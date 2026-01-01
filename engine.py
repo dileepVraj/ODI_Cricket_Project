@@ -79,7 +79,6 @@ class CricketAnalyzer:
         # 4. Pivots
         scores_pivot = innings_stats.pivot(index='match_id', columns='innings', values='total_score').reset_index()
         scores_pivot.rename(columns={1: 'score_inn1', 2: 'score_inn2'}, inplace=True)
-        # Ensure columns exist even if data is missing
         if 'score_inn1' not in scores_pivot.columns: scores_pivot['score_inn1'] = 0
         if 'score_inn2' not in scores_pivot.columns: scores_pivot['score_inn2'] = 0
         scores_pivot.fillna(0, inplace=True)
@@ -136,6 +135,7 @@ class CricketAnalyzer:
         
         return df
 
+    # --- ADVANCED STATS HELPER (Upgraded to handle Chasing Split) ---
     def _calculate_team_stats(self, df, team_name, is_home_analysis=False):
         if is_home_analysis and team_name == 'Visitors':
             bat1 = df[df['team_bat_1'] != df['home_team_ref']]
@@ -150,265 +150,189 @@ class CricketAnalyzer:
         avg_1st_win = int(bat1_win['score_inn1'].mean()) if not bat1_win.empty else 0
         low_defended = int(bat1_win['score_inn1'].min()) if not bat1_win.empty else 0
         
+        # CHASING LOGIC
         if is_home_analysis and team_name == 'Visitors':
-            chase_win = df[(df['team_bat_2'] != df['home_team_ref']) & (df['is_chased'] == True)]
+            chase = df[df['team_bat_2'] != df['home_team_ref']]
         else:
-            chase_win = df[(df['team_bat_2'] == team_name) & (df['is_chased'] == True)]
+            chase = df[df['team_bat_2'] == team_name]
             
-        avg_chase = int(chase_win['score_inn2'].mean()) if not chase_win.empty else 0
-        high_chase = int(chase_win['score_inn2'].max()) if not chase_win.empty else 0
+        avg_2nd = int(chase['score_inn2'].mean()) if not chase.empty else 0
+        
+        # Successful Chase
+        chase_win = chase[chase['is_chased'] == True]
+        high_chased = int(chase_win['score_inn2'].max()) if not chase_win.empty else 0
+        avg_succ_chase = int(chase_win['score_inn2'].mean()) if not chase_win.empty else 0
+        
+        # Failed Chase
+        chase_loss = chase[chase['is_chased'] == False]
+        avg_fail_chase = int(chase_loss['score_inn2'].mean()) if not chase_loss.empty else 0
         
         return {
             'avg_1st': avg_1st, 'avg_1st_win': avg_1st_win, 
             'high_1st': high_1st, 'low_1st': low_1st, 'low_defended': low_defended,
-            'avg_chase': avg_chase, 'high_chase': high_chase
+            'avg_2nd': avg_2nd, 
+            'high_chased': high_chased, 'avg_succ': avg_succ_chase, 'avg_fail': avg_fail_chase
         }
 
-    # --- TABLE 2: SPECIFIC MATCHUP (Updated with Win %) ---
-    def analyze_venue_matchup(self, stadium_name, home_team, touring_team, years_back=10):
+    # -------------------------------------------------------------------------------------
+    # FUNCTION 1: VENUE ANALYSIS (Handles "Fortress" & "Matchup")
+    # -------------------------------------------------------------------------------------
+    def analyze_home_fortress(self, stadium_name, home_team, opp_team='All', years_back=10):
         stadium_name = self._resolve_stadium(stadium_name)
-        
-        # 1. Date Filter
         self.match_df['start_date'] = pd.to_datetime(self.match_df['start_date'])
+        
         cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         
-        print(f"\n🏟️ DEEP DIVE: {home_team} vs {touring_team} at {stadium_name}")
-        print(f"   (📅 Data from last {years_back} years: Since {cutoff_date.date()})")
+        # Labels
+        visitor_label = opp_team if opp_team != 'All' else "Visitors"
+        vs_text = f"vs {visitor_label}"
+        print(f"\n🏰 FORTRESS CHECK: {home_team} {vs_text} at {stadium_name}")
+        print(f"📅 Analyzing data from the last {years_back} years...")
         
-        # 2. Filter Venue & Date
+        # Filter 1: Venue & Date
         venue_matches = self.match_df[
             (self.match_df['venue'].str.contains(stadium_name, case=False, na=False)) &
             (self.match_df['start_date'] >= cutoff_date)
         ].copy()
         
-        # 3. Filter Teams
-        df = venue_matches[
-            ((venue_matches['team_bat_1'] == home_team) & (venue_matches['team_bat_2'] == touring_team)) |
-            ((venue_matches['team_bat_1'] == touring_team) & (venue_matches['team_bat_2'] == home_team))
-        ].copy()
-        
-        if df.empty:
-            print(f"❌ No matches found in the last {years_back} years.")
-            return
-
-        # --- PART A: THE RECORD ---
-        matches_played = len(df)
-        won_home = len(df[df['winner'] == home_team])
-        won_touring = len(df[df['winner'] == touring_team])
-        tied_nr = matches_played - (won_home + won_touring)
-        
-        # NEW: Calculate Win %
-        home_win_rate = int((won_home / matches_played) * 100) if matches_played > 0 else 0
-
-        # --- PART B: THE STATS ---
-        df = self._apply_smart_filters(df)
-        stats_df = df[df['status'] == '✅ Included'].copy()
-        
-        # Overall Stats
-        overall_avg_1st = int(stats_df['score_inn1'].mean()) if not stats_df.empty else 0
-        overall_defended = stats_df[stats_df['is_defended'] == True]
-        overall_avg_1st_win = int(overall_defended['score_inn1'].mean()) if not overall_defended.empty else 0
-
-        # Team Stats
-        h_stats = self._calculate_team_stats(stats_df, home_team)
-        t_stats = self._calculate_team_stats(stats_df, touring_team)
-        
-        # Chasing Stats
-        h_chase_win = stats_df[(stats_df['team_bat_2'] == home_team) & (stats_df['is_chased'] == True)]
-        h_avg_chase_win = int(h_chase_win['score_inn2'].mean()) if not h_chase_win.empty else 0
-        h_chase_loss = stats_df[(stats_df['team_bat_2'] == home_team) & (stats_df['is_chased'] == False)]
-        h_avg_chase_loss = int(h_chase_loss['score_inn2'].mean()) if not h_chase_loss.empty else 0
-
-        t_chase_win = stats_df[(stats_df['team_bat_2'] == touring_team) & (stats_df['is_chased'] == True)]
-        t_avg_chase_win = int(t_chase_win['score_inn2'].mean()) if not t_chase_win.empty else 0
-        t_chase_loss = stats_df[(stats_df['team_bat_2'] == touring_team) & (stats_df['is_chased'] == False)]
-        t_avg_chase_loss = int(t_chase_loss['score_inn2'].mean()) if not t_chase_loss.empty else 0
-
-        # --- BUILD REPORT ---
-        report_data = [
-            {"Metric": "Matches Played", "Value": matches_played},
-            {"Metric": f"Wins: {home_team}", "Value": won_home},
-            {"Metric": f"Win %: {home_team}", "Value": f"{home_win_rate}%"}, # <--- ADDED HERE
-            {"Metric": f"Wins: {touring_team}", "Value": won_touring},
-            {"Metric": "Tied / No Result", "Value": tied_nr},
-            
-            {"Metric": "--- OVERALL VENUE STATS ---", "Value": "---"},
-            {"Metric": "Overall Avg 1st Innings Score", "Value": overall_avg_1st},
-            {"Metric": "Overall Avg 1st Innings Winning Score", "Value": overall_avg_1st_win},
-            
-            {"Metric": f"--- BATTING 1ST: {home_team} ---", "Value": "---"},
-            {"Metric": f"{home_team} Average 1st Innings", "Value": h_stats['avg_1st']},
-            {"Metric": f"{home_team} Highest 1st Innings", "Value": h_stats['high_1st']},
-            {"Metric": f"{home_team} Lowest 1st Innings", "Value": h_stats['low_1st']},
-            {"Metric": f"{home_team} Avg Winning Score", "Value": h_stats['avg_1st_win']},
-            {"Metric": f"{home_team} Lowest Defended Score", "Value": h_stats['low_defended']},
-            
-            {"Metric": f"--- BATTING 1ST: {touring_team} ---", "Value": "---"},
-            {"Metric": f"{touring_team} Average 1st Innings", "Value": t_stats['avg_1st']},
-            {"Metric": f"{touring_team} Highest 1st Innings", "Value": t_stats['high_1st']},
-            {"Metric": f"{touring_team} Lowest 1st Innings", "Value": t_stats['low_1st']},
-            {"Metric": f"{touring_team} Avg Winning Score", "Value": t_stats['avg_1st_win']},
-            {"Metric": f"{touring_team} Lowest Defended Score", "Value": t_stats['low_defended']},
-            
-            {"Metric": f"--- CHASING: {home_team} ---", "Value": "---"},
-            {"Metric": f"{home_team} Highest Chased", "Value": h_stats['high_chase']},
-            {"Metric": f"{home_team} Avg Successful Chase", "Value": h_avg_chase_win},
-            {"Metric": f"{home_team} Avg Failed Chase", "Value": h_avg_chase_loss},
-            
-            {"Metric": f"--- CHASING: {touring_team} ---", "Value": "---"},
-            {"Metric": f"{touring_team} Highest Chased", "Value": t_stats['high_chase']},
-            {"Metric": f"{touring_team} Avg Successful Chase", "Value": t_avg_chase_win},
-            {"Metric": f"{touring_team} Avg Failed Chase", "Value": t_avg_chase_loss},
-        ]
-        
-        self._display_report(report_data, home_team, touring_team, f"MATCHUP: {home_team} vs {touring_team}")
-        self._display_audit(df, home_team)
-
-    # --- TABLE 3: FORTRESS REPORT ---
-    def analyze_home_fortress(self, stadium_name, home_team, years_back=10):
-        stadium_name = self._resolve_stadium(stadium_name)
-        self.match_df['start_date'] = pd.to_datetime(self.match_df['start_date'])
-        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years_back)
-        
-        print(f"\n🏰 FORTRESS CHECK: {home_team} at {stadium_name}")
-        
-        venue_matches = self.match_df[
-            (self.match_df['venue'].str.contains(stadium_name, case=False, na=False)) &
-            (self.match_df['start_date'] >= cutoff_date)
-        ].copy()
-        
+        # Filter 2: Home Team
         df = venue_matches[(venue_matches['team_bat_1'] == home_team) | (venue_matches['team_bat_2'] == home_team)].copy()
         
+        # Filter 3: Opponent (If Specific)
+        if opp_team != 'All':
+            df = df[(df['team_bat_1'] == opp_team) | (df['team_bat_2'] == opp_team)].copy()
+        
         if df.empty:
-            print("❌ No matches found.")
+            print(f"❌ No matches found for {home_team} {vs_text} at this venue.")
             return
 
-        matches_played = len(df)
-        won_home = len(df[df['winner'] == home_team])
-        won_visitor = matches_played - won_home
-        win_rate = int((won_home / matches_played) * 100) if matches_played > 0 else 0
-        
-        df = self._apply_smart_filters(df)
-        stats_df = df[df['status'] == '✅ Included'].copy()
-        stats_df['home_team_ref'] = home_team
-        
-        home_stats = self._calculate_team_stats(stats_df, home_team)
-        visit_stats = self._calculate_team_stats(stats_df, 'Visitors', is_home_analysis=True)
-        
-        report_data = [
-            {"Metric": "Matches Played", "Value": matches_played},
-            {"Metric": f"Wins: {home_team}", "Value": won_home},
-            {"Metric": "Wins: Visitors", "Value": won_visitor},
-            {"Metric": "Overall Win %", "Value": f"{win_rate}%"},
-            
-            {"Metric": f"--- BATTING 1ST: {home_team} ---", "Value": "---"},
-            {"Metric": "Average Score", "Value": home_stats['avg_1st']},
-            {"Metric": "Highest Score", "Value": home_stats['high_1st']},
-            {"Metric": "Lowest Score", "Value": home_stats['low_1st']},
-            {"Metric": "Avg Winning Score", "Value": home_stats['avg_1st_win']},
-            {"Metric": "Lowest Defended Score", "Value": home_stats['low_defended']},
-            
-            {"Metric": "--- BATTING 1ST: VISITORS ---", "Value": "---"},
-            {"Metric": "Average Score", "Value": visit_stats['avg_1st']},
-            {"Metric": "Highest Score", "Value": visit_stats['high_1st']},
-            {"Metric": "Lowest Score", "Value": visit_stats['low_1st']},
-            {"Metric": "Avg Winning Score", "Value": visit_stats['avg_1st_win']},
-            {"Metric": "Lowest Defended Score", "Value": visit_stats['low_defended']},
-            
-            {"Metric": "--- CHASING RECORDS ---", "Value": "---"},
-            {"Metric": f"{home_team} Highest Chased", "Value": home_stats['high_chase']},
-            {"Metric": "Visitors Highest Chased", "Value": visit_stats['high_chase']},
-        ]
-        
-        self._display_report(report_data, home_team, 'Visitors', f"FORTRESS REPORT")
-        self._display_audit(df, home_team)
+        # --- GENERATE REPORT ---
+        # We reuse a shared logic function to avoid code duplication
+        self._build_and_display_report(df, home_team, visitor_label, f"FORTRESS REPORT ({vs_text})", is_venue_mode=True)
 
-    # --- TABLE 4 & 5: GLOBAL/COUNTRY RIVALRY ---
-    def analyze_global_h2h(self, team_a, team_b, years_back=5):
-        self._generic_h2h_analysis(team_a, team_b, years_back=years_back, filter_country=None)
 
-    def analyze_h2h_in_country(self, team_a, team_b, host_country, years_back=10):
-        self._generic_h2h_analysis(team_a, team_b, years_back=years_back, filter_country=host_country)
-
-    def _generic_h2h_analysis(self, team_a, team_b, years_back, filter_country=None):
+    # -------------------------------------------------------------------------------------
+    # FUNCTION 2: GLOBAL H2H ANALYSIS (Handles "Global Stats")
+    # -------------------------------------------------------------------------------------
+    def analyze_global_h2h(self, home_team, opp_team, years_back=5):
         self.match_df['start_date'] = pd.to_datetime(self.match_df['start_date'])
         cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         
-        title_extra = f"IN {filter_country.upper()}" if filter_country else "GLOBAL"
-        print(f"\n⚔️ RIVALRY CHECK ({title_extra}): {team_a} vs {team_b}")
+        print(f"\n🌍 GLOBAL H2H CHECK: {home_team} vs {opp_team}")
+        print(f"📅 Analyzing data from the last {years_back} years (All Venues)...")
         
-        matches = self.match_df[self.match_df['start_date'] >= cutoff_date].copy()
+        # Filter: Date & Matchup
+        mask = (
+            ((self.match_df['team_bat_1'] == home_team) & (self.match_df['team_bat_2'] == opp_team)) |
+            ((self.match_df['team_bat_1'] == opp_team) & (self.match_df['team_bat_2'] == home_team))
+        ) & (self.match_df['start_date'] >= cutoff_date)
         
-        if filter_country:
-            venue_keywords = []
-            c = filter_country.lower()
-            if c == 'australia': venue_keywords = ['Australia', 'Melbourne', 'Sydney', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Canberra', 'W.A.C.A']
-            elif c == 'england': venue_keywords = ['England', 'Lord', 'Oval', 'Manchester', 'Birmingham', 'Leeds', 'Nottingham', 'Southampton', 'Cardiff', 'Bristol', 'Chester-le-Street']
-            elif c == 'india': venue_keywords = ['India', 'Mumbai', 'Kolkata', 'Delhi', 'Chennai', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Mohali', 'Indore', 'Pune', 'Jaipur', 'Cuttack', 'Visakhapatnam', 'Raipur', 'Ranchi', 'Dharamsala', 'Lucknow', 'Guwahati', 'Thiruvananthapuram', 'Rajkot']
-            elif c == 'south africa': venue_keywords = ['South Africa', 'Cape Town', 'Johannesburg', 'Centurion', 'Durban', 'Port Elizabeth', 'Paarl', 'Bloemfontein', 'East London', 'Kimberley', 'Gqeberha', 'St George']
-            elif c == 'new zealand': venue_keywords = ['New Zealand', 'Auckland', 'Wellington', 'Christchurch', 'Hamilton', 'Napier', 'Dunedin', 'Mount Maunganui', 'Nelson']
-            elif c == 'sri lanka': venue_keywords = ['Sri Lanka', 'Colombo', 'Kandy', 'Galle', 'Hambantota', 'Dambulla', 'Pallekele']
-            elif c == 'west indies': venue_keywords = ['West Indies', 'Barbados', 'Trinidad', 'Guyana', 'Antigua', 'Jamaica', 'Saint Lucia', 'Grenada', 'St Kitts']
-            elif c == 'pakistan': venue_keywords = ['Pakistan', 'Lahore', 'Karachi', 'Rawalpindi', 'Multan']
-            else: venue_keywords = [filter_country]
-            
-            matches = matches[matches['venue'].str.contains('|'.join(venue_keywords), case=False, na=False)]
-
-        df = matches[
-            ((matches['team_bat_1'] == team_a) & (matches['team_bat_2'] == team_b)) |
-            ((matches['team_bat_1'] == team_b) & (matches['team_bat_2'] == team_a))
-        ].copy()
+        df = self.match_df[mask].copy()
         
         if df.empty:
-            print(f"❌ No matches found.")
+            print(f"❌ No global matches found between {home_team} and {opp_team}.")
             return
 
+        # --- GENERATE REPORT ---
+        self._build_and_display_report(df, home_team, opp_team, f"GLOBAL RIVALRY REPORT", is_venue_mode=False)
+
+
+    # -------------------------------------------------------------------------------------
+    # SHARED REPORT GENERATOR (Internal Logic)
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
+    # SHARED REPORT GENERATOR (Internal Logic)
+    # -------------------------------------------------------------------------------------
+    def _build_and_display_report(self, df, home_team, visitor_label, title, is_venue_mode):
+        # Win/Loss Counts
         matches_played = len(df)
-        won_a = len(df[df['winner'] == team_a])
-        won_b = len(df[df['winner'] == team_b])
-        tied_nr = matches_played - (won_a + won_b)
-        win_rate_a = int((won_a / matches_played) * 100) if matches_played > 0 else 0
+        home_wins_df = df[df['winner'] == home_team]
+        won_home = len(home_wins_df)
+        won_home_bat1 = len(home_wins_df[home_wins_df['team_bat_1'] == home_team])
+        won_home_bat2 = len(home_wins_df[home_wins_df['team_bat_2'] == home_team])
+
+        if visitor_label == 'Visitors':
+            vis_wins_df = df[(df['winner'] != home_team) & (df['winner'] != 'Tie') & (df['winner'].notna())]
+        else:
+            vis_wins_df = df[df['winner'] == visitor_label]
+            
+        won_visitor = len(vis_wins_df)
+        won_vis_bat1 = len(vis_wins_df[vis_wins_df['team_bat_2'] == home_team]) 
+        won_vis_bat2 = len(vis_wins_df[vis_wins_df['team_bat_1'] == home_team]) 
         
+        invalid_results = matches_played - won_home - won_visitor
+        win_rate = int((won_home / matches_played) * 100) if matches_played > 0 else 0
+        
+        # Stats Calculation
         df = self._apply_smart_filters(df)
         stats_df = df[df['status'] == '✅ Included'].copy()
         
-        a_stats = self._calculate_team_stats(stats_df, team_a)
-        b_stats = self._calculate_team_stats(stats_df, team_b)
+        # Set Home Ref for the helper
+        stats_df['home_team_ref'] = home_team 
+        
+        # Overall Averages
+        overall_avg_1 = int(stats_df['score_inn1'].mean()) if not stats_df.empty else 0
+        overall_avg_2 = int(stats_df['score_inn2'].mean()) if not stats_df.empty else 0
+        bat1_winners = stats_df[stats_df['winner'] == stats_df['team_bat_1']]
+        overall_avg_win = int(bat1_winners['score_inn1'].mean()) if not bat1_winners.empty else 0
+        
+        # Detailed Stats
+        h_stats = self._calculate_team_stats(stats_df, home_team)
+        v_stats = self._calculate_team_stats(stats_df, visitor_label, is_home_analysis=True)
 
         report_data = [
             {"Metric": "Matches Played", "Value": matches_played},
-            {"Metric": f"Wins: {team_a}", "Value": won_a},
-            {"Metric": f"Wins: {team_b}", "Value": won_b},
-            {"Metric": "Tied / No Result", "Value": tied_nr},
-            {"Metric": f"{team_a} Win %", "Value": f"{win_rate_a}%"},
+            {"Metric": "Tied / No Result", "Value": invalid_results},
+            {"Metric": f"{home_team} Win %", "Value": f"{win_rate}%"},
+
+            {"Metric": f"--- {home_team.upper()} WINS ---", "Value": "---"},
+            {"Metric": "Total Wins", "Value": won_home},
+            {"Metric": "Won Batting 1st (Defended)", "Value": won_home_bat1},
+            {"Metric": "Won Batting 2nd (Chased)", "Value": won_home_bat2},
             
-            {"Metric": f"--- BATTING 1ST: {team_a} ---", "Value": "---"},
-            {"Metric": "Average Score", "Value": a_stats['avg_1st']},
-            {"Metric": "Highest Score", "Value": a_stats['high_1st']},
-            {"Metric": "Lowest Score", "Value": a_stats['low_1st']},
-            {"Metric": "Avg Winning Score", "Value": a_stats['avg_1st_win']},
-            {"Metric": "Lowest Defended Score", "Value": a_stats['low_defended']},
+            {"Metric": f"--- {visitor_label.upper()} WINS ---", "Value": "---"},
+            {"Metric": "Total Wins", "Value": won_visitor},
+            {"Metric": "Won Batting 1st (Defended)", "Value": won_vis_bat1},
+            {"Metric": "Won Batting 2nd (Chased)", "Value": won_vis_bat2},
             
-            {"Metric": f"--- BATTING 1ST: {team_b} ---", "Value": "---"},
-            {"Metric": "Average Score", "Value": b_stats['avg_1st']},
-            {"Metric": "Highest Score", "Value": b_stats['high_1st']},
-            {"Metric": "Lowest Score", "Value": b_stats['low_1st']},
-            {"Metric": "Avg Winning Score", "Value": b_stats['avg_1st_win']},
-            {"Metric": "Lowest Defended Score", "Value": b_stats['low_defended']},
+            {"Metric": "--- OVERALL SCORING STATS ---", "Value": "---"},
+            {"Metric": "Overall Avg 1st Innings", "Value": overall_avg_1},
+            {"Metric": "Overall Avg 2nd Innings", "Value": overall_avg_2},
+            {"Metric": "Avg 1st Innings Winning Score", "Value": overall_avg_win},
             
-            {"Metric": "--- CHASING RECORDS ---", "Value": "---"},
-            {"Metric": f"{team_a} Highest Chased", "Value": a_stats['high_chase']},
-            {"Metric": f"{team_b} Highest Chased", "Value": b_stats['high_chase']},
+            {"Metric": f"--- BATTING 1ST: {home_team} ---", "Value": "---"},
+            {"Metric": "Average 1st Innings", "Value": h_stats['avg_1st']},
+            {"Metric": "Highest 1st Innings", "Value": h_stats['high_1st']},
+            {"Metric": "Lowest 1st Innings", "Value": h_stats['low_1st']},
+            {"Metric": "Avg Winning Score", "Value": h_stats['avg_1st_win']},
+            {"Metric": "Lowest Defended Score", "Value": h_stats['low_defended']},
+            
+            {"Metric": f"--- BATTING 1ST: {visitor_label} ---", "Value": "---"},
+            {"Metric": "Average 1st Innings", "Value": v_stats['avg_1st']},
+            {"Metric": "Highest 1st Innings", "Value": v_stats['high_1st']},
+            {"Metric": "Lowest 1st Innings", "Value": v_stats['low_1st']},
+            {"Metric": "Avg Winning Score", "Value": v_stats['avg_1st_win']},
+            {"Metric": "Lowest Defended Score", "Value": v_stats['low_defended']},
+            
+            {"Metric": f"--- CHASING: {home_team} ---", "Value": "---"},
+            {"Metric": "Average 2nd Innings", "Value": h_stats['avg_2nd']},
+            {"Metric": "Highest Chased", "Value": h_stats['high_chased']},
+            {"Metric": "Avg Successful Chase", "Value": h_stats['avg_succ']}, 
+            {"Metric": "Avg Failed Chase", "Value": h_stats['avg_fail']},
+            
+            {"Metric": f"--- CHASING: {visitor_label} ---", "Value": "---"},
+            {"Metric": "Average 2nd Innings", "Value": v_stats['avg_2nd']},
+            {"Metric": "Highest Chased", "Value": v_stats['high_chased']},
+            {"Metric": "Avg Successful Chase", "Value": v_stats['avg_succ']},
+            {"Metric": "Avg Failed Chase", "Value": v_stats['avg_fail']},
         ]
         
-        self._display_report(report_data, team_a, team_b, f"RIVALRY: {team_a} vs {team_b}")
-        self._display_audit(df, team_a)
+        self._display_report(report_data, home_team, visitor_label, title)
+        
+        # --- FIX: ALWAYS SHOW AUDIT (Removed the is_venue_mode check) ---
+        self._display_audit(df, home_team)
 
-    # --- UTILITY & UI ---
-    def export_reference_lists(self, filename='reference_data.txt'):
-        # Code remains the same as before...
-        pass
-
+    # --- UI HELPERS ---
     def _display_report(self, data, team_a, team_b, title):
         report_df = pd.DataFrame(data)
         team_colors = {
@@ -422,8 +346,8 @@ class CricketAnalyzer:
                 if t in str(val): return f'color: {c}; font-weight: bold;'
             return ''
         print(f"\n📊 {title}")
-        styled = report_df.style.applymap(lambda x: get_color(team_a) if team_a in str(x) else '', subset=['Metric'])\
-                                .applymap(lambda x: get_color(team_b) if team_b in str(x) else '', subset=['Metric'])\
+        styled = report_df.style.map(lambda x: get_color(team_a) if team_a in str(x) else '', subset=['Metric'])\
+                                .map(lambda x: get_color(team_b) if team_b in str(x) else '', subset=['Metric'])\
                                 .hide(axis='index')
         with pd.option_context('display.max_rows', None): display(styled)
 
