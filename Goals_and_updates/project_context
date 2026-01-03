@@ -1,0 +1,71 @@
+This is a smart move. 💾
+
+Below is your **"System Restore Point."** Save this text into a file named **`PROJECT_CONTEXT.txt`**.
+
+Tomorrow, when you start a new chat, simply copy and paste the entire block below as your first message. It contains everything I need to instantly understand our code structure, logic, and goals without missing a beat.
+
+---
+
+### 📥 SYSTEM RESTORE POINT: Cricket Trading Engine (v2.1)
+
+**🤖 AI Instructions:**
+This is the current state of our Python Cricket Trading Project. Please load this context into your memory. We are building a sophisticated Sports Trading Dashboard using Pandas and IPyWidgets.
+
+#### 1. Project Goal
+
+To build a "Smart" Cricket Analysis Engine that identifies trading edges (Back/Lay signals) by filtering out noise (Rain/DL matches) and focusing on true scoring potential at specific venues.
+
+#### 2. Architecture & Files
+
+* **`engine.py` (Class `CricketAnalyzer`):** The brain. Handles data loading, cleaning, and statistical calculations.
+* **`venues.py` (`VENUE_MAP`):** The map. A dictionary converting messy strings (`"R Premadasa"`) into Master IDs (`SL_COLOMBO_RPS`).
+* **`interface.py` (Class `TraderCockpit`):** The GUI. IPyWidgets dashboard with dropdowns and buttons.
+
+#### 3. Key Logic Established (DO NOT FORGET)
+
+* **The "Confidence Factor":** All averages must show sample size. Format: `"320 (12)"`.
+* **Smart Venue Mapping:** Uses `Fuzzy Logic` + `Substring Matching` to handle duplicate venue names.
+* **Rain/Short Game Handling:**
+* **Win/Loss Record:** *Includes* Rain/DL games (to keep the record accurate).
+* **Average Scores:** *Excludes* Rain/DL games (to keep trading signals pure).
+
+
+* **The "Regional Trap" Fix:** We explicitly mapped regional grounds (Cairns, Mackay) to country codes (`AUS_`) to ensure "Home Dominance" reports are accurate.
+
+#### 4. Critical Function Status (Latest Versions)
+
+* **`analyze_home_dominance`:** COMPLETE. Generates a matrix of Home vs All Tourists. Now displays split batting averages (Home 1st Inn vs Visitor 1st Inn) with sample sizes.
+* **`_calculate_team_stats`:** COMPLETE. Includes logic to handle specific "Visitor" team filtering and uses the `_get_avg_with_count` helper.
+* **`_build_and_display_report`:** COMPLETE. Assembles the "Confidence" data into the final visual report.
+
+#### 5. Latest Code Snapshot (The "Golden Logic")
+
+*The AI needs to know we implemented this specific helper today:*
+
+```python
+def _get_avg_with_count(self, df, column_name):
+    """Helper: Returns '285 (12)' or '-' if empty."""
+    if df.empty or column_name not in df.columns: return "-"
+    val = df[column_name].mean()
+    if pd.isna(val): return "-"
+    return f"{int(val)} ({len(df)})"
+
+```
+
+#### 6. Immediate Next Step (Mission for Tomorrow)
+
+We have verified the data and the stats engine.
+**The Goal:** Finalize and test the **`predict_match`** function.
+
+* This function currently exists in draft form but needs to be formally integrated and tested.
+* It implements the **"Weighted Trinity"** algorithm:
+1. **Fortress Factor (Venue)** - 45%
+2. **Host Factor (Country)** - 35%
+3. **Global Form (Recent H2H)** - 20%
+
+
+
+---
+
+**End of Restore Point.**
+See you tomorrow! 🏏🚀
