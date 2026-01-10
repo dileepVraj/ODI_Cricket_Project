@@ -27,9 +27,9 @@ VENUE_MAP = {
     'Rajiv Gandhi International Stadium, Uppal': 'IND_HYDERABAD',
     'Himachal Pradesh Cricket Association Stadium': 'IND_DHARAMSALA',
     'HPCA Stadium': 'IND_DHARAMSALA',
-    'Punjab Cricket Association IS Bindra Stadium': 'IND_MOHALI',
-    'Punjab Cricket Association IS Bindra Stadium, Mohali': 'IND_MOHALI',
-    'PCA Stadium, Mohali': 'IND_MOHALI',
+    'Punjab Cricket Association IS Bindra Stadium': 'IND_MOHALI(I.S BINDRA)',
+    'Punjab Cricket Association IS Bindra Stadium, Mohali': 'IND_MOHALI(I.S BINDRA)',
+    'PCA Stadium, Mohali': 'IND_MOHALI(I.S BINDRA)',
     'Maharashtra Cricket Association Stadium': 'IND_PUNE',
     'Maharashtra Cricket Association Stadium, Gahunje': 'IND_PUNE',
     'Sawai Mansingh Stadium': 'IND_JAIPUR',
@@ -45,6 +45,10 @@ VENUE_MAP = {
     'JSCA International Stadium Complex': 'IND_RANCHI',
     'Saurashtra Cricket Association Stadium': 'IND_RAJKOT',
     'Vidarbha Cricket Association Stadium, Jamtha': 'IND_NAGPUR',
+    'Shaheed Veer Narayan Singh International Stadium': 'IND_RAIPUR',
+    'Shaheed Veer Narayan Singh Stadium': 'IND_RAIPUR',
+    'Raipur': 'IND_RAIPUR',
+    'Raipur International Cricket Stadium': 'IND_RAIPUR',
     
     # --- 🇦🇺 AUSTRALIA ---
     'Melbourne Cricket Ground': 'AUS_MELBOURNE',
@@ -69,6 +73,12 @@ VENUE_MAP = {
     "Ray Mitchell Oval": 'AUS_MACKAY',
     "Harrup Park": 'AUS_MACKAY',
     "Mackay": 'AUS_MACKAY',
+    'W.A.C.A. Ground': 'AUS_PERTH_WACA',
+    'W.A.C.A.': 'AUS_PERTH_WACA',      
+    'W.A.C.A': 'AUS_PERTH_WACA',       
+    'WACA Ground': 'AUS_PERTH_WACA',   
+    'WACA': 'AUS_PERTH_WACA',
+    'Western Australia Cricket Association Ground': 'AUS_PERTH_WACA',          
     
     # Also valid for "Riverway Stadium" if you have Townsville matches
     "Riverway Stadium": 'AUS_TOWNSVILLE',
@@ -119,9 +129,24 @@ VENUE_MAP = {
     'Sophia Gardens, Cardiff': 'ENG_CARDIFF',
     'Swalec Stadium': 'ENG_CARDIFF',
     
-    'County Ground, Bristol': 'ENG_BRISTOL',
-    'Bristol County Ground': 'ENG_BRISTOL',
     'Bristol': 'ENG_BRISTOL',
+    'Bristol County Ground': 'ENG_BRISTOL',
+    'County Ground, Bristol': 'ENG_BRISTOL',
+    'The County Ground, Bristol': 'ENG_BRISTOL', 
+    'Nevil Road': 'ENG_BRISTOL',
+    'The Brightside Ground, Bristol': 'ENG_BRISTOL',
+    'The Brightside Ground': 'ENG_BRISTOL',
+    'Brightside Ground': 'ENG_BRISTOL',
+    'Seat Unique Stadium': 'ENG_BRISTOL',
+    'County Ground': 'ENG_BRISTOL',
+    'The County Ground': 'ENG_BRISTOL',
+    'County Ground, Taunton': 'ENG_TAUNTON',
+    'The Cooper Associates County Ground': 'ENG_TAUNTON',
+    'Taunton': 'ENG_TAUNTON',
+
+    'County Ground, Chelmsford': 'ENG_CHELMSFORD',
+    'County Ground, Northampton': 'ENG_NORTHAMPTON',
+    'County Ground, Derby': 'ENG_DERBY',
     
     'Riverside Ground': 'ENG_DURHAM',
     'Riverside Ground, Chester-le-Street': 'ENG_DURHAM',
@@ -133,6 +158,7 @@ VENUE_MAP = {
     'Gaddafi Stadium': 'PAK_LAHORE',
     'Rawalpindi Cricket Stadium': 'PAK_RAWALPINDI',
     'Multan Cricket Stadium': 'PAK_MULTAN',
+    'Faisalabad': 'PAK_FAISALABAD',
     
     # --- 🇳🇿 NEW ZEALAND ---
     'Eden Park': 'NZ_AUCKLAND',
@@ -146,29 +172,37 @@ VENUE_MAP = {
     'University Oval, Dunedin': 'NZ_DUNEDIN',
     'Bay Oval': 'NZ_MT_MAUNGANUI',
     'Saxton Oval': 'NZ_NELSON',
+    'Cobham Oval': 'NZ_WHANGAREI',
+    'Cobham Oval (New)': 'NZ_WHANGAREI',
+    'Cobham Oval, Whangarei': 'NZ_WHANGAREI',
+    'Whangarei': 'NZ_WHANGAREI',
     
     # --- 🇿🇦 SOUTH AFRICA ---
     'Wanderers Stadium': 'SA_JOHANNESBURG',
     'SuperSport Park': 'SA_CENTURION',
     'Newlands': 'SA_CAPETOWN',
     'Kingsmead': 'SA_DURBAN',
-    "St George's Park": 'SA_PORT_ELIZABETH',
+    "St George's Park": 'SA_GQEBERHA(Port.Elz)',
     'Boland Park': 'SA_PAARL',
     'Mangaung Oval': 'SA_BLOEMFONTEIN',
     'Senwes Park': 'SA_POTCHEFSTROOM',
-    # --- 🇿🇦 SOUTH AFRICA ---
-    'Buffalo Park': 'SA_EAST_LONDON',   # <--- Merges "Buffalo Park, East London"
+    'Buffalo Park': 'SA_EAST_LONDON',   
     'East London': 'SA_EAST_LONDON',
-    
-    'Diamond Oval': 'SA_KIMBERLEY',     # <--- Merges "Diamond Oval, Kimberley"
+    'Diamond Oval': 'SA_KIMBERLEY',     
     'Kimberley': 'SA_KIMBERLEY',
+    "New Wanderers Stadium": "SA_JOHANNESBURG",
+    "Wanderers": "SA_JOHANNESBURG",
+    "The Wanderers Stadium": "SA_JOHANNESBURG",  
+    "JB Marks Oval": "SA_POTCHEFSTROOM",
+    "Senwes Park": "SA_POTCHEFSTROOM",  
+    'Sedgars Park, Potchefstroom': 'SA_POTCHEFSTROOM',
     
     # --- 🇱🇰 SRI LANKA ---
     'R.Premadasa Stadium': 'SL_COLOMBO_RPS',
     'R. Premadasa Stadium': 'SL_COLOMBO_RPS',
     'R.Premadasa Stadium, Khettarama': 'SL_COLOMBO_RPS',
     'Sinhalese Sports Club Ground': 'SL_COLOMBO_SSC',
-    'Pallekele International Cricket Stadium': 'SL_KANDY',
+    'Pallekele International Cricket Stadium': 'SL_PALLEKELE',
     'Galle International Stadium': 'SL_GALLE',
     'Rangiri Dambulla International Stadium': 'SL_DAMBULLA',
     'Mahinda Rajapaksa International Cricket Stadium': 'SL_HAMBANTOTA',
@@ -222,6 +256,27 @@ VENUE_MAP = {
     # --- 🌴 WEST INDIES ---
     'Warner Park': 'WI_ST_KITTS',  # <--- The "Root Key" merges both duplicate listings
     'Basseterre': 'WI_ST_KITTS',
+    'Brain Lara Stadium, Tarouba': 'WI_TAROUBA',
+
+    # --- IRELAND  ---
+'Dublin': 'IRE_DUBLIN',
+'Malahide': 'IRE_DUBLIN',
+'The Village, Malahide': 'IRE_DUBLIN',
+'Clontarf': 'IRE_DUBLIN',
+'Castle Avenue': 'IRE_DUBLIN',
+'Bready': 'IRE_BREADY',
+'Stormont': 'IRE_BELFAST',
+'Belfast': 'IRE_BELFAST',
+
+# --- 🇿🇼 ZIMBABWE ---
+    'Harare Sports Club': 'ZIM_HARARE',
+    'Harare': 'ZIM_HARARE',
+    'Takashinga Sports Club': 'ZIM_HARARE_TAKASHINGA',
+    
+    'Queens Sports Club': 'ZIM_BULAWAYO',
+    'Queens Sports Club, Bulawayo': 'ZIM_BULAWAYO',
+    'Bulawayo': 'ZIM_BULAWAYO',
+    'Bulawayo Athletic Club': 'ZIM_BULAWAYO_BAC',
     
     # --- 🇦🇪 UAE (Neutral) ---
     'Dubai International Cricket Stadium': 'UAE_DUBAI',

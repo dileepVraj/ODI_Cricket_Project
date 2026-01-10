@@ -1,0 +1,162 @@
+# bug 1:
+
+Hey mate, I’ve found a serious issue in our application.
+
+The problem is that the same ground appears multiple times with different names. For example, when I checked match stats between India and Australia for the last 10 years at the Chennai ground, I noticed two separate entries in the venue dropdown:
+
+“MA Chidambaram Stadium, Chepauk”
+
+“MA Chidambaram Stadium, Chepauk, Chennai”
+
+When I ran the analyze venue matchup report using these two different venue names, I got different results:
+
+One venue returned 2 matches
+
+The other returned 3 matches
+
+This is a major bug because we don’t know how many other grounds are duplicated in the same way, which can lead to incorrect analysis and probabilities.
+
+# Root cause analysis:
+
+That is a massive catch. You are absolutely right—this is a "Data Integrity" bug, and for a trader, it is dangerous because it splits your sample size in half.
+
+The Root Cause: The dropdown list in your dashboard (interface.py) grabs the raw venue names directly from the CSV. Because data providers change how they type names over the years (e.g., adding ", Chennai" in 2021), your tool thinks they are two different stadiums.
+
+The Fix: We need to "normalize" the venue names immediately when the engine loads, before the dashboard even looks at them. We will force the engine to scan every single venue name, check it against our VENUE_MAP, and overwrite it with a standard name (e.g., convert both variations to just "MA Chidambaram").
+
+Here is the plan to fix engine.py.
+
+Step 1: Update the VENUE_MAP
+We need to add those specific "Chepauk" variations to your dictionary.
+
+Step 2: Apply the Cleaning in __init__
+We will add a line in the startup function that applies the cleaning to the entire column.
+
+# Code fix:
+
+# --- STADIUM TRANSLATOR ---
+    VENUE_MAP = {
+        # South Africa
+        'centurion': 'SuperSport Park',
+        'joburg': 'Wanderers Stadium',
+        'wanderers': 'Wanderers Stadium',
+        'port elizabeth': 'St George\'s Park',
+        'paarl': 'Boland Park',
+        
+        # Australia
+        'mcg': 'Melbourne Cricket Ground',
+        'scg': 'Sydney Cricket Ground',
+        'gabba': 'Brisbane Cricket Ground',
+        'hobart': 'Bellerive Oval',
+        'perth': 'Perth Stadium',
+        'waca': 'W.A.C.A. Ground',
+        
+        # India
+        'wankhede': 'Wankhede',
+        'eden gardens': 'Eden Gardens',
+        'chinnaswamy': 'Chinnaswamy',
+        'bangalore': 'Chinnaswamy',
+        'chepauk': 'MA Chidambaram',    
+        'chennai': 'MA Chidambaram',
+        'chidambaram': 'MA Chidambaram', # <--- Added catch-all for Chidambaram
+        'hyderabad': 'Rajiv Gandhi',
+        'ahmedabad': 'Narendra Modi',
+        'motera': 'Narendra Modi',
+        'dharamshala': 'Himachal',
+        'mohali': 'PCA Stadium',
+        'punjab': 'PCA Stadium',
+        
+        # England
+        'lords': 'Lord\'s',
+        'oval': 'The Oval',
+        'old trafford': 'Old Trafford',
+        'edgbaston': 'Edgbaston',
+        'headingley': 'Headingley',
+        'trent bridge': 'Trent Bridge',
+    }
+
+    def __init__(self, filepath):
+        print(f"⚙️ Initializing Engine...")
+        print(f"📂 Loading Database: {filepath}")
+        
+        self.raw_df = pd.read_csv(filepath, low_memory=False)
+        self.raw_df['start_date'] = pd.to_datetime(self.raw_df['start_date'], errors='coerce')
+        self.raw_df['year'] = self.raw_df['start_date'].dt.year
+        
+        # --- 🚨 CRITICAL FIX: NORMALIZE VENUES ON LOAD ---
+        print("   🧹 Cleaning Venue Names...")
+        self.raw_df['venue'] = self.raw_df['venue'].apply(self._resolve_stadium)
+        
+        print(f"   Raw Data: {len(self.raw_df)} balls loaded.")
+        self._create_match_summary()
+        print(f"✅ Engine Ready! Condensed into {len(self.match_df)} unique matches.")
+        print(f"   Date Range: {self.match_df['year'].min()} to {self.match_df['year'].max()}")
+
+    def _resolve_stadium(self, input_name):
+        if not isinstance(input_name, str): return str(input_name)
+        
+        clean_input = input_name.lower().strip()
+        
+        # check against our map keys
+        for key, standard_name in self.VENUE_MAP.items():
+            if key in clean_input:
+                return standard_name
+                
+        return input_name
+
+
+# Follow-up question:
+
+okay, will it applies same logic to all ground names or only for chepuk.
+
+# Response:
+
+It applies to ALL grounds that are listed in your VENUE_MAP dictionary.
+
+Here is exactly how the logic works for every single row in your data:
+
+The Scanner: The code looks at the messy name from the CSV (e.g., "The Oval, London").
+
+The Check: It loops through every key in your VENUE_MAP.
+
+It asks: "Does 'oval' appear inside 'The Oval, London'?" -> YES.
+
+It asks: "Does 'lords' appear inside 'The Oval, London'?" -> NO.
+
+The Fix: As soon as it finds a match (like 'oval'), it replaces the entire messy name with the clean version you defined ("The Oval").
+
+⚠️ Important: You control the list
+It works for everything currently in your list (MCG, Lord's, Wankhede, etc.).
+
+However, if there is a stadium NOT in your map (e.g., "Green Park" vs "Green Park, Kanpur"), the code won't know to fix it yet. You might still see duplicates for venues you haven't added to the map.
+
+🛠️ Quick Check for Other Duplicates
+To be 100% sure you have caught all duplicates, you can run this small snippet in a new cell. It prints every unique venue name so you can scan them with your eyes:
+
+# Code snippet to run test:
+
+# Print all unique venue names to check for duplicates
+unique_venues = sorted(bot.match_df['venue'].unique())
+
+print(f"Total unique venues: {len(unique_venues)}")
+print("-" * 30)
+
+for v in unique_venues:
+    print(v)
+----------------------------------------------------------------------------------------------
+
+# Bug 2
+We’ve found another issue. When we ran the host country stats for India vs Australia with India as the host country, our application returned 13 matches, but ESPN Statsguru shows 21 matches for the same criteria.
+
+This indicates that our application is missing some matches, which is a serious data accuracy problem.
+
+
+# Resolution:
+
+The "Master Registry" (External Config): instead of writing if/else code in Python, we create a separate venues.json or venues.csv file. It maps every "bad name" to a "clean ID." We load this map once and use it to clean the data before it even touches the bot.
+
+The "City Column" Strategy: We find a way to inject a City or Country column into the raw data (perhaps by merging with an external list of match IDs). If we know the City is "Karachi," we never confuse it with "Mirpur."
+
+The "Fuzzy Match" AI: We use a library (like fuzzywuzzy) that calculates the similarity between strings, so "Gaddafi Stadium" and "Gaddafi Stadium, Lahore" are automatically detected as the same place without us typing it manually.
+
+

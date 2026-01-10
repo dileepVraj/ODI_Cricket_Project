@@ -1,0 +1,1534 @@
+match_id,venue,date,innings,team,pp_runs,pp_wkts,mid_runs,mid_wkts,dth_runs,dth_wkts
+1000887,"Brisbane Cricket Ground, Woolloongabba",2017-01-13,1,Australia,61,3,132,4,75,2
+1000887,"Brisbane Cricket Ground, Woolloongabba",2017-01-13,2,Pakistan,47,1,116,7,13,2
+1000889,Melbourne Cricket Ground,2017-01-15,1,Australia,49,3,127,2,44,5
+1000889,Melbourne Cricket Ground,2017-01-15,2,Pakistan,36,0,147,3,38,1
+1000891,Western Australia Cricket Association Ground,2017-01-19,1,Pakistan,50,1,163,3,50,3
+1000891,Western Australia Cricket Association Ground,2017-01-19,2,Australia,45,2,188,1,32,0
+1000893,Sydney Cricket Ground,2017-01-22,1,Australia,63,0,172,3,118,3
+1000893,Sydney Cricket Ground,2017-01-22,2,Pakistan,68,1,174,5,25,4
+1000895,Adelaide Oval,2017-01-26,1,Australia,67,0,202,0,100,7
+1000895,Adelaide Oval,2017-01-26,2,Pakistan,50,1,196,5,66,4
+1001371,Sydney Cricket Ground,2016-12-04,1,Australia,47,2,164,2,113,4
+1001371,Sydney Cricket Ground,2016-12-04,2,New Zealand,44,2,183,5,29,3
+1001373,Manuka Oval,2016-12-06,1,Australia,54,0,198,3,126,2
+1001373,Manuka Oval,2016-12-06,2,New Zealand,53,2,181,4,28,4
+1001375,Melbourne Cricket Ground,2016-12-09,1,Australia,31,2,150,3,83,3
+1001375,Melbourne Cricket Ground,2016-12-09,2,New Zealand,48,1,99,9,0,0
+1007649,Harare Sports Club,2016-06-11,2,India,27,1,131,0,15,0
+1007651,Harare Sports Club,2016-06-13,2,India,42,0,87,2,0,0
+1007653,Harare Sports Club,2016-06-15,2,India,43,0,83,0,0,0
+1019973,Hagley Oval,2016-12-26,1,New Zealand,50,1,188,3,103,3
+1019973,Hagley Oval,2016-12-26,2,Bangladesh,43,1,191,6,30,3
+1019975,Saxton Oval,2016-12-29,1,New Zealand,37,1,139,5,75,4
+1019975,Saxton Oval,2016-12-29,2,Bangladesh,32,1,143,8,9,1
+1019977,Saxton Oval,2016-12-31,1,Bangladesh,44,0,135,7,57,2
+1019977,Saxton Oval,2016-12-31,2,New Zealand,44,2,180,1,15,0
+1020013,Eden Park,2017-01-30,1,New Zealand,62,1,153,5,71,3
+1020013,Eden Park,2017-01-30,2,Australia,45,3,148,4,87,3
+1020017,Seddon Park,2017-02-05,1,New Zealand,59,1,149,4,73,4
+1020017,Seddon Park,2017-02-05,2,Australia,52,2,147,5,58,3
+1020031,Seddon Park,2017-02-19,1,New Zealand,54,1,153,6,0,0
+1020031,Seddon Park,2017-02-19,2,South Africa,52,0,158,6,0,0
+1020033,Hagley Oval,2017-02-22,1,New Zealand,39,1,161,3,89,0
+1020033,Hagley Oval,2017-02-22,2,South Africa,48,1,156,5,79,3
+1020035,Westpac Stadium,2017-02-25,1,South Africa,48,1,135,5,88,2
+1020035,Westpac Stadium,2017-02-25,2,New Zealand,38,2,74,8,0,0
+1020037,Seddon Park,2017-03-01,1,South Africa,51,1,122,5,106,2
+1020037,Seddon Park,2017-03-01,2,New Zealand,57,1,177,1,46,1
+1020039,Eden Park,2017-03-04,1,New Zealand,41,1,107,8,1,1
+1020039,Eden Park,2017-03-04,2,South Africa,32,1,118,3,0,0
+1022347,Kennington Oval,2017-06-01,1,Bangladesh,36,0,187,2,82,4
+1022347,Kennington Oval,2017-06-01,2,England,51,1,180,1,77,0
+1022349,Edgbaston,2017-06-02,1,New Zealand,68,1,189,3,34,6
+1022349,Edgbaston,2017-06-02,2,Australia,53,3,0,0,0,0
+1022351,Kennington Oval,2017-06-03,1,South Africa,32,0,189,3,78,3
+1022351,Kennington Oval,2017-06-03,2,Sri Lanka,87,1,107,8,9,1
+1022353,Edgbaston,2017-06-04,1,India,46,0,167,2,106,1
+1022353,Edgbaston,2017-06-04,2,Pakistan,51,1,113,8,0,0
+1022355,Kennington Oval,2017-06-05,1,Bangladesh,37,1,134,5,11,4
+1022355,Kennington Oval,2017-06-05,2,Australia,57,1,26,0,0,0
+1022357,Sophia Gardens,2017-06-06,1,England,50,1,171,4,89,5
+1022357,Sophia Gardens,2017-06-06,2,New Zealand,40,1,158,5,25,4
+1022359,Edgbaston,2017-06-07,1,South Africa,47,1,109,5,63,2
+1022359,Edgbaston,2017-06-07,2,Pakistan,42,2,77,1,0,0
+1022361,Kennington Oval,2017-06-08,1,India,48,0,170,3,103,3
+1022361,Kennington Oval,2017-06-08,2,Sri Lanka,44,1,203,2,75,1
+1022363,Sophia Gardens,2017-06-09,1,New Zealand,60,1,143,3,62,4
+1022363,Sophia Gardens,2017-06-09,2,Bangladesh,24,3,172,1,72,1
+1022365,Edgbaston,2017-06-10,1,Australia,56,1,164,3,57,5
+1022365,Edgbaston,2017-06-10,2,England,58,3,178,1,4,0
+1022367,Kennington Oval,2017-06-11,1,South Africa,35,0,143,6,13,4
+1022367,Kennington Oval,2017-06-11,2,India,37,1,156,1,0,0
+1022369,Sophia Gardens,2017-06-12,1,Sri Lanka,50,1,135,6,51,3
+1022369,Sophia Gardens,2017-06-12,2,Pakistan,65,0,133,7,39,0
+1022371,Sophia Gardens,2017-06-14,1,England,52,1,117,5,42,4
+1022371,Sophia Gardens,2017-06-14,2,Pakistan,49,0,166,2,0,0
+1022373,Edgbaston,2017-06-15,1,Bangladesh,46,2,161,3,57,2
+1022373,Edgbaston,2017-06-15,2,India,63,0,198,1,4,0
+1022375,Kennington Oval,2017-06-18,1,Pakistan,56,0,191,3,91,1
+1022375,Kennington Oval,2017-06-18,2,India,47,3,111,7,0,0
+1027315,"Sir Vivian Richards Stadium, North Sound",2017-03-03,1,England,38,2,158,2,100,2
+1027315,"Sir Vivian Richards Stadium, North Sound",2017-03-03,2,West Indies,37,1,164,4,50,5
+1027317,"Sir Vivian Richards Stadium, North Sound",2017-03-05,1,West Indies,35,2,141,4,49,4
+1027317,"Sir Vivian Richards Stadium, North Sound",2017-03-05,2,England,69,1,120,5,37,0
+1027319,"Kensington Oval, Bridgetown",2017-03-09,1,England,39,1,202,2,87,7
+1027319,"Kensington Oval, Bridgetown",2017-03-09,2,West Indies,27,3,115,7,0,0
+1029001,County Ground,2017-05-05,2,England,69,1,58,2,0,0
+1029003,Lord's,2017-05-07,1,England,45,0,175,4,108,2
+1029819,Shere Bangla National Stadium,2016-10-07,1,England,53,1,167,3,89,4
+1029819,Shere Bangla National Stadium,2016-10-07,2,Bangladesh,50,1,206,3,32,6
+1029821,Shere Bangla National Stadium,2016-10-09,1,Bangladesh,30,2,133,4,75,2
+1029821,Shere Bangla National Stadium,2016-10-09,2,England,31,4,131,5,42,1
+1029823,Zahur Ahmed Chowdhury Stadium,2016-10-12,1,Bangladesh,42,0,156,6,79,0
+1029823,Zahur Ahmed Chowdhury Stadium,2016-10-12,2,England,49,0,172,4,57,2
+1030219,Himachal Pradesh Cricket Association Stadium,2016-10-16,1,New Zealand,42,3,123,5,25,2
+1030219,Himachal Pradesh Cricket Association Stadium,2016-10-16,2,India,49,1,145,3,0,0
+1030221,Feroz Shah Kotla,2016-10-20,1,New Zealand,50,1,152,2,40,6
+1030221,Feroz Shah Kotla,2016-10-20,2,India,35,1,143,5,58,4
+1030223,"Punjab Cricket Association Stadium, Mohali",2016-10-23,1,New Zealand,64,1,147,7,74,2
+1030223,"Punjab Cricket Association Stadium, Mohali",2016-10-23,2,India,45,2,168,1,76,0
+1030225,JSCA International Stadium Complex,2016-10-26,1,New Zealand,80,0,119,4,61,3
+1030225,JSCA International Stadium Complex,2016-10-26,2,India,50,1,139,6,52,3
+1030227,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2016-10-29,1,India,45,1,154,3,70,2
+1030227,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2016-10-29,2,New Zealand,46,2,33,8,0,0
+1031425,Headingley,2017-05-24,1,England,58,1,179,4,102,1
+1031425,Headingley,2017-05-24,2,South Africa,59,1,173,7,35,2
+1031427,The Rose Bowl,2017-05-27,1,England,43,1,176,3,111,2
+1031427,The Rose Bowl,2017-05-27,2,South Africa,56,1,182,3,90,1
+1031429,Lord's,2017-05-29,1,England,40,6,113,4,0,0
+1031429,Lord's,2017-05-29,2,South Africa,57,0,99,3,0,0
+1031667,Old Trafford,2017-09-19,1,West Indies,55,2,126,5,23,2
+1031667,Old Trafford,2017-09-19,2,England,69,1,141,2,0,0
+1031669,Trent Bridge,2017-09-21,1,England,21,0,0,0,0,0
+1031671,County Ground,2017-09-24,1,England,65,1,181,5,123,3
+1031671,County Ground,2017-09-24,2,West Indies,73,1,172,9,0,0
+1031673,Kennington Oval,2017-09-27,1,West Indies,55,3,170,1,131,2
+1031673,Kennington Oval,2017-09-27,2,England,57,0,201,5,0,0
+1031675,The Rose Bowl,2017-09-29,1,West Indies,65,1,130,3,93,2
+1031675,The Rose Bowl,2017-09-29,2,England,71,0,223,1,0,0
+1033361,Malahide,2017-05-12,1,Bangladesh,43,2,114,2,0,0
+1033363,Malahide,2017-05-14,1,New Zealand,57,2,145,2,87,3
+1033365,Clontarf Cricket Club Ground,2017-05-17,1,Bangladesh,46,0,144,5,67,4
+1033365,Clontarf Cricket Club Ground,2017-05-17,2,New Zealand,48,1,157,3,53,2
+1033367,Malahide,2017-05-19,2,Bangladesh,69,0,113,2,0,0
+1033369,Malahide,2017-05-21,1,New Zealand,70,0,152,3,122,3
+1033371,Clontarf Cricket Club Ground,2017-05-24,1,New Zealand,60,1,157,3,53,4
+1033371,Clontarf Cricket Club Ground,2017-05-24,2,Bangladesh,46,1,156,4,69,0
+1034819,Maharashtra Cricket Association Stadium,2017-01-15,1,England,67,1,168,3,115,3
+1034819,Maharashtra Cricket Association Stadium,2017-01-15,2,India,51,2,240,4,65,1
+1034821,Barabati Stadium,2017-01-19,1,India,43,3,218,0,120,3
+1034821,Barabati Stadium,2017-01-19,2,England,66,1,203,4,97,3
+1034823,Eden Gardens,2017-01-22,1,England,43,0,182,4,96,4
+1034823,Eden Gardens,2017-01-22,2,India,52,2,177,3,87,4
+1050223,Sharjah Cricket Stadium,2016-09-30,1,Pakistan,60,1,157,4,67,4
+1050223,Sharjah Cricket Stadium,2016-09-30,2,West Indies,30,1,145,9,0,0
+1050225,Sharjah Cricket Stadium,2016-10-02,1,Pakistan,55,2,185,1,97,2
+1050225,Sharjah Cricket Stadium,2016-10-02,2,West Indies,46,1,171,4,61,2
+1050227,Sheikh Zayed Stadium,2016-10-05,1,Pakistan,66,0,173,3,69,3
+1050227,Sheikh Zayed Stadium,2016-10-05,2,West Indies,46,1,113,5,13,4
+1059710,Harare Sports Club,2016-11-14,2,Sri Lanka,56,0,99,2,0,0
+1059711,Harare Sports Club,2016-11-16,1,West Indies,27,2,130,2,70,6
+1059711,Harare Sports Club,2016-11-16,2,Sri Lanka,32,3,111,4,22,3
+1059712,Queens Sports Club,2016-11-19,2,West Indies,56,1,136,1,65,6
+1059714,Queens Sports Club,2016-11-23,1,Sri Lanka,71,1,169,2,90,4
+1059714,Queens Sports Club,2016-11-23,2,West Indies,79,1,181,4,69,4
+1059715,Queens Sports Club,2016-11-25,2,West Indies,35,3,89,2,0,0
+1059716,Queens Sports Club,2016-11-27,2,Sri Lanka,56,3,110,1,0,0
+1072310,Melbourne Cricket Ground,2018-01-14,1,Australia,52,1,169,4,83,3
+1072310,Melbourne Cricket Ground,2018-01-14,2,England,87,2,182,0,39,3
+1072311,"Brisbane Cricket Ground, Woolloongabba",2018-01-19,1,Australia,56,0,157,4,57,5
+1072311,"Brisbane Cricket Ground, Woolloongabba",2018-01-19,2,England,60,1,183,5,31,0
+1072312,Sydney Cricket Ground,2018-01-21,1,England,47,2,153,4,102,0
+1072312,Sydney Cricket Ground,2018-01-21,2,Australia,49,2,164,3,73,1
+1072313,Adelaide Oval,2018-01-26,1,England,18,5,144,3,34,2
+1072313,Adelaide Oval,2018-01-26,2,Australia,61,2,136,5,0,0
+1072314,Perth Stadium,2018-01-28,1,England,66,0,150,6,43,4
+1072314,Perth Stadium,2018-01-28,2,Australia,63,1,144,7,40,2
+1075504,Diamond Oval,2017-10-15,1,Bangladesh,44,1,158,3,76,3
+1075504,Diamond Oval,2017-10-15,2,South Africa,61,0,199,0,22,0
+1075505,Boland Park,2017-10-18,1,South Africa,50,0,205,3,98,3
+1075505,Boland Park,2017-10-18,2,Bangladesh,62,1,156,4,31,5
+1075506,Buffalo Park,2017-10-22,1,South Africa,69,0,212,2,88,5
+1075506,Buffalo Park,2017-10-22,2,Bangladesh,47,3,122,5,0,2
+1077949,Providence Stadium,2017-04-07,1,Pakistan,59,0,157,3,92,2
+1077949,Providence Stadium,2017-04-07,2,West Indies,49,1,167,3,93,2
+1077950,Providence Stadium,2017-04-09,1,Pakistan,46,2,142,3,94,0
+1077950,Providence Stadium,2017-04-09,2,West Indies,51,3,137,5,20,2
+1077951,Providence Stadium,2017-04-11,1,West Indies,44,2,117,1,72,6
+1077951,Providence Stadium,2017-04-11,2,Pakistan,45,3,162,1,29,0
+1083446,Rangiri Dambulla International Stadium,2017-03-25,1,Bangladesh,64,1,151,2,109,2
+1083446,Rangiri Dambulla International Stadium,2017-03-25,2,Sri Lanka,30,2,173,5,31,3
+1083447,Rangiri Dambulla International Stadium,2017-03-28,1,Sri Lanka,48,1,187,3,76,6
+1083448,Sinhalese Sports Club Ground,2017-04-01,1,Sri Lanka,76,0,127,5,77,4
+1083448,Sinhalese Sports Club Ground,2017-04-01,2,Bangladesh,60,3,122,5,28,2
+1098206,"Queen's Park Oval, Port of Spain",2017-06-23,1,India,47,0,152,3,0,0
+1098207,"Queen's Park Oval, Port of Spain",2017-06-25,1,India,63,0,208,4,39,1
+1098207,"Queen's Park Oval, Port of Spain",2017-06-25,2,West Indies,31,2,160,4,14,0
+1098208,"Sir Vivian Richards Stadium, North Sound",2017-06-30,1,India,34,2,117,1,100,1
+1098208,"Sir Vivian Richards Stadium, North Sound",2017-06-30,2,West Indies,40,1,118,9,0,0
+1098209,"Sir Vivian Richards Stadium, North Sound",2017-07-02,1,West Indies,31,0,126,5,32,4
+1098209,"Sir Vivian Richards Stadium, North Sound",2017-07-02,2,India,33,2,94,3,51,5
+1098210,"Sabina Park, Kingston",2017-07-06,1,West Indies,49,1,115,4,41,4
+1098210,"Sabina Park, Kingston",2017-07-06,2,India,50,1,156,1,0,0
+1104478,Galle International Stadium,2017-06-30,1,Sri Lanka,51,1,187,2,78,2
+1104479,Galle International Stadium,2017-07-02,2,Sri Lanka,45,2,113,1,0,0
+1104480,"Mahinda Rajapaksa International Cricket Stadium, Sooriyawewa",2017-07-06,2,Sri Lanka,69,0,179,2,64,0
+1104481,"Mahinda Rajapaksa International Cricket Stadium, Sooriyawewa",2017-07-08,1,Sri Lanka,62,0,159,2,79,4
+1104482,"Mahinda Rajapaksa International Cricket Stadium, Sooriyawewa",2017-07-10,1,Sri Lanka,34,3,112,4,57,1
+1109605,Rangiri Dambulla International Stadium,2017-08-20,1,Sri Lanka,55,0,141,8,20,2
+1109605,Rangiri Dambulla International Stadium,2017-08-20,2,India,64,1,156,0,0,0
+1109606,Pallekele International Cricket Stadium,2017-08-24,1,Sri Lanka,52,1,127,4,57,3
+1109606,Pallekele International Cricket Stadium,2017-08-24,2,India,68,0,133,7,30,0
+1109607,Pallekele International Cricket Stadium,2017-08-27,1,Sri Lanka,37,2,122,3,58,4
+1109607,Pallekele International Cricket Stadium,2017-08-27,2,India,35,2,151,2,32,0
+1109608,"R.Premadasa Stadium, Khettarama",2017-08-31,1,India,67,1,217,4,91,0
+1109608,"R.Premadasa Stadium, Khettarama",2017-08-31,2,Sri Lanka,40,3,152,4,15,3
+1109609,"R.Premadasa Stadium, Khettarama",2017-09-03,1,Sri Lanka,64,3,125,1,49,6
+1109609,"R.Premadasa Stadium, Khettarama",2017-09-03,2,India,53,2,156,1,30,1
+1115775,Seddon Park,2018-02-25,1,England,41,1,176,4,67,3
+1115775,Seddon Park,2018-02-25,2,New Zealand,28,3,177,1,82,3
+1115776,Bay Oval,2018-02-28,1,New Zealand,34,2,125,6,64,2
+1115776,Bay Oval,2018-02-28,2,England,47,2,178,2,0,0
+1115777,Westpac Stadium,2018-03-03,1,England,36,1,130,3,68,6
+1115777,Westpac Stadium,2018-03-03,2,New Zealand,47,1,121,5,62,2
+1115778,University Oval,2018-03-07,1,England,77,0,199,4,59,5
+1115778,University Oval,2018-03-07,2,New Zealand,44,2,212,1,83,2
+1115779,Hagley Oval,2018-03-10,1,New Zealand,27,2,133,4,63,4
+1115779,Hagley Oval,2018-03-10,2,England,65,0,164,3,0,0
+1115795,Cobham Oval (New),2017-12-20,1,West Indies,40,0,147,7,61,2
+1115795,Cobham Oval (New),2017-12-20,2,New Zealand,69,0,142,4,38,1
+1115796,Hagley Oval,2017-12-23,1,New Zealand,66,1,156,4,103,1
+1115796,Hagley Oval,2017-12-23,2,West Indies,53,4,68,6,0,0
+1115797,Hagley Oval,2017-12-26,1,New Zealand,35,3,96,1,0,0
+1115797,Hagley Oval,2017-12-26,2,West Indies,57,5,42,4,0,0
+1115802,Basin Reserve,2018-01-06,1,New Zealand,62,0,166,4,87,3
+1115802,Basin Reserve,2018-01-06,2,Pakistan,40,4,126,2,0,0
+1115803,Saxton Oval,2018-01-09,1,Pakistan,39,2,121,5,86,2
+1115803,Saxton Oval,2018-01-09,2,New Zealand,48,2,103,0,0,0
+1115804,University Oval,2018-01-13,1,New Zealand,37,1,158,2,62,7
+1115804,University Oval,2018-01-13,2,Pakistan,9,3,65,7,0,0
+1115805,Seddon Park,2018-01-16,1,Pakistan,43,2,130,3,89,3
+1115805,Seddon Park,2018-01-16,2,New Zealand,59,0,147,5,57,0
+1115806,Basin Reserve,2018-01-19,1,New Zealand,66,1,139,1,66,5
+1115806,Basin Reserve,2018-01-19,2,Pakistan,34,3,138,4,84,3
+1119496,"MA Chidambaram Stadium, Chepauk",2017-09-17,1,India,34,3,164,2,83,2
+1119496,"MA Chidambaram Stadium, Chepauk",2017-09-17,2,Australia,47,4,90,5,0,0
+1119497,Eden Gardens,2017-09-21,1,India,44,1,163,5,45,4
+1119497,Eden Gardens,2017-09-21,2,Australia,47,2,135,7,20,1
+1119498,Holkar Cricket Stadium,2017-09-24,1,Australia,49,0,185,2,59,4
+1119498,Holkar Cricket Stadium,2017-09-24,2,India,68,0,172,4,54,1
+1119499,M.Chinnaswamy Stadium,2017-09-28,1,Australia,63,0,185,3,86,2
+1119499,M.Chinnaswamy Stadium,2017-09-28,2,India,65,0,175,4,73,4
+1119500,"Vidarbha Cricket Association Stadium, Jamtha",2017-10-01,1,Australia,60,0,130,4,52,5
+1119500,"Vidarbha Cricket Association Stadium, Jamtha",2017-10-01,2,India,43,0,188,3,12,0
+1119537,Kennington Oval,2018-06-13,1,Australia,51,2,140,4,23,4
+1119537,Kennington Oval,2018-06-13,2,England,48,3,153,4,17,0
+1119538,Sophia Gardens,2018-06-16,1,England,71,1,182,3,89,4
+1119538,Sophia Gardens,2018-06-16,2,Australia,60,1,176,4,68,5
+1119539,Trent Bridge,2018-06-19,1,England,79,0,277,3,125,3
+1119539,Trent Bridge,2018-06-19,2,Australia,83,1,156,9,0,0
+1119540,Riverside Ground,2018-06-21,1,Australia,61,0,167,3,82,5
+1119540,Riverside Ground,2018-06-21,2,England,76,0,184,4,54,0
+1119541,Old Trafford,2018-06-24,1,Australia,79,2,126,8,0,0
+1119541,Old Trafford,2018-06-24,2,England,34,4,133,4,41,1
+1119546,Trent Bridge,2018-07-12,1,England,71,0,131,5,66,5
+1119546,Trent Bridge,2018-07-12,2,India,74,1,193,1,2,0
+1119547,Lord's,2018-07-14,1,England,69,0,159,5,94,2
+1119547,Lord's,2018-07-14,2,India,57,2,137,5,42,3
+1119548,Headingley,2018-07-17,1,India,32,1,164,5,60,2
+1119548,Headingley,2018-07-17,2,England,78,2,158,0,24,0
+1120090,Wankhede Stadium,2017-10-22,1,India,37,2,160,2,83,4
+1120090,Wankhede Stadium,2017-10-22,2,New Zealand,52,1,160,2,72,1
+1120091,Maharashtra Cricket Association Stadium,2017-10-25,1,New Zealand,35,3,133,3,62,3
+1120091,Maharashtra Cricket Association Stadium,2017-10-25,2,India,64,1,140,2,28,1
+1120092,Green Park,2017-10-29,1,India,53,1,199,0,85,5
+1120092,Green Park,2017-10-29,2,New Zealand,74,1,173,2,84,4
+1120286,Dubai International Cricket Stadium,2017-10-13,1,Pakistan,36,1,167,2,89,3
+1120286,Dubai International Cricket Stadium,2017-10-13,2,Sri Lanka,48,2,120,5,41,1
+1120287,Sheikh Zayed Stadium,2017-10-16,1,Pakistan,40,3,110,3,69,3
+1120287,Sheikh Zayed Stadium,2017-10-16,2,Sri Lanka,30,1,107,6,50,3
+1120288,Sheikh Zayed Stadium,2017-10-18,1,Sri Lanka,53,0,99,6,56,4
+1120288,Sheikh Zayed Stadium,2017-10-18,2,Pakistan,53,0,146,2,10,1
+1120289,Sharjah Cricket Stadium,2017-10-20,1,Sri Lanka,58,2,106,6,9,2
+1120289,Sharjah Cricket Stadium,2017-10-20,2,Pakistan,40,2,137,1,0,0
+1120290,Sharjah Cricket Stadium,2017-10-23,1,Sri Lanka,39,5,64,5,0,0
+1120290,Sharjah Cricket Stadium,2017-10-23,2,Pakistan,49,0,56,1,0,0
+1122279,Kingsmead,2018-02-01,1,South Africa,49,1,151,4,69,3
+1122279,Kingsmead,2018-02-01,2,India,49,1,187,1,34,2
+1122280,SuperSport Park,2018-02-04,1,South Africa,39,1,79,9,0,0
+1122280,SuperSport Park,2018-02-04,2,India,57,1,62,0,0,0
+1122281,Newlands,2018-02-07,1,India,50,1,173,3,80,2
+1122281,Newlands,2018-02-07,2,South Africa,48,1,131,9,0,0
+1122282,The Wanderers Stadium,2018-02-10,1,India,53,1,177,3,59,3
+1122282,The Wanderers Stadium,2018-02-10,2,South Africa,53,1,154,4,0,0
+1122283,St George's Park,2018-02-13,1,India,61,1,158,2,55,4
+1122283,St George's Park,2018-02-13,2,South Africa,52,1,140,5,9,4
+1122284,SuperSport Park,2018-02-16,1,South Africa,44,2,118,5,42,3
+1122284,SuperSport Park,2018-02-16,2,India,63,1,143,1,0,0
+1122726,Himachal Pradesh Cricket Association Stadium,2017-12-10,1,India,11,3,101,7,0,0
+1122726,Himachal Pradesh Cricket Association Stadium,2017-12-10,2,Sri Lanka,42,2,72,1,0,0
+1122727,"Punjab Cricket Association IS Bindra Stadium, Mohali",2017-12-13,1,India,33,0,212,1,147,3
+1122727,"Punjab Cricket Association IS Bindra Stadium, Mohali",2017-12-13,2,Sri Lanka,41,2,162,5,48,1
+1122728,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2017-12-17,1,Sri Lanka,68,1,143,7,4,2
+1122728,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2017-12-17,2,India,55,1,164,1,0,0
+1130737,"Shere Bangla National Stadium, Mirpur",2018-01-15,2,Bangladesh,55,1,116,1,0,0
+1130738,"Shere Bangla National Stadium, Mirpur",2018-01-17,2,Sri Lanka,61,2,174,5,43,3
+1130739,"Shere Bangla National Stadium, Mirpur",2018-01-19,1,Bangladesh,50,0,193,3,77,4
+1130739,"Shere Bangla National Stadium, Mirpur",2018-01-19,2,Sri Lanka,44,2,113,8,0,0
+1130740,"Shere Bangla National Stadium, Mirpur",2018-01-21,2,Sri Lanka,33,1,133,4,36,0
+1130741,"Shere Bangla National Stadium, Mirpur",2018-01-23,1,Bangladesh,45,1,122,5,49,3
+1130742,"Shere Bangla National Stadium, Mirpur",2018-01-25,1,Bangladesh,32,3,50,7,0,0
+1130742,"Shere Bangla National Stadium, Mirpur",2018-01-25,2,Sri Lanka,71,0,12,0,0,0
+1130743,"Shere Bangla National Stadium, Mirpur",2018-01-27,1,Sri Lanka,60,2,107,3,54,5
+1130743,"Shere Bangla National Stadium, Mirpur",2018-01-27,2,Bangladesh,26,3,115,5,1,1
+1133003,Old Hararians,2018-03-06,1,West Indies,57,0,211,3,89,2
+1133007,Old Hararians,2018-03-08,2,West Indies,47,2,142,2,12,0
+1133010,Harare Sports Club,2018-03-10,1,West Indies,35,2,138,4,84,2
+1133026,Harare Sports Club,2018-03-19,2,West Indies,54,1,163,1,73,4
+1133028,Harare Sports Club,2018-03-21,1,West Indies,27,2,131,4,40,4
+1140379,Rangiri Dambulla International Stadium,2018-10-10,1,England,55,2,37,0,0,0
+1140380,Rangiri Dambulla International Stadium,2018-10-13,1,England,54,1,155,3,69,5
+1140380,Rangiri Dambulla International Stadium,2018-10-13,2,Sri Lanka,38,4,102,1,0,0
+1140381,Pallekele International Cricket Stadium,2018-10-17,1,Sri Lanka,76,2,74,7,0,0
+1140381,Pallekele International Cricket Stadium,2018-10-17,2,England,91,3,62,0,0,0
+1140382,Pallekele International Cricket Stadium,2018-10-20,1,Sri Lanka,44,1,146,4,83,2
+1140382,Pallekele International Cricket Stadium,2018-10-20,2,England,54,1,78,1,0,0
+1140383,"R.Premadasa Stadium, Khettarama",2018-10-23,1,Sri Lanka,72,0,213,3,81,3
+1140383,"R.Premadasa Stadium, Khettarama",2018-10-23,2,England,41,4,91,5,0,0
+1142584,Rangiri Dambulla International Stadium,2018-07-29,1,Sri Lanka,45,5,148,5,0,0
+1142584,Rangiri Dambulla International Stadium,2018-07-29,2,South Africa,60,2,136,3,0,0
+1142585,Rangiri Dambulla International Stadium,2018-08-01,1,Sri Lanka,52,2,141,3,51,3
+1142585,Rangiri Dambulla International Stadium,2018-08-01,2,South Africa,67,0,171,6,8,0
+1142586,Pallekele International Cricket Stadium,2018-08-05,1,South Africa,64,1,185,3,114,3
+1142586,Pallekele International Cricket Stadium,2018-08-05,2,Sri Lanka,73,3,182,4,30,3
+1142587,Pallekele International Cricket Stadium,2018-08-08,1,Sri Lanka,51,0,255,7,0,0
+1142587,Pallekele International Cricket Stadium,2018-08-08,2,South Africa,113,3,74,6,0,0
+1142588,"R.Premadasa Stadium, Khettarama",2018-08-12,1,Sri Lanka,64,2,142,3,93,3
+1142588,"R.Premadasa Stadium, Khettarama",2018-08-12,2,South Africa,48,4,73,6,0,0
+1142920,Queens Sports Club,2018-07-13,1,Pakistan,36,0,188,2,84,5
+1142921,Queens Sports Club,2018-07-16,2,Pakistan,54,0,141,1,0,0
+1142922,Queens Sports Club,2018-07-18,2,Pakistan,69,1,0,0,0,0
+1142923,Queens Sports Club,2018-07-20,1,Pakistan,59,0,231,0,109,1
+1142924,Queens Sports Club,2018-07-22,1,Pakistan,68,0,198,2,98,2
+1144146,Diamond Oval,2018-09-30,2,South Africa,40,3,79,2,0,0
+1144147,Mangaung Oval,2018-10-03,1,South Africa,40,3,135,4,23,3
+1144148,Boland Park,2018-10-06,2,South Africa,64,0,141,4,26,2
+1144156,St George's Park,2019-01-19,1,South Africa,46,0,144,1,76,1
+1144156,St George's Park,2019-01-19,2,Pakistan,46,1,163,2,58,2
+1144157,Kingsmead,2019-01-22,1,Pakistan,39,2,126,6,38,2
+1144157,Kingsmead,2019-01-22,2,South Africa,52,3,140,2,15,0
+1144158,SuperSport Park,2019-01-25,1,Pakistan,38,1,188,2,91,3
+1144158,SuperSport Park,2019-01-25,2,South Africa,58,1,129,1,0,0
+1144159,The Wanderers Stadium,2019-01-27,1,South Africa,32,2,129,7,3,1
+1144159,The Wanderers Stadium,2019-01-27,2,Pakistan,51,0,117,2,0,0
+1144160,Newlands,2019-01-30,1,Pakistan,53,1,124,5,63,2
+1144160,Newlands,2019-01-30,2,South Africa,65,1,176,2,0,0
+1144167,The Wanderers Stadium,2019-03-03,1,Sri Lanka,59,2,154,6,18,2
+1144167,The Wanderers Stadium,2019-03-03,2,South Africa,65,1,167,1,0,0
+1144168,SuperSport Park,2019-03-06,1,South Africa,75,0,163,7,13,3
+1144168,SuperSport Park,2019-03-06,2,Sri Lanka,52,2,86,8,0,0
+1144169,Kingsmead,2019-03-10,1,South Africa,58,1,174,3,99,1
+1144169,Kingsmead,2019-03-10,2,Sri Lanka,45,2,76,3,0,0
+1144170,St George's Park,2019-03-13,1,Sri Lanka,49,2,140,8,0,0
+1144170,St George's Park,2019-03-13,2,South Africa,45,1,145,3,0,0
+1144171,Newlands,2019-03-16,1,Sri Lanka,36,2,125,4,64,4
+1144171,Newlands,2019-03-16,2,South Africa,40,1,95,1,0,0
+1144483,Kennington Oval,2019-05-30,1,England,60,1,175,3,76,4
+1144483,Kennington Oval,2019-05-30,2,South Africa,44,2,163,8,0,0
+1144484,Trent Bridge,2019-05-31,1,Pakistan,45,3,60,7,0,0
+1144484,Trent Bridge,2019-05-31,2,West Indies,71,2,37,1,0,0
+1144485,Sophia Gardens,2019-06-01,1,Sri Lanka,51,3,85,7,0,0
+1144485,Sophia Gardens,2019-06-01,2,New Zealand,77,0,60,0,0,0
+1144487,Kennington Oval,2019-06-02,1,Bangladesh,65,1,179,3,86,2
+1144487,Kennington Oval,2019-06-02,2,South Africa,51,1,177,4,81,3
+1144488,Trent Bridge,2019-06-03,1,Pakistan,69,0,183,3,96,5
+1144488,Trent Bridge,2019-06-03,2,England,62,2,196,3,76,4
+1144490,The Rose Bowl,2019-06-05,1,South Africa,34,2,127,5,66,2
+1144490,The Rose Bowl,2019-06-05,2,India,34,1,137,2,59,1
+1144491,Kennington Oval,2019-06-05,1,Bangladesh,49,1,139,4,56,5
+1144491,Kennington Oval,2019-06-05,2,New Zealand,55,2,145,3,48,3
+1144492,Trent Bridge,2019-06-06,1,Australia,48,4,158,2,82,4
+1144492,Trent Bridge,2019-06-06,2,West Indies,54,2,167,4,52,3
+1144494,Sophia Gardens,2019-06-08,1,England,67,0,208,3,111,3
+1144494,Sophia Gardens,2019-06-08,2,Bangladesh,48,1,176,4,56,5
+1144496,Kennington Oval,2019-06-09,1,India,41,0,195,2,116,3
+1144496,Kennington Oval,2019-06-09,2,Australia,48,0,190,5,78,5
+1144497,The Rose Bowl,2019-06-10,1,South Africa,29,2,0,0,0,0
+1144499,The Cooper Associates County Ground,2019-06-12,1,Australia,56,0,200,4,51,6
+1144499,The Cooper Associates County Ground,2019-06-12,2,Pakistan,51,1,179,6,36,3
+1144501,The Rose Bowl,2019-06-14,1,West Indies,41,1,161,7,10,2
+1144501,The Rose Bowl,2019-06-14,2,England,62,0,151,2,0,0
+1144502,Kennington Oval,2019-06-15,1,Australia,53,0,184,2,97,5
+1144502,Kennington Oval,2019-06-15,2,Sri Lanka,87,0,149,8,11,2
+1144504,Old Trafford,2019-06-16,1,India,53,0,195,2,88,3
+1144504,Old Trafford,2019-06-16,2,Pakistan,38,1,174,5,0,0
+1144505,The Cooper Associates County Ground,2019-06-17,1,West Indies,32,1,211,4,78,3
+1144505,The Cooper Associates County Ground,2019-06-17,2,Bangladesh,70,1,235,2,17,0
+1144507,Edgbaston,2019-06-19,1,South Africa,40,1,129,3,72,2
+1144507,Edgbaston,2019-06-19,2,New Zealand,43,1,141,4,61,1
+1144508,Trent Bridge,2019-06-20,1,Australia,53,0,197,1,131,4
+1144508,Trent Bridge,2019-06-20,2,Bangladesh,53,1,192,3,88,4
+1144509,Headingley,2019-06-21,1,Sri Lanka,48,2,123,3,61,4
+1144509,Headingley,2019-06-21,2,England,38,2,138,4,36,4
+1144511,Old Trafford,2019-06-22,1,New Zealand,30,2,169,1,92,5
+1144511,Old Trafford,2019-06-22,2,West Indies,59,2,163,6,64,2
+1144512,Lord's,2019-06-23,1,Pakistan,58,0,159,3,91,4
+1144512,Lord's,2019-06-23,2,South Africa,38,1,151,4,70,4
+1144514,Lord's,2019-06-25,1,Australia,44,0,171,4,70,3
+1144514,Lord's,2019-06-25,2,England,39,3,152,4,30,3
+1144515,Edgbaston,2019-06-26,1,New Zealand,44,3,108,2,85,1
+1144515,Edgbaston,2019-06-26,2,Pakistan,43,1,140,2,58,1
+1144516,Old Trafford,2019-06-27,1,India,47,1,139,4,82,2
+1144516,Old Trafford,2019-06-27,2,West Indies,29,2,114,8,0,0
+1144517,Riverside Ground,2019-06-28,1,Sri Lanka,67,2,96,5,40,3
+1144517,Riverside Ground,2019-06-28,2,South Africa,53,1,153,0,0,0
+1144519,Lord's,2019-06-29,1,Australia,40,2,148,3,55,4
+1144519,Lord's,2019-06-29,2,New Zealand,31,1,110,7,16,2
+1144520,Edgbaston,2019-06-30,1,England,47,0,198,3,92,4
+1144520,Edgbaston,2019-06-30,2,India,28,1,206,3,72,1
+1144521,Riverside Ground,2019-07-01,1,Sri Lanka,49,0,204,4,85,2
+1144521,Riverside Ground,2019-07-01,2,West Indies,37,2,207,4,71,3
+1144522,Edgbaston,2019-07-02,1,India,69,0,182,4,63,5
+1144522,Edgbaston,2019-07-02,2,Bangladesh,40,1,185,5,61,4
+1144523,Riverside Ground,2019-07-03,1,England,67,0,174,4,64,4
+1144523,Riverside Ground,2019-07-03,2,New Zealand,37,2,134,6,15,2
+1144525,Lord's,2019-07-05,1,Pakistan,38,1,192,1,85,7
+1144525,Lord's,2019-07-05,2,Bangladesh,47,1,150,5,24,4
+1144526,Headingley,2019-07-06,1,Sri Lanka,52,2,148,3,64,2
+1144526,Headingley,2019-07-06,2,India,59,0,175,1,31,2
+1144527,Old Trafford,2019-07-06,1,South Africa,73,0,172,2,80,4
+1144527,Old Trafford,2019-07-06,2,Australia,44,2,183,3,88,5
+1144528,Old Trafford,2019-07-09,1,New Zealand,27,1,128,2,84,5
+1144528,Old Trafford,2019-07-09,2,India,24,4,126,2,71,4
+1144529,Edgbaston,2019-07-11,1,Australia,27,3,148,4,48,3
+1144529,Edgbaston,2019-07-11,2,England,50,0,176,2,0,0
+1144530,Lord's,2019-07-14,1,New Zealand,33,1,146,4,62,3
+1144530,Lord's,2019-07-14,2,England,39,1,131,3,71,6
+1144986,Perth Stadium,2018-11-04,1,Australia,19,3,133,7,0,0
+1144986,Perth Stadium,2018-11-04,2,South Africa,57,0,96,4,0,0
+1144987,Adelaide Oval,2018-11-09,1,Australia,58,1,124,6,49,3
+1144987,Adelaide Oval,2018-11-09,2,South Africa,48,2,129,4,47,3
+1144988,Bellerive Oval,2018-11-11,1,South Africa,27,2,163,1,130,2
+1144988,Bellerive Oval,2018-11-11,2,Australia,39,2,176,2,65,5
+1144997,Sydney Cricket Ground,2019-01-12,1,Australia,41,2,154,2,93,1
+1144997,Sydney Cricket Ground,2019-01-12,2,India,21,3,159,2,74,4
+1144998,Adelaide Oval,2019-01-15,1,Australia,38,2,167,3,93,4
+1144998,Adelaide Oval,2019-01-15,2,India,53,1,163,2,83,1
+1144999,Melbourne Cricket Ground,2019-01-18,1,Australia,30,2,160,4,40,4
+1144999,Melbourne Cricket Ground,2019-01-18,2,India,26,1,139,2,69,0
+1146720,Providence Stadium,2018-07-22,1,Bangladesh,31,1,156,0,92,3
+1146720,Providence Stadium,2018-07-22,2,West Indies,31,1,137,7,63,1
+1146721,Providence Stadium,2018-07-25,1,West Indies,34,1,148,3,89,6
+1146721,Providence Stadium,2018-07-25,2,Bangladesh,79,1,117,2,72,3
+1146722,"Warner Park, Basseterre",2018-07-28,1,Bangladesh,37,1,168,3,96,2
+1146722,"Warner Park, Basseterre",2018-07-28,2,West Indies,53,0,140,4,90,2
+1152841,Kennington Oval,2019-05-08,1,Pakistan,35,1,45,1,0,0
+1152842,The Rose Bowl,2019-05-11,1,England,57,0,204,3,112,0
+1152842,The Rose Bowl,2019-05-11,2,Pakistan,66,0,210,4,85,3
+1152843,County Ground,2019-05-14,1,Pakistan,59,2,205,2,94,5
+1152843,County Ground,2019-05-14,2,England,74,0,238,3,47,1
+1152844,Trent Bridge,2019-05-17,1,Pakistan,63,0,189,3,88,4
+1152844,Trent Bridge,2019-05-17,2,England,68,0,190,6,83,1
+1152845,Headingley,2019-05-19,1,England,95,1,181,5,75,3
+1152845,Headingley,2019-05-19,2,Pakistan,55,3,195,5,47,2
+1153243,Dubai International Cricket Stadium,2018-09-15,1,Bangladesh,24,2,174,5,63,3
+1153243,Dubai International Cricket Stadium,2018-09-15,2,Sri Lanka,42,4,82,6,0,0
+1153244,Dubai International Cricket Stadium,2018-09-16,2,Pakistan,46,1,74,1,0,0
+1153246,Dubai International Cricket Stadium,2018-09-18,1,India,56,1,181,1,48,5
+1153247,Dubai International Cricket Stadium,2018-09-19,1,Pakistan,25,2,132,5,5,3
+1153247,Dubai International Cricket Stadium,2018-09-19,2,India,58,0,106,2,0,0
+1153249,Dubai International Cricket Stadium,2018-09-21,1,Bangladesh,44,3,84,4,45,3
+1153249,Dubai International Cricket Stadium,2018-09-21,2,India,51,0,123,3,0,0
+1153251,Dubai International Cricket Stadium,2018-09-23,1,Pakistan,28,1,141,3,68,3
+1153251,Dubai International Cricket Stadium,2018-09-23,2,India,53,0,185,1,0,0
+1153254,Sheikh Zayed Stadium,2018-09-26,1,Bangladesh,27,3,160,2,52,5
+1153254,Sheikh Zayed Stadium,2018-09-26,2,Pakistan,37,3,128,3,37,3
+1153255,Dubai International Cricket Stadium,2018-09-28,1,Bangladesh,65,0,113,5,44,5
+1153255,Dubai International Cricket Stadium,2018-09-28,2,India,57,2,115,3,51,2
+1153314,"Shere Bangla National Stadium, Mirpur",2018-12-09,1,West Indies,31,1,98,5,66,3
+1153314,"Shere Bangla National Stadium, Mirpur",2018-12-09,2,Bangladesh,47,2,149,3,0,0
+1153315,"Shere Bangla National Stadium, Mirpur",2018-12-11,1,Bangladesh,47,1,144,2,64,4
+1153315,"Shere Bangla National Stadium, Mirpur",2018-12-11,2,West Indies,37,1,152,5,67,0
+1153316,Sylhet International Cricket Stadium,2018-12-14,1,West Indies,45,1,106,6,47,2
+1153316,Sylhet International Cricket Stadium,2018-12-14,2,Bangladesh,45,0,157,2,0,0
+1153635,"Shere Bangla National Stadium, Mirpur",2018-10-21,1,Bangladesh,39,2,147,4,85,2
+1153636,Zahur Ahmed Chowdhury Stadium,2018-10-24,2,Bangladesh,50,0,170,3,30,0
+1153637,Zahur Ahmed Chowdhury Stadium,2018-10-26,2,Bangladesh,80,1,194,2,14,0
+1153691,McLean Park,2019-01-23,1,New Zealand,34,2,123,8,0,0
+1153691,McLean Park,2019-01-23,2,India,43,1,113,1,0,0
+1153692,Bay Oval,2019-01-26,1,India,56,0,182,3,86,1
+1153692,Bay Oval,2019-01-26,2,New Zealand,63,2,171,7,0,1
+1153693,Bay Oval,2019-01-28,1,New Zealand,42,2,149,3,52,5
+1153693,Bay Oval,2019-01-28,2,India,44,1,174,2,27,0
+1153694,Seddon Park,2019-01-31,1,India,32,2,60,8,0,0
+1153694,Seddon Park,2019-01-31,2,New Zealand,51,2,42,0,0,0
+1153695,Westpac Stadium,2019-02-03,1,India,22,4,146,1,84,5
+1153695,Westpac Stadium,2019-02-03,2,New Zealand,38,2,151,5,28,3
+1153840,Bay Oval,2019-01-03,1,New Zealand,58,1,187,1,126,5
+1153840,Bay Oval,2019-01-03,2,Sri Lanka,70,0,196,4,60,6
+1153841,Bay Oval,2019-01-05,1,New Zealand,50,2,172,2,97,3
+1153841,Bay Oval,2019-01-05,2,Sri Lanka,50,1,188,7,60,2
+1153842,Saxton Oval,2019-01-08,1,New Zealand,55,2,179,1,130,1
+1153842,Saxton Oval,2019-01-08,2,Sri Lanka,73,1,175,5,1,4
+1153844,McLean Park,2019-02-13,1,Bangladesh,50,4,131,3,51,3
+1153844,McLean Park,2019-02-13,2,New Zealand,42,0,156,2,35,0
+1153845,Hagley Oval,2019-02-16,1,Bangladesh,32,2,158,4,36,4
+1153845,Hagley Oval,2019-02-16,2,New Zealand,59,1,170,1,0,0
+1153846,University Oval,2019-02-20,1,New Zealand,52,1,172,3,106,2
+1153846,University Oval,2019-02-20,2,Bangladesh,40,4,158,3,44,3
+1157378,Sheikh Zayed Stadium,2018-11-07,1,New Zealand,47,2,152,1,67,6
+1157378,Sheikh Zayed Stadium,2018-11-07,2,Pakistan,39,3,142,3,38,4
+1157379,Sheikh Zayed Stadium,2018-11-09,1,New Zealand,55,2,102,3,52,4
+1157379,Sheikh Zayed Stadium,2018-11-09,2,Pakistan,45,0,163,5,4,0
+1157380,Dubai International Cricket Stadium,2018-11-11,1,Pakistan,48,0,156,2,75,6
+1157380,Dubai International Cricket Stadium,2018-11-11,2,New Zealand,35,1,0,0,0,0
+1157754,Barsapara Cricket Stadium,2018-10-21,1,West Indies,59,1,195,6,68,1
+1157754,Barsapara Cricket Stadium,2018-10-21,2,India,71,1,232,1,23,0
+1157755,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2018-10-24,1,India,49,2,172,1,100,3
+1157755,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2018-10-24,2,West Indies,72,2,187,3,62,2
+1157756,Maharashtra Cricket Association Stadium,2018-10-27,1,West Indies,46,2,165,4,72,3
+1157756,Maharashtra Cricket Association Stadium,2018-10-27,2,India,54,1,161,4,25,5
+1157757,Brabourne Stadium,2018-10-29,1,India,56,0,205,2,116,3
+1157757,Brabourne Stadium,2018-10-29,2,West Indies,45,4,108,6,0,0
+1157758,Greenfield International Stadium,2018-11-01,1,West Indies,30,2,74,8,0,0
+1157758,Greenfield International Stadium,2018-11-01,2,India,52,1,53,0,0,0
+1158066,"Kensington Oval, Barbados",2019-02-20,1,West Indies,49,1,211,3,100,4
+1158066,"Kensington Oval, Barbados",2019-02-20,2,England,88,0,214,2,62,2
+1158067,"Kensington Oval, Barbados",2019-02-22,1,West Indies,49,0,159,5,81,1
+1158067,"Kensington Oval, Barbados",2019-02-22,2,England,42,2,186,3,35,5
+1158069,"National Cricket Stadium, Grenada",2019-02-27,1,England,89,0,175,3,154,3
+1158069,"National Cricket Stadium, Grenada",2019-02-27,2,West Indies,75,2,249,4,65,4
+1158070,"Darren Sammy National Cricket Stadium, St Lucia",2019-03-02,1,England,55,2,58,8,0,0
+1158070,"Darren Sammy National Cricket Stadium, St Lucia",2019-03-02,2,West Indies,97,3,18,0,0,0
+1161014,"The Village, Malahide",2019-05-03,2,England,46,3,129,3,24,0
+1168242,"Rajiv Gandhi International Stadium, Uppal",2019-03-02,1,Australia,38,1,135,5,63,1
+1168242,"Rajiv Gandhi International Stadium, Uppal",2019-03-02,2,India,42,1,134,3,64,0
+1168243,"Vidarbha Cricket Association Stadium, Jamtha",2019-03-05,1,India,39,2,165,4,46,4
+1168243,"Vidarbha Cricket Association Stadium, Jamtha",2019-03-05,2,Australia,60,0,126,5,56,5
+1168244,JSCA International Stadium Complex,2019-03-08,1,Australia,52,0,192,2,69,3
+1168244,JSCA International Stadium Complex,2019-03-08,2,India,40,3,187,3,54,4
+1168245,"Punjab Cricket Association IS Bindra Stadium, Mohali",2019-03-10,1,India,58,0,209,3,91,6
+1168245,"Punjab Cricket Association IS Bindra Stadium, Mohali",2019-03-10,2,Australia,47,2,214,2,98,2
+1168246,Arun Jaitley Stadium,2019-03-13,1,Australia,52,0,150,4,70,5
+1168246,Arun Jaitley Stadium,2019-03-13,2,India,43,1,135,5,59,4
+1168508,Castle Avenue,2019-05-05,1,West Indies,37,0,222,0,122,3
+1168509,Castle Avenue,2019-05-07,1,West Indies,48,0,149,2,64,7
+1168509,Castle Avenue,2019-05-07,2,Bangladesh,38,0,187,2,39,0
+1168511,"The Village, Malahide",2019-05-11,2,West Indies,73,0,179,4,79,1
+1168512,"The Village, Malahide",2019-05-13,1,West Indies,55,1,125,3,67,5
+1168512,"The Village, Malahide",2019-05-13,2,Bangladesh,58,1,149,3,41,1
+1168513,Castle Avenue,2019-05-15,2,Bangladesh,58,0,218,4,18,1
+1168514,"The Village, Malahide",2019-05-17,1,West Indies,50,0,102,1,0,0
+1168514,"The Village, Malahide",2019-05-17,2,Bangladesh,94,2,119,3,0,0
+1169332,"Grange Cricket Club, Raeburn Place",2019-05-21,1,Sri Lanka,53,0,170,4,99,4
+1174238,Sharjah Cricket Stadium,2019-03-22,1,Pakistan,40,1,154,3,86,1
+1174238,Sharjah Cricket Stadium,2019-03-22,2,Australia,61,0,160,1,60,1
+1174239,Sharjah Cricket Stadium,2019-03-24,1,Pakistan,49,2,162,2,73,3
+1174239,Sharjah Cricket Stadium,2019-03-24,2,Australia,48,0,187,1,50,1
+1174240,Sheikh Zayed Stadium,2019-03-27,1,Australia,48,2,128,2,90,2
+1174240,Sheikh Zayed Stadium,2019-03-27,2,Pakistan,21,3,145,3,20,4
+1174241,Dubai International Cricket Stadium,2019-03-29,1,Australia,39,0,152,5,86,2
+1174241,Dubai International Cricket Stadium,2019-03-29,2,Pakistan,51,1,161,1,59,6
+1174242,Dubai International Cricket Stadium,2019-03-31,1,Australia,57,0,163,2,107,5
+1174242,Dubai International Cricket Stadium,2019-03-31,2,Pakistan,55,1,184,3,68,3
+1183537,Sydney Cricket Ground,2020-03-13,1,Australia,51,0,143,4,64,3
+1183537,Sydney Cricket Ground,2020-03-13,2,New Zealand,28,1,152,8,7,1
+1185310,Newlands,2020-02-04,1,England,52,1,139,5,67,2
+1185310,Newlands,2020-02-04,2,South Africa,41,1,177,1,41,1
+1185311,Kingsmead,2020-02-07,1,South Africa,61,1,10,1,0,0
+1185312,The Wanderers Stadium,2020-02-09,1,South Africa,36,1,142,4,78,2
+1185312,The Wanderers Stadium,2020-02-09,2,England,77,2,167,5,13,1
+1185319,Boland Park,2020-02-29,1,South Africa,50,3,159,1,82,3
+1185319,Boland Park,2020-02-29,2,Australia,58,2,139,4,20,4
+1185320,Mangaung Oval,2020-03-04,1,Australia,73,1,149,3,49,6
+1185320,Mangaung Oval,2020-03-04,2,South Africa,42,1,154,3,78,0
+1185321,Senwes Park,2020-03-07,1,Australia,38,1,142,3,74,3
+1185321,Senwes Park,2020-03-07,2,South Africa,54,1,168,2,36,1
+1187021,"MA Chidambaram Stadium, Chepauk",2019-12-15,1,India,33,2,183,3,71,3
+1187021,"MA Chidambaram Stadium, Chepauk",2019-12-15,2,West Indies,36,1,196,1,59,0
+1187022,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2019-12-18,1,India,55,0,205,2,127,3
+1187022,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2019-12-18,2,West Indies,56,0,201,8,23,2
+1187023,Barabati Stadium,2019-12-22,1,West Indies,44,0,153,4,118,1
+1187023,Barabati Stadium,2019-12-22,2,India,59,0,178,5,79,1
+1187027,Wankhede Stadium,2020-01-14,1,India,45,1,150,4,60,5
+1187027,Wankhede Stadium,2020-01-14,2,Australia,84,0,174,0,0,0
+1187028,Saurashtra Cricket Association Stadium,2020-01-17,1,India,55,0,194,3,91,3
+1187028,Saurashtra Cricket Association Stadium,2020-01-17,2,Australia,55,1,180,4,69,5
+1187029,M.Chinnaswamy Stadium,2020-01-19,1,Australia,56,2,167,2,63,5
+1187029,M.Chinnaswamy Stadium,2020-01-19,2,India,61,0,163,2,65,1
+1187682,Seddon Park,2020-02-05,1,India,55,2,196,1,96,1
+1187682,Seddon Park,2020-02-05,2,New Zealand,54,0,238,3,56,3
+1187683,Eden Park,2020-02-08,1,New Zealand,52,0,143,7,78,1
+1187683,Eden Park,2020-02-08,2,India,59,3,130,4,62,3
+1187684,Bay Oval,2020-02-11,1,India,56,2,161,2,79,3
+1187684,Bay Oval,2020-02-11,2,New Zealand,65,0,158,5,77,0
+1188624,"Providence Stadium, Guyana",2019-08-08,1,West Indies,42,0,12,1,0,0
+1188625,"Queen's Park Oval, Trinidad",2019-08-11,1,India,55,1,157,2,67,4
+1188625,"Queen's Park Oval, Trinidad",2019-08-11,2,West Indies,46,1,155,7,9,2
+1188626,"Queen's Park Oval, Trinidad",2019-08-14,1,West Indies,114,0,126,7,0,0
+1188626,"Queen's Park Oval, Trinidad",2019-08-14,2,India,83,1,173,3,0,0
+1193504,"R.Premadasa Stadium, Khettarama",2019-07-26,1,Sri Lanka,77,1,168,3,69,4
+1193504,"R.Premadasa Stadium, Khettarama",2019-07-26,2,Bangladesh,36,3,168,6,19,1
+1193505,"R.Premadasa Stadium, Khettarama",2019-07-28,1,Bangladesh,35,2,134,4,69,2
+1193505,"R.Premadasa Stadium, Khettarama",2019-07-28,2,Sri Lanka,69,0,148,3,25,0
+1193506,"R.Premadasa Stadium, Khettarama",2019-07-31,1,Sri Lanka,36,1,152,2,106,5
+1193506,"R.Premadasa Stadium, Khettarama",2019-07-31,2,Bangladesh,41,2,131,8,0,0
+1198238,Old Trafford,2020-09-11,1,Australia,46,2,172,3,76,4
+1198238,Old Trafford,2020-09-11,2,England,22,2,168,4,85,3
+1198239,Old Trafford,2020-09-13,1,England,32,2,117,5,82,2
+1198239,Old Trafford,2020-09-13,2,Australia,44,2,122,6,41,2
+1198240,Old Trafford,2020-09-16,1,England,67,2,153,3,82,2
+1198240,Old Trafford,2020-09-16,2,Australia,47,2,175,3,83,2
+1198247,The Rose Bowl,2020-07-30,2,England,59,3,115,1,0,0
+1198248,The Rose Bowl,2020-08-01,2,England,77,2,139,4,0,0
+1198249,The Rose Bowl,2020-08-04,1,England,59,3,200,4,69,3
+1198487,National Stadium,2019-09-30,1,Pakistan,47,0,169,3,89,4
+1198487,National Stadium,2019-09-30,2,Sri Lanka,28,4,174,1,36,5
+1198488,National Stadium,2019-10-02,1,Sri Lanka,49,1,166,2,82,6
+1198488,National Stadium,2019-10-02,2,Pakistan,67,0,170,3,62,2
+1203673,"Kensington Oval, Barbados",2020-01-07,2,West Indies,62,1,122,4,0,0
+1203674,"Kensington Oval, Barbados",2020-01-09,2,West Indies,33,3,168,5,41,1
+1203675,"National Cricket Stadium, Grenada",2020-01-12,2,West Indies,58,2,141,3,0,0
+1213871,Sinhalese Sports Club Ground,2020-02-22,1,West Indies,31,1,164,3,94,3
+1213871,Sinhalese Sports Club Ground,2020-02-22,2,Sri Lanka,78,0,153,6,59,3
+1213872,"Mahinda Rajapaksa International Cricket Stadium, Sooriyawewa",2020-02-26,1,Sri Lanka,49,2,197,0,99,6
+1213872,"Mahinda Rajapaksa International Cricket Stadium, Sooriyawewa",2020-02-26,2,West Indies,54,0,130,10,0,0
+1213873,Pallekele International Cricket Stadium,2020-03-01,1,Sri Lanka,60,0,159,5,88,5
+1213873,Pallekele International Cricket Stadium,2020-03-01,2,West Indies,64,0,155,3,82,6
+1214667,Sylhet International Cricket Stadium,2020-03-01,1,Bangladesh,44,0,183,4,94,3
+1214668,Sylhet International Cricket Stadium,2020-03-03,1,Bangladesh,65,1,174,2,83,5
+1214669,Sylhet International Cricket Stadium,2020-03-06,1,Bangladesh,53,0,226,0,43,3
+1223955,Sydney Cricket Ground,2020-11-27,1,Australia,51,0,213,2,110,4
+1223955,Sydney Cricket Ground,2020-11-27,2,India,80,3,170,3,58,2
+1223956,Sydney Cricket Ground,2020-11-29,1,Australia,59,0,216,2,114,2
+1223956,Sydney Cricket Ground,2020-11-29,2,India,67,2,192,2,79,5
+1223957,Manuka Oval,2020-12-02,1,India,49,1,143,4,110,0
+1223957,Manuka Oval,2020-12-02,2,Australia,51,1,176,5,62,4
+1233461,Rawalpindi Cricket Stadium,2020-10-30,1,Pakistan,41,0,150,4,90,4
+1233462,Rawalpindi Cricket Stadium,2020-11-01,2,Pakistan,68,0,140,4,0,0
+1233463,Rawalpindi Cricket Stadium,2020-11-03,2,Pakistan,46,3,162,3,70,3
+1233976,University Oval,2021-03-20,1,Bangladesh,33,2,92,5,6,3
+1233976,University Oval,2021-03-20,2,New Zealand,80,1,52,1,0,0
+1233977,Hagley Oval,2021-03-23,1,Bangladesh,26,1,157,2,88,3
+1233977,Hagley Oval,2021-03-23,2,New Zealand,51,2,160,2,64,1
+1233978,Basin Reserve,2021-03-26,1,New Zealand,51,2,160,2,107,2
+1233978,Basin Reserve,2021-03-26,2,Bangladesh,32,3,97,5,25,2
+1239534,"Riverside Ground, Chester-le-Street",2021-06-29,1,Sri Lanka,47,3,119,5,19,2
+1239534,"Riverside Ground, Chester-le-Street",2021-06-29,2,England,74,3,115,2,0,0
+1239535,"Kennington Oval, London",2021-07-01,1,Sri Lanka,47,4,131,2,63,3
+1239535,"Kennington Oval, London",2021-07-01,2,England,65,0,159,2,20,0
+1239536,"County Ground, Bristol",2021-07-04,1,Sri Lanka,45,4,113,5,8,1
+1239537,"Sophia Gardens, Cardiff",2021-07-08,1,Pakistan,46,4,95,6,0,0
+1239537,"Sophia Gardens, Cardiff",2021-07-08,2,England,61,1,81,0,0,0
+1239538,"Lord's, London",2021-07-10,1,England,72,2,157,5,18,3
+1239538,"Lord's, London",2021-07-10,2,Pakistan,38,3,154,6,3,1
+1239539,"Edgbaston, Birmingham",2021-07-13,1,Pakistan,35,1,192,1,104,7
+1239539,"Edgbaston, Birmingham",2021-07-13,2,England,84,2,186,3,62,2
+1243393,Maharashtra Cricket Association Stadium,2021-03-23,1,India,39,0,166,4,112,1
+1243393,Maharashtra Cricket Association Stadium,2021-03-23,2,England,89,0,154,9,8,1
+1243394,Maharashtra Cricket Association Stadium,2021-03-26,1,India,41,2,169,1,126,3
+1243394,Maharashtra Cricket Association Stadium,2021-03-26,2,England,59,0,259,4,19,0
+1243395,Maharashtra Cricket Association Stadium,2021-03-28,1,India,65,0,218,6,46,4
+1243395,Maharashtra Cricket Association Stadium,2021-03-28,2,England,66,2,193,6,63,1
+1244022,Shere Bangla National Stadium,2021-01-20,1,West Indies,38,2,84,8,0,0
+1244022,Shere Bangla National Stadium,2021-01-20,2,Bangladesh,39,0,86,4,0,0
+1244023,Shere Bangla National Stadium,2021-01-22,1,West Indies,22,1,105,8,21,1
+1244023,Shere Bangla National Stadium,2021-01-22,2,Bangladesh,42,1,107,2,0,0
+1244024,Zahur Ahmed Chowdhury Stadium,2021-01-25,1,Bangladesh,53,2,144,2,100,2
+1244024,Zahur Ahmed Chowdhury Stadium,2021-01-25,2,West Indies,44,2,110,4,23,4
+1251572,"SuperSport Park, Centurion",2021-04-02,1,South Africa,43,3,148,2,82,1
+1251572,"SuperSport Park, Centurion",2021-04-02,2,Pakistan,37,1,176,4,61,2
+1251573,The Wanderers Stadium,2021-04-04,1,South Africa,56,1,191,1,94,4
+1251573,The Wanderers Stadium,2021-04-04,2,Pakistan,68,1,158,6,98,2
+1251574,"SuperSport Park, Centurion",2021-04-07,1,Pakistan,44,0,186,3,90,4
+1251574,"SuperSport Park, Centurion",2021-04-07,2,South Africa,54,1,168,4,70,5
+1251951,"The Village, Malahide, Dublin",2021-07-13,2,South Africa,51,1,138,4,58,5
+1251952,"The Village, Malahide, Dublin",2021-07-16,1,South Africa,58,0,188,1,100,3
+1252069,Sir Vivian Richards Stadium,2021-03-10,1,Sri Lanka,57,0,132,7,43,3
+1252069,Sir Vivian Richards Stadium,2021-03-10,2,West Indies,56,0,135,1,45,1
+1252070,Sir Vivian Richards Stadium,2021-03-12,1,Sri Lanka,51,3,142,2,80,3
+1252070,Sir Vivian Richards Stadium,2021-03-12,2,West Indies,57,0,141,2,76,3
+1252071,Sir Vivian Richards Stadium,2021-03-14,1,Sri Lanka,50,0,135,6,89,0
+1252071,Sir Vivian Richards Stadium,2021-03-14,2,West Indies,40,2,170,2,66,1
+1262344,"Shere Bangla National Stadium, Mirpur",2021-05-23,1,Bangladesh,40,1,153,3,64,2
+1262344,"Shere Bangla National Stadium, Mirpur",2021-05-23,2,Sri Lanka,49,2,142,5,33,3
+1262346,Sher-e-Bangla National Cricket Stadium,2021-05-25,1,Bangladesh,44,2,144,5,58,3
+1262346,Sher-e-Bangla National Cricket Stadium,2021-05-25,2,Sri Lanka,38,1,103,8,0,0
+1262347,"Shere Bangla National Stadium, Mirpur",2021-05-28,1,Sri Lanka,77,0,140,4,69,2
+1262347,"Shere Bangla National Stadium, Mirpur",2021-05-28,2,Bangladesh,29,3,142,5,18,2
+1262755,"R Premadasa Stadium, Colombo",2021-07-18,1,Sri Lanka,55,1,131,5,76,3
+1262755,"R Premadasa Stadium, Colombo",2021-07-18,2,India,91,1,172,2,0,0
+1262756,"R Premadasa Stadium, Colombo",2021-07-20,1,Sri Lanka,59,0,136,6,80,3
+1262756,"R Premadasa Stadium, Colombo",2021-07-20,2,India,60,2,149,5,68,0
+1262757,"R Premadasa Stadium, Colombo",2021-07-23,1,India,66,1,152,7,7,2
+1262757,"R Premadasa Stadium, Colombo",2021-07-23,2,Sri Lanka,55,1,172,6,0,0
+1263161,"Kensington Oval, Bridgetown, Barbados",2021-07-20,1,Australia,50,0,137,4,65,5
+1263161,"Kensington Oval, Bridgetown, Barbados",2021-07-20,2,West Indies,35,6,88,4,0,0
+1263162,"Kensington Oval, Bridgetown, Barbados",2021-07-22,1,Australia,37,3,103,5,47,2
+1263162,"Kensington Oval, Bridgetown, Barbados",2021-07-22,2,West Indies,51,3,140,3,0,0
+1263163,"Kensington Oval, Bridgetown, Barbados",2021-07-26,1,West Indies,37,1,98,7,17,2
+1263163,"Kensington Oval, Bridgetown, Barbados",2021-07-26,2,Australia,34,2,119,2,0,0
+1267677,Harare Sports Club,2021-07-16,1,Bangladesh,38,2,161,3,77,4
+1267678,Harare Sports Club,2021-07-18,2,Bangladesh,40,1,139,6,63,0
+1267679,Harare Sports Club,2021-07-20,2,Bangladesh,57,0,191,4,54,1
+1271627,"R Premadasa Stadium, Colombo",2021-09-02,1,Sri Lanka,50,0,160,3,90,6
+1271627,"R Premadasa Stadium, Colombo",2021-09-02,2,South Africa,49,1,161,3,76,3
+1271628,"R Premadasa Stadium, Colombo",2021-09-04,1,South Africa,50,1,159,2,74,3
+1271628,"R Premadasa Stadium, Colombo",2021-09-04,2,Sri Lanka,43,3,154,7,0,0
+1271629,"R Premadasa Stadium, Colombo",2021-09-07,1,Sri Lanka,53,2,112,5,38,2
+1271629,"R Premadasa Stadium, Colombo",2021-09-07,2,South Africa,46,4,79,6,0,0
+1276907,"Kennington Oval, London",2022-07-12,1,England,30,5,80,5,0,0
+1276907,"Kennington Oval, London",2022-07-12,2,India,56,0,58,0,0,0
+1276908,"Lord's, London",2022-07-14,1,England,46,1,155,5,45,4
+1276908,"Lord's, London",2022-07-14,2,India,28,2,118,8,0,0
+1276909,"Old Trafford, Manchester",2022-07-17,1,England,66,3,148,4,45,3
+1276909,"Old Trafford, Manchester",2022-07-17,2,India,43,3,188,2,30,0
+1276910,"Riverside Ground, Chester-le-Street",2022-07-19,1,South Africa,54,1,190,1,89,3
+1276910,"Riverside Ground, Chester-le-Street",2022-07-19,2,England,47,0,168,6,56,4
+1276911,"Old Trafford, Manchester",2022-07-22,1,England,66,4,135,6,0,0
+1276911,"Old Trafford, Manchester",2022-07-22,2,South Africa,39,5,44,5,0,0
+1276912,"Headingley, Leeds",2022-07-24,1,South Africa,60,1,99,1,0,0
+1277073,"SuperSport Park, Centurion",2021-11-26,1,South Africa,43,2,148,3,86,3
+1277082,"Boland Park, Paarl",2022-01-19,1,South Africa,39,1,171,2,86,1
+1277082,"Boland Park, Paarl",2022-01-19,2,India,55,1,148,6,62,1
+1277083,"Boland Park, Paarl",2022-01-21,1,India,57,0,160,5,70,1
+1277083,"Boland Park, Paarl",2022-01-21,2,South Africa,66,0,179,3,43,0
+1277084,"Newlands, Cape Town",2022-01-23,1,South Africa,53,2,175,3,59,5
+1277084,"Newlands, Cape Town",2022-01-23,2,India,50,1,160,5,73,4
+1277085,"Sabina Park, Kingston, Jamaica",2022-01-08,1,West Indies,36,1,168,3,65,6
+1277086,"Sabina Park, Kingston, Jamaica",2022-01-13,1,West Indies,39,1,116,7,74,2
+1277087,"Sabina Park, Kingston, Jamaica",2022-01-16,1,West Indies,69,0,110,7,33,3
+1277097,"SuperSport Park, Centurion",2022-03-18,1,Bangladesh,33,0,190,3,91,4
+1277097,"SuperSport Park, Centurion",2022-03-18,2,South Africa,42,3,157,2,77,5
+1277098,"The Wanderers Stadium, Johannesburg",2022-03-20,1,Bangladesh,30,3,116,3,48,3
+1277098,"The Wanderers Stadium, Johannesburg",2022-03-20,2,South Africa,72,0,123,3,0,0
+1277099,"SuperSport Park, Centurion",2022-03-23,1,South Africa,57,1,97,9,0,0
+1277099,"SuperSport Park, Centurion",2022-03-23,2,Bangladesh,58,0,98,1,0,0
+1278676,"Narendra Modi Stadium, Ahmedabad",2022-02-06,1,West Indies,39,1,126,7,11,2
+1278676,"Narendra Modi Stadium, Ahmedabad",2022-02-06,2,India,67,0,111,4,0,0
+1278677,"Narendra Modi Stadium, Ahmedabad",2022-02-09,1,India,37,1,146,4,54,4
+1278677,"Narendra Modi Stadium, Ahmedabad",2022-02-09,2,West Indies,38,2,133,6,22,2
+1278678,"Narendra Modi Stadium, Ahmedabad",2022-02-11,1,India,42,3,151,3,72,4
+1278678,"Narendra Modi Stadium, Ahmedabad",2022-02-11,2,West Indies,47,3,122,7,0,0
+1281444,"VRA Ground, Amstelveen",2022-06-17,1,England,67,1,267,1,164,2
+1281445,"VRA Ground, Amstelveen",2022-06-19,2,England,66,0,173,4,0,0
+1281446,"VRA Ground, Amstelveen",2022-06-22,2,England,85,2,163,0,0,0
+1288313,"Gaddafi Stadium, Lahore",2022-03-29,1,Australia,72,0,160,5,81,2
+1288313,"Gaddafi Stadium, Lahore",2022-03-29,2,Pakistan,52,1,158,5,15,4
+1288314,"Gaddafi Stadium, Lahore",2022-03-31,1,Australia,65,1,206,2,77,5
+1288314,"Gaddafi Stadium, Lahore",2022-03-31,2,Pakistan,63,0,216,2,70,2
+1288315,"Gaddafi Stadium, Lahore",2022-04-02,1,Australia,31,3,170,6,9,1
+1288315,"Gaddafi Stadium, Lahore",2022-04-02,2,Pakistan,57,1,157,0,0,0
+1288987,"Bay Oval, Mount Maunganui",2022-03-29,2,New Zealand,60,1,144,2,0,0
+1288988,"Seddon Park, Hamilton",2022-04-02,1,New Zealand,32,5,149,2,83,2
+1288989,"Seddon Park, Hamilton",2022-04-04,1,New Zealand,32,1,195,1,106,6
+1294969,Pallekele International Cricket Stadium,2022-01-16,2,Sri Lanka,59,1,172,2,69,2
+1294970,Pallekele International Cricket Stadium,2022-01-18,2,Sri Lanka,34,3,178,2,68,4
+1294971,Pallekele International Cricket Stadium,2022-01-21,1,Sri Lanka,43,0,147,5,64,4
+1302349,"VRA Ground, Amstelveen",2022-05-31,2,West Indies,53,0,171,3,25,0
+1302350,"VRA Ground, Amstelveen",2022-06-02,2,West Indies,41,2,132,3,44,0
+1302351,"VRA Ground, Amstelveen",2022-06-04,1,West Indies,51,0,190,1,67,4
+1303309,"The Village, Malahide, Dublin",2022-07-10,2,New Zealand,45,2,155,4,105,3
+1303310,"The Village, Malahide, Dublin",2022-07-12,2,New Zealand,56,2,163,5,0,0
+1303311,"The Village, Malahide, Dublin",2022-07-15,1,New Zealand,79,1,175,3,106,2
+1307296,Pallekele International Cricket Stadium,2022-06-14,1,Sri Lanka,56,0,158,4,86,3
+1307296,Pallekele International Cricket Stadium,2022-06-14,2,Australia,57,1,199,7,26,0
+1307297,Pallekele International Cricket Stadium,2022-06-16,1,Sri Lanka,43,2,149,5,28,2
+1307297,Pallekele International Cricket Stadium,2022-06-16,2,Australia,47,1,142,9,0,0
+1307298,"R Premadasa Stadium, Colombo",2022-06-19,1,Australia,47,1,146,4,98,1
+1307298,"R Premadasa Stadium, Colombo",2022-06-19,2,Sri Lanka,54,1,169,1,69,3
+1307299,"R Premadasa Stadium, Colombo",2022-06-21,1,Sri Lanka,35,3,170,2,53,5
+1307299,"R Premadasa Stadium, Colombo",2022-06-21,2,Australia,45,1,152,6,57,3
+1307300,"R Premadasa Stadium, Colombo",2022-06-24,1,Sri Lanka,35,3,105,5,20,2
+1307300,"R Premadasa Stadium, Colombo",2022-06-24,2,Australia,34,3,130,3,0,0
+1307479,"Grange Cricket Club Ground, Raeburn Place, Edinburgh",2022-07-31,2,New Zealand,53,0,194,3,60,0
+1311737,"Hazelaarweg, Rotterdam",2022-08-16,1,Pakistan,37,1,178,3,99,2
+1311738,"Hazelaarweg, Rotterdam",2022-08-18,2,Pakistan,49,2,142,1,0,0
+1311739,"Hazelaarweg, Rotterdam",2022-08-21,1,Pakistan,38,1,114,4,54,5
+1315038,Multan Cricket Stadium,2022-06-08,1,West Indies,41,1,177,3,87,4
+1315038,Multan Cricket Stadium,2022-06-08,2,Pakistan,41,1,179,1,86,3
+1315039,Multan Cricket Stadium,2022-06-10,1,Pakistan,45,1,163,5,67,2
+1315039,Multan Cricket Stadium,2022-06-10,2,West Indies,71,2,84,8,0,0
+1315040,Multan Cricket Stadium,2022-06-12,1,Pakistan,56,0,147,6,66,3
+1315040,Multan Cricket Stadium,2022-06-12,2,West Indies,52,2,164,8,0,0
+1317152,"Providence Stadium, Guyana",2022-07-10,1,West Indies,30,1,107,8,12,0
+1317152,"Providence Stadium, Guyana",2022-07-10,2,Bangladesh,60,2,91,2,0,0
+1317153,"Providence Stadium, Guyana",2022-07-13,1,West Indies,26,0,82,10,0,0
+1317153,"Providence Stadium, Guyana",2022-07-13,2,Bangladesh,41,0,71,1,0,0
+1317154,"Providence Stadium, Guyana",2022-07-16,1,West Indies,20,3,121,3,37,4
+1317154,"Providence Stadium, Guyana",2022-07-16,2,Bangladesh,32,1,122,5,25,0
+1317476,"Tony Ireland Stadium, Townsville",2022-08-28,2,Australia,50,1,151,4,0,0
+1317477,"Tony Ireland Stadium, Townsville",2022-08-31,2,Australia,57,2,43,0,0,0
+1317478,"Riverway Stadium, Townsville",2022-09-03,1,Australia,37,3,104,7,0,0
+1317479,"Cazaly's Stadium, Cairns",2022-09-06,1,New Zealand,29,1,143,2,60,6
+1317479,"Cazaly's Stadium, Cairns",2022-09-06,2,Australia,38,4,167,2,28,2
+1317480,"Cazaly's Stadium, Cairns",2022-09-08,1,Australia,31,4,97,4,67,1
+1317480,"Cazaly's Stadium, Cairns",2022-09-08,2,New Zealand,14,3,68,7,0,0
+1317481,"Cazaly's Stadium, Cairns",2022-09-11,1,Australia,19,2,157,1,91,2
+1317481,"Cazaly's Stadium, Cairns",2022-09-11,2,New Zealand,56,1,129,5,57,4
+1317489,Adelaide Oval,2022-11-17,1,England,47,3,168,4,72,2
+1317489,Adelaide Oval,2022-11-17,2,Australia,65,0,184,4,42,0
+1317490,Sydney Cricket Ground,2022-11-19,1,Australia,53,2,151,2,76,4
+1317490,Sydney Cricket Ground,2022-11-19,2,England,45,3,163,7,0,0
+1317491,Melbourne Cricket Ground,2022-11-22,1,Australia,64,0,212,2,79,3
+1317491,Melbourne Cricket Ground,2022-11-22,2,England,49,1,93,9,0,0
+1317900,"Queen's Park Oval, Port of Spain, Trinidad",2022-07-22,1,India,73,0,175,4,60,3
+1317900,"Queen's Park Oval, Port of Spain, Trinidad",2022-07-22,2,West Indies,52,1,167,4,86,1
+1317901,"Queen's Park Oval, Port of Spain, Trinidad",2022-07-24,1,West Indies,71,1,147,2,93,3
+1317901,"Queen's Park Oval, Port of Spain, Trinidad",2022-07-24,2,India,42,0,170,5,100,3
+1317902,"Queen's Park Oval, Port of Spain, Trinidad",2022-07-27,1,India,45,0,180,3,0,0
+1317902,"Queen's Park Oval, Port of Spain, Trinidad",2022-07-27,2,West Indies,48,3,89,7,0,0
+1317911,"Kensington Oval, Bridgetown, Barbados",2022-08-17,1,New Zealand,50,1,114,6,26,3
+1317911,"Kensington Oval, Bridgetown, Barbados",2022-08-17,2,West Indies,51,2,142,3,0,0
+1317912,"Kensington Oval, Bridgetown, Barbados",2022-08-19,1,New Zealand,32,3,133,3,47,4
+1317912,"Kensington Oval, Bridgetown, Barbados",2022-08-19,2,West Indies,27,6,134,4,0,0
+1317913,"Kensington Oval, Bridgetown, Barbados",2022-08-21,1,West Indies,24,0,172,4,105,4
+1317913,"Kensington Oval, Bridgetown, Barbados",2022-08-21,2,New Zealand,61,1,179,2,67,2
+1322278,"Eden Park, Auckland",2022-11-25,1,India,40,0,170,4,96,3
+1322278,"Eden Park, Auckland",2022-11-25,2,New Zealand,42,1,199,2,68,0
+1322279,"Seddon Park, Hamilton",2022-11-27,1,India,60,1,29,0,0,0
+1322280,"Hagley Oval, Christchurch",2022-11-30,1,India,43,1,137,6,39,3
+1322280,"Hagley Oval, Christchurch",2022-11-30,2,New Zealand,59,0,45,1,0,0
+1322359,"Eden Park, Auckland",2023-03-25,1,New Zealand,54,1,167,5,53,4
+1322359,"Eden Park, Auckland",2023-03-25,2,Sri Lanka,31,5,45,5,0,0
+1322361,"Seddon Park, Hamilton",2023-03-31,1,Sri Lanka,26,3,126,6,5,1
+1322361,"Seddon Park, Hamilton",2023-03-31,2,New Zealand,39,3,120,1,0,0
+1323292,Harare Sports Club,2022-08-05,1,Bangladesh,51,0,162,2,90,1
+1323293,Harare Sports Club,2022-08-07,1,Bangladesh,62,0,144,4,84,5
+1323294,Harare Sports Club,2022-08-10,1,Bangladesh,47,3,142,2,67,4
+1325549,Harare Sports Club,2022-08-18,2,India,43,0,149,0,0,0
+1325550,Harare Sports Club,2022-08-20,2,India,75,2,92,3,0,0
+1325551,Harare Sports Club,2022-08-22,1,India,41,0,169,2,79,6
+1327509,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2022-10-06,1,South Africa,41,0,208,4,0,0
+1327509,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2022-10-06,2,India,24,2,216,6,0,0
+1327510,"JSCA International Stadium Complex, Ranchi",2022-10-09,1,South Africa,40,2,181,3,57,2
+1327510,"JSCA International Stadium Complex, Ranchi",2022-10-09,2,India,55,2,181,1,46,0
+1327511,"Arun Jaitley Stadium, Delhi",2022-10-11,1,South Africa,26,3,73,7,0,0
+1327511,"Arun Jaitley Stadium, Delhi",2022-10-11,2,India,53,1,52,2,0,0
+1336052,"Sophia Gardens, Cardiff",2023-09-08,1,England,50,0,152,4,89,2
+1336052,"Sophia Gardens, Cardiff",2023-09-08,2,New Zealand,61,0,177,2,59,0
+1336053,"The Rose Bowl, Southampton",2023-09-10,1,England,46,4,180,3,0,0
+1336053,"The Rose Bowl, Southampton",2023-09-10,2,New Zealand,51,2,96,8,0,0
+1336054,"Kennington Oval, London",2023-09-13,1,England,55,2,252,2,61,6
+1336054,"Kennington Oval, London",2023-09-13,2,New Zealand,36,3,151,7,0,0
+1336055,"Lord's, London",2023-09-15,1,England,56,1,187,3,68,5
+1336055,"Lord's, London",2023-09-15,2,New Zealand,51,2,160,7,0,0
+1336129,"Trent Bridge, Nottingham",2023-09-23,1,England,72,2,179,3,83,3
+1336130,"County Ground, Bristol",2023-09-26,1,England,107,2,173,2,0,0
+1339595,"Mangaung Oval, Bloemfontein",2023-01-27,1,South Africa,75,1,145,3,78,3
+1339595,"Mangaung Oval, Bloemfontein",2023-01-27,2,England,56,0,200,7,15,3
+1339596,"Mangaung Oval, Bloemfontein",2023-01-29,1,England,42,2,206,2,94,3
+1339596,"Mangaung Oval, Bloemfontein",2023-01-29,2,South Africa,64,0,209,4,74,1
+1339597,"Diamond Oval, Kimberley",2023-02-01,1,England,20,3,219,0,107,4
+1339597,"Diamond Oval, Kimberley",2023-02-01,2,South Africa,55,1,224,6,8,3
+1339602,"Buffalo Park, East London",2023-03-18,1,West Indies,71,2,171,3,93,3
+1339602,"Buffalo Park, East London",2023-03-18,2,South Africa,78,1,204,7,5,2
+1339603,"Senwes Park, Potchefstroom",2023-03-21,1,West Indies,61,1,149,6,50,3
+1339603,"Senwes Park, Potchefstroom",2023-03-21,2,South Africa,68,2,196,4,0,0
+1339607,"Willowmoore Park, Benoni",2023-03-31,2,South Africa,40,1,150,1,0,0
+1339608,"The Wanderers Stadium, Johannesburg",2023-04-02,1,South Africa,43,2,219,2,108,4
+1339611,"National Stadium, Karachi",2023-01-09,1,New Zealand,48,2,132,3,75,4
+1339611,"National Stadium, Karachi",2023-01-09,2,Pakistan,49,1,148,2,61,1
+1339612,"National Stadium, Karachi",2023-01-11,1,New Zealand,63,1,156,5,42,4
+1339612,"National Stadium, Karachi",2023-01-11,2,Pakistan,31,2,135,5,16,3
+1339613,"National Stadium, Karachi",2023-01-13,1,Pakistan,37,2,169,2,74,5
+1339613,"National Stadium, Karachi",2023-01-13,2,New Zealand,44,1,177,5,60,2
+1339619,Rawalpindi Cricket Stadium,2023-04-27,1,New Zealand,49,1,173,2,66,4
+1339619,Rawalpindi Cricket Stadium,2023-04-27,2,Pakistan,57,0,181,3,53,2
+1339620,Rawalpindi Cricket Stadium,2023-04-29,1,New Zealand,53,1,185,1,98,3
+1339620,Rawalpindi Cricket Stadium,2023-04-29,2,Pakistan,66,1,198,2,73,0
+1339621,"National Stadium, Karachi",2023-05-03,1,Pakistan,40,1,165,3,82,2
+1339621,"National Stadium, Karachi",2023-05-03,2,New Zealand,57,0,134,5,70,5
+1339622,"National Stadium, Karachi",2023-05-05,1,Pakistan,53,1,187,2,94,3
+1339622,"National Stadium, Karachi",2023-05-05,2,New Zealand,46,2,173,5,13,3
+1339623,"National Stadium, Karachi",2023-05-07,1,New Zealand,42,1,182,3,75,6
+1339623,"National Stadium, Karachi",2023-05-07,2,Pakistan,40,2,165,4,47,4
+1340845,"Shere Bangla National Stadium, Mirpur",2022-12-04,1,India,48,1,131,8,7,1
+1340845,"Shere Bangla National Stadium, Mirpur",2022-12-04,2,Bangladesh,30,2,110,7,47,0
+1340846,"Shere Bangla National Stadium, Mirpur",2022-12-07,1,Bangladesh,44,2,125,4,102,1
+1340846,"Shere Bangla National Stadium, Mirpur",2022-12-07,2,India,39,3,154,3,73,3
+1340847,"Zahur Ahmed Chowdhury Stadium, Chattogram",2022-12-10,1,India,45,1,294,2,70,5
+1340847,"Zahur Ahmed Chowdhury Stadium, Chattogram",2022-12-10,2,Bangladesh,66,2,116,8,0,0
+1348643,"Barsapara Cricket Stadium, Guwahati",2023-01-10,1,India,75,0,219,3,79,4
+1348643,"Barsapara Cricket Stadium, Guwahati",2023-01-10,2,Sri Lanka,38,2,182,6,86,0
+1348644,"Eden Gardens, Kolkata",2023-01-12,1,Sri Lanka,51,1,164,9,0,0
+1348644,"Eden Gardens, Kolkata",2023-01-12,2,India,67,3,124,3,28,0
+1348645,"Greenfield International Stadium, Thiruvananthapuram",2023-01-15,1,India,75,0,199,2,116,3
+1348645,"Greenfield International Stadium, Thiruvananthapuram",2023-01-15,2,Sri Lanka,39,5,34,4,0,0
+1348646,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",2023-01-18,1,India,52,0,199,5,98,3
+1348646,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",2023-01-18,2,New Zealand,42,1,205,5,90,4
+1348647,"Shaheed Veer Narayan Singh International Stadium, Raipur",2023-01-21,1,New Zealand,15,4,93,6,0,0
+1348647,"Shaheed Veer Narayan Singh International Stadium, Raipur",2023-01-21,2,India,52,0,59,2,0,0
+1348648,"Holkar Cricket Stadium, Indore",2023-01-24,1,India,82,0,216,5,87,4
+1348648,"Holkar Cricket Stadium, Indore",2023-01-24,2,New Zealand,73,1,207,8,15,1
+1348656,"Wankhede Stadium, Mumbai",2023-03-17,1,Australia,59,1,129,9,0,0
+1348656,"Wankhede Stadium, Mumbai",2023-03-17,2,India,39,3,152,2,0,0
+1348657,"Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium, Visakhapatnam",2023-03-19,1,India,51,5,66,5,0,0
+1348657,"Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium, Visakhapatnam",2023-03-19,2,Australia,112,0,9,0,0,0
+1348658,"MA Chidambaram Stadium, Chepauk, Chennai",2023-03-22,1,Australia,61,0,148,7,60,3
+1348658,"MA Chidambaram Stadium, Chepauk, Chennai",2023-03-22,2,India,67,1,137,5,44,4
+1351397,"Shere Bangla National Stadium, Mirpur",2023-03-01,1,Bangladesh,54,2,121,5,34,3
+1351397,"Shere Bangla National Stadium, Mirpur",2023-03-01,2,England,38,2,128,5,46,0
+1351398,"Shere Bangla National Stadium, Mirpur",2023-03-03,1,England,40,1,179,4,107,2
+1351398,"Shere Bangla National Stadium, Mirpur",2023-03-03,2,Bangladesh,44,3,130,4,20,3
+1351399,"Zahur Ahmed Chowdhury Stadium, Chattogram",2023-03-06,1,Bangladesh,34,2,156,3,56,5
+1351399,"Zahur Ahmed Chowdhury Stadium, Chattogram",2023-03-06,2,England,55,2,127,6,14,2
+1355717,Sylhet International Cricket Stadium,2023-03-18,1,Bangladesh,50,2,192,2,96,4
+1355718,Sylhet International Cricket Stadium,2023-03-20,1,Bangladesh,42,1,199,3,108,2
+1355719,Sylhet International Cricket Stadium,2023-03-23,2,Bangladesh,81,0,21,0,0,0
+1364124,"County Ground, Chelmsford",2023-05-09,1,Bangladesh,50,2,145,4,51,3
+1364125,"County Ground, Chelmsford",2023-05-12,2,Bangladesh,46,2,240,4,34,1
+1365552,"County Ground, Chelmsford",2023-05-14,1,Bangladesh,62,1,161,4,51,5
+1373571,"Mangaung Oval, Bloemfontein",2023-09-07,1,South Africa,25,1,143,6,54,3
+1373571,"Mangaung Oval, Bloemfontein",2023-09-07,2,Australia,69,5,152,3,4,0
+1373572,"Mangaung Oval, Bloemfontein",2023-09-09,1,Australia,102,0,199,3,91,5
+1373572,"Mangaung Oval, Bloemfontein",2023-09-09,2,South Africa,84,1,175,7,10,2
+1373573,"Sedgars Park, Potchefstroom",2023-09-12,1,South Africa,64,0,178,4,96,2
+1373573,"Sedgars Park, Potchefstroom",2023-09-12,2,Australia,104,1,123,9,0,0
+1373574,"SuperSport Park, Centurion",2023-09-15,1,South Africa,44,0,199,4,173,1
+1373574,"SuperSport Park, Centurion",2023-09-15,2,Australia,71,3,181,7,0,0
+1373575,"The Wanderers Stadium, Johannesburg",2023-09-17,1,South Africa,32,1,170,3,113,5
+1373575,"The Wanderers Stadium, Johannesburg",2023-09-17,2,Australia,60,2,133,8,0,0
+1373576,"Sir Vivian Richards Stadium, North Sound, Antigua",2023-12-03,1,England,78,2,158,4,89,4
+1373576,"Sir Vivian Richards Stadium, North Sound, Antigua",2023-12-03,2,West Indies,55,0,165,5,106,1
+1373577,"Sir Vivian Richards Stadium, North Sound, Antigua",2023-12-06,1,West Indies,41,4,161,6,0,0
+1373577,"Sir Vivian Richards Stadium, North Sound, Antigua",2023-12-06,2,England,74,1,132,3,0,0
+1373578,"Kensington Oval, Bridgetown, Barbados",2023-12-09,1,England,49,5,157,4,0,0
+1373578,"Kensington Oval, Bridgetown, Barbados",2023-12-09,2,West Indies,62,1,129,5,0,0
+1375847,Melbourne Cricket Ground,2024-02-02,1,West Indies,37,3,148,2,46,5
+1375847,Melbourne Cricket Ground,2024-02-02,2,Australia,79,1,153,1,0,0
+1375848,Sydney Cricket Ground,2024-02-04,1,Australia,61,3,128,4,69,2
+1375848,Sydney Cricket Ground,2024-02-04,2,West Indies,40,3,120,5,15,2
+1375849,"Manuka Oval, Canberra",2024-02-06,1,West Indies,36,1,50,9,0,0
+1375849,"Manuka Oval, Canberra",2024-02-06,2,Australia,87,2,0,0,0,0
+1377005,Sharjah Cricket Stadium,2023-06-04,2,West Indies,50,1,156,2,0,0
+1377006,Sharjah Cricket Stadium,2023-06-06,1,West Indies,84,0,164,5,58,5
+1377007,Sharjah Cricket Stadium,2023-06-09,2,West Indies,78,1,107,5,0,0
+1377747,"Takashinga Sports Club, Highfield, Harare",2023-06-18,1,West Indies,41,2,176,4,80,4
+1377748,"Queens Sports Club, Bulawayo",2023-06-19,1,Sri Lanka,58,0,189,3,108,3
+1377754,Harare Sports Club,2023-06-22,1,West Indies,30,2,211,1,98,4
+1377756,"Queens Sports Club, Bulawayo",2023-06-23,2,Sri Lanka,64,0,36,0,0,0
+1377758,Harare Sports Club,2023-06-24,2,West Indies,55,2,162,4,16,4
+1377760,"Queens Sports Club, Bulawayo",2023-06-25,1,Sri Lanka,58,2,189,2,78,6
+1377763,"Takashinga Sports Club, Highfield, Harare",2023-06-26,1,West Indies,61,0,195,3,118,3
+1377764,"Queens Sports Club, Bulawayo",2023-06-27,1,Sri Lanka,44,2,161,4,40,4
+1377767,"Queens Sports Club, Bulawayo",2023-06-30,1,Sri Lanka,36,4,135,3,42,3
+1377769,Harare Sports Club,2023-07-01,1,West Indies,43,4,125,4,13,2
+1377770,"Queens Sports Club, Bulawayo",2023-07-02,2,Sri Lanka,47,0,122,1,0,0
+1377775,Harare Sports Club,2023-07-05,2,West Indies,42,1,180,2,0,0
+1377778,Harare Sports Club,2023-07-07,1,West Indies,55,2,127,6,61,2
+1377778,Harare Sports Club,2023-07-07,2,Sri Lanka,56,0,167,2,21,0
+1377779,Harare Sports Club,2023-07-09,1,Sri Lanka,44,1,154,6,35,3
+1381214,"Kensington Oval, Bridgetown, Barbados",2023-07-27,1,West Indies,52,3,62,7,0,0
+1381214,"Kensington Oval, Bridgetown, Barbados",2023-07-27,2,India,50,1,68,4,0,0
+1381215,"Kensington Oval, Bridgetown, Barbados",2023-07-29,1,India,49,0,131,9,1,1
+1381215,"Kensington Oval, Bridgetown, Barbados",2023-07-29,2,West Indies,64,2,118,2,0,0
+1381216,"Brian Lara Stadium, Tarouba, Trinidad",2023-08-01,1,India,73,0,174,4,104,1
+1381216,"Brian Lara Stadium, Tarouba, Trinidad",2023-08-01,2,West Indies,34,3,117,7,0,0
+1384392,"Narendra Modi Stadium, Ahmedabad",2023-10-05,1,England,51,1,173,5,58,3
+1384392,"Narendra Modi Stadium, Ahmedabad",2023-10-05,2,New Zealand,81,1,202,0,0,0
+1384393,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",2023-10-06,1,Pakistan,43,3,184,3,59,4
+1384395,"Arun Jaitley Stadium, Delhi",2023-10-07,1,South Africa,48,1,243,2,137,2
+1384395,"Arun Jaitley Stadium, Delhi",2023-10-07,2,Sri Lanka,94,2,197,6,35,2
+1384396,"MA Chidambaram Stadium, Chepauk, Chennai",2023-10-08,1,Australia,43,1,113,6,43,3
+1384396,"MA Chidambaram Stadium, Chepauk, Chennai",2023-10-08,2,India,27,3,155,1,19,0
+1384397,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",2023-10-09,1,New Zealand,63,0,175,3,84,4
+1384398,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2023-10-10,1,England,61,0,237,3,66,6
+1384398,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2023-10-10,2,Bangladesh,57,4,134,3,36,3
+1384399,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",2023-10-10,1,Sri Lanka,58,1,225,3,61,5
+1384399,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",2023-10-10,2,Pakistan,48,2,223,1,74,1
+1384401,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2023-10-12,1,South Africa,53,0,179,3,79,4
+1384401,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2023-10-12,2,Australia,50,3,124,5,3,2
+1384402,"MA Chidambaram Stadium, Chepauk, Chennai",2023-10-13,1,Bangladesh,46,2,143,5,56,2
+1384402,"MA Chidambaram Stadium, Chepauk, Chennai",2023-10-13,2,New Zealand,37,1,184,2,27,0
+1384403,"Narendra Modi Stadium, Ahmedabad",2023-10-14,1,Pakistan,49,1,138,7,4,2
+1384403,"Narendra Modi Stadium, Ahmedabad",2023-10-14,2,India,79,2,113,1,0,0
+1384405,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2023-10-16,1,Sri Lanka,51,0,148,8,10,2
+1384405,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2023-10-16,2,Australia,64,2,151,3,0,0
+1384406,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2023-10-17,2,South Africa,41,2,143,7,23,1
+1384408,"Maharashtra Cricket Association Stadium, Pune",2023-10-19,1,Bangladesh,63,0,126,5,67,3
+1384408,"Maharashtra Cricket Association Stadium, Pune",2023-10-19,2,India,63,0,186,3,12,0
+1384409,"M Chinnaswamy Stadium, Bengaluru",2023-10-20,1,Australia,82,0,215,3,70,6
+1384409,"M Chinnaswamy Stadium, Bengaluru",2023-10-20,2,Pakistan,59,0,213,5,33,5
+1384410,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2023-10-21,2,Sri Lanka,56,2,167,2,40,1
+1384411,"Wankhede Stadium, Mumbai",2023-10-21,1,South Africa,59,1,197,4,143,2
+1384411,"Wankhede Stadium, Mumbai",2023-10-21,2,England,67,4,103,5,0,0
+1384412,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2023-10-22,1,New Zealand,34,2,185,2,54,6
+1384412,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2023-10-22,2,India,63,0,162,5,49,1
+1384414,"Wankhede Stadium, Mumbai",2023-10-24,1,South Africa,44,2,194,1,144,2
+1384414,"Wankhede Stadium, Mumbai",2023-10-24,2,Bangladesh,35,3,149,5,49,2
+1384415,"Arun Jaitley Stadium, Delhi",2023-10-25,1,Australia,66,1,202,4,131,3
+1384416,"M Chinnaswamy Stadium, Bengaluru",2023-10-26,1,England,59,2,97,8,0,0
+1384416,"M Chinnaswamy Stadium, Bengaluru",2023-10-26,2,Sri Lanka,56,2,104,0,0,0
+1384417,"MA Chidambaram Stadium, Chepauk, Chennai",2023-10-27,1,Pakistan,58,2,167,4,45,4
+1384417,"MA Chidambaram Stadium, Chepauk, Chennai",2023-10-27,2,South Africa,67,2,182,4,22,3
+1384418,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2023-10-28,1,Australia,118,0,174,5,96,5
+1384418,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2023-10-28,2,New Zealand,73,2,219,3,91,4
+1384419,"Eden Gardens, Kolkata",2023-10-28,2,Bangladesh,39,2,101,6,2,2
+1384420,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2023-10-29,1,India,35,2,145,3,49,4
+1384420,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",2023-10-29,2,England,40,4,89,6,0,0
+1384422,"Eden Gardens, Kolkata",2023-10-31,1,Bangladesh,37,3,151,4,16,3
+1384422,"Eden Gardens, Kolkata",2023-10-31,2,Pakistan,52,0,153,3,0,0
+1384423,"Maharashtra Cricket Association Stadium, Pune",2023-11-01,1,South Africa,43,1,195,1,119,2
+1384423,"Maharashtra Cricket Association Stadium, Pune",2023-11-01,2,New Zealand,51,2,116,8,0,0
+1384424,"Wankhede Stadium, Mumbai",2023-11-02,1,India,60,1,204,3,93,4
+1384424,"Wankhede Stadium, Mumbai",2023-11-02,2,Sri Lanka,14,6,41,4,0,0
+1384426,"M Chinnaswamy Stadium, Bengaluru",2023-11-04,1,New Zealand,66,0,241,3,94,3
+1384426,"M Chinnaswamy Stadium, Bengaluru",2023-11-04,2,Pakistan,75,1,125,0,0,0
+1384427,"Narendra Modi Stadium, Ahmedabad",2023-11-04,1,Australia,48,2,172,3,66,5
+1384427,"Narendra Modi Stadium, Ahmedabad",2023-11-04,2,England,38,2,149,5,66,3
+1384428,"Eden Gardens, Kolkata",2023-11-05,1,India,91,1,148,2,87,2
+1384428,"Eden Gardens, Kolkata",2023-11-05,2,South Africa,35,3,48,7,0,0
+1384429,"Arun Jaitley Stadium, Delhi",2023-11-06,1,Sri Lanka,52,1,171,4,56,4
+1384429,"Arun Jaitley Stadium, Delhi",2023-11-06,2,Bangladesh,57,2,211,4,14,1
+1384431,"Maharashtra Cricket Association Stadium, Pune",2023-11-08,1,England,70,1,145,5,124,3
+1384432,"M Chinnaswamy Stadium, Bengaluru",2023-11-09,1,Sri Lanka,74,5,81,4,16,1
+1384432,"M Chinnaswamy Stadium, Bengaluru",2023-11-09,2,New Zealand,73,0,99,5,0,0
+1384434,"Maharashtra Cricket Association Stadium, Pune",2023-11-11,1,Bangladesh,62,0,177,4,67,4
+1384434,"Maharashtra Cricket Association Stadium, Pune",2023-11-11,2,Australia,58,1,206,1,43,0
+1384435,"Eden Gardens, Kolkata",2023-11-11,1,England,72,0,168,2,97,7
+1384435,"Eden Gardens, Kolkata",2023-11-11,2,Pakistan,43,2,166,7,35,1
+1384436,"M Chinnaswamy Stadium, Bengaluru",2023-11-12,1,India,91,0,193,3,126,1
+1384437,"Wankhede Stadium, Mumbai",2023-11-15,1,India,84,1,203,0,110,3
+1384437,"Wankhede Stadium, Mumbai",2023-11-15,2,New Zealand,46,2,220,2,61,6
+1384438,"Eden Gardens, Kolkata",2023-11-16,1,South Africa,18,2,138,4,56,4
+1384438,"Eden Gardens, Kolkata",2023-11-16,2,Australia,74,2,119,5,22,0
+1384439,"Narendra Modi Stadium, Ahmedabad",2023-11-19,1,India,80,2,117,3,43,5
+1384439,"Narendra Modi Stadium, Ahmedabad",2023-11-19,2,Australia,60,3,165,0,16,1
+1385700,"Trent Bridge, Nottingham",2024-09-19,1,England,59,1,206,4,50,5
+1385700,"Trent Bridge, Nottingham",2024-09-19,2,Australia,69,1,207,2,41,0
+1385701,"Headingley, Leeds",2024-09-21,1,Australia,59,1,179,8,32,1
+1385701,"Headingley, Leeds",2024-09-21,2,England,65,5,137,4,0,1
+1385702,"Riverside Ground, Chester-le-Street",2024-09-24,1,Australia,41,1,159,4,104,2
+1385702,"Riverside Ground, Chester-le-Street",2024-09-24,2,England,45,2,209,2,0,0
+1385703,"Lord's, London",2024-09-27,1,England,49,1,263,4,0,0
+1385703,"Lord's, London",2024-09-27,2,Australia,75,2,51,8,0,0
+1385704,"County Ground, Bristol",2024-09-29,1,England,73,2,188,6,48,2
+1385704,"County Ground, Bristol",2024-09-29,2,Australia,103,1,62,1,0,0
+1387600,"The Wanderers Stadium, Johannesburg",2023-12-17,1,South Africa,52,4,64,6,0,0
+1387600,"The Wanderers Stadium, Johannesburg",2023-12-17,2,India,61,1,56,1,0,0
+1387601,"St George's Park, Gqeberha",2023-12-19,1,India,46,1,131,6,34,3
+1387601,"St George's Park, Gqeberha",2023-12-19,2,South Africa,39,0,165,1,11,1
+1387602,"Boland Park, Paarl",2023-12-21,1,India,59,2,144,1,93,5
+1387602,"Boland Park, Paarl",2023-12-21,2,South Africa,62,1,136,6,20,3
+1388211,"Saxton Oval, Nelson",2023-12-20,1,Bangladesh,44,3,150,2,97,5
+1388211,"Saxton Oval, Nelson",2023-12-20,2,New Zealand,61,0,193,2,42,1
+1388212,"McLean Park, Napier",2023-12-23,1,New Zealand,27,2,71,8,0,0
+1388212,"McLean Park, Napier",2023-12-23,2,Bangladesh,57,1,42,1,0,0
+1388392,Multan Cricket Stadium,2023-08-30,1,Pakistan,44,2,169,2,129,2
+1388393,Pallekele International Cricket Stadium,2023-08-31,1,Bangladesh,34,2,126,4,4,4
+1388393,Pallekele International Cricket Stadium,2023-08-31,2,Sri Lanka,44,3,121,2,0,0
+1388394,Pallekele International Cricket Stadium,2023-09-02,1,India,48,3,173,2,45,5
+1388398,Pallekele International Cricket Stadium,2023-09-04,2,India,64,0,83,0,0,0
+1388401,"Gaddafi Stadium, Lahore",2023-09-06,1,Bangladesh,49,4,144,6,0,0
+1388401,"Gaddafi Stadium, Lahore",2023-09-06,2,Pakistan,37,1,157,2,0,0
+1388403,"R Premadasa Stadium, Colombo",2023-09-09,1,Sri Lanka,51,1,125,4,81,4
+1388403,"R Premadasa Stadium, Colombo",2023-09-09,2,Bangladesh,47,0,130,5,59,5
+1388406,"R Premadasa Stadium, Colombo",2023-09-10,1,India,61,0,190,2,105,0
+1388406,"R Premadasa Stadium, Colombo",2023-09-10,2,Pakistan,43,1,85,7,0,0
+1388407,"R Premadasa Stadium, Colombo",2023-09-12,1,India,65,0,115,7,33,3
+1388407,"R Premadasa Stadium, Colombo",2023-09-12,2,Sri Lanka,39,3,131,4,2,3
+1388410,"R Premadasa Stadium, Colombo",2023-09-14,1,Pakistan,40,1,195,4,17,2
+1388410,"R Premadasa Stadium, Colombo",2023-09-14,2,Sri Lanka,62,1,178,4,12,3
+1388412,"R Premadasa Stadium, Colombo",2023-09-15,1,Bangladesh,44,3,144,3,77,2
+1388412,"R Premadasa Stadium, Colombo",2023-09-15,2,India,42,2,146,4,71,4
+1388414,"R Premadasa Stadium, Colombo",2023-09-17,1,Sri Lanka,31,6,19,4,0,0
+1388414,"R Premadasa Stadium, Colombo",2023-09-17,2,India,51,0,0,0,0,0
+1389388,"Punjab Cricket Association IS Bindra Stadium, Mohali, Chandigarh",2023-09-22,1,Australia,42,1,145,4,89,5
+1389388,"Punjab Cricket Association IS Bindra Stadium, Mohali, Chandigarh",2023-09-22,2,India,66,0,157,4,58,1
+1389389,"Holkar Cricket Stadium, Indore",2023-09-24,1,India,80,1,216,2,103,2
+1389389,"Holkar Cricket Stadium, Indore",2023-09-24,2,Australia,63,2,154,8,0,0
+1389390,"Saurashtra Cricket Association Stadium, Rajkot",2023-09-27,1,Australia,90,1,196,4,66,2
+1389390,"Saurashtra Cricket Association Stadium, Rajkot",2023-09-27,2,India,72,0,179,6,35,4
+1395700,"Shere Bangla National Stadium, Mirpur",2023-09-21,1,New Zealand,26,2,110,3,0,0
+1395701,"Shere Bangla National Stadium, Mirpur",2023-09-23,1,New Zealand,41,3,148,4,65,3
+1395701,"Shere Bangla National Stadium, Mirpur",2023-09-23,2,Bangladesh,54,1,112,7,2,2
+1395702,"Shere Bangla National Stadium, Mirpur",2023-09-26,1,Bangladesh,62,3,109,7,0,0
+1395702,"Shere Bangla National Stadium, Mirpur",2023-09-26,2,New Zealand,49,2,126,1,0,0
+1408102,"University Oval, Dunedin",2023-12-17,1,New Zealand,37,2,202,5,0,0
+1408102,"University Oval, Dunedin",2023-12-17,2,Bangladesh,71,2,129,7,0,0
+1412539,"R Premadasa Stadium, Colombo",2024-01-06,1,Sri Lanka,64,2,135,4,74,3
+1412540,"R Premadasa Stadium, Colombo",2024-01-08,2,Sri Lanka,41,2,123,4,47,2
+1412541,"R Premadasa Stadium, Colombo",2024-01-11,2,Sri Lanka,58,1,39,1,0,0
+1419827,"Zahur Ahmed Chowdhury Stadium, Chattogram",2024-03-13,1,Sri Lanka,71,1,149,4,35,5
+1419827,"Zahur Ahmed Chowdhury Stadium, Chattogram",2024-03-13,2,Bangladesh,55,3,177,1,25,0
+1419828,"Zahur Ahmed Chowdhury Stadium, Chattogram",2024-03-15,1,Bangladesh,64,1,142,5,80,1
+1419828,"Zahur Ahmed Chowdhury Stadium, Chattogram",2024-03-15,2,Sri Lanka,60,3,187,2,40,2
+1419829,"Zahur Ahmed Chowdhury Stadium, Chattogram",2024-03-18,1,Sri Lanka,39,2,135,5,61,3
+1419829,"Zahur Ahmed Chowdhury Stadium, Chattogram",2024-03-18,2,Bangladesh,56,1,177,5,4,0
+1426549,Melbourne Cricket Ground,2024-11-04,1,Pakistan,35,2,134,5,34,3
+1426549,Melbourne Cricket Ground,2024-11-04,2,Australia,61,2,143,6,0,0
+1426550,Adelaide Oval,2024-11-08,1,Australia,59,2,104,8,0,0
+1426550,Adelaide Oval,2024-11-08,2,Pakistan,47,0,122,1,0,0
+1426551,Perth Stadium,2024-11-10,1,Australia,54,2,86,8,0,0
+1426551,Perth Stadium,2024-11-10,2,Pakistan,47,0,96,2,0,0
+1431088,"Zayed Cricket Stadium, Abu Dhabi",2024-10-02,1,South Africa,39,3,169,3,63,3
+1431089,"Zayed Cricket Stadium, Abu Dhabi",2024-10-04,1,South Africa,61,0,185,4,97,1
+1431090,"Zayed Cricket Stadium, Abu Dhabi",2024-10-07,2,South Africa,48,3,133,5,34,2
+1432214,"Boland Park, Paarl",2024-12-17,1,South Africa,70,1,129,4,40,4
+1432214,"Boland Park, Paarl",2024-12-17,2,Pakistan,32,1,163,3,47,3
+1432215,"Newlands, Cape Town",2024-12-19,1,Pakistan,53,2,171,2,105,6
+1432215,"Newlands, Cape Town",2024-12-19,2,South Africa,67,1,154,6,27,3
+1432216,"The Wanderers Stadium, Johannesburg",2024-12-22,1,Pakistan,42,1,195,4,71,4
+1432216,"The Wanderers Stadium, Johannesburg",2024-12-22,2,South Africa,57,2,198,6,16,2
+1433370,"Sir Vivian Richards Stadium, North Sound, Antigua",2024-10-31,1,England,46,1,141,6,22,3
+1433370,"Sir Vivian Richards Stadium, North Sound, Antigua",2024-10-31,2,West Indies,49,0,108,2,0,0
+1433371,"Sir Vivian Richards Stadium, North Sound, Antigua",2024-11-02,1,West Indies,41,2,194,2,93,2
+1433371,"Sir Vivian Richards Stadium, North Sound, Antigua",2024-11-02,2,England,58,1,171,3,100,1
+1433372,"Kensington Oval, Bridgetown, Barbados",2024-11-06,1,England,24,4,139,1,100,3
+1433372,"Kensington Oval, Bridgetown, Barbados",2024-11-06,2,West Indies,65,1,184,0,18,1
+1433380,"Warner Park, Basseterre, St Kitts",2024-12-08,1,Bangladesh,58,2,152,3,84,1
+1433380,"Warner Park, Basseterre, St Kitts",2024-12-08,2,West Indies,42,2,170,2,83,1
+1433381,"Warner Park, Basseterre, St Kitts",2024-12-10,1,Bangladesh,55,3,131,4,41,3
+1433381,"Warner Park, Basseterre, St Kitts",2024-12-10,2,West Indies,54,0,176,3,0,0
+1433382,"Warner Park, Basseterre, St Kitts",2024-12-12,1,Bangladesh,46,2,171,3,104,0
+1433382,"Warner Park, Basseterre, St Kitts",2024-12-12,2,West Indies,66,3,195,3,64,0
+1439904,"Vidarbha Cricket Association Stadium, Jamtha, Nagpur",2025-02-06,1,England,77,3,129,4,42,3
+1439904,"Vidarbha Cricket Association Stadium, Jamtha, Nagpur",2025-02-06,2,India,71,2,180,4,0,0
+1439905,"Barabati Stadium, Cuttack",2025-02-09,1,England,75,0,155,4,74,6
+1439905,"Barabati Stadium, Cuttack",2025-02-09,2,India,77,0,198,4,33,2
+1439906,"Narendra Modi Stadium, Ahmedabad",2025-02-12,1,India,52,1,223,3,81,6
+1439906,"Narendra Modi Stadium, Ahmedabad",2025-02-12,2,England,84,2,130,8,0,0
+1442220,"Gaddafi Stadium, Lahore",2025-02-08,1,New Zealand,42,2,165,3,123,1
+1442220,"Gaddafi Stadium, Lahore",2025-02-08,2,Pakistan,52,1,156,6,44,2
+1442221,"Gaddafi Stadium, Lahore",2025-02-10,1,South Africa,46,1,150,2,108,3
+1442221,"Gaddafi Stadium, Lahore",2025-02-10,2,New Zealand,50,1,208,3,50,0
+1442222,"National Stadium, Karachi",2025-02-12,1,South Africa,64,1,178,3,110,1
+1442222,"National Stadium, Karachi",2025-02-12,2,Pakistan,91,2,180,1,84,1
+1442223,"National Stadium, Karachi",2025-02-14,1,Pakistan,48,2,133,3,61,5
+1442223,"National Stadium, Karachi",2025-02-14,2,New Zealand,45,1,159,3,39,1
+1442990,"R Premadasa Stadium, Colombo",2024-08-02,1,Sri Lanka,37,1,128,5,65,2
+1442990,"R Premadasa Stadium, Colombo",2024-08-02,2,India,71,0,125,6,34,4
+1442991,"R Premadasa Stadium, Colombo",2024-08-04,1,Sri Lanka,42,1,119,5,79,3
+1442991,"R Premadasa Stadium, Colombo",2024-08-04,2,India,76,0,124,8,8,2
+1442992,"R Premadasa Stadium, Colombo",2024-08-07,1,Sri Lanka,41,0,147,4,60,3
+1442992,"R Premadasa Stadium, Colombo",2024-08-07,2,India,67,3,71,7,0,0
+1443546,"Basin Reserve, Wellington",2025-01-05,1,Sri Lanka,23,4,152,4,3,2
+1443546,"Basin Reserve, Wellington",2025-01-05,2,New Zealand,70,0,110,1,0,0
+1443547,"Seddon Park, Hamilton",2025-01-08,1,New Zealand,71,1,184,8,0,0
+1443547,"Seddon Park, Hamilton",2025-01-08,2,Sri Lanka,49,4,93,6,0,0
+1443548,"Eden Park, Auckland",2025-01-11,1,Sri Lanka,66,0,148,5,76,3
+1443548,"Eden Park, Auckland",2025-01-11,2,New Zealand,35,5,115,5,0,0
+1443554,"McLean Park, Napier",2025-03-29,1,New Zealand,36,2,196,1,112,6
+1443554,"McLean Park, Napier",2025-03-29,2,Pakistan,64,0,189,6,18,4
+1443555,"Seddon Park, Hamilton",2025-04-02,1,New Zealand,72,2,138,4,82,2
+1443555,"Seddon Park, Hamilton",2025-04-02,2,Pakistan,28,3,174,7,6,1
+1443556,"Bay Oval, Mount Maunganui",2025-04-05,1,New Zealand,61,1,181,5,22,2
+1443556,"Bay Oval, Mount Maunganui",2025-04-05,2,Pakistan,37,1,184,10,0,0
+1444649,"Queens Sports Club, Bulawayo",2024-11-24,2,Pakistan,27,2,33,4,0,0
+1444650,"Queens Sports Club, Bulawayo",2024-11-26,2,Pakistan,71,0,77,0,0,0
+1444651,"Queens Sports Club, Bulawayo",2024-11-28,1,Pakistan,49,0,152,3,102,3
+1448343,"Edgbaston, Birmingham",2025-05-29,1,England,90,1,193,3,117,4
+1448343,"Edgbaston, Birmingham",2025-05-29,2,West Indies,58,3,104,7,0,0
+1448344,"Sophia Gardens, Cardiff",2025-06-01,1,West Indies,56,1,171,3,81,6
+1448344,"Sophia Gardens, Cardiff",2025-06-01,2,England,78,2,167,3,67,2
+1448345,"Kennington Oval, London",2025-06-03,1,West Indies,59,3,192,6,0,0
+1448345,"Kennington Oval, London",2025-06-03,2,England,121,1,125,2,0,0
+1448354,"Headingley, Leeds",2025-09-02,1,England,57,2,74,8,0,0
+1448354,"Headingley, Leeds",2025-09-02,2,South Africa,67,0,70,3,0,0
+1448355,"Lord's, London",2025-09-04,1,South Africa,51,0,189,4,90,4
+1448355,"Lord's, London",2025-09-04,2,England,56,1,182,4,87,4
+1448356,"The Rose Bowl, Southampton",2025-09-07,1,England,67,1,232,1,115,3
+1448356,"The Rose Bowl, Southampton",2025-09-07,2,South Africa,24,6,48,3,0,0
+1451817,Pallekele International Cricket Stadium,2024-10-20,1,West Indies,43,2,142,2,0,0
+1451817,Pallekele International Cricket Stadium,2024-10-20,2,Sri Lanka,69,3,165,2,0,0
+1451818,Pallekele International Cricket Stadium,2024-10-23,1,West Indies,37,4,152,6,0,0
+1451818,Pallekele International Cricket Stadium,2024-10-23,2,Sri Lanka,31,2,159,3,0,0
+1451819,Pallekele International Cricket Stadium,2024-10-26,1,Sri Lanka,47,0,109,3,0,0
+1451819,Pallekele International Cricket Stadium,2024-10-26,2,West Indies,76,1,120,1,0,0
+1456443,Rangiri Dambulla International Stadium,2024-11-13,1,Sri Lanka,57,1,181,2,86,2
+1456443,Rangiri Dambulla International Stadium,2024-11-13,2,New Zealand,71,0,104,9,0,0
+1456444,Pallekele International Cricket Stadium,2024-11-17,1,New Zealand,38,2,147,4,24,4
+1456444,Pallekele International Cricket Stadium,2024-11-17,2,Sri Lanka,41,2,133,5,36,0
+1456445,Pallekele International Cricket Stadium,2024-11-19,1,New Zealand,59,1,53,0,0,0
+1459908,"R Premadasa Stadium, Colombo",2025-02-12,1,Sri Lanka,39,4,127,4,48,2
+1459908,"R Premadasa Stadium, Colombo",2025-02-12,2,Australia,36,4,129,6,0,0
+1466414,"National Stadium, Karachi",2025-02-19,1,New Zealand,48,2,159,2,113,1
+1466414,"National Stadium, Karachi",2025-02-19,2,Pakistan,22,2,174,4,64,4
+1466415,Dubai International Cricket Stadium,2025-02-20,1,Bangladesh,39,5,126,0,63,5
+1466415,Dubai International Cricket Stadium,2025-02-20,2,India,69,1,120,3,42,0
+1466417,"Gaddafi Stadium, Lahore",2025-02-22,1,England,73,2,195,2,83,4
+1466417,"Gaddafi Stadium, Lahore",2025-02-22,2,Australia,76,2,189,2,91,1
+1466418,Dubai International Cricket Stadium,2025-02-23,1,Pakistan,52,2,131,3,58,5
+1466418,Dubai International Cricket Stadium,2025-02-23,2,India,64,1,159,3,21,0
+1466419,Rawalpindi Cricket Stadium,2025-02-24,1,Bangladesh,58,1,114,5,64,3
+1466419,Rawalpindi Cricket Stadium,2025-02-24,2,New Zealand,54,2,154,2,32,1
+1466424,"National Stadium, Karachi",2025-03-01,1,England,62,3,117,7,0,0
+1466424,"National Stadium, Karachi",2025-03-01,2,South Africa,58,2,123,1,0,0
+1466425,Dubai International Cricket Stadium,2025-03-02,1,India,37,3,148,3,64,3
+1466425,Dubai International Cricket Stadium,2025-03-02,2,New Zealand,44,1,121,5,40,4
+1466426,Dubai International Cricket Stadium,2025-03-04,1,Australia,63,2,150,4,51,4
+1466426,Dubai International Cricket Stadium,2025-03-04,2,India,55,2,145,2,67,2
+1466427,"Gaddafi Stadium, Lahore",2025-03-05,1,New Zealand,56,1,196,2,110,3
+1466427,"Gaddafi Stadium, Lahore",2025-03-05,2,South Africa,56,1,167,7,89,1
+1466428,Dubai International Cricket Stadium,2025-03-09,1,New Zealand,69,1,103,4,79,2
+1466428,Dubai International Cricket Stadium,2025-03-09,2,India,64,0,127,4,63,2
+1469168,"R Premadasa Stadium, Colombo",2025-02-14,1,Sri Lanka,40,1,144,2,97,1
+1469168,"R Premadasa Stadium, Colombo",2025-02-14,2,Australia,48,3,59,7,0,0
+1472511,"Castle Avenue, Dublin",2025-05-21,2,West Indies,35,5,144,5,0,0
+1472512,"Castle Avenue, Dublin",2025-05-23,1,West Indies,55,2,172,3,125,3
+1472513,"Castle Avenue, Dublin",2025-05-25,1,West Indies,58,2,183,1,144,4
+1472528,"Brian Lara Stadium, Tarouba, Trinidad",2025-08-08,1,West Indies,59,1,137,3,84,6
+1472528,"Brian Lara Stadium, Tarouba, Trinidad",2025-08-08,2,Pakistan,48,1,161,4,75,0
+1472529,"Brian Lara Stadium, Tarouba, Trinidad",2025-08-10,1,Pakistan,39,2,132,5,0,0
+1472529,"Brian Lara Stadium, Tarouba, Trinidad",2025-08-10,2,West Indies,30,2,154,3,0,0
+1472530,"Brian Lara Stadium, Tarouba, Trinidad",2025-08-12,1,West Indies,36,1,139,3,119,2
+1472530,"Brian Lara Stadium, Tarouba, Trinidad",2025-08-12,2,Pakistan,26,4,66,6,0,0
+1478901,"Cazaly's Stadium, Cairns",2025-08-19,1,South Africa,56,0,167,3,73,5
+1478901,"Cazaly's Stadium, Cairns",2025-08-19,2,Australia,67,2,129,6,2,2
+1478902,"Great Barrier Reef Arena, Mackay",2025-08-22,1,South Africa,56,2,177,3,44,5
+1478902,"Great Barrier Reef Arena, Mackay",2025-08-22,2,Australia,39,3,154,7,0,0
+1478903,"Great Barrier Reef Arena, Mackay",2025-08-24,1,Australia,86,0,219,2,126,0
+1478903,"Great Barrier Reef Arena, Mackay",2025-08-24,2,South Africa,65,4,90,6,0,0
+1478904,Perth Stadium,2025-10-19,1,India,27,3,109,6,0,0
+1478904,Perth Stadium,2025-10-19,2,Australia,55,2,76,1,0,0
+1478905,Adelaide Oval,2025-10-23,1,India,29,2,169,3,66,4
+1478905,Adelaide Oval,2025-10-23,2,Australia,42,1,174,4,49,3
+1478906,Sydney Cricket Ground,2025-10-25,1,Australia,63,1,143,6,30,3
+1478906,Sydney Cricket Ground,2025-10-25,2,India,68,0,169,1,0,0
+1485505,"R Premadasa Stadium, Colombo",2025-07-02,1,Sri Lanka,50,3,142,3,52,4
+1485505,"R Premadasa Stadium, Colombo",2025-07-02,2,Bangladesh,61,1,106,9,0,0
+1485506,"R Premadasa Stadium, Colombo",2025-07-05,1,Bangladesh,65,1,145,5,38,4
+1485506,"R Premadasa Stadium, Colombo",2025-07-05,2,Sri Lanka,75,2,99,6,58,2
+1485507,Pallekele International Cricket Stadium,2025-07-08,1,Sri Lanka,51,1,171,2,63,4
+1485507,Pallekele International Cricket Stadium,2025-07-08,2,Bangladesh,55,2,131,8,0,0
+1491720,"Bay Oval, Mount Maunganui",2025-10-26,1,England,45,5,178,5,0,0
+1491720,"Bay Oval, Mount Maunganui",2025-10-26,2,New Zealand,59,3,165,3,0,0
+1491721,"Seddon Park, Hamilton",2025-10-29,1,England,49,2,126,8,0,0
+1491721,"Seddon Park, Hamilton",2025-10-29,2,New Zealand,32,1,145,4,0,0
+1491722,"Sky Stadium, Wellington",2025-11-01,1,England,44,4,178,5,0,1
+1491722,"Sky Stadium, Wellington",2025-11-01,2,New Zealand,64,0,140,8,22,0
+1491728,"Hagley Oval, Christchurch",2025-11-16,1,New Zealand,39,2,146,2,84,3
+1491728,"Hagley Oval, Christchurch",2025-11-16,2,West Indies,32,1,140,4,90,1
+1491729,"McLean Park, Napier",2025-11-19,1,West Indies,40,2,207,7,0,0
+1491729,"McLean Park, Napier",2025-11-19,2,New Zealand,44,0,204,5,0,0
+1491730,"Seddon Park, Hamilton",2025-11-22,1,West Indies,60,3,101,7,0,0
+1491730,"Seddon Park, Hamilton",2025-11-22,2,New Zealand,32,2,130,4,0,0
+1492821,Harare Sports Club,2025-08-29,1,Sri Lanka,29,1,156,4,113,1
+1492822,Harare Sports Club,2025-08-31,2,Sri Lanka,45,0,166,3,67,2
+1501898,"Iqbal Stadium, Faisalabad",2025-11-04,1,South Africa,62,0,149,6,52,4
+1501898,"Iqbal Stadium, Faisalabad",2025-11-04,2,Pakistan,53,0,153,4,58,4
+1501899,"Iqbal Stadium, Faisalabad",2025-11-06,1,Pakistan,41,3,138,2,90,4
+1501899,"Iqbal Stadium, Faisalabad",2025-11-06,2,South Africa,65,0,204,2,1,0
+1501900,"Iqbal Stadium, Faisalabad",2025-11-08,1,South Africa,47,0,96,10,0,0
+1501900,"Iqbal Stadium, Faisalabad",2025-11-08,2,Pakistan,59,1,85,2,0,0
+1502167,Rawalpindi Cricket Stadium,2025-11-11,1,Pakistan,28,1,167,3,104,1
+1502167,Rawalpindi Cricket Stadium,2025-11-11,2,Sri Lanka,75,0,147,7,71,2
+1502168,Rawalpindi Cricket Stadium,2025-11-14,1,Sri Lanka,51,1,162,4,75,3
+1502168,Rawalpindi Cricket Stadium,2025-11-14,2,Pakistan,77,1,158,1,54,0
+1502169,Rawalpindi Cricket Stadium,2025-11-16,1,Sri Lanka,57,1,128,6,26,3
+1502169,Rawalpindi Cricket Stadium,2025-11-16,2,Pakistan,46,1,139,3,30,0
+1505122,"Shere Bangla National Stadium, Mirpur",2025-10-18,1,Bangladesh,33,2,107,2,67,6
+1505122,"Shere Bangla National Stadium, Mirpur",2025-10-18,2,West Indies,45,0,88,10,0,0
+1505123,"Shere Bangla National Stadium, Mirpur",2025-10-21,1,Bangladesh,40,1,91,5,82,1
+1505123,"Shere Bangla National Stadium, Mirpur",2025-10-21,2,West Indies,34,1,116,6,63,2
+1505124,"Shere Bangla National Stadium, Mirpur",2025-10-23,1,Bangladesh,74,0,157,3,65,5
+1505124,"Shere Bangla National Stadium, Mirpur",2025-10-23,2,West Indies,39,3,78,7,0,0
+656399,Hagley Oval,2015-02-14,1,New Zealand,77,0,152,4,102,2
+656399,Hagley Oval,2015-02-14,2,Sri Lanka,46,0,163,7,24,3
+656401,Melbourne Cricket Ground,2015-02-14,1,Australia,66,2,171,3,105,4
+656401,Melbourne Cricket Ground,2015-02-14,2,England,50,2,171,7,10,1
+656403,Seddon Park,2015-02-15,1,South Africa,28,2,165,2,146,0
+656405,Adelaide Oval,2015-02-15,1,India,42,1,175,1,83,5
+656405,Adelaide Oval,2015-02-15,2,Pakistan,46,1,148,6,30,3
+656407,Saxton Oval,2015-02-16,1,West Indies,40,2,140,3,124,2
+656409,University Oval,2015-02-17,2,New Zealand,66,2,80,5,0,0
+656415,Westpac Stadium,2015-02-20,1,England,43,2,80,8,0,0
+656415,Westpac Stadium,2015-02-20,2,New Zealand,116,2,9,0,0,0
+656417,Hagley Oval,2015-02-21,1,West Indies,46,2,149,3,115,2
+656417,Hagley Oval,2015-02-21,2,Pakistan,25,4,135,6,0,0
+656423,Melbourne Cricket Ground,2015-02-22,1,India,36,1,191,1,80,5
+656423,Melbourne Cricket Ground,2015-02-22,2,South Africa,38,1,137,8,2,1
+656425,Hagley Oval,2015-02-23,1,England,58,0,167,4,78,4
+656427,Manuka Oval,2015-02-24,1,West Indies,43,1,177,0,152,1
+656433,Melbourne Cricket Ground,2015-02-26,1,Sri Lanka,51,0,166,1,115,0
+656433,Melbourne Cricket Ground,2015-02-26,2,Bangladesh,60,3,144,3,36,4
+656435,Sydney Cricket Ground,2015-02-27,1,South Africa,30,1,228,2,150,2
+656435,Sydney Cricket Ground,2015-02-27,2,West Indies,47,2,104,8,0,0
+656437,Eden Park,2015-02-28,1,Australia,68,1,83,9,0,0
+656437,Eden Park,2015-02-28,2,New Zealand,81,4,71,5,0,0
+656439,Western Australia Cricket Association Ground,2015-02-28,2,India,52,1,52,0,0,0
+656441,Westpac Stadium,2015-03-01,1,England,62,1,141,3,106,2
+656441,Westpac Stadium,2015-03-01,2,Sri Lanka,55,0,192,1,65,0
+656443,"Brisbane Cricket Ground, Woolloongabba",2015-03-01,1,Pakistan,14,2,148,4,73,1
+656445,Manuka Oval,2015-03-03,1,South Africa,57,1,223,1,131,2
+656447,McLean Park,2015-03-04,1,Pakistan,41,1,174,2,124,3
+656451,Saxton Oval,2015-03-05,2,Bangladesh,62,1,190,3,70,0
+656453,Western Australia Cricket Association Ground,2015-03-06,1,West Indies,38,4,124,4,20,2
+656453,Western Australia Cricket Association Ground,2015-03-06,2,India,41,2,144,4,0,0
+656455,Eden Park,2015-03-07,1,Pakistan,35,1,161,4,26,5
+656455,Eden Park,2015-03-07,2,South Africa,67,2,135,8,0,0
+656461,Sydney Cricket Ground,2015-03-08,1,Australia,49,2,204,2,123,5
+656461,Sydney Cricket Ground,2015-03-08,2,Sri Lanka,69,1,203,3,40,6
+656463,Adelaide Oval,2015-03-09,1,Bangladesh,32,2,165,2,78,3
+656463,Adelaide Oval,2015-03-09,2,England,50,1,131,5,79,4
+656465,Seddon Park,2015-03-10,2,India,73,0,187,2,0,0
+656467,Bellerive Oval,2015-03-11,1,Sri Lanka,46,1,236,3,81,5
+656469,Westpac Stadium,2015-03-12,1,South Africa,61,1,179,3,101,2
+656471,Seddon Park,2015-03-13,1,Bangladesh,29,2,155,3,104,2
+656471,Seddon Park,2015-03-13,2,New Zealand,57,2,154,2,79,3
+656475,Eden Park,2015-03-14,2,India,35,2,162,2,91,0
+656477,Bellerive Oval,2015-03-14,2,Australia,63,1,70,2,0,0
+656479,McLean Park,2015-03-15,2,West Indies,69,2,107,2,0,0
+656481,Adelaide Oval,2015-03-15,2,Pakistan,65,0,145,3,31,0
+656483,Sydney Cricket Ground,2015-03-18,1,Sri Lanka,35,2,98,8,0,0
+656483,Sydney Cricket Ground,2015-03-18,2,South Africa,61,1,73,0,0,0
+656485,Melbourne Cricket Ground,2015-03-19,1,India,51,0,154,3,97,3
+656485,Melbourne Cricket Ground,2015-03-19,2,Bangladesh,44,2,125,4,24,4
+656487,Adelaide Oval,2015-03-20,1,Pakistan,37,2,145,4,31,4
+656487,Adelaide Oval,2015-03-20,2,Australia,56,2,160,2,0,0
+656489,Westpac Stadium,2015-03-21,1,New Zealand,63,1,177,2,153,3
+656489,Westpac Stadium,2015-03-21,2,West Indies,80,4,170,6,0,0
+656491,Eden Park,2015-03-24,1,South Africa,39,2,200,2,42,1
+656491,Eden Park,2015-03-24,2,New Zealand,88,2,181,3,30,1
+656493,Sydney Cricket Ground,2015-03-26,1,Australia,56,1,183,3,89,3
+656493,Sydney Cricket Ground,2015-03-26,2,India,55,0,141,5,37,5
+656495,Melbourne Cricket Ground,2015-03-29,1,New Zealand,31,1,134,5,18,4
+656495,Melbourne Cricket Ground,2015-03-29,2,Australia,56,1,130,2,0,0
+722339,Kingsmead,2015-01-16,1,South Africa,59,2,183,2,37,4
+722339,Kingsmead,2015-01-16,2,West Indies,67,2,97,8,0,0
+722341,New Wanderers Stadium,2015-01-18,1,South Africa,51,0,225,1,163,1
+722341,New Wanderers Stadium,2015-01-18,2,West Indies,63,2,179,4,49,1
+722343,Buffalo Park,2015-01-21,1,West Indies,37,3,85,7,0,0
+722343,Buffalo Park,2015-01-21,2,South Africa,38,1,86,0,0,0
+722345,St George's Park,2015-01-25,1,South Africa,49,3,135,2,78,3
+722345,St George's Park,2015-01-25,2,West Indies,26,2,171,5,69,2
+722347,SuperSport Park,2015-01-28,1,South Africa,59,2,265,1,37,2
+722347,SuperSport Park,2015-01-28,2,West Indies,68,1,162,9,0,0
+743943,Edgbaston,2015-06-09,1,England,68,2,220,4,120,3
+743943,Edgbaston,2015-06-09,2,New Zealand,70,2,128,8,0,0
+743945,Kennington Oval,2015-06-12,1,New Zealand,77,1,212,2,109,2
+743945,Kennington Oval,2015-06-12,2,England,65,0,244,7,56,2
+743947,The Rose Bowl,2015-06-14,1,England,41,2,226,3,35,5
+743947,The Rose Bowl,2015-06-14,2,New Zealand,64,2,185,2,57,3
+743949,Trent Bridge,2015-06-17,1,New Zealand,64,0,177,3,108,4
+743949,Trent Bridge,2015-06-17,2,England,97,0,218,3,35,0
+743951,Riverside Ground,2015-06-20,1,New Zealand,59,1,147,3,77,5
+743951,Riverside Ground,2015-06-20,2,England,52,5,140,2,0,0
+743973,"Civil Service Cricket Club, Stormont",2015-08-27,1,Australia,80,0,140,6,2,0
+743977,The Rose Bowl,2015-09-03,1,Australia,54,0,158,6,93,0
+743977,The Rose Bowl,2015-09-03,2,England,61,0,159,7,26,3
+743979,Lord's,2015-09-05,1,Australia,46,2,172,3,91,3
+743979,Lord's,2015-09-05,2,England,57,1,173,7,15,2
+743981,Old Trafford,2015-09-08,1,England,57,1,179,3,64,4
+743981,Old Trafford,2015-09-08,2,Australia,51,1,126,8,30,1
+743983,Headingley,2015-09-11,1,Australia,39,3,171,1,89,3
+743983,Headingley,2015-09-11,2,England,73,1,165,4,66,2
+743985,Old Trafford,2015-09-13,1,England,40,4,98,6,0,0
+743985,Old Trafford,2015-09-13,2,Australia,36,2,104,0,0,0
+749781,Hagley Oval,2015-01-11,1,Sri Lanka,26,2,129,3,63,4
+749781,Hagley Oval,2015-01-11,2,New Zealand,76,2,133,4,10,1
+749783,Seddon Park,2015-01-15,1,New Zealand,50,1,140,6,58,3
+749783,Seddon Park,2015-01-15,2,Sri Lanka,49,0,154,3,49,1
+749785,Eden Park,2015-01-17,1,New Zealand,45,1,100,2,0,0
+749787,Saxton Oval,2015-01-20,1,Sri Lanka,46,1,165,3,65,6
+749787,Saxton Oval,2015-01-20,2,New Zealand,44,2,156,2,80,2
+749789,University Oval,2015-01-23,1,New Zealand,50,1,188,4,122,0
+749789,University Oval,2015-01-23,2,Sri Lanka,51,0,184,7,17,3
+749791,University Oval,2015-01-25,1,New Zealand,39,1,190,2,86,5
+749791,University Oval,2015-01-25,2,Sri Lanka,42,0,150,9,3,1
+749793,Westpac Stadium,2015-01-29,1,Sri Lanka,42,0,170,4,75,2
+749793,Westpac Stadium,2015-01-29,2,New Zealand,34,2,181,5,38,3
+749795,Westpac Stadium,2015-01-31,1,Pakistan,30,2,144,4,36,4
+749795,Westpac Stadium,2015-01-31,2,New Zealand,61,1,152,2,0,0
+749797,McLean Park,2015-02-03,1,New Zealand,48,1,205,2,116,2
+749797,McLean Park,2015-02-03,2,Pakistan,50,0,178,7,22,3
+754749,Melbourne Cricket Ground,2015-01-18,1,India,45,2,161,2,61,4
+754749,Melbourne Cricket Ground,2015-01-18,2,Australia,56,1,162,2,51,3
+754751,Sydney Cricket Ground,2015-01-16,1,England,39,4,128,2,67,4
+754751,Sydney Cricket Ground,2015-01-16,2,Australia,55,1,180,6,0,0
+754753,"Brisbane Cricket Ground, Woolloongabba",2015-01-20,1,India,36,1,117,9,0,0
+754753,"Brisbane Cricket Ground, Woolloongabba",2015-01-20,2,England,67,1,89,0,0,0
+754755,Bellerive Oval,2015-01-23,1,England,69,0,175,2,59,6
+754755,Bellerive Oval,2015-01-23,2,Australia,67,0,163,5,74,2
+754757,Sydney Cricket Ground,2015-01-26,1,India,45,1,24,1,0,0
+754759,Western Australia Cricket Association Ground,2015-01-30,1,India,34,0,123,6,43,4
+754759,Western Australia Cricket Association Ground,2015-01-30,2,England,35,1,128,4,38,2
+754761,Western Australia Cricket Association Ground,2015-02-01,1,Australia,42,2,150,2,86,4
+754761,Western Australia Cricket Association Ground,2015-02-01,2,England,46,2,120,8,0,0
+800469,Mangaung Oval,2016-02-03,1,England,75,1,222,3,102,5
+800469,Mangaung Oval,2016-02-03,2,South Africa,72,1,178,4,0,0
+800471,St George's Park,2016-02-06,1,South Africa,52,1,146,2,64,4
+800471,St George's Park,2016-02-06,2,England,39,1,159,3,65,1
+800473,SuperSport Park,2016-02-09,1,England,56,1,180,3,82,4
+800473,SuperSport Park,2016-02-09,2,South Africa,57,0,199,2,63,1
+800475,New Wanderers Stadium,2016-02-12,1,England,39,1,159,5,64,4
+800475,New Wanderers Stadium,2016-02-12,2,South Africa,53,1,151,5,62,3
+800477,Newlands,2016-02-14,1,England,59,1,153,7,24,2
+800477,Newlands,2016-02-14,2,South Africa,32,3,175,2,30,0
+817207,Shere Bangla National Stadium,2015-07-10,1,Bangladesh,52,4,108,6,0,0
+817207,Shere Bangla National Stadium,2015-07-10,2,South Africa,38,1,126,1,0,0
+817209,Shere Bangla National Stadium,2015-07-12,1,South Africa,38,1,89,6,35,3
+817209,Shere Bangla National Stadium,2015-07-12,2,Bangladesh,57,2,110,1,0,0
+817211,Zahur Ahmed Chowdhury Stadium,2015-07-15,1,South Africa,30,2,138,7,0,0
+817211,Zahur Ahmed Chowdhury Stadium,2015-07-15,2,Bangladesh,63,0,107,1,0,0
+848843,SuperSport Park,2015-08-19,1,South Africa,47,1,172,0,85,6
+848843,SuperSport Park,2015-08-19,2,New Zealand,33,1,193,4,58,5
+848845,Senwes Park,2015-08-23,1,South Africa,48,2,125,4,31,4
+848845,Senwes Park,2015-08-23,2,New Zealand,56,0,126,2,25,0
+848847,Kingsmead,2015-08-26,1,South Africa,49,0,168,3,66,4
+848847,Kingsmead,2015-08-26,2,New Zealand,40,1,144,5,37,4
+858485,Shere Bangla National Stadium,2015-04-17,1,Bangladesh,44,0,192,2,93,4
+858485,Shere Bangla National Stadium,2015-04-17,2,Pakistan,52,0,165,6,33,4
+858487,Shere Bangla National Stadium,2015-04-19,1,Pakistan,37,2,128,4,74,0
+858487,Shere Bangla National Stadium,2015-04-19,2,Bangladesh,83,1,157,2,0,0
+858489,Shere Bangla National Stadium,2015-04-22,1,Pakistan,58,0,153,4,39,6
+858489,Shere Bangla National Stadium,2015-04-22,2,Bangladesh,48,0,203,2,0,0
+860269,Rangiri Dambulla International Stadium,2015-07-11,1,Sri Lanka,48,1,144,3,63,4
+860269,Rangiri Dambulla International Stadium,2015-07-11,2,Pakistan,51,1,174,3,34,0
+860271,Pallekele International Cricket Stadium,2015-07-15,1,Pakistan,44,0,155,5,88,3
+860271,Pallekele International Cricket Stadium,2015-07-15,2,Sri Lanka,98,1,154,6,36,1
+860273,R Premadasa Stadium,2015-07-19,1,Pakistan,55,0,168,3,93,1
+860273,R Premadasa Stadium,2015-07-19,2,Sri Lanka,52,2,120,7,9,1
+860275,R Premadasa Stadium,2015-07-22,1,Sri Lanka,48,1,133,3,75,5
+860275,R Premadasa Stadium,2015-07-22,2,Pakistan,69,0,181,3,7,0
+860277,"Mahinda Rajapaksa International Cricket Stadium, Sooriyawewa",2015-07-26,1,Sri Lanka,64,0,185,3,119,1
+860277,"Mahinda Rajapaksa International Cricket Stadium, Sooriyawewa",2015-07-26,2,Pakistan,52,1,151,9,0,0
+868727,Gaddafi Stadium,2015-05-26,1,Pakistan,47,0,216,2,112,1
+868729,Gaddafi Stadium,2015-05-29,2,Pakistan,49,1,160,2,60,1
+868731,Gaddafi Stadium,2015-05-31,1,Pakistan,52,0,158,5,86,4
+870731,Shere Bangla National Stadium,2015-06-18,1,Bangladesh,79,0,166,5,62,5
+870731,Shere Bangla National Stadium,2015-06-18,2,India,66,0,131,8,31,2
+870733,Shere Bangla National Stadium,2015-06-21,1,India,65,1,114,6,21,3
+870733,Shere Bangla National Stadium,2015-06-21,2,Bangladesh,49,1,151,3,0,0
+870735,Shere Bangla National Stadium,2015-06-24,1,India,61,1,166,2,90,3
+870735,Shere Bangla National Stadium,2015-06-24,2,Bangladesh,65,2,151,6,24,2
+885959,Harare Sports Club,2015-07-10,1,India,32,1,133,4,90,1
+885965,Harare Sports Club,2015-07-12,1,India,39,0,155,2,77,6
+885967,Harare Sports Club,2015-07-14,1,India,36,2,134,2,106,1
+894287,Harare Sports Club,2015-08-02,1,New Zealand,40,2,148,1,115,1
+894289,Harare Sports Club,2015-08-04,2,New Zealand,46,0,171,0,19,0
+894291,Harare Sports Club,2015-08-07,1,New Zealand,44,1,157,3,72,2
+895807,Western Australia Cricket Association Ground,2016-01-12,1,India,52,1,164,0,93,2
+895807,Western Australia Cricket Association Ground,2016-01-12,2,Australia,40,2,209,0,61,3
+895809,"Brisbane Cricket Ground, Woolloongabba",2016-01-15,1,India,47,1,186,1,75,6
+895809,"Brisbane Cricket Ground, Woolloongabba",2016-01-15,2,Australia,40,0,199,2,70,1
+895811,Melbourne Cricket Ground,2016-01-17,1,India,43,1,164,1,88,4
+895811,Melbourne Cricket Ground,2016-01-17,2,Australia,65,1,166,5,65,1
+895813,Manuka Oval,2016-01-20,1,Australia,59,0,178,2,111,6
+895813,Manuka Oval,2016-01-20,2,India,80,1,202,3,41,6
+895815,Sydney Cricket Ground,2016-01-23,1,Australia,61,1,188,4,81,2
+895815,Sydney Cricket Ground,2016-01-23,2,India,68,0,186,3,77,1
+902641,Sheikh Zayed Stadium,2015-11-11,1,England,46,3,132,4,38,3
+902641,Sheikh Zayed Stadium,2015-11-11,2,Pakistan,41,3,147,1,29,0
+902643,Sheikh Zayed Stadium,2015-11-13,1,England,51,0,176,2,56,3
+902643,Sheikh Zayed Stadium,2015-11-13,2,Pakistan,19,2,133,5,36,3
+902645,Sharjah Cricket Stadium,2015-11-17,1,Pakistan,43,0,114,7,51,3
+902645,Sharjah Cricket Stadium,2015-11-17,2,England,41,2,160,2,9,0
+902647,Dubai International Cricket Stadium,2015-11-20,1,England,51,0,175,3,129,2
+902647,Dubai International Cricket Stadium,2015-11-20,2,Pakistan,71,2,200,7,0,1
+903593,Green Park,2015-10-11,1,South Africa,48,1,146,2,109,2
+903593,Green Park,2015-10-11,2,India,59,1,155,2,84,4
+903595,Holkar Cricket Stadium,2015-10-14,1,India,44,1,121,6,82,2
+903595,Holkar Cricket Stadium,2015-10-14,2,South Africa,56,2,152,6,17,2
+903597,Saurashtra Cricket Association Stadium,2015-10-18,1,South Africa,59,0,151,4,60,3
+903597,Saurashtra Cricket Association Stadium,2015-10-18,2,India,40,0,145,2,67,4
+903599,"MA Chidambaram Stadium, Chepauk",2015-10-22,1,India,43,2,187,1,69,5
+903599,"MA Chidambaram Stadium, Chepauk",2015-10-22,2,South Africa,63,1,137,5,64,3
+903601,Wankhede Stadium,2015-10-25,1,South Africa,73,1,221,1,144,3
+903601,Wankhede Stadium,2015-10-25,2,India,51,2,173,8,0,0
+913621,"The Village, Malahide",2016-06-18,1,Sri Lanka,47,0,246,1,84,7
+913623,Trent Bridge,2016-06-21,1,Sri Lanka,59,3,166,3,61,3
+913623,Trent Bridge,2016-06-21,2,England,39,4,169,2,78,2
+913625,Edgbaston,2016-06-24,1,Sri Lanka,51,2,137,4,66,1
+913625,Edgbaston,2016-06-24,2,England,57,0,199,0,0,0
+913627,County Ground,2016-06-26,1,Sri Lanka,34,2,152,3,62,4
+913627,County Ground,2016-06-26,2,England,16,1,0,0,0,0
+913629,Kennington Oval,2016-06-29,1,Sri Lanka,64,1,216,4,25,0
+913629,Kennington Oval,2016-06-29,2,England,61,1,244,3,4,0
+913631,Sophia Gardens,2016-07-02,1,England,60,0,167,4,97,3
+913631,Sophia Gardens,2016-07-02,2,Sri Lanka,41,1,150,6,11,3
+913649,"The Village, Malahide",2016-08-18,1,Pakistan,47,1,224,4,66,1
+913653,The Rose Bowl,2016-08-24,1,Pakistan,45,1,154,3,61,2
+913653,The Rose Bowl,2016-08-24,2,England,66,1,128,2,0,0
+913655,Lord's,2016-08-27,1,Pakistan,46,3,141,2,64,5
+913655,Lord's,2016-08-27,2,England,39,2,180,2,36,2
+913657,Trent Bridge,2016-08-30,1,England,64,1,245,2,135,0
+913657,Trent Bridge,2016-08-30,2,Pakistan,83,3,158,6,34,1
+913659,Headingley,2016-09-01,1,Pakistan,40,1,137,5,70,2
+913659,Headingley,2016-09-01,2,England,52,2,149,3,51,1
+913661,Sophia Gardens,2016-09-04,1,England,69,2,175,3,58,4
+913661,Sophia Gardens,2016-09-04,2,Pakistan,64,1,192,4,48,1
+914207,Hagley Oval,2015-12-26,1,Sri Lanka,29,5,135,3,24,2
+914207,Hagley Oval,2015-12-26,2,New Zealand,108,0,83,3,0,0
+914209,Hagley Oval,2015-12-28,1,Sri Lanka,40,3,77,7,0,0
+914209,Hagley Oval,2015-12-28,2,New Zealand,118,0,0,0,0,0
+914211,Saxton Oval,2015-12-31,1,New Zealand,47,1,159,5,70,2
+914211,Saxton Oval,2015-12-31,2,Sri Lanka,83,0,162,2,32,0
+914213,Saxton Oval,2016-01-02,1,New Zealand,75,3,0,0,0,0
+914215,Bay Oval,2016-01-05,1,New Zealand,55,1,157,2,82,2
+914215,Bay Oval,2016-01-05,2,Sri Lanka,33,3,183,2,42,5
+914227,Basin Reserve,2016-01-25,1,New Zealand,45,2,140,5,95,2
+914227,Basin Reserve,2016-01-25,2,Pakistan,33,1,143,5,34,4
+914231,Eden Park,2016-02-03,1,New Zealand,71,0,167,6,69,2
+914231,Eden Park,2016-02-03,2,Australia,47,6,101,4,0,0
+914233,Westpac Stadium,2016-02-06,1,New Zealand,57,1,148,5,76,3
+914233,Westpac Stadium,2016-02-06,2,Australia,77,0,166,6,40,0
+914235,Seddon Park,2016-02-08,1,New Zealand,84,1,137,3,25,6
+914235,Seddon Park,2016-02-08,2,Australia,67,1,117,7,7,2
+914265,Eden Park,2016-01-31,1,Pakistan,53,2,205,4,32,4
+914265,Eden Park,2016-01-31,2,New Zealand,52,1,198,4,15,2
+915777,R Premadasa Stadium,2015-11-01,1,West Indies,29,3,130,5,0,0
+915777,R Premadasa Stadium,2015-11-01,2,Sri Lanka,89,1,75,8,0,0
+915779,R Premadasa Stadium,2015-11-04,1,West Indies,61,2,153,8,0,0
+915779,R Premadasa Stadium,2015-11-04,2,Sri Lanka,67,1,158,1,0,0
+915781,Pallekele International Cricket Stadium,2015-11-07,1,West Indies,47,4,159,5,0,0
+915781,Pallekele International Cricket Stadium,2015-11-07,2,Sri Lanka,64,1,116,4,0,0
+919607,Harare Sports Club,2015-10-01,1,Pakistan,35,3,136,2,88,1
+919609,Harare Sports Club,2015-10-03,2,Pakistan,31,3,157,4,68,1
+919611,Harare Sports Club,2015-10-05,2,Pakistan,34,0,128,3,0,0
+931390,Shere Bangla National Stadium,2015-11-07,1,Bangladesh,39,2,155,2,79,5
+931392,Shere Bangla National Stadium,2015-11-09,1,Bangladesh,46,1,142,4,53,4
+931394,Shere Bangla National Stadium,2015-11-11,1,Bangladesh,47,0,158,3,71,6
+932849,Providence Stadium,2016-06-03,1,South Africa,52,1,118,4,18,5
+932849,Providence Stadium,2016-06-03,2,West Indies,34,0,126,5,31,1
+932851,Providence Stadium,2016-06-05,1,West Indies,48,1,68,9,0,0
+932851,Providence Stadium,2016-06-05,2,Australia,54,1,63,3,0,0
+932853,Providence Stadium,2016-06-07,1,South Africa,43,2,100,4,46,3
+932853,Providence Stadium,2016-06-07,2,Australia,38,3,104,7,0,0
+932855,"Warner Park, Basseterre",2016-06-11,1,Australia,48,1,150,2,90,3
+932855,"Warner Park, Basseterre",2016-06-11,2,South Africa,50,1,169,3,33,6
+932857,"Warner Park, Basseterre",2016-06-13,1,Australia,40,1,152,1,73,5
+932857,"Warner Park, Basseterre",2016-06-13,2,West Indies,74,1,148,2,44,3
+932859,"Warner Park, Basseterre",2016-06-15,1,South Africa,52,0,186,2,105,2
+932859,"Warner Park, Basseterre",2016-06-15,2,West Indies,74,1,130,9,0,0
+932861,"Kensington Oval, Bridgetown",2016-06-19,1,South Africa,8,0,0,0,0,0
+932863,"Kensington Oval, Bridgetown",2016-06-21,1,West Indies,36,3,163,0,83,5
+932863,"Kensington Oval, Bridgetown",2016-06-21,2,Australia,60,2,150,1,73,1
+932865,"Kensington Oval, Bridgetown",2016-06-24,1,West Indies,40,4,185,2,60,4
+932865,"Kensington Oval, Bridgetown",2016-06-24,2,South Africa,32,3,121,6,32,1
+932867,"Kensington Oval, Bridgetown",2016-06-26,1,Australia,55,1,137,5,78,3
+932867,"Kensington Oval, Bridgetown",2016-06-26,2,West Indies,48,0,122,6,42,4
+936131,Willowmoore Park,2016-09-25,1,South Africa,69,0,169,3,116,2
+936133,Willowmoore Park,2016-09-27,2,Australia,76,1,123,0,0,0
+936135,SuperSport Park,2016-09-30,1,Australia,64,1,181,5,49,3
+936135,SuperSport Park,2016-09-30,2,South Africa,87,0,208,4,0,0
+936137,New Wanderers Stadium,2016-10-02,1,South Africa,66,0,198,2,97,4
+936137,New Wanderers Stadium,2016-10-02,2,Australia,54,2,165,8,0,0
+936139,Kingsmead,2016-10-05,1,Australia,88,0,182,2,101,4
+936139,Kingsmead,2016-10-05,2,South Africa,77,1,207,5,88,0
+936141,St George's Park,2016-10-09,1,Australia,30,3,137,7,0,0
+936141,St George's Park,2016-10-09,2,South Africa,35,2,133,2,0,0
+936143,Newlands,2016-10-12,1,South Africa,52,2,190,2,85,4
+936143,Newlands,2016-10-12,2,Australia,60,0,169,4,67,6
+936159,St George's Park,2017-01-28,1,Sri Lanka,37,2,113,4,31,4
+936159,St George's Park,2017-01-28,2,South Africa,43,0,142,2,0,0
+936161,Kingsmead,2017-02-01,1,South Africa,62,1,155,3,90,2
+936161,Kingsmead,2017-02-01,2,Sri Lanka,56,2,130,8,0,0
+936163,New Wanderers Stadium,2017-02-04,1,Sri Lanka,54,0,109,10,0,0
+936163,New Wanderers Stadium,2017-02-04,2,South Africa,52,1,112,2,0,0
+936165,Newlands,2017-02-07,1,South Africa,59,1,202,2,106,2
+936165,Newlands,2017-02-07,2,Sri Lanka,100,0,172,4,55,6
+936167,SuperSport Park,2017-02-10,1,South Africa,71,0,203,3,110,3
+936167,SuperSport Park,2017-02-10,2,Sri Lanka,73,4,134,4,89,0
+995457,R Premadasa Stadium,2016-08-21,1,Sri Lanka,43,1,120,4,64,3
+995457,R Premadasa Stadium,2016-08-21,2,Australia,61,1,141,3,26,3
+995459,R Premadasa Stadium,2016-08-24,1,Sri Lanka,59,2,153,3,76,5
+995459,R Premadasa Stadium,2016-08-24,2,Australia,42,3,140,3,24,4
+995461,Rangiri Dambulla International Stadium,2016-08-28,1,Sri Lanka,53,2,122,5,51,3
+995461,Rangiri Dambulla International Stadium,2016-08-28,2,Australia,45,3,147,2,35,3
+995463,Rangiri Dambulla International Stadium,2016-08-31,1,Sri Lanka,32,3,129,3,51,4
+995463,Rangiri Dambulla International Stadium,2016-08-31,2,Australia,109,3,108,1,0,0
+995465,Pallekele International Cricket Stadium,2016-09-04,1,Sri Lanka,58,0,137,9,0,1
+995465,Pallekele International Cricket Stadium,2016-09-04,2,Australia,31,2,156,2,12,1
