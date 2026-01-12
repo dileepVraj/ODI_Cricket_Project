@@ -4,6 +4,7 @@ import difflib  # <--- 🧠 THE BRAIN IMPLANT (Fuzzy Logic)
 import re
 from IPython.display import display
 from venues import VENUE_MAP  # <--- Imports our 'Source of Truth'
+from venues import get_venue_aliases
 
 class CricketAnalyzer:
     """
@@ -18,9 +19,9 @@ class CricketAnalyzer:
             # 🧠 UNDERSTANDING & CONTEXT:
             # The Boot Sequence.
             # 1. Load Data (Matches & Players).
-            # 2. Build Stats (Runs/Wickets).
-            # 3. Fix Ambiguities (Logic-based).
-            # 4. SMART STANDARDIZE: The new "Fuzzy" step that fixes typos automatically.
+            # 2. GLOBAL SORT: Ensures time-series logic (Form/Trends) works correctly.
+            # 3. Build Stats (Runs/Wickets).
+            # 4. Fix Ambiguities & Standardize Venues.
             
             print(f"⚙️ Initializing Smart Engine...")
             print(f"📂 Loading Database: {filepath}")
@@ -31,7 +32,11 @@ class CricketAnalyzer:
             self.raw_df['start_date'] = pd.to_datetime(self.raw_df['start_date'], errors='coerce')
             self.raw_df['year'] = self.raw_df['start_date'].dt.year
             
-            print(f"   Raw Data: {len(self.raw_df)} balls loaded.")
+            # 🚨 CRITICAL FIX: GLOBAL SORT BY DATE
+            # This ensures that whenever we use .tail(5) later, we get the ACTUAL most recent matches.
+            self.raw_df = self.raw_df.sort_values(['start_date', 'match_id'])
+            
+            print(f"   Raw Data: {len(self.raw_df)} balls loaded (Sorted by Date).")
 
             # 👇 2. NEW: Load Player Stats & Metadata
             try:
@@ -53,9 +58,6 @@ class CricketAnalyzer:
             # --- 🧠 STEP 2: SMART VENUE STANDARDIZATION (Fuzzy Logic) ---
             # This replaces the old simple replace. It finds the best match for every unique name.
             self._smart_standardize_venues()
-        
-            print(f"✅ Engine Ready! Condensed into {len(self.match_df)} unique matches.")
-            print(f"   Date Range: {self.match_df['year'].min()} to {self.match_df['year'].max()}")
         
             print(f"✅ Engine Ready! Condensed into {len(self.match_df)} unique matches.")
             print(f"   Date Range: {self.match_df['year'].min()} to {self.match_df['year'].max()}")
@@ -347,189 +349,91 @@ class CricketAnalyzer:
             'avg_succ': avg_succ_chase, 
             'avg_fail': avg_fail_chase
         }
-    
-    def get_active_squad(self, team_name):
-        """
-        Returns a list of players who have played for 'team_name'.
-        Used to populate the Multi-Select Widget.
-        """
-        if self.meta_df.empty: return []
-        
-        # Filter by team and sort alphabetically
-        # We perform a case-insensitive check
-        team_players = self.meta_df[self.meta_df['team'].str.lower() == team_name.lower()]
-        return sorted(team_players['player'].unique().tolist())
 
-    def compare_squads(self, team_a_name, team_a_players, team_b_name, team_b_players, venue_id):
+    def _calculate_smart_projection(self, player, role, venue_name):
         """
-        The Virtual Dugout. 🏟️
-        Compares two selected XIs with BATTER-CENTRIC Matchup views.
+        🔮 LAW OF AVERAGES ENGINE
+        Calculates a 'Smart Projection' using weighted mean reversion.
+        Formula: 50% Recent Form + 30% Venue History + 20% Career Class
         """
-        print(f"\n⚔️ SQUAD COMPARISON: {team_a_name} vs {team_b_name}")
+        # 1. Get Career Stats (The Anchor)
+        p_stats = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == role)]
         
-        # 🎨 JERSEY COLOR MAP
-        TEAM_COLORS = {
-            'India': '#1F34D1', 'Australia': '#D4AF37', 'England': '#C51130',
-            'South Africa': '#006A4E', 'New Zealand': '#222222', 'Pakistan': '#01411C',
-            'West Indies': '#7B0028', 'Sri Lanka': '#0E3292', 'Bangladesh': '#006A4E',
-            'Afghanistan': '#0063B2', 'Zimbabwe': '#D40000', 'Ireland': '#009D4E',
-            'Netherlands': '#FF6600'
-        }
+        if p_stats.empty:
+            return 0, "New Player"
 
-        if self.player_df.empty:
-            print("❌ No player data available.")
-            return
-
-        # --- STEP 1: RESOLVE VENUE NAME ---
-        real_venue_name = venue_id
-        available_venues = self.player_df[self.player_df['context'] == 'at_venue']['opponent'].unique().tolist()
-        clean_id = venue_id.split('_')
-        if len(clean_id) > 1: clean_id = clean_id[1:] 
-        keywords = [k.lower() for k in clean_id if len(k) > 2]
+        # Career Average
+        car_runs = p_stats[p_stats['context'] == 'vs_team']['runs'].sum()
+        car_outs = p_stats[p_stats['context'] == 'vs_team']['dismissals'].sum()
+        car_avg = (car_runs / car_outs) if car_outs > 0 else car_runs
         
-        best_match = None
-        max_hits = 0
-        for v in available_venues:
-            v_lower = str(v).lower()
-            hits = sum(1 for k in keywords if k in v_lower)
-            if hits > max_hits:
-                max_hits = hits
-                best_match = v
-        
-        if best_match and max_hits > 0:
-            real_venue_name = best_match
-            print(f"📍 Venue Mapped: '{venue_id}' ➡️ '{real_venue_name}'")
+        # 2. Get Venue Stats (The Context)
+        ven_stats = p_stats[(p_stats['context'] == 'at_venue') & (p_stats['opponent'] == venue_name)]
+        if not ven_stats.empty:
+            ven_runs = ven_stats['runs'].sum()
+            ven_outs = ven_stats['dismissals'].sum()
+            ven_avg = (ven_runs / ven_outs) if ven_outs > 0 else ven_runs
         else:
-            print(f"📍 Venue: {venue_id}")
-        print("-" * 80)
-
-        # --- INTERNAL HELPER: GET PLAYER STATS ---
-        def get_stats(player, opponent_team, venue_lookup):
-            # Batting
-            bat_all = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == 'batting')]
-            car_runs = bat_all[bat_all['context'] == 'vs_team']['runs'].sum()
-            car_outs = bat_all[bat_all['context'] == 'vs_team']['dismissals'].sum()
-            # 👇 NEW: Calculate Total Innings
-            car_inns = bat_all[bat_all['context'] == 'vs_team']['innings'].sum()
+            ven_avg = car_avg # Fallback to career if no venue data
             
-            car_avg = round(car_runs / car_outs, 1) if car_outs > 0 else car_runs
-            
-            opp_row = bat_all[(bat_all['context'] == 'vs_team') & (bat_all['opponent'] == opponent_team)]
-            opp_avg = "-"
-            if not opp_row.empty:
-                runs, outs = opp_row['runs'].sum(), opp_row['dismissals'].sum()
-                opp_avg = round(runs / outs, 1) if outs > 0 else runs
+        # 3. Get Recent Form (The Momentum)
+        # We look at the raw data for the last 5 innings
+        recent_avg = car_avg # Default fallback
+        try:
+            if role == 'batting':
+                # Get last 5 scores
+                p_raw = self.raw_df[self.raw_df['striker'] == player].drop_duplicates(subset=['match_id'])
+                last_5 = p_raw.tail(5)
+                if not last_5.empty:
+                    runs_5 = 0
+                    outs_5 = 0
+                    for m_id in last_5['match_id'].unique():
+                        m_data = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['striker'] == player)]
+                        runs_5 += m_data['runs_off_bat'].sum()
+                        if m_data['wicket_type'].notna().any(): outs_5 += 1
+                    recent_avg = (runs_5 / outs_5) if outs_5 > 0 else runs_5
+                    
+            elif role == 'bowling':
+                # Get last 5 matches wickets
+                p_raw = self.raw_df[self.raw_df['bowler'] == player].drop_duplicates(subset=['match_id'])
+                last_5 = p_raw.tail(5)
+                if not last_5.empty:
+                    wkts_5 = 0
+                    matches_5 = len(last_5)
+                    for m_id in last_5['match_id'].unique():
+                        m_data = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['bowler'] == player)]
+                        wicket_types = ['bowled', 'caught', 'lbw', 'stumped', 'caught and bowled', 'hit wicket']
+                        wkts_5 += m_data['wicket_type'].isin(wicket_types).sum()
+                    
+                    # For bowlers, we predict Wickets per Match
+                    recent_avg = wkts_5 / matches_5
+                    # Adjust historical avgs to 'Wickets per Match' for consistent weighing
+                    # (Career Avg is usually runs/wkt, so we need Wkts/Match)
+                    c_inns = p_stats[p_stats['context'] == 'vs_team']['innings'].sum()
+                    c_wkts = p_stats[p_stats['context'] == 'vs_team']['dismissals'].sum()
+                    car_avg = c_wkts / c_inns if c_inns > 0 else 0
+                    
+                    if not ven_stats.empty:
+                         v_inns = ven_stats['innings'].sum()
+                         v_wkts = ven_stats['dismissals'].sum()
+                         ven_avg = v_wkts / v_inns if v_inns > 0 else 0
+                    else:
+                        ven_avg = car_avg
 
-            ven_row = bat_all[(bat_all['context'] == 'at_venue') & (bat_all['opponent'] == venue_lookup)]
-            ven_avg = "-"
-            ven_inns = "-" # 👇 NEW: Venue Innings
-            if not ven_row.empty:
-                runs, outs = ven_row['runs'].sum(), ven_row['dismissals'].sum()
-                ven_avg = round(runs / outs, 1) if outs > 0 else runs
-                ven_inns = ven_row['innings'].sum()
+        except:
+            pass
 
-            # Bowling
-            bowl_all = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == 'bowling')]
-            c_runs = bowl_all[bowl_all['context'] == 'vs_team']['runs'].sum()
-            c_wkts = bowl_all[bowl_all['context'] == 'vs_team']['dismissals'].sum()
-            c_balls = bowl_all[bowl_all['context'] == 'vs_team']['balls'].sum()
-            bowl_avg = round(c_runs / c_wkts, 1) if c_wkts > 0 else "-"
-            bowl_econ = round((c_runs / c_balls) * 6, 1) if c_balls > 0 else "-"
-
-            v_bowl_row = bowl_all[(bowl_all['context'] == 'at_venue') & (bowl_all['opponent'] == venue_lookup)]
-            ven_econ = "-"
-            ven_wkts = "-"
-            if not v_bowl_row.empty:
-                vr, vb, vw = v_bowl_row['runs'].sum(), v_bowl_row['balls'].sum(), v_bowl_row['dismissals'].sum()
-                ven_econ = round((vr / vb) * 6, 1) if vb > 0 else "-"
-                ven_wkts = int(vw)
-            
-            v_short = venue_id.split('_')[-1].title() if '_' in venue_id else 'Venue'
-            
-            return {
-                'Player': player,
-                'Inns': car_inns, # 👈 Added Column
-                'Bat Avg': car_avg,
-                f'vs {opponent_team}': opp_avg,
-                f'Inns ({v_short})': ven_inns, # 👈 Added Column
-                f'Avg ({v_short})': ven_avg, 
-                'Bowl Avg': bowl_avg,
-                'Econ': bowl_econ,
-                f'Econ ({v_short})': ven_econ,
-                f'Wkts ({v_short})': ven_wkts 
-            }
-
-        # --- DISPLAY TEAM SUMMARIES (Top Tables) ---
-        print(f"\n📊 {team_a_name.upper()} SQUAD OVERVIEW")
-        data_a = [get_stats(p, team_b_name, real_venue_name) for p in team_a_players]
-        df_a = pd.DataFrame(data_a)
-        if not df_a.empty: display(df_a.style.format(na_rep="-", precision=1).hide(axis='index'))
-
-        print(f"\n📊 {team_b_name.upper()} SQUAD OVERVIEW")
-        data_b = [get_stats(p, team_a_name, real_venue_name) for p in team_b_players]
-        df_b = pd.DataFrame(data_b)
-        if not df_b.empty: display(df_b.style.format(na_rep="-", precision=1).hide(axis='index'))
-
-        # --- THE NEW MATCHUP FORMAT (BATTER vs BOWLER LIST) ---
+        # 4. THE WEIGHTED FORMULA
+        # 50% Form + 30% Venue + 20% Career
+        weighted_projection = (0.5 * recent_avg) + (0.3 * ven_avg) + (0.2 * car_avg)
         
-        def display_batter_vs_bowlers(batter_name, batter_team, bowlers_list, bowling_team):
-            matchup_data = []
-            
-            for bowler in bowlers_list:
-                h2h = self.player_df[
-                    (self.player_df['player'] == batter_name) & 
-                    (self.player_df['opponent'] == bowler) & 
-                    (self.player_df['role'] == 'h2h')
-                ]
-                
-                if not h2h.empty:
-                    balls = h2h['balls'].sum()
-                    if balls > 0:
-                        runs = h2h['runs'].sum()
-                        outs = h2h['dismissals'].sum()
-                        avg = round(runs/outs, 1) if outs > 0 else f"(Inf) {runs}"
-                        sr = round((runs/balls)*100, 1)
-                        
-                        matchup_data.append({
-                            'Bowler': bowler,
-                            'Runs': runs,
-                            'Balls': balls,
-                            'Outs': outs,
-                            'Avg': avg,
-                            'SR': sr
-                        })
-            
-            if matchup_data:
-                hex_code = TEAM_COLORS.get(batter_team, '#000000')
-                from IPython.display import HTML, display
-                display(HTML(f"<h4 style='color: {hex_code}; margin-bottom: 2px; margin-top: 15px;'>🏏 {batter_name} vs {bowling_team} Bowlers</h4>"))
-                
-                df_m = pd.DataFrame(matchup_data).sort_values('Balls', ascending=False)
-                
-                def style_rows(row):
-                    if isinstance(row['Outs'], (int, float)) and row['Outs'] >= 3:
-                        return ['color: red; font-weight: bold'] * len(row)
-                    elif row['Balls'] > 30 and row['Outs'] == 0:
-                        return ['color: green; font-weight: bold'] * len(row)
-                    return [''] * len(row)
-
-                display(df_m.style.apply(style_rows, axis=1).format(precision=1).hide(axis='index'))
-
-        # --- 1. HOME TEAM BATTERS vs AWAY BOWLERS ---
-        print(f"\n⚔️ {team_a_name.upper()} BATTERS vs {team_b_name.upper()} BOWLERS")
-        print("="*60)
-        for batter in team_a_players:
-            display_batter_vs_bowlers(batter, team_a_name, team_b_players, team_b_name)
-            
-        # --- 2. AWAY TEAM BATTERS vs HOME BOWLERS ---
-        print(f"\n⚔️ {team_b_name.upper()} BATTERS vs {team_a_name.upper()} BOWLERS")
-        print("="*60)
-        for batter in team_b_players:
-            display_batter_vs_bowlers(batter, team_b_name, team_a_players, team_a_name)
-
+        return round(weighted_projection, 1), "OK"
+    
     # =================================================================================
     # 4. REPORTING & ANALYSIS METHODS
     # =================================================================================
+
+    
     def analyze_home_fortress(self, stadium_name, home_team, opp_team='All', years_back=10):
         """
         TRADING LAYER 2: "The Fortress Check"
@@ -1486,6 +1390,517 @@ class CricketAnalyzer:
         
         # 8. Audit
         self._display_audit(recent, team_name)
+    
+    def _calculate_squad_metrics(self, team_name, player_list):
+        """
+        Calculates aggregate career stats for a list of players.
+        FIXED: Calculates 'Combined Caps' by summing individual player appearances.
+        """
+        # 1. Filter raw data for the whole squad first (Optimization)
+        # We check Striker (Batting) and Bowler roles.
+        # Note: This misses games where a player ONLY fielded (no bat, no bowl), 
+        # but that is a limitation of ball-by-ball data.
+        mask = (self.raw_df['striker'].isin(player_list)) | (self.raw_df['bowler'].isin(player_list))
+        squad_data = self.raw_df[mask]
+        
+        total_runs = 0
+        centuries = 0
+        fifties = 0
+        total_wickets = 0
+        five_wickets = 0
+        combined_caps = 0
+
+        # 2. Iterate Player by Player to get Individual Stats
+        for player in player_list:
+            # Get player specific data
+            p_bat = squad_data[squad_data['striker'] == player]
+            p_bowl = squad_data[squad_data['bowler'] == player]
+            
+            # --- CAPS (Matches Played) ---
+            # Unique matches where they appeared as Striker OR Bowler
+            matches_batted = set(p_bat['match_id'].unique())
+            matches_bowled = set(p_bowl['match_id'].unique())
+            player_caps = len(matches_batted.union(matches_bowled))
+            combined_caps += player_caps # Add to Squad Total
+            
+            # --- BATTING STATS ---
+            if not p_bat.empty:
+                # Group by match to handle scores
+                match_scores = p_bat.groupby('match_id')['runs_off_bat'].sum()
+                total_runs += match_scores.sum()
+                centuries += (match_scores >= 100).sum()
+                fifties += ((match_scores >= 50) & (match_scores < 100)).sum()
+            
+            # --- BOWLING STATS ---
+            if not p_bowl.empty:
+                # Filter for wickets
+                wicket_types = ['bowled', 'caught', 'lbw', 'stumped', 'caught and bowled', 'hit wicket']
+                valid_wickets = p_bowl[p_bowl['wicket_type'].isin(wicket_types)]
+                
+                total_wickets += len(valid_wickets)
+                
+                # Group by match for 5WIs
+                if not valid_wickets.empty:
+                    match_wickets = valid_wickets.groupby('match_id')['wicket_type'].count()
+                    five_wickets += (match_wickets >= 5).sum()
+        
+        return {
+            'Team': team_name,
+            'Caps (Combined)': combined_caps, # 👈 Now sums up every player's experience
+            'Total Runs': total_runs,
+            '100s': centuries,
+            '50s': fifties,
+            'Total Wickets': total_wickets,
+            '5-Wkt Hauls': five_wickets
+        }
+    
+    def get_active_squad(self, team_name):
+        """
+        Returns a list of players who have played for 'team_name'.
+        Used to populate the Multi-Select Widget.
+        """
+        if self.meta_df.empty: return []
+        
+        # Filter by team and sort alphabetically
+        # We perform a case-insensitive check
+        team_players = self.meta_df[self.meta_df['team'].str.lower() == team_name.lower()]
+        return sorted(team_players['player'].unique().tolist())
+
+    def compare_squads(self, team_a_name, team_a_players, team_b_name, team_b_players, venue_id):
+        """
+        The Virtual Dugout. 🏟️
+        Compares two selected XIs with:
+        - 🏆 SQUAD EXPERIENCE MONITOR
+        - 📝 FORM (L5 Scores & Wickets Strings)
+        - 🔮 SMART PROJECTIONS (Law of Averages)
+        - Side-by-Side Matchups
+        - Traffic Light Coloring
+        - 🔗 WIRED TO VENUES.PY
+        """
+        import ipywidgets as widgets
+        from IPython.display import display, HTML
+        import numpy as np
+        
+        print(f"\n⚔️ SQUAD COMPARISON: {team_a_name} vs {team_b_name}")
+
+        # --- 1. SQUAD EXPERIENCE TABLE ---
+        metrics_a = self._calculate_squad_metrics(team_a_name, team_a_players)
+        metrics_b = self._calculate_squad_metrics(team_b_name, team_b_players)
+        
+        df_experience = pd.DataFrame([metrics_a, metrics_b])
+        
+        print("\n🏆 SQUAD EXPERIENCE (Combined Career Stats)")
+        display(df_experience.style.format({
+            'Caps (Combined)': '{:,}', 
+            'Total Runs': '{:,}', 
+            'Total Wickets': '{:,}'
+        }).hide(axis='index').set_properties(**{'text-align': 'center', 'font-size': '11pt'}))
+        print("-" * 80)
+        
+        # 🎨 JERSEY COLOR MAP
+        TEAM_COLORS = {
+            'India': '#1F34D1', 'Australia': '#D4AF37', 'England': '#C51130',
+            'South Africa': '#006A4E', 'New Zealand': '#222222', 'Pakistan': '#01411C',
+            'West Indies': '#7B0028', 'Sri Lanka': '#0E3292', 'Bangladesh': '#006A4E',
+            'Afghanistan': '#0063B2', 'Zimbabwe': '#D40000', 'Ireland': '#009D4E',
+            'Netherlands': '#FF6600'
+        }
+
+        # 🧠 BOWLER STYLE DICTIONARY
+        BOWLER_STYLES = {
+            # --- AUSTRALIA ---
+            'MA Starc': '⚡ Left-Arm Fast', 'JR Hazlewood': '⚡ Right-Arm Fast', 'PJ Cummins': '⚡ Right-Arm Fast',
+            'A Zampa': '🌀 Leg Spin', 'NM Lyon': '🌀 Off Spin', 'GJ Maxwell': '🌀 Off Spin', 
+            'MR Marsh': '⚡ Right-Arm Med-Fast', 'MP Stoinis': '⚡ Right-Arm Med-Fast', 
+            'C Green': '⚡ Right-Arm Fast-Med', 'Sean Abbott': '⚡ Right-Arm Fast-Med', 'JA Richardson': '⚡ Right-Arm Fast',
+            'NT Ellis': '⚡ Right-Arm Fast-Med', 'X Bartlett': '⚡ Right-Arm Fast-Med',
+            # --- INDIA ---
+            'JJ Bumrah': '⚡ Right-Arm Fast', 'Mohammed Shami': '⚡ Right-Arm Fast', 'Mohammed Siraj': '⚡ Right-Arm Fast',
+            'Kuldeep Yadav': '🌀 Left-Arm Wrist', 'RA Jadeja': '🌀 Left-Arm Orth', 'R Ashwin': '🌀 Off Spin',
+            'AR Patel': '🌀 Left-Arm Orth', 'HH Pandya': '⚡ Right-Arm Fast-Med', 'Shardul Thakur': '⚡ Right-Arm Med-Fast',
+            'Washington Sundar': '🌀 Off Spin', 'Harshit Rana': '⚡ Right-Arm Fast', 'Nithish Kumar Reddy': '⚡ Right-Arm Fast-Med',
+            'M Prasidh Krishna': '⚡ Right-Arm Fast', 'Arshdeep Singh': '⚡ Left-Arm Fast-Med', 'Ravi Bishnoi': '🌀 Leg Spin',
+            # --- ENGLAND ---
+            'J Archer': '⚡ Right-Arm Fast', 'MA Wood': '⚡ Right-Arm Fast', 'CR Woakes': '⚡ Right-Arm Fast-Med',
+            'SM Curran': '⚡ Left-Arm Fast-Med', 'AU Rashid': '🌀 Leg Spin', 'MM Ali': '🌀 Off Spin',
+            'RJW Topley': '⚡ Left-Arm Fast-Med', 'BA Carse': '⚡ Right-Arm Fast', 'O Stone': '⚡ Right-Arm Fast',
+            'G Atkinson': '⚡ Right-Arm Fast-Med', 'LS Livingstone': '🌀 Off Spin', 'W Jacks': '🌀 Off Spin',
+            'Rehan Ahmed': '🌀 Leg Spin', 'S Mahmood': '⚡ Right-Arm Fast-Med', 'L Wood': '⚡ Left-Arm Fast',
+            # --- SOUTH AFRICA ---
+            'K Rabada': '⚡ Right-Arm Fast', 'L Ngidi': '⚡ Right-Arm Fast-Med', 'A Nortje': '⚡ Right-Arm Fast',
+            'M Jansen': '⚡ Left-Arm Fast-Med', 'G Coetzee': '⚡ Right-Arm Fast', 'KA Maharaj': '🌀 Left-Arm Orth',
+            'T Shamsi': '🌀 Left-Arm Wrist', 'BC Fortuin': '🌀 Left-Arm Orth', 'W Mulder': '⚡ Right-Arm Med',
+            'AL Phehlukwayo': '⚡ Right-Arm Fast-Med', 'N Burger': '⚡ Left-Arm Fast-Med', 'O Baartman': '⚡ Right-Arm Fast-Med',
+            # --- NEW ZEALAND ---
+            'TA Boult': '⚡ Left-Arm Fast-Med', 'TG Southee': '⚡ Right-Arm Fast-Med', 'MJ Henry': '⚡ Right-Arm Fast-Med',
+            'LH Ferguson': '⚡ Right-Arm Fast', 'MJ Santner': '🌀 Left-Arm Orth', 'IS Sodhi': '🌀 Leg Spin',
+            'KJ Jamieson': '⚡ Right-Arm Fast-Med', 'AF Milne': '⚡ Right-Arm Fast', 'GD Phillips': '🌀 Off Spin',
+            'R Ravindra': '🌀 Left-Arm Orth', 'MJ Bracewell': '🌀 Off Spin', 'BN Sears': '⚡ Right-Arm Fast',
+            'W O\'Rourke': '⚡ Right-Arm Fast-Med',
+            # --- PAKISTAN ---
+            'Shaheen Shah Afridi': '⚡ Left-Arm Fast', 'Naseem Shah': '⚡ Right-Arm Fast', 'Haris Rauf': '⚡ Right-Arm Fast',
+            'Hasan Ali': '⚡ Right-Arm Fast-Med', 'Shadab Khan': '🌀 Leg Spin', 'Mohammad Nawaz': '🌀 Left-Arm Orth',
+            'Usama Mir': '🌀 Leg Spin', 'Mohammad Wasim': '⚡ Right-Arm Fast-Med', 'Abrar Ahmed': '🌀 Leg Spin',
+            'Iftikhar Ahmed': '🌀 Off Spin', 'Agha Salman': '🌀 Off Spin', 'Faheem Ashraf': '⚡ Right-Arm Fast-Med',
+            'Zaman Khan': '⚡ Right-Arm Fast', 'Aamer Jamal': '⚡ Right-Arm Fast-Med', 'Mir Hamza': '⚡ Left-Arm Fast-Med',
+            # --- SRI LANKA ---
+            'PWH de Silva': '🌀 Leg Spin', 'M Theekshana': '🌀 Off Spin', 'D Madushanka': '⚡ Left-Arm Fast-Med',
+            'CAK Rajitha': '⚡ Right-Arm Fast-Med', 'PVD Chameera': '⚡ Right-Arm Fast', 'M Pathirana': '⚡ Right-Arm Fast',
+            'CBRLS Kumara': '⚡ Right-Arm Fast', 'D Wellalage': '🌀 Left-Arm Orth', 'J Vandersay': '🌀 Leg Spin',
+            'AM Fernando': '⚡ Right-Arm Fast-Med', 'C Karunaratne': '⚡ Right-Arm Fast-Med', 'MD Shanaka': '⚡ Right-Arm Med',
+            'DM de Silva': '🌀 Off Spin', 'KIC Asalanka': '🌀 Off Spin', 'N Thushara': '⚡ Right-Arm Fast-Med',
+            # --- WEST INDIES ---
+            'AS Joseph': '⚡ Right-Arm Fast', 'J Holder': '⚡ Right-Arm Fast-Med', 'AJ Hosein': '🌀 Left-Arm Orth',
+            'G Motie': '🌀 Left-Arm Orth', 'R Shepherd': '⚡ Right-Arm Fast-Med', 'O Thomas': '⚡ Right-Arm Fast',
+            'K Pierre': '🌀 Left-Arm Orth', 'RL Chase': '🌀 Off Spin', 'JNT Seales': '⚡ Right-Arm Fast',
+            'JP Greaves': '🌀 Off Spin', 'S Gabriel': '⚡ Right-Arm Fast',
+            # --- BANGLADESH ---
+            'Mustafizur Rahman': '⚡ Left-Arm Fast', 'Taskin Ahmed': '⚡ Right-Arm Fast', 'Shakib Al Hasan': '🌀 Left-Arm Orth',
+            'Mehedi Hasan Miraz': '🌀 Off Spin', 'Nasum Ahmed': '🌀 Left-Arm Orth', 'Hasan Mahmud': '⚡ Right-Arm Fast',
+            'Shoriful Islam': '⚡ Left-Arm Fast', 'Taijul Islam': '🌀 Left-Arm Orth', 'Rishad Hossain': '🌀 Leg Spin',
+            'Tanzim Hasan Sakib': '⚡ Right-Arm Fast-Med', 'Ebadot Hossain': '⚡ Right-Arm Fast',
+            # --- AFGHANISTAN ---
+            'Rashid Khan': '🌀 Leg Spin', 'Mujeeb Ur Rahman': '🌀 Off Spin', 'Mohammad Nabi': '🌀 Off Spin',
+            'Fazalhaq Farooqi': '⚡ Left-Arm Fast-Med', 'Naveen-ul-Haq': '⚡ Right-Arm Fast-Med',
+            'Azmatullah Omarzai': '⚡ Right-Arm Fast-Med', 'Noor Ahmad': '🌀 Left-Arm Wrist', 'Fareed Ahmad': '⚡ Left-Arm Fast-Med',
+            'Gulbadin Naib': '⚡ Right-Arm Fast-Med', 'Qais Ahmad': '🌀 Leg Spin', 'AM Ghazanfar': '🌀 Off Spin'
+        }
+
+        if self.player_df.empty:
+            print("❌ No player data available.")
+            return
+
+        # -------------------------------------------------------------
+        # ✅ NEW VENUE LOGIC (WIRED TO VENUES.PY)
+        # -------------------------------------------------------------
+        from venues import get_venue_aliases
+        target_venues = get_venue_aliases(venue_id)
+        
+        print(f"📍 Analysis Venue ID: {venue_id}")
+        print(f"🔎 Aggregating stats from: {target_venues}")
+        print("-" * 80)
+
+        # --- INTERNAL HELPER: GET PLAYER STATS ---
+        def get_stats(player, opponent_team, venue_list):
+            # Batting
+            bat_all = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == 'batting')]
+            car_runs = bat_all[bat_all['context'] == 'vs_team']['runs'].sum()
+            car_outs = bat_all[bat_all['context'] == 'vs_team']['dismissals'].sum()
+            car_inns = bat_all[bat_all['context'] == 'vs_team']['innings'].sum()
+            car_avg = round(car_runs / car_outs, 1) if car_outs > 0 else car_runs
+            
+            opp_row = bat_all[(bat_all['context'] == 'vs_team') & (bat_all['opponent'] == opponent_team)]
+            opp_avg = "-"
+            if not opp_row.empty:
+                runs, outs = opp_row['runs'].sum(), opp_row['dismissals'].sum()
+                opp_avg = round(runs / outs, 1) if outs > 0 else runs
+
+            ven_row = bat_all[(bat_all['context'] == 'at_venue') & (bat_all['opponent'].isin(venue_list))]
+            ven_avg = "-"
+            ven_inns = "-"
+            if not ven_row.empty:
+                runs = ven_row['runs'].sum()
+                outs = ven_row['dismissals'].sum()
+                ven_inns = ven_row['innings'].sum()
+                ven_avg = round(runs / outs, 1) if outs > 0 else runs
+
+            # -------------------------------------------------------
+            # 📝 BATTING FORM (Last 5 Scores) - UPDATED
+            # -------------------------------------------------------
+            bat_form_display = "-"
+            try:
+                # 1. Get chronological innings (Uses global sort from __init__)
+                p_bat_raw = self.raw_df[self.raw_df['striker'] == player].drop_duplicates(subset=['match_id'])
+                last_5_bat = p_bat_raw.tail(5)['match_id'].unique()
+                
+                recent_scores = []
+                if len(last_5_bat) > 0:
+                    for m_id in last_5_bat:
+                        m_data = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['striker'] == player)]
+                        runs = m_data['runs_off_bat'].sum()
+                        is_out = m_data['wicket_type'].notna().any()
+                        score_str = f"{runs}" if is_out else f"{runs}*"
+                        recent_scores.append(score_str)
+                    # Show: Most Recent -> Oldest (Left to Right)
+                    bat_form_display = ", ".join(recent_scores[::-1]) 
+            except: pass
+
+            # 🔮 PROJECTIONS (Runs)
+            venue_primary = target_venues[0] if target_venues else venue_id
+            proj_runs, _ = self._calculate_smart_projection(player, 'batting', venue_primary)
+
+            # Bowling Stats
+            bowl_all = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == 'bowling')]
+            c_runs = bowl_all[bowl_all['context'] == 'vs_team']['runs'].sum()
+            c_wkts = bowl_all[bowl_all['context'] == 'vs_team']['dismissals'].sum()
+            c_balls = bowl_all[bowl_all['context'] == 'vs_team']['balls'].sum()
+            bowl_avg = round(c_runs / c_wkts, 1) if c_wkts > 0 else "-"
+            bowl_econ = round((c_runs / c_balls) * 6, 1) if c_balls > 0 else "-"
+
+            v_bowl_row = bowl_all[(bowl_all['context'] == 'at_venue') & (bowl_all['opponent'].isin(venue_list))]
+            ven_econ = "-"
+            ven_wkts = "-"
+            if not v_bowl_row.empty:
+                vr, vb, vw = v_bowl_row['runs'].sum(), v_bowl_row['balls'].sum(), v_bowl_row['dismissals'].sum()
+                ven_econ = round((vr / vb) * 6, 1) if vb > 0 else "-"
+                ven_wkts = int(vw)
+            
+            # -------------------------------------------------------
+            # 🥎 BOWLING FORM (Last 5 Matches Wickets) - NEW
+            # -------------------------------------------------------
+            bowl_form_display = "-"
+            try:
+                # Get chronological bowling innings
+                p_bowl_raw = self.raw_df[self.raw_df['bowler'] == player].drop_duplicates(subset=['match_id'])
+                if not p_bowl_raw.empty:
+                    last_5_bowl = p_bowl_raw.tail(5)['match_id'].unique()
+                    recent_wkts = []
+                    
+                    wicket_types = ['bowled', 'caught', 'lbw', 'stumped', 'caught and bowled', 'hit wicket']
+                    
+                    for m_id in last_5_bowl:
+                        m_data = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['bowler'] == player)]
+                        wkt_count = m_data['wicket_type'].isin(wicket_types).sum()
+                        recent_wkts.append(f"{wkt_count}w")
+                    
+                    bowl_form_display = ", ".join(recent_wkts[::-1])
+            except: pass
+
+            # 🔮 PROJECTIONS (Wickets)
+            proj_wkts, _ = self._calculate_smart_projection(player, 'bowling', venue_primary)
+            v_short = venue_id.split('_')[-1].title() if '_' in venue_id else 'Venue'
+            
+            # ✅ RETURN DICTIONARY WITH ALL NEW METRICS
+            return {
+                'Player': player,
+                'Inns': car_inns,
+                'Bat Form': bat_form_display, # 👈 Score String
+                'Bat Avg': car_avg,
+                f'vs {opponent_team}': opp_avg,
+                f'Avg ({v_short})': ven_avg, 
+                '🔮 Runs': proj_runs, # 👈 Prediction
+                'Bowl Form': bowl_form_display, # 👈 Wicket String
+                'Bowl Econ': bowl_econ,
+                f'Econ ({v_short})': ven_econ,
+                f'Wkts ({v_short})': ven_wkts,
+                '🔮 Wkts': proj_wkts  # 👈 Prediction
+            }
+
+        # --- DISPLAY TEAM SUMMARIES (Side by Side) ---
+        out_summary_a = widgets.Output()
+        out_summary_b = widgets.Output()
+
+        # Helper to style the dataframe (Conditionally Format Forms)
+        def style_df(df):
+            return df.style.format(na_rep="-", precision=1).hide(axis='index')\
+                .applymap(lambda v: 'color: red; font-weight: bold;' if isinstance(v, str) and v == '0' else '', subset=['Bat Form'])\
+                .applymap(lambda v: 'color: green; font-weight: bold;' if isinstance(v, str) and ('3w' in v or '4w' in v or '5w' in v) else '', subset=['Bowl Form'])
+
+        with out_summary_a:
+            print(f"📊 {team_a_name.upper()}")
+            data_a = [get_stats(p, team_b_name, target_venues) for p in team_a_players]
+            df_a = pd.DataFrame(data_a)
+            if not df_a.empty: display(style_df(df_a))
+
+        with out_summary_b:
+            print(f"📊 {team_b_name.upper()}")
+            data_b = [get_stats(p, team_a_name, target_venues) for p in team_b_players]
+            df_b = pd.DataFrame(data_b)
+            if not df_b.empty: display(style_df(df_b))
+            
+        display(widgets.HBox([out_summary_a, out_summary_b], layout=widgets.Layout(width='100%')))
+
+        # --- HELPER: BATTER VS BOWLERS DISPLAY (Existing) ---
+        def display_batter_vs_bowlers(batter_name, batter_team, bowlers_list, bowling_team):
+            matchup_data = []
+            
+            for bowler in bowlers_list:
+                h2h = self.player_df[
+                    (self.player_df['player'] == batter_name) & 
+                    (self.player_df['opponent'] == bowler) & 
+                    (self.player_df['role'] == 'h2h')
+                ]
+                
+                if not h2h.empty:
+                    balls = h2h['balls'].sum()
+                    if balls > 0:
+                        runs = h2h['runs'].sum()
+                        outs = h2h['dismissals'].sum()
+                        avg = round(runs/outs, 1) if outs > 0 else f"{runs}*"
+                        sr = round((runs/balls)*100, 1)
+                        
+                        style = BOWLER_STYLES.get(bowler, 'Unknown')
+                        bowler_display = f"{bowler} ({style})"
+                        
+                        matchup_data.append({
+                            'Bowler': bowler_display,
+                            'Runs': runs,
+                            'Balls': balls,
+                            'Outs': outs,
+                            'Avg': avg,
+                            'SR': sr
+                        })
+            
+            if matchup_data:
+                hex_code = TEAM_COLORS.get(batter_team, '#000000')
+                display(HTML(f"<h4 style='color: {hex_code}; margin-bottom: 2px; margin-top: 15px;'>🏏 {batter_name}</h4>"))
+                
+                df_m = pd.DataFrame(matchup_data).sort_values('Balls', ascending=False)
+                
+                # 🎨 COLOR CODING LOGIC (Green / Orange / Red)
+                def style_rows(row):
+                    outs = row['Outs']
+                    if outs == 0:
+                        return ['color: green; font-weight: bold'] * len(row)
+                    elif outs > 2:
+                        return ['color: red; font-weight: bold'] * len(row)
+                    elif 1 <= outs <= 2:
+                        return ['color: #FF8C00; font-weight: bold'] * len(row)
+                    return [''] * len(row)
+
+                display(df_m.style.apply(style_rows, axis=1).format(precision=1).hide(axis='index'))
+
+        # --- SIDE BY SIDE MATCHUPS ---
+        print("\n⚔️ FULL MATCHUP BREAKDOWN")
+        print("="*80)
+        
+        left_box = widgets.Output()
+        right_box = widgets.Output()
+        
+        with left_box:
+            print(f"🗡️ {team_a_name} Batting vs {team_b_name} Bowling")
+            for batter in team_a_players:
+                display_batter_vs_bowlers(batter, team_a_name, team_b_players, team_b_name)
+        
+        with right_box:
+            print(f"🗡️ {team_b_name} Batting vs {team_a_name} Bowling")
+            for batter in team_b_players:
+                display_batter_vs_bowlers(batter, team_b_name, team_a_players, team_a_name)
+        
+        display(widgets.HBox([left_box, right_box], layout=widgets.Layout(width='100%', justify_content='space-around')))
+
+    def predict_score(self, batting_team, batting_players, bowling_team, bowling_players, venue_id):
+        """
+        🔮 PREDICTOR ENGINE: Calculates Par Score based on Venue, Batting Form & Bowling Resistance.
+        FIXED: 
+        - Calculates Total Runs by adding 'runs_off_bat' + 'extras'.
+        - Wired to VENUES.PY for consistent stadium alias lookups.
+        """
+        import ipywidgets as widgets
+        from IPython.display import display, HTML
+        
+        print(f"\n🔮 SCORE PREDICTOR: {batting_team} Batting First at {venue_id}")
+        print("="*80)
+        
+        # -------------------------------------------------------------
+        # ✅ NEW VENUE LOGIC (WIRED TO VENUES.PY)
+        # -------------------------------------------------------------
+        # This replaces the old hardcoded dictionaries.
+        # It automatically finds ALL variations (e.g. Wankhede + Wankhede Mumbai)
+        target_venues = get_venue_aliases(venue_id)
+        
+        # --- 2. CALCULATE VENUE BASELINE (1st Innings Avg) ---
+        venue_mask = self.raw_df['venue'].isin(target_venues) & (self.raw_df['innings'] == 1)
+        venue_matches = self.raw_df[venue_mask]
+        
+        # We need a fallback variable for display in case data is missing
+        venue_avg = 250 
+        sample_size = 0
+        
+        if venue_matches.empty:
+            print(f"⚠️ Not enough data for venue '{venue_id}'. Using Global Avg (250).")
+        else:
+            # 🚨 FIX: Sum runs_off_bat + extras to get total runs
+            # We group by match_id, sum both columns, then add them together
+            match_sums = venue_matches.groupby('match_id')[['runs_off_bat', 'extras']].sum()
+            match_totals = match_sums['runs_off_bat'] + match_sums['extras']
+            
+            venue_avg = int(match_totals.mean())
+            sample_size = len(match_totals)
+            print(f"🏟️ Venue Avg (1st Inn): {venue_avg} runs (Sample: {sample_size} matches)")
+
+        # --- 3. CALCULATE BATTING POWER (Team A) ---
+        total_bat_potential = 0
+        active_batters = 0
+        
+        for p in batting_players:
+            p_stats = self.player_df[(self.player_df['player'] == p) & (self.player_df['role'] == 'batting')]
+            if not p_stats.empty:
+                runs = p_stats[p_stats['context'] == 'vs_team']['runs'].sum()
+                outs = p_stats[p_stats['context'] == 'vs_team']['dismissals'].sum()
+                
+                # Cap average at 60
+                avg = (runs / outs) if outs > 0 else runs
+                if avg > 60: avg = 60 
+                if avg < 5: avg = 5 
+                
+                total_bat_potential += avg
+                active_batters += 1
+        
+        standard_bat_score = 300 
+        bat_factor = total_bat_potential / standard_bat_score if standard_bat_score > 0 else 1.0
+        
+        # --- 4. CALCULATE BOWLING RESISTANCE (Team B) ---
+        total_econ = 0
+        active_bowlers = 0
+        
+        for p in bowling_players:
+            p_stats = self.player_df[(self.player_df['player'] == p) & (self.player_df['role'] == 'bowling')]
+            if not p_stats.empty:
+                runs = p_stats[p_stats['context'] == 'vs_team']['runs'].sum()
+                balls = p_stats[p_stats['context'] == 'vs_team']['balls'].sum()
+                
+                if balls > 60:
+                    econ = (runs / balls) * 6
+                    total_econ += econ
+                    active_bowlers += 1
+        
+        avg_team_econ = (total_econ / active_bowlers) if active_bowlers > 0 else 5.5
+        standard_econ = 5.5
+        
+        # Logic: If Team Econ (6.0) > Standard (5.5) -> They concede MORE runs -> Factor > 1
+        bowl_factor = avg_team_econ / standard_econ
+        
+        # --- 5. THE PREDICTION FORMULA ---
+        predicted_score = venue_avg * bat_factor * bowl_factor
+        
+        lower_bound = int(predicted_score - 15)
+        upper_bound = int(predicted_score + 15)
+        
+        # --- DISPLAY DASHBOARD ---
+        
+        # Determine Colors
+        bat_color = 'green' if bat_factor >= 1 else 'red'
+        bowl_color = 'green' if bowl_factor >= 1 else 'red' # High factor (bad bowling) is 'green' for batting side!
+        
+        html_card = f"""
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 20px;">
+            <h2 style="color: #333; margin-top: 0;">🔮 Prediction: {batting_team} to score</h2>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <div style="text-align: center; width: 30%;">
+                    <div style="font-size: 24px;">🏟️</div>
+                    <div style="font-weight: bold; color: #666;">Venue Baseline</div>
+                    <div style="font-size: 20px; color: #333;">{venue_avg}</div>
+                </div>
+                <div style="text-align: center; width: 30%;">
+                    <div style="font-size: 24px;">🏏</div>
+                    <div style="font-weight: bold; color: #666;">Bat Strength</div>
+                    <div style="font-size: 20px; color: {bat_color};">{round(bat_factor, 2)}x</div>
+                </div>
+                <div style="text-align: center; width: 30%;">
+                    <div style="font-size: 24px;">⚡</div>
+                    <div style="font-weight: bold; color: #666;">Bowl Permissiveness</div>
+                    <div style="font-size: 20px; color: {bowl_color};">{round(bowl_factor, 2)}x</div>
+                </div>
+            </div>
+            <div style="text-align: center; border-top: 1px solid #ccc; padding-top: 15px;">
+                <div style="font-size: 16px; color: #555; margin-bottom: 5px;">Predicted 1st Innings Range</div>
+                <div style="font-size: 36px; font-weight: bold; color: #2c3e50;">{lower_bound} - {upper_bound}</div>
+                <div style="font-size: 12px; color: #888;">(Confidence: Based on {sample_size} historical matches)</div>
+            </div>
+        </div>
+        """
+        display(HTML(html_card))
 
     #==================================================================================================#
     # 5. PLAYERS STATS FUNCTIONS

@@ -6,7 +6,7 @@ class TraderCockpit:
     """
     The Dashboard (GUI). 🎛️
     This class connects the Engine's logic to visual Widgets.
-    UPDATED: Fixed Continent Analysis to correctly pass Opponent and Years.
+    UPDATED: Added Clear Buttons & Fixed List Resetting Bug.
     """
 
     def __init__(self, bot_instance):
@@ -71,7 +71,7 @@ class TraderCockpit:
             layout=widgets.Layout(width='45%')
         )
 
-        # 👇 1. SINGLE PLAYER WIDGETS (Fixed: Added Button Definition)
+        # 👇 1. SINGLE PLAYER WIDGETS
         self.player_select = widgets.Combobox(
             placeholder='Search Player (e.g. V Kohli)...',
             options=self.all_players,
@@ -102,7 +102,8 @@ class TraderCockpit:
             disabled=False,
             layout=widgets.Layout(width='95%', height='180px')
         )
-        self.btn_home_remove = widgets.Button(description='Remove Selected', icon='minus', button_style='warning', layout=widgets.Layout(width='95%'))
+        self.btn_home_remove = widgets.Button(description='Remove', icon='minus', button_style='warning', layout=widgets.Layout(width='48%'))
+        self.btn_home_clear = widgets.Button(description='Clear All', icon='trash', button_style='danger', layout=widgets.Layout(width='48%')) # 👈 NEW
 
         # 👇 3. SQUAD BUILDER WIDGETS (AWAY TEAM)
         self.away_search = widgets.Combobox(
@@ -119,7 +120,8 @@ class TraderCockpit:
             disabled=False,
             layout=widgets.Layout(width='95%', height='180px')
         )
-        self.btn_away_remove = widgets.Button(description='Remove Selected', icon='minus', button_style='warning', layout=widgets.Layout(width='95%'))
+        self.btn_away_remove = widgets.Button(description='Remove', icon='minus', button_style='warning', layout=widgets.Layout(width='48%'))
+        self.btn_away_clear = widgets.Button(description='Clear All', icon='trash', button_style='danger', layout=widgets.Layout(width='48%')) # 👈 NEW
 
         # COMPARE BUTTON
         self.btn_compare = widgets.Button(
@@ -130,39 +132,35 @@ class TraderCockpit:
         )
         
         # --- BINDINGS ---
-        self.home_select.observe(self.update_squad_lists, names='value')
-        self.away_select.observe(self.update_squad_lists, names='value')
         
-        # Single Player Binding (Fixed: Was missing)
+        # 🚨 FIX: Separate listeners to prevent list erasing
+        self.home_select.observe(self.update_home_list, names='value')
+        self.away_select.observe(self.update_away_list, names='value')
+        
+        # Single Player Binding
         self.btn_player.on_click(self.run_player_analysis)
         
-        # Add/Remove Bindings
+        # Squad Builder Bindings
         self.btn_home_add.on_click(self.add_home_player)
         self.btn_home_remove.on_click(self.remove_home_player)
+        self.btn_home_clear.on_click(self.clear_home_squad) # 👈 Bind Clear Home
+        
         self.btn_away_add.on_click(self.add_away_player)
         self.btn_away_remove.on_click(self.remove_away_player)
+        self.btn_away_clear.on_click(self.clear_away_squad) # 👈 Bind Clear Away
         
         self.btn_compare.on_click(self.run_squad_comparison)
         
         # --- ACTION BUTTONS ---
         
-        # Row 1: Basic Matchup
         self.btn_matchup = widgets.Button(description='Analyze Venue Matchup', button_style='primary', icon='map-marker', layout=widgets.Layout(width='48%'))
         self.btn_fortress = widgets.Button(description='Check Fortress', button_style='warning', icon='shield', layout=widgets.Layout(width='48%'))
-        
-        # Row 2: Country & Global
         self.btn_country = widgets.Button(description='Check Host Country Stats', button_style='info', icon='flag', layout=widgets.Layout(width='48%'))
         self.btn_global = widgets.Button(description='Global H2H Stats', button_style='success', icon='globe', layout=widgets.Layout(width='48%'))
-
-        # Row 3: Special Tools
         self.btn_dominance = widgets.Button(description='🏠 Home Dominance', button_style='danger', icon='table', layout=widgets.Layout(width='32%'))
         self.btn_away_perf = widgets.Button(description='✈️ Away Stats', button_style='warning', icon='plane', layout=widgets.Layout(width='32%'))
         self.btn_global_perf = widgets.Button(description='🌍 Global Power', button_style='danger', icon='globe', layout=widgets.Layout(width='32%'))
-        
-        # Row 4: Continent
         self.btn_continent = widgets.Button(description='Check Continent Stats', button_style='info', icon='compass', layout=widgets.Layout(width='98%'))
-
-        # Row 5: VENUE DEEP DIVE
         self.btn_toss = widgets.Button(description='🪙 Check Toss Bias', button_style='primary', icon='toggle-on', layout=widgets.Layout(width='48%'))
         self.btn_phases = widgets.Button(
             description='🕒 Phase Analysis (PP/Death)',
@@ -170,11 +168,8 @@ class TraderCockpit:
             icon='clock-o',
             layout=widgets.Layout(width='48%')
         )
-        
-        # Row 6: Team Form
         self.btn_form = widgets.Button(description='📉 Check Recent Form', button_style='primary', icon='chart-line', layout=widgets.Layout(width='98%'))
         
-        # Output Area
         self.out = widgets.Output()
         
         # 3. BIND EVENTS (Existing)
@@ -190,7 +185,7 @@ class TraderCockpit:
         self.btn_form.on_click(self.run_team_form)
         self.btn_phases.on_click(self.run_phases)
         
-        # 4. ORGANIZE LAYOUT (Fixed: Cleaned up indentation and structure)
+        # 4. ORGANIZE LAYOUT
         self.ui = widgets.VBox([
             widgets.HTML("<h2>🏏 Algo-Trader Dashboard</h2>"),
             widgets.HTML("<i>Start typing a venue name or select an ID...</i>"),
@@ -224,7 +219,7 @@ class TraderCockpit:
                     widgets.Label("🏠 Home Team Draft:"),
                     widgets.HBox([self.home_search, self.btn_home_add]),
                     self.home_squad_box,
-                    self.btn_home_remove
+                    widgets.HBox([self.btn_home_remove, self.btn_home_clear]) # 👈 Added Clear Button
                 ], layout=widgets.Layout(width='48%')),
                 
                 # RIGHT COLUMN (AWAY)
@@ -232,7 +227,7 @@ class TraderCockpit:
                     widgets.Label("✈️ Away Team Draft:"),
                     widgets.HBox([self.away_search, self.btn_away_add]),
                     self.away_squad_box,
-                    self.btn_away_remove
+                    widgets.HBox([self.btn_away_remove, self.btn_away_clear]) # 👈 Added Clear Button
                 ], layout=widgets.Layout(width='48%'))
             ]),
             
@@ -242,11 +237,79 @@ class TraderCockpit:
             self.out
         ])
         
+        # 🚨 STARTUP FIX: Force-load lists for default values
+        self.update_home_list()
+        self.update_away_list()
+        
     def display(self):
         display(self.ui)
         
-    # --- LOGIC HANDLERS ---
-    
+    # 🔄 UPDATED: Populate the Search Box (Using RAW_DF to find squads)
+    def update_home_list(self, change=None):
+        if self.home_select.value:
+            team = self.home_select.value
+            
+            # 1. Get Batters (Strikers for this team)
+            batters = self.bot.raw_df[self.bot.raw_df['batting_team'] == team]['striker'].unique()
+            
+            # 2. Get Bowlers (Bowlers for this team)
+            bowlers = self.bot.raw_df[self.bot.raw_df['bowling_team'] == team]['bowler'].unique()
+            
+            # 3. Combine and Sort
+            squad = sorted(list(set(batters) | set(bowlers)))
+            
+            # 4. Update Widget
+            self.home_search.options = squad
+            self.home_search.value = ''
+            self.home_squad_box.options = [] 
+            
+    def update_away_list(self, change=None):
+        if self.away_select.value and self.away_select.value != 'All':
+            team = self.away_select.value
+            
+            batters = self.bot.raw_df[self.bot.raw_df['batting_team'] == team]['striker'].unique()
+            bowlers = self.bot.raw_df[self.bot.raw_df['bowling_team'] == team]['bowler'].unique()
+            
+            squad = sorted(list(set(batters) | set(bowlers)))
+            
+            self.away_search.options = squad
+            self.away_search.value = ''
+            self.away_squad_box.options = []
+
+    # --- SQUAD MANAGEMENT HANDLERS ---
+    def add_home_player(self, b):
+        player = self.home_search.value
+        current_list = list(self.home_squad_box.options)
+        if player and player not in current_list:
+            current_list.append(player)
+            self.home_squad_box.options = current_list
+            self.home_search.value = ''
+
+    def add_away_player(self, b):
+        player = self.away_search.value
+        current_list = list(self.away_squad_box.options)
+        if player and player not in current_list:
+            current_list.append(player)
+            self.away_squad_box.options = current_list
+            self.away_search.value = ''
+
+    def remove_home_player(self, b):
+        to_remove = self.home_squad_box.value
+        new_list = [p for p in list(self.home_squad_box.options) if p not in to_remove]
+        self.home_squad_box.options = new_list
+
+    def remove_away_player(self, b):
+        to_remove = self.away_squad_box.value
+        new_list = [p for p in list(self.away_squad_box.options) if p not in to_remove]
+        self.away_squad_box.options = new_list
+
+    def clear_home_squad(self, b): # 👈 NEW HANDLER
+        self.home_squad_box.options = []
+        
+    def clear_away_squad(self, b): # 👈 NEW HANDLER
+        self.away_squad_box.options = []
+
+    # --- EXISTING ANALYSIS HANDLERS ---
     def run_matchup(self, b):
         with self.out:
             clear_output()
@@ -315,16 +378,13 @@ class TraderCockpit:
     def run_continent(self, b):
         with self.out:
             clear_output()
-            # 🚨 FIX: Correctly passing arguments to the new Engine signature
-            opp_label = self.away_select.value  # 'All' or specific Team
-            
+            opp_label = self.away_select.value
             print(f"🌏 Analyzing {self.home_select.value} in {self.continent_select.value} (vs {opp_label})...")
-            
             self.bot.analyze_continent_performance(
                 team_name=self.home_select.value, 
                 continent=self.continent_select.value, 
-                opp_team=opp_label,             # <--- Correctly passing the opponent
-                years_back=self.years_slider.value  # <--- Correctly passing the years
+                opp_team=opp_label,
+                years_back=self.years_slider.value
             )
             
     def run_toss_bias(self, b):
@@ -339,34 +399,26 @@ class TraderCockpit:
     def run_team_form(self, b):
         with self.out:
             clear_output()
-            # Capture the current selections
             opp_label = self.away_select.value
             cont_label = self.continent_select.value
-            
-            # Create a descriptive print
             filter_text = ""
             if opp_label != 'All': filter_text += f" vs {opp_label}"
             if cont_label: filter_text += f" in {cont_label}"
             
             print(f"📉 Checking Recent Form for {self.home_select.value}{filter_text}...")
-            
-            # Pass the filters to the engine
             self.bot.analyze_team_form(
                 team_name=self.home_select.value, 
-                opp_team=opp_label,        # <--- Now passing opponent
-                continent=cont_label,      # <--- Now passing continent
+                opp_team=opp_label,
+                continent=cont_label,
                 limit=5
             )
 
     def run_phases(self, b):
-        # NEW UPDATED HANDLER
         with self.out:
             clear_output()
             if not self.venue_select.value:
                 print("❌ ERROR: You must select a Venue first.")
                 return
-            
-            # CRITICAL UPDATE: Passing Home and Away teams to the engine
             self.bot.analyze_venue_phases(
                 stadium_id=self.venue_select.value,
                 home_team=self.home_select.value,
@@ -380,58 +432,9 @@ class TraderCockpit:
             if not player:
                 print("❌ ERROR: Please select or type a player name.")
                 return
-            
             self.bot.analyze_player_profile(player)
     
-    # 🔄 UPDATED: Populate the Search Box, not the List
-    def update_squad_lists(self, change=None):
-        """Populates the Combobox options when a Team is selected."""
-        # Home Team
-        if self.home_select.value:
-            players = self.bot.get_active_squad(self.home_select.value)
-            self.home_search.options = players
-            self.home_search.value = '' # Reset text
-            self.home_squad_box.options = [] # Clear selected list
-            
-        # Away Team
-        if self.away_select.value:
-            players = self.bot.get_active_squad(self.away_select.value)
-            self.away_search.options = players
-            self.away_search.value = ''
-            self.away_squad_box.options = []
-
-    # ➕ ADD HANDLERS
-    def add_home_player(self, b):
-        player = self.home_search.value
-        current_list = list(self.home_squad_box.options)
-        if player and player not in current_list:
-            current_list.append(player)
-            self.home_squad_box.options = current_list
-            self.home_search.value = '' # Clear box for next player
-
-    def add_away_player(self, b):
-        player = self.away_search.value
-        current_list = list(self.away_squad_box.options)
-        if player and player not in current_list:
-            current_list.append(player)
-            self.away_squad_box.options = current_list
-            self.away_search.value = ''
-
-    # ➖ REMOVE HANDLERS
-    def remove_home_player(self, b):
-        # Remove items that are currently highlighted in the box
-        to_remove = self.home_squad_box.value
-        current_list = list(self.home_squad_box.options)
-        new_list = [p for p in current_list if p not in to_remove]
-        self.home_squad_box.options = new_list
-
-    def remove_away_player(self, b):
-        to_remove = self.away_squad_box.value
-        current_list = list(self.away_squad_box.options)
-        new_list = [p for p in current_list if p not in to_remove]
-        self.away_squad_box.options = new_list
-
-    # ⚔️ UPDATED COMPARE LOGIC
+    # ⚔️ UPDATED COMPARE LOGIC (Includes Score Prediction)
     def run_squad_comparison(self, b):
         with self.out:
             clear_output()
@@ -440,7 +443,7 @@ class TraderCockpit:
             team_b = self.away_select.value
             venue = self.venue_select.value
             
-            # 👇 NOW READING FROM .options (The built list)
+            # Use options from the box, which persists even if you change other things
             players_a = list(self.home_squad_box.options)
             players_b = list(self.away_squad_box.options)
             
@@ -448,4 +451,23 @@ class TraderCockpit:
                 print("⚠️ Please add at least 1 player to both squads.")
                 return
             
+            # 1. Run Stats Comparison
             self.bot.compare_squads(team_a, players_a, team_b, players_b, venue)
+            
+            # 2. Score Prediction (Home Bats First)
+            self.bot.predict_score(
+                batting_team=team_a,
+                batting_players=players_a,
+                bowling_team=team_b,
+                bowling_players=players_b,
+                venue_id=venue
+            )
+            
+            # 3. Score Prediction (Away Bats First)
+            self.bot.predict_score(
+                batting_team=team_b,
+                batting_players=players_b,
+                bowling_team=team_a,
+                bowling_players=players_a,
+                venue_id=venue
+            )

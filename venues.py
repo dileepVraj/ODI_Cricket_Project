@@ -49,6 +49,11 @@ VENUE_MAP = {
     'Shaheed Veer Narayan Singh Stadium': 'IND_RAIPUR',
     'Raipur': 'IND_RAIPUR',
     'Raipur International Cricket Stadium': 'IND_RAIPUR',
+    'Saurashtra Cricket Association Stadium': 'IND_RAJKOT',
+    'Saurashtra Cricket Association Stadium, Rajkot': 'IND_RAJKOT', # <--- Likely missing culprit
+    'Rajkot': 'IND_RAJKOT',
+    'Madhavrao Scindia Cricket Ground': 'IND_RAJKOT', # (Historical venue in same city)
+    'Madhavrao Scindia Cricket Ground, Rajkot': 'IND_RAJKOT',
     
     # --- 🇦🇺 AUSTRALIA ---
     'Melbourne Cricket Ground': 'AUS_MELBOURNE',
@@ -285,3 +290,27 @@ VENUE_MAP = {
 
     
 }
+
+def get_venue_aliases(venue_identifier):
+    """
+    Takes a Venue ID (e.g. 'IND_MUMBAI_WANKHEDE') OR a Raw Name (e.g. 'Wankhede Stadium')
+    and returns a LIST of ALL variations found in the Raw Data that match this venue.
+    
+    This is the key to aggregation!
+    """
+    # 1. Normalize: Find the Master ID
+    # If input is already an ID (like 'IND_MUMBAI_WANKHEDE'), it won't be in keys, so we default to it.
+    # If input is 'Wankhede Stadium', we find 'IND_MUMBAI_WANKHEDE'.
+    master_id = VENUE_MAP.get(venue_identifier, venue_identifier)
+    
+    # 2. Reverse Lookup: Find ALL keys that point to this Master ID
+    # This finds ['Wankhede Stadium', 'Wankhede Stadium, Mumbai']
+    aliases = [name for name, m_id in VENUE_MAP.items() if m_id == master_id]
+    
+    # 3. Fallback
+    if not aliases:
+        # If no alias found (maybe a new stadium not in map yet), return the input itself 
+        # so the code doesn't crash.
+        return [venue_identifier]
+        
+    return aliases
