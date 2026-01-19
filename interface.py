@@ -6,7 +6,7 @@ class TraderCockpit:
     """
     The Dashboard (GUI). 🎛️
     This class connects the Engine's logic to visual Widgets.
-    UPDATED: Added Clear Buttons & Fixed List Resetting Bug.
+    UPDATED: Added 'Load Last XI' buttons for fast squad selection.
     """
 
     def __init__(self, bot_instance):
@@ -38,19 +38,31 @@ class TraderCockpit:
             layout=widgets.Layout(width='98%')
         )
         
-        # Team Selectors
+        # Team Selectors & LOAD BUTTONS 🆕
         self.home_select = widgets.Dropdown(
-            options=self.all_teams,
+            options=['All'] + self.all_teams,  
             description='🏠 Home:',
             value='India',
-            layout=widgets.Layout(width='45%')
+            layout=widgets.Layout(width='35%')
+        )
+        self.btn_load_home = widgets.Button(
+            description='📋 Last XI', 
+            button_style='info', 
+            tooltip='Auto-load the last playing 11 for this team',
+            layout=widgets.Layout(width='12%')
         )
         
         self.away_select = widgets.Dropdown(
             options=['All'] + self.all_teams,
             description='✈️ Touring:',
             value='Australia',
-            layout=widgets.Layout(width='45%')
+            layout=widgets.Layout(width='35%')
+        )
+        self.btn_load_away = widgets.Button(
+            description='📋 Last XI', 
+            button_style='info', 
+            tooltip='Auto-load the last playing 11 for this team',
+            layout=widgets.Layout(width='12%')
         )
         
         # Continent & Years
@@ -103,7 +115,7 @@ class TraderCockpit:
             layout=widgets.Layout(width='95%', height='180px')
         )
         self.btn_home_remove = widgets.Button(description='Remove', icon='minus', button_style='warning', layout=widgets.Layout(width='48%'))
-        self.btn_home_clear = widgets.Button(description='Clear All', icon='trash', button_style='danger', layout=widgets.Layout(width='48%')) # 👈 NEW
+        self.btn_home_clear = widgets.Button(description='Clear All', icon='trash', button_style='danger', layout=widgets.Layout(width='48%'))
 
         # 👇 3. SQUAD BUILDER WIDGETS (AWAY TEAM)
         self.away_search = widgets.Combobox(
@@ -121,7 +133,7 @@ class TraderCockpit:
             layout=widgets.Layout(width='95%', height='180px')
         )
         self.btn_away_remove = widgets.Button(description='Remove', icon='minus', button_style='warning', layout=widgets.Layout(width='48%'))
-        self.btn_away_clear = widgets.Button(description='Clear All', icon='trash', button_style='danger', layout=widgets.Layout(width='48%')) # 👈 NEW
+        self.btn_away_clear = widgets.Button(description='Clear All', icon='trash', button_style='danger', layout=widgets.Layout(width='48%'))
 
         # COMPARE BUTTON
         self.btn_compare = widgets.Button(
@@ -133,7 +145,6 @@ class TraderCockpit:
         
         # --- BINDINGS ---
         
-        # 🚨 FIX: Separate listeners to prevent list erasing
         self.home_select.observe(self.update_home_list, names='value')
         self.away_select.observe(self.update_away_list, names='value')
         
@@ -143,11 +154,15 @@ class TraderCockpit:
         # Squad Builder Bindings
         self.btn_home_add.on_click(self.add_home_player)
         self.btn_home_remove.on_click(self.remove_home_player)
-        self.btn_home_clear.on_click(self.clear_home_squad) # 👈 Bind Clear Home
+        self.btn_home_clear.on_click(self.clear_home_squad)
         
         self.btn_away_add.on_click(self.add_away_player)
         self.btn_away_remove.on_click(self.remove_away_player)
-        self.btn_away_clear.on_click(self.clear_away_squad) # 👈 Bind Clear Away
+        self.btn_away_clear.on_click(self.clear_away_squad)
+        
+        # LOAD LAST XI BINDINGS 🆕
+        self.btn_load_home.on_click(self.load_home_xi)
+        self.btn_load_away.on_click(self.load_away_xi)
         
         self.btn_compare.on_click(self.run_squad_comparison)
         
@@ -172,7 +187,7 @@ class TraderCockpit:
         
         self.out = widgets.Output()
         
-        # 3. BIND EVENTS (Existing)
+        # 3. BIND EVENTS
         self.btn_matchup.on_click(self.run_matchup)
         self.btn_fortress.on_click(self.run_fortress)
         self.btn_country.on_click(self.run_country)
@@ -185,17 +200,24 @@ class TraderCockpit:
         self.btn_form.on_click(self.run_team_form)
         self.btn_phases.on_click(self.run_phases)
         
-        # 4. ORGANIZE LAYOUT
-        self.ui = widgets.VBox([
-            widgets.HTML("<h2>🏏 Algo-Trader Dashboard</h2>"),
-            widgets.HTML("<i>Start typing a venue name or select an ID...</i>"),
-            self.venue_select,
-            widgets.HBox([self.home_select, self.away_select]),
-            widgets.HTML("<br><b>⚙️ Settings:</b>"),
-            widgets.HBox([self.years_slider, self.continent_select]), 
-            widgets.HTML("<hr>"),
-            
-            # Button Layout:
+        # -----------------------------------------------------------
+        # 🆕 UX UPGRADE: COLLAPSIBLE SECTIONS
+        # -----------------------------------------------------------
+        
+        # Toggle Buttons
+        self.toggle_analysis_btn = widgets.Button(
+            description='🔽 Hide Team & Venue Analysis',
+            button_style='', 
+            layout=widgets.Layout(width='99%', margin='10px 0px 5px 0px')
+        )
+        self.toggle_squads_btn = widgets.Button(
+            description='🔽 Hide Player & Squads',
+            button_style='',
+            layout=widgets.Layout(width='99%', margin='10px 0px 5px 0px')
+        )
+
+        # SECTION 1: Team & Venue Analysis Container
+        self.container_analysis = widgets.VBox([
             widgets.HBox([self.btn_matchup, self.btn_fortress]),
             widgets.HBox([self.btn_country, self.btn_global]),
             widgets.HBox([self.btn_dominance, self.btn_away_perf, self.btn_global_perf]),
@@ -206,12 +228,15 @@ class TraderCockpit:
             
             widgets.HTML("<b>📉 Team Context:</b>"),
             widgets.Box([self.btn_form]),
-            
-            widgets.HTML("<hr><b>🔬 Player Analytics (Micro-Level):</b>"),
+        ])
+
+        # SECTION 2: Player & Squads Container
+        self.container_squads = widgets.VBox([
+            widgets.HTML("<b>🔬 Player Analytics (Micro-Level):</b>"),
             widgets.HBox([self.player_select, self.btn_player]),
             
             widgets.HTML("<hr><b>⚔️ Virtual Dugout (Squad Comparison):</b>"),
-            widgets.HTML("<i>Select players from the dropdown and click '+' to build your Playing XI.</i>"),
+            widgets.HTML("<i>Select players manually OR click 'Last XI' to auto-load.</i>"),
             
             widgets.HBox([
                 # LEFT COLUMN (HOME)
@@ -219,7 +244,7 @@ class TraderCockpit:
                     widgets.Label("🏠 Home Team Draft:"),
                     widgets.HBox([self.home_search, self.btn_home_add]),
                     self.home_squad_box,
-                    widgets.HBox([self.btn_home_remove, self.btn_home_clear]) # 👈 Added Clear Button
+                    widgets.HBox([self.btn_home_remove, self.btn_home_clear])
                 ], layout=widgets.Layout(width='48%')),
                 
                 # RIGHT COLUMN (AWAY)
@@ -227,11 +252,38 @@ class TraderCockpit:
                     widgets.Label("✈️ Away Team Draft:"),
                     widgets.HBox([self.away_search, self.btn_away_add]),
                     self.away_squad_box,
-                    widgets.HBox([self.btn_away_remove, self.btn_away_clear]) # 👈 Added Clear Button
+                    widgets.HBox([self.btn_away_remove, self.btn_away_clear])
                 ], layout=widgets.Layout(width='48%'))
             ]),
             
-            widgets.Box([self.btn_compare]),
+            widgets.Box([self.btn_compare])
+        ])
+
+        # Bind Toggle Logic
+        self.toggle_analysis_btn.on_click(lambda b: self._toggle_section(self.container_analysis, self.toggle_analysis_btn, "Team & Venue Analysis"))
+        self.toggle_squads_btn.on_click(lambda b: self._toggle_section(self.container_squads, self.toggle_squads_btn, "Player & Squads"))
+
+        # 4. ORGANIZE FINAL LAYOUT
+        self.ui = widgets.VBox([
+            widgets.HTML("<h2>🏏 Algo-Trader Dashboard</h2>"),
+            widgets.HTML("<i>Start typing a venue name or select an ID...</i>"),
+            self.venue_select,
+            # Updated Team Selector Row with Load Buttons
+            widgets.HBox([self.home_select, self.btn_load_home, self.away_select, self.btn_load_away]),
+            widgets.HTML("<br><b>⚙️ Settings:</b>"),
+            widgets.HBox([self.years_slider, self.continent_select]), 
+            
+            widgets.HTML("<hr>"),
+            
+            # Section 1
+            self.toggle_analysis_btn,
+            self.container_analysis,
+            
+            widgets.HTML("<hr>"),
+            
+            # Section 2
+            self.toggle_squads_btn,
+            self.container_squads,
             
             widgets.HTML("<hr>"),
             self.out
@@ -243,6 +295,14 @@ class TraderCockpit:
         
     def display(self):
         display(self.ui)
+
+    def _toggle_section(self, container, btn, name):
+        if container.layout.display == 'none':
+            container.layout.display = 'block'
+            btn.description = f'🔽 Hide {name}'
+        else:
+            container.layout.display = 'none'
+            btn.description = f'▶️ Show {name}'
         
     # 🔄 UPDATED: Populate the Search Box (Using RAW_DF to find squads)
     def update_home_list(self, change=None):
@@ -303,11 +363,37 @@ class TraderCockpit:
         new_list = [p for p in list(self.away_squad_box.options) if p not in to_remove]
         self.away_squad_box.options = new_list
 
-    def clear_home_squad(self, b): # 👈 NEW HANDLER
+    def clear_home_squad(self, b):
         self.home_squad_box.options = []
         
-    def clear_away_squad(self, b): # 👈 NEW HANDLER
+    def clear_away_squad(self, b):
         self.away_squad_box.options = []
+
+    # --- LOAD LAST XI HANDLERS 🆕 ---
+    def load_home_xi(self, b):
+        try:
+            squad = self.bot.get_last_match_xi(self.home_select.value)
+            if squad:
+                self.home_squad_box.options = squad
+                # Provide visual feedback via output (optional, or just rely on box update)
+            else:
+                with self.out:
+                    print(f"⚠️ No recent match found for {self.home_select.value}")
+        except Exception as e:
+            with self.out:
+                print(f"❌ Error loading squad: {e}")
+
+    def load_away_xi(self, b):
+        try:
+            squad = self.bot.get_last_match_xi(self.away_select.value)
+            if squad:
+                self.away_squad_box.options = squad
+            else:
+                with self.out:
+                    print(f"⚠️ No recent match found for {self.away_select.value}")
+        except Exception as e:
+            with self.out:
+                print(f"❌ Error loading squad: {e}")
 
     # --- EXISTING ANALYSIS HANDLERS ---
     def run_matchup(self, b):
@@ -393,8 +479,14 @@ class TraderCockpit:
             if not self.venue_select.value:
                 print("❌ ERROR: You must select a Venue first.")
                 return
+            
             print(f"🪙 Checking Toss Bias for {self.venue_select.value}...")
-            self.bot.analyze_venue_bias(self.venue_select.value)
+            
+            # 👇 Updated to pass the Years Slider value
+            self.bot.analyze_venue_bias(
+                stadium_name=self.venue_select.value, 
+                years_back=self.years_slider.value
+            )
 
     def run_team_form(self, b):
         with self.out:
@@ -419,10 +511,13 @@ class TraderCockpit:
             if not self.venue_select.value:
                 print("❌ ERROR: You must select a Venue first.")
                 return
+            
+            # 👇 Pass the slider value here
             self.bot.analyze_venue_phases(
-                stadium_id=self.venue_select.value,
-                home_team=self.home_select.value,
-                away_team=self.away_select.value
+                self.venue_select.value, 
+                self.home_select.value, 
+                self.away_select.value,
+                years=self.years_slider.value
             )
     
     def run_player_analysis(self, b):
@@ -452,7 +547,12 @@ class TraderCockpit:
                 return
             
             # 1. Run Stats Comparison
-            self.bot.compare_squads(team_a, players_a, team_b, players_b, venue)
+            self.bot.compare_squads(
+                team_a, players_a, 
+                team_b, players_b, 
+                venue, 
+                years=self.years_slider.value
+            )
             
             # 2. Score Prediction (Home Bats First)
             self.bot.predict_score(

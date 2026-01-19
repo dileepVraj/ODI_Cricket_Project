@@ -33,6 +33,9 @@ VENUE_MAP = {
     'Maharashtra Cricket Association Stadium': 'IND_PUNE',
     'Maharashtra Cricket Association Stadium, Gahunje': 'IND_PUNE',
     'Sawai Mansingh Stadium': 'IND_JAIPUR',
+    'Sawai Mansingh Stadium': 'IND_JAIPUR',
+    'Sawai Mansingh Stadium, Jaipur': 'IND_JAIPUR', 
+    'Jaipur': 'IND_JAIPUR',
     'Green Park': 'IND_KANPUR',
     'Barabati Stadium': 'IND_CUTTACK',
     'Holkar Cricket Stadium': 'IND_INDORE',
@@ -54,6 +57,9 @@ VENUE_MAP = {
     'Rajkot': 'IND_RAJKOT',
     'Madhavrao Scindia Cricket Ground': 'IND_RAJKOT', # (Historical venue in same city)
     'Madhavrao Scindia Cricket Ground, Rajkot': 'IND_RAJKOT',
+    'Holkar Cricket Stadium': 'IND_INDORE',
+    'Holkar Cricket Stadium, Indore': 'IND_INDORE', 
+    'Indore': 'IND_INDORE',
     
     # --- 🇦🇺 AUSTRALIA ---
     'Melbourne Cricket Ground': 'AUS_MELBOURNE',
@@ -69,11 +75,9 @@ VENUE_MAP = {
     'Bellerive Oval': 'AUS_HOBART',
     'Blundstone Arena': 'AUS_HOBART',
     'Manuka Oval': 'AUS_CANBERRA',
-    # --- 🇦🇺 AUSTRALIA (Regional Updates) ---
     "Cazaly's Stadium": 'AUS_CAIRNS',
     "Cazaly's Stadium, Cairns": 'AUS_CAIRNS',
     "Cairns": 'AUS_CAIRNS',
-    
     "Great Barrier Reef Arena": 'AUS_MACKAY',
     "Ray Mitchell Oval": 'AUS_MACKAY',
     "Harrup Park": 'AUS_MACKAY',
@@ -84,11 +88,8 @@ VENUE_MAP = {
     'WACA Ground': 'AUS_PERTH_WACA',   
     'WACA': 'AUS_PERTH_WACA',
     'Western Australia Cricket Association Ground': 'AUS_PERTH_WACA',          
-    
-    # Also valid for "Riverway Stadium" if you have Townsville matches
     "Riverway Stadium": 'AUS_TOWNSVILLE',
     "Townsville": 'AUS_TOWNSVILLE',
-    
     "Manuka Oval": 'AUS_CANBERRA',
     "Canberra": 'AUS_CANBERRA',
     
@@ -96,7 +97,7 @@ VENUE_MAP = {
     "Lord's": 'ENG_LONDON_LORDS',
     "Lord's, London": 'ENG_LONDON_LORDS',
     
-    'The Oval': 'ENG_LONDON_OVAL', # (Handled by disambiguation logic first)
+    'The Oval': 'ENG_LONDON_OVAL', 
     'The Oval, London': 'ENG_LONDON_OVAL',
     'Kennington Oval': 'ENG_LONDON_OVAL',
     'Kennington Oval, London': 'ENG_LONDON_OVAL',
@@ -181,6 +182,10 @@ VENUE_MAP = {
     'Cobham Oval (New)': 'NZ_WHANGAREI',
     'Cobham Oval, Whangarei': 'NZ_WHANGAREI',
     'Whangarei': 'NZ_WHANGAREI',
+    'Bay Oval': 'NZ_MT_MAUNGANUI',
+    'Bay Oval, Mount Maunganui': 'NZ_MT_MAUNGANUI', # 2025 Name
+    'Mount Maunganui': 'NZ_MT_MAUNGANUI',           # 2018 Name (Likely)
+    'NZ_MT_MAUNGANUI': 'NZ_MT_MAUNGANUI',
     
     # --- 🇿🇦 SOUTH AFRICA ---
     'Wanderers Stadium': 'SA_JOHANNESBURG',
