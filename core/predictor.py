@@ -1,157 +1,201 @@
 import pandas as pd
+import numpy as np
+import re
 from IPython.display import display, HTML
 from venues import get_venue_aliases
 from config.settings import (
     VENUE_BASELINE_DEFAULT, STANDARD_BATTING_POTENTIAL, 
-    STANDARD_BOWLING_ECONOMY, PREDICTION_MARGIN,
-    MIN_BAT_AVG_CAP, MAX_BAT_AVG_CAP, MIN_BOWLS_FILTER,
-    WEIGHT_FORM, WEIGHT_VENUE, WEIGHT_CAREER
+    PREDICTION_MARGIN, MIN_BAT_AVG_CAP, MAX_BAT_AVG_CAP, MIN_BOWLS_FILTER
 )
+from config.teams import TEAM_COLORS
+
+# 🔧 INTERNAL CALIBRATION (Modern ODI Standards)
+# We moved these here to ensure they override any old settings
+MODERN_BOWLING_ECONOMY = 5.85  # Raised from 5.0 -> Makes 5.4 look ELITE
+MODERN_BOWLING_SR = 34.0       # Standard balls per wicket
+CRITICAL_BAT_DEPTH = 7         # Minimum real batters needed
 
 class PredictorEngine:
     """
-    🔮 The Oracle.
-    Handles Score Predictions and Smart Projections using the Law of Averages.
+    🔮 The Sniper (v3.2 - Calibrated).
+    - Fix: 'Bowl Weakness' now correctly identifies Elite Attacks as 'Strength' (<1.0x).
+    - Logic: Aggressive Collapse Penalty when weak batting meets strong bowling.
     """
     def __init__(self, raw_df, player_df):
         self.raw_df = raw_df
         self.player_df = player_df
 
-    def calculate_smart_projection(self, player, role, venue_name):
-        """
-        🔮 LAW OF AVERAGES ENGINE
-        Formula: (Form * W1) + (Venue * W2) + (Career * W3)
-        """
-        # 1. Career Stats
-        p_stats = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == role)]
-        if p_stats.empty: return 0, "New Player"
-
-        car_runs = p_stats[p_stats['context'] == 'vs_team']['runs'].sum()
-        car_outs = p_stats[p_stats['context'] == 'vs_team']['dismissals'].sum()
-        car_avg = (car_runs / car_outs) if car_outs > 0 else car_runs
+    def calculate_smart_projection(self, player, role, venue_pattern):
+        # (Lightweight helper for tables)
+        bat = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == role)]
+        if bat.empty: return 0, "-"
         
-        # 2. Venue Stats
-        ven_stats = p_stats[(p_stats['context'] == 'at_venue') & (p_stats['opponent'] == venue_name)]
-        if not ven_stats.empty:
-            ven_runs = ven_stats['runs'].sum()
-            ven_outs = ven_stats['dismissals'].sum()
-            ven_avg = (ven_runs / ven_outs) if ven_outs > 0 else ven_runs
+        if role == 'batting':
+            car_val = bat[bat['context']=='vs_team']['runs'].sum() / max(1, bat[bat['context']=='vs_team']['dismissals'].sum())
         else:
-            ven_avg = car_avg
+            car_val = bat[bat['context']=='vs_team']['dismissals'].sum() / max(1, bat[bat['context']=='vs_team']['innings'].sum())
 
-        # 3. Recent Form
-        recent_avg = car_avg
+        ven_val = car_val
         try:
+            # Simple Regex search for table display
+            mask = (self.raw_df['venue'].str.contains(venue_pattern, case=False, na=False))
             if role == 'batting':
-                p_raw = self.raw_df[self.raw_df['striker'] == player].drop_duplicates(subset=['match_id'])
-                last_5 = p_raw.tail(5)
-                if not last_5.empty:
-                    runs_5 = 0; outs_5 = 0
-                    for m_id in last_5['match_id'].unique():
-                        m_data = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['striker'] == player)]
-                        runs_5 += m_data['runs_off_bat'].sum()
-                        if m_data['wicket_type'].notna().any(): outs_5 += 1
-                    recent_avg = (runs_5 / outs_5) if outs_5 > 0 else runs_5
-            
-            elif role == 'bowling':
-                p_raw = self.raw_df[self.raw_df['bowler'] == player].drop_duplicates(subset=['match_id'])
-                last_5 = p_raw.tail(5)
-                if not last_5.empty:
-                    wkts_5 = 0; matches_5 = len(last_5)
-                    wicket_types = ['bowled', 'caught', 'lbw', 'stumped', 'caught and bowled', 'hit wicket']
-                    for m_id in last_5['match_id'].unique():
-                        m_data = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['bowler'] == player)]
-                        wkts_5 += m_data['wicket_type'].isin(wicket_types).sum()
-                    
-                    recent_avg = wkts_5 / matches_5 # Wkts per match
-                    
-                    # Normalize Historical Avgs to Wkts/Match for weighting
-                    c_inns = p_stats[p_stats['context'] == 'vs_team']['innings'].sum()
-                    c_wkts = p_stats[p_stats['context'] == 'vs_team']['dismissals'].sum()
-                    car_avg = c_wkts / c_inns if c_inns > 0 else 0
-                    
-                    if not ven_stats.empty:
-                         v_inns = ven_stats['innings'].sum()
-                         v_wkts = ven_stats['dismissals'].sum()
-                         ven_avg = v_wkts / v_inns if v_inns > 0 else 0
-                    else:
-                        ven_avg = car_avg
+                raw_ven = self.raw_df[(self.raw_df['striker'] == player) & mask]
+                if not raw_ven.empty:
+                    runs = raw_ven['runs_off_bat'].sum()
+                    outs = raw_ven['wicket_type'].notna().sum()
+                    ven_val = runs / max(1, outs)
+            else:
+                raw_ven = self.raw_df[(self.raw_df['bowler'] == player) & mask]
+                if not raw_ven.empty:
+                    wkts = raw_ven['wicket_type'].isin(['bowled','caught','lbw','stumped','caught and bowled','hit wicket']).sum()
+                    matches = len(raw_ven['match_id'].unique())
+                    ven_val = wkts / max(1, matches)
         except: pass
 
-        weighted = (WEIGHT_FORM * recent_avg) + (WEIGHT_VENUE * ven_avg) + (WEIGHT_CAREER * car_avg)
-        return round(weighted, 1), "OK"
+        proj = (0.3 * ven_val) + (0.7 * car_val)
+        return round(proj, 1), "OK"
 
     def predict_score(self, batting_team, batting_players, bowling_team, bowling_players, venue_id):
-        print(f"\n🔮 SCORE PREDICTOR: {batting_team} Batting First at {venue_id}")
-        print("="*80)
-        
+        # 1. VENUE INTELLIGENCE (Modern Par)
         target_venues = get_venue_aliases(venue_id)
+        if "_" in venue_id: 
+            parts = venue_id.split("_")
+            if len(parts) > 1: target_venues.append(parts[1]) 
+            
+        venue_pattern = '|'.join([re.escape(v) for v in target_venues if v])
         
-        # 1. VENUE BASELINE
-        venue_mask = self.raw_df['venue'].isin(target_venues) & (self.raw_df['innings'] == 1)
-        venue_matches = self.raw_df[venue_mask]
+        # Date Filter: Last 5 Years
+        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=5)
+        
+        venue_matches = self.raw_df[
+            (self.raw_df['venue'].str.contains(venue_pattern, case=False, na=False)) & 
+            (self.raw_df['innings'] == 1) &
+            (self.raw_df['start_date'] >= cutoff_date)
+        ]
         
         venue_avg = VENUE_BASELINE_DEFAULT
-        sample_size = 0
+        venue_msg = "Global Avg (Data Missing)"
         
-        if venue_matches.empty:
-            print(f"⚠️ Not enough data for venue '{venue_id}'. Using Global Avg ({VENUE_BASELINE_DEFAULT}).")
-        else:
+        if not venue_matches.empty:
             match_sums = venue_matches.groupby('match_id')[['runs_off_bat', 'extras']].sum()
             match_totals = match_sums['runs_off_bat'] + match_sums['extras']
-            venue_avg = int(match_totals.mean())
-            sample_size = len(match_totals)
-            print(f"🏟️ Venue Avg (1st Inn): {venue_avg} runs (Sample: {sample_size} matches)")
-
-        # 2. BATTING POWER
-        total_bat = 0
+            clean_totals = match_totals[match_totals > 180] 
+            
+            if not clean_totals.empty:
+                venue_avg = int(clean_totals.mean())
+                venue_msg = f"Venue Par (Last 5 Yrs, {len(clean_totals)} Mat)"
+            else:
+                venue_avg = int(match_totals.mean())
+                venue_msg = f"Venue Avg (Low Sample: {len(match_totals)})"
+        
+        # 2. BATTING POWER & DEPTH
+        total_bat_potential = 0
+        capable_batters = 0 
+        
         for p in batting_players:
             p_stats = self.player_df[(self.player_df['player'] == p) & (self.player_df['role'] == 'batting')]
             if not p_stats.empty:
                 runs = p_stats[p_stats['context'] == 'vs_team']['runs'].sum()
                 outs = p_stats[p_stats['context'] == 'vs_team']['dismissals'].sum()
                 avg = (runs / outs) if outs > 0 else runs
+                
+                # Apply Caps
                 if avg > MAX_BAT_AVG_CAP: avg = MAX_BAT_AVG_CAP
                 if avg < MIN_BAT_AVG_CAP: avg = MIN_BAT_AVG_CAP
-                total_bat += avg
+                
+                total_bat_potential += avg
+                if avg > 22: capable_batters += 1 # Raised threshold slightly
         
-        bat_factor = total_bat / STANDARD_BATTING_POTENTIAL if STANDARD_BATTING_POTENTIAL > 0 else 1.0
+        # 3. BOWLING THREAT (Economy + Strike Rate)
+        total_econ = 0
+        total_sr = 0
+        active_bowlers = 0
         
-        # 3. BOWLING RESISTANCE
-        total_econ = 0; active_bowlers = 0
         for p in bowling_players:
             p_stats = self.player_df[(self.player_df['player'] == p) & (self.player_df['role'] == 'bowling')]
             if not p_stats.empty:
                 runs = p_stats[p_stats['context'] == 'vs_team']['runs'].sum()
                 balls = p_stats[p_stats['context'] == 'vs_team']['balls'].sum()
+                wkts = p_stats[p_stats['context'] == 'vs_team']['dismissals'].sum()
+                
                 if balls > MIN_BOWLS_FILTER:
                     econ = (runs / balls) * 6
+                    sr = (balls / wkts) if wkts > 0 else 60
+                    
                     total_econ += econ
+                    total_sr += sr
                     active_bowlers += 1
         
-        avg_econ = (total_econ / active_bowlers) if active_bowlers > 0 else STANDARD_BOWLING_ECONOMY
-        bowl_factor = avg_econ / STANDARD_BOWLING_ECONOMY
+        avg_bowling_econ = (total_econ / active_bowlers) if active_bowlers > 0 else MODERN_BOWLING_ECONOMY
         
-        # 4. RESULT
-        predicted_score = venue_avg * bat_factor * bowl_factor
-        low = int(predicted_score - PREDICTION_MARGIN)
-        high = int(predicted_score + PREDICTION_MARGIN)
+        # 4. ALGORITHM (Calibrated)
+        bat_factor = total_bat_potential / STANDARD_BATTING_POTENTIAL
         
-        bat_c = 'green' if bat_factor >= 1 else 'red'
-        bowl_c = 'green' if bowl_factor >= 1 else 'red'
+        # Bowl Factor: If Economy is 5.4 vs Standard 5.85, Factor is 0.92 (Strength)
+        bowl_factor = avg_bowling_econ / MODERN_BOWLING_ECONOMY 
         
-        html = f"""
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
-            <h2 style="color: #333; margin:0;">🔮 Prediction: {batting_team} to score</h2>
-            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                <div style="text-align: center;"><h3>🏟️ Venue</h3><span style="font-size:18px">{venue_avg}</span></div>
-                <div style="text-align: center;"><h3>🏏 Bat</h3><span style="font-size:18px; color:{bat_c}">{round(bat_factor, 2)}x</span></div>
-                <div style="text-align: center;"><h3>⚡ Bowl</h3><span style="font-size:18px; color:{bowl_c}">{round(bowl_factor, 2)}x</span></div>
+        raw_prediction = venue_avg * bat_factor * bowl_factor
+        
+        # 5. RISK ADJUSTMENTS
+        adjustment_msg = []
+        final_prediction = raw_prediction
+        
+        # A. Collapse Penalty
+        if capable_batters < CRITICAL_BAT_DEPTH:
+            base_penalty = (CRITICAL_BAT_DEPTH - capable_batters) * 20 # -20 runs per missing batter
+            
+            # Multiplier: If bowling is STRONG (factor < 0.96), double the penalty
+            if bowl_factor < 0.96:
+                base_penalty = int(base_penalty * 1.5)
+                adjustment_msg.append(f"📉 High Collapse Risk (-{base_penalty})")
+            else:
+                adjustment_msg.append(f"📉 Tail-Ender Risk (-{base_penalty})")
+                
+            final_prediction -= base_penalty
+
+        # 6. RENDER
+        lower = int(final_prediction - PREDICTION_MARGIN)
+        upper = int(final_prediction + PREDICTION_MARGIN)
+        
+        c1 = TEAM_COLORS.get(batting_team, "#333")
+        
+        # Color logic for Bowl Factor (Green if < 1 because low score is good for bowling team)
+        bf_color = 'green' if bowl_factor < 1.0 else 'red'
+        bf_text = "STRONG ATTACK" if bowl_factor < 1.0 else "WEAK ATTACK"
+        
+        display(HTML(f"""
+        <div style="background:#fff; border:1px solid #ddd; border-top: 4px solid {c1}; border-radius:6px; margin-bottom:20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <div style="padding:10px; background:#f8f9fa; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:bold; color:#333;">🔮 SCORE PREDICTOR</div>
+                <div style="font-size:11px; color:#777;">{venue_msg}</div>
             </div>
-            <div style="text-align: center; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px;">
-                <h1 style="color: #2c3e50; margin:0;">{low} - {high}</h1>
-                <small>(Confidence: {sample_size} matches)</small>
+            
+            <div style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="text-align:center;">
+                    <div style="font-size:12px; color:#555;">VENUE PAR</div>
+                    <div style="font-size:20px; font-weight:bold; color:#333;">{venue_avg}</div>
+                </div>
+                <div style="text-align:center; color:#ccc;">✖️</div>
+                <div style="text-align:center;">
+                    <div style="font-size:12px; color:#555;">BAT STRENGTH</div>
+                    <div style="font-size:18px; font-weight:bold; color:{'green' if bat_factor>=1 else 'red'}">{bat_factor:.2f}x</div>
+                </div>
+                <div style="text-align:center; color:#ccc;">✖️</div>
+                <div style="text-align:center;">
+                    <div style="font-size:12px; color:#555;">BOWL IMPACT</div>
+                    <div style="font-size:18px; font-weight:bold; color:{bf_color}">{bowl_factor:.2f}x</div>
+                    <div style="font-size:9px; color:{bf_color}">{bf_text}</div>
+                </div>
+                <div style="text-align:center; color:#ccc;">=</div>
+                <div style="text-align:center; background:{c1}; color:white; padding:10px 20px; border-radius:6px;">
+                    <div style="font-size:12px; opacity:0.9;">PREDICTED RANGE</div>
+                    <div style="font-size:24px; font-weight:bold;">{lower} - {upper}</div>
+                </div>
+            </div>
+            
+            <div style="padding:10px; background:#fffbe6; font-size:11px; color:#856404; border-top:1px solid #ffeeba;">
+                <b>🤖 Model Notes:</b> {', '.join(adjustment_msg) if adjustment_msg else 'Standard conditions detected.'}
             </div>
         </div>
-        """
-        display(HTML(html))
+        """))

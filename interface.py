@@ -4,9 +4,9 @@ from IPython.display import display, clear_output
 
 class TraderCockpit:
     """
-    The Dashboard (GUI). 🎛️
-    This class connects the Engine's logic to visual Widgets.
-    UPDATED: Added 'Load Last XI' buttons for fast squad selection.
+    The Dashboard (GUI) - Final Production Version. 🎛️
+    - Connected to: PlayerEngine v4.1 & PredictorEngine v3.2
+    - Features: Live Data, Sniper Prediction, Last XI Loaders.
     """
 
     def __init__(self, bot_instance):
@@ -14,6 +14,7 @@ class TraderCockpit:
         self.bot = bot_instance
         
         # 1. PREPARE DATA LISTS
+        # Handle cases where venue/team data might have NaNs
         self.all_venues = sorted([str(v) for v in self.bot.match_df['venue'].unique() if str(v) != 'nan'])
         
         all_teams_raw = pd.concat([self.bot.match_df['team_bat_1'], self.bot.match_df['team_bat_2']]).unique()
@@ -121,7 +122,7 @@ class TraderCockpit:
         self.away_search = widgets.Combobox(
             placeholder='Type Player Name...',
             options=[],
-            ensure_option=True,
+            ensure_option=True, 
             layout=widgets.Layout(width='70%')
         )
         self.btn_away_add = widgets.Button(icon='plus', button_style='success', layout=widgets.Layout(width='25%'))
@@ -375,7 +376,6 @@ class TraderCockpit:
             squad = self.bot.get_last_match_xi(self.home_select.value)
             if squad:
                 self.home_squad_box.options = squad
-                # Provide visual feedback via output (optional, or just rely on box update)
             else:
                 with self.out:
                     print(f"⚠️ No recent match found for {self.home_select.value}")
@@ -481,8 +481,6 @@ class TraderCockpit:
                 return
             
             print(f"🪙 Checking Toss Bias for {self.venue_select.value}...")
-            
-            # 👇 Updated to pass the Years Slider value
             self.bot.analyze_venue_bias(
                 stadium_name=self.venue_select.value, 
                 years_back=self.years_slider.value
@@ -512,7 +510,6 @@ class TraderCockpit:
                 print("❌ ERROR: You must select a Venue first.")
                 return
             
-            # 👇 Pass the slider value here
             self.bot.analyze_venue_phases(
                 self.venue_select.value, 
                 self.home_select.value, 
@@ -527,7 +524,35 @@ class TraderCockpit:
             if not player:
                 print("❌ ERROR: Please select or type a player name.")
                 return
-            self.bot.analyze_player_profile(player)
+            
+            # 1. Get Context
+            home_team = self.home_select.value
+            away_team = self.away_select.value
+            venue = self.venue_select.value
+            
+            # 2. Get Squad Lists (The Active Players)
+            home_squad = list(self.home_squad_box.options)
+            away_squad = list(self.away_squad_box.options)
+            
+            # 3. Determine Opponent & Active Bowlers
+            opposition = away_team 
+            active_bowlers = away_squad 
+            
+            if player in home_squad:
+                opposition = away_team
+                active_bowlers = away_squad
+            elif player in away_squad:
+                opposition = home_team
+                active_bowlers = home_squad
+            
+            # 4. Run Analysis with ALL Context (Including Years)
+            self.bot.analyze_player_profile(
+                player_name=player, 
+                opposition=opposition, 
+                venue_id=venue,
+                active_bowlers=active_bowlers,
+                years=self.years_slider.value  # 👈 Pass the Slider Value
+            )
     
     # ⚔️ UPDATED COMPARE LOGIC (Includes Score Prediction)
     def run_squad_comparison(self, b):
@@ -546,7 +571,7 @@ class TraderCockpit:
                 print("⚠️ Please add at least 1 player to both squads.")
                 return
             
-            # 1. Run Stats Comparison
+            # 1. Run Stats Comparison (Stats Engine)
             self.bot.compare_squads(
                 team_a, players_a, 
                 team_b, players_b, 
@@ -554,20 +579,29 @@ class TraderCockpit:
                 years=self.years_slider.value
             )
             
-            # 2. Score Prediction (Home Bats First)
-            self.bot.predict_score(
-                batting_team=team_a,
-                batting_players=players_a,
-                bowling_team=team_b,
-                bowling_players=players_b,
-                venue_id=venue
-            )
-            
-            # 3. Score Prediction (Away Bats First)
-            self.bot.predict_score(
-                batting_team=team_b,
-                batting_players=players_b,
-                bowling_team=team_a,
-                bowling_players=players_a,
-                venue_id=venue
-            )
+            print("\n" + "="*80 + "\n")
+
+            # 2. Score Prediction (With Safety Wrapper)
+            try:
+                self.bot.predict_score(
+                    batting_team=team_a,
+                    batting_players=players_a,
+                    bowling_team=team_b,
+                    bowling_players=players_b,
+                    venue_id=venue
+                )
+            except Exception as e:
+                print(f"⚠️ Prediction Error (Team A Batting): {e}")
+
+            print("\n")
+
+            try:
+                self.bot.predict_score(
+                    batting_team=team_b,
+                    batting_players=players_b,
+                    bowling_team=team_a,
+                    bowling_players=players_a,
+                    venue_id=venue
+                )
+            except Exception as e:
+                print(f"⚠️ Prediction Error (Team B Batting): {e}")
