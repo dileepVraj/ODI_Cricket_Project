@@ -25,6 +25,15 @@ def rebuild_intelligence_layer():
     cols_to_fix = ['runs_off_bat', 'extras', 'wides', 'noballs']
     for c in cols_to_fix: df[c] = pd.to_numeric(df[c], errors='coerce').fillna(0)
 
+    # 🚨 Ensure is_wicket exists early
+    if 'is_wicket' not in df.columns:
+        # Use wicket_type if available (more reliable), else player_dismissed
+        if 'wicket_type' in df.columns:
+            df['is_wicket'] = df['wicket_type'].notna().astype(int)
+        else:
+            df['is_wicket'] = df['player_dismissed'].notna().astype(int)
+
+
     # ---------------------------------------------------------
     # 🏗️ PART 1: PLAYER STATS GENERATOR
     # ---------------------------------------------------------
@@ -63,17 +72,7 @@ def rebuild_intelligence_layer():
         'is_wicket': 'sum' # Assuming is_wicket column exists, if not calculate it
     }).reset_index()
     
-    # Re-verify Wicket Logic if 'is_wicket' missing
-    if 'is_wicket' not in df.columns:
-        df['is_wicket'] = df['player_dismissed'].notna().astype(int)
-        # Recalculate
-        bowl_group = df.groupby(['bowler', 'bowling_team', 'batting_team']).agg({
-            'match_id': 'nunique',
-            'runs_off_bat': 'sum',
-            'extras': 'sum',
-            'ball': 'count',
-            'is_wicket': 'sum'
-        }).reset_index()
+
 
     bowl_group['runs_conceded'] = bowl_group['runs_off_bat'] + bowl_group['extras']
     

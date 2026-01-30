@@ -69,6 +69,7 @@ class TraderCockpit:
             
             /* --- TEXT & LABELS --- */
             .widget-label {{ color: {t['text']} !important; font-weight: 500; font-size: 14px; }}
+            .widget-readout {{ color: {t['text']} !important; font-weight: bold; }}
             
             /* --- INPUTS --- */
             .widget-text input, .widget-dropdown select, .widget-combobox input {{
@@ -201,7 +202,7 @@ class TraderCockpit:
         self.years_slider = widgets.IntSlider(
             value=5,
             min=1,
-            max=10,
+            max=50,
             step=1,
             description='📅 Years:',
             continuous_update=False,

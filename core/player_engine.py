@@ -13,10 +13,17 @@ class PlayerEngine:
     - FIXED: 'KeyError: type' in analyze_player_profile (Changed to 'context').
     - FEATURE: Smart Player Profile (Auto-detects Opponent & Venue).
     """
-    def __init__(self, raw_df, player_df, meta_df):
+    def __init__(self, raw_df, player_df, meta_df, squads_df=None):
         self.raw_df = raw_df
         self.player_df = player_df
         self.meta_df = meta_df
+        self.squads_df = squads_df if squads_df is not None else pd.DataFrame(columns=['match_id','player'])
+        
+        # Ensure ID type match
+        if not self.squads_df.empty:
+            self.squads_df['match_id'] = self.squads_df['match_id'].astype(str)
+            self.raw_df['match_id'] = self.raw_df['match_id'].astype(str)
+            
         self.predictor = PredictorEngine(raw_df, player_df)
 
     def get_active_squad(self, team_name):
@@ -25,7 +32,21 @@ class PlayerEngine:
         return sorted(team_players['player'].unique().tolist())
         
     def get_last_match_xi(self, team_name):
-        """Smart Fetch: Retrieves players from the last match (with backfill)."""
+        """Smart Fetch: Retrieves players from the last match using Squads DB (Preferred) or Backfill."""
+        
+        # 1. Try Squads DB First
+        if not self.squads_df.empty:
+            team_squads = self.squads_df[self.squads_df['team'] == team_name]
+            if not team_squads.empty:
+                # Sort by date (if string, convert temp or rely on strict strings)
+                # Assuming date is YYYY-MM-DD
+                dates = team_squads.sort_values('date', ascending=False)
+                last_match_id = dates.iloc[0]['match_id']
+                
+                # Verify match_id type matches our storage
+                return sorted(team_squads[team_squads['match_id'] == str(last_match_id)]['player'].unique().tolist())
+
+        # 2. Fallback to Raw Data Backfill (Legacy)
         mask = (self.raw_df['batting_team'] == team_name) | (self.raw_df['bowling_team'] == team_name)
         team_matches = self.raw_df[mask]
         
@@ -538,22 +559,41 @@ class PlayerEngine:
         cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
         
         # Get ALL activity for this player (Batting OR Bowling)
-        # This ensures we know they played the match even if they did nothing in one discipline
+        # This is ALWAYS needed for the actual score lookup later
         all_activity = self.raw_df[
             ((self.raw_df['striker'] == player) | (self.raw_df['bowler'] == player)) &
             (self.raw_df['start_date'] >= cutoff_date)
         ]
         
-        if all_activity.empty:
+        # OPTIMIZED MATCH IDENTIFICATION (Using Squads if available)
+        matches_played = pd.DataFrame()
+        
+        if not self.squads_df.empty:
+            # ✅ PREFERRED: Use official Squad lists (captures DNB perfectly)
+            # Filter by player
+            matches_selected = self.squads_df[self.squads_df['player'] == player].copy()
+            
+            # Convert date to datetime if it's string (optimized)
+            if matches_selected['date'].dtype == 'object':
+                 matches_selected['date'] = pd.to_datetime(matches_selected['date'])
+                 
+            matches_played = matches_selected[matches_selected['date'] >= cutoff_date].sort_values(
+                ['date', 'match_id'], ascending=[False, False]
+            )
+        else:
+            # ⚠️ FALLBACK: Usage-based (Legacy Method) - Can miss DNBs
+            if all_activity.empty:
+                matches_played = pd.DataFrame()
+            else:
+                matches_played = all_activity.drop_duplicates('match_id').sort_values(['start_date', 'match_id'], ascending=[False, False])
+
+        if matches_played.empty:
             return {
                 'Player': player, 'Inns': 0, 'Bat Form': "-", 'Bat Avg': "-", 'vs Opp': "-", 
                 'Ven Inns': "-", 'Ven Runs': "-", 'Ven Avg': "-", 'Ven HS': "-",
                 'Bowl Form': "-", 'Bowl Econ': "-", 'Ven Econ': "-", 'Ven Wkts': "-", 'Ven Matches': "-"
             }
 
-        # Get Unique Match IDs sorted by Date (Newest First)
-        # 🚨 CRITICAL FIX: Explicit Sort to prevent random match selection
-        matches_played = all_activity.drop_duplicates('match_id').sort_values('start_date', ascending=False)
         last_5_ids = matches_played['match_id'].head(5).tolist()
 
         # ---------------------------------------------------------
@@ -561,11 +601,12 @@ class PlayerEngine:
         # ---------------------------------------------------------
         form_bat = []
         for m_id in last_5_ids:
+            m_id = str(m_id)
             # Check if they appeared as a striker
             m_bat = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['striker'] == player)]
             
             if m_bat.empty:
-                # They played (we know from all_activity) but didn't bat -> DNB
+                # In Squad but did not bat (or Fallback DNB)
                 form_bat.append("DNB")
             else:
                 r = m_bat['runs_off_bat'].sum()
@@ -613,8 +654,8 @@ class PlayerEngine:
         # ---------------------------------------------------------
         form_bowl = []
         for m_id in last_5_ids:
-            # Check if they bowled
-            m_bowl = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['bowler'] == player)]
+            # Check if they bowled (Using all_activity subset)
+            m_bowl = all_activity[(all_activity['match_id'] == m_id) & (all_activity['bowler'] == player)]
             
             if m_bowl.empty:
                 # Played but didn't bowl
@@ -751,11 +792,38 @@ class PlayerEngine:
 
         print(f"\n👤 PLAYER PROFILE: {player_name.upper()}")
         
+        # Dynamic Label
+        time_label = f"Last {years} Years" if years < 40 else "All Time"
+        
         # --- A. GLOBAL CAREER SUMMARY ---
         p_stats = self.player_df[self.player_df['player'] == player_name].copy()
-        career_df = p_stats[p_stats['context'] == 'vs_team'].copy()
+        
+        # 🚨 BUG FIX: Filter for Batting Role only (avoid summing Bowling stats)
+        career_df = p_stats[(p_stats['context'] == 'vs_team') & (p_stats['role'] == 'batting')].copy()
         
         if not career_df.empty:
+            # --- 1. DETAILED BATTING CALCULATIONS ---
+            # Helper: Calculate milestones from raw dataframe
+            def get_batting_milestones(df, player_col='striker'):
+                if df.empty: return 0, 0, 0, 0
+                match_sums = df.groupby('match_id')['runs_off_bat'].sum()
+                centuries = (match_sums >= 100).sum()
+                fifties = ((match_sums >= 50) & (match_sums < 100)).sum()
+                hs = match_sums.max() if not match_sums.empty else 0
+                return centuries, fifties, hs
+
+            # Career Milestones
+            # We must go back to raw_df for milestones because aggregated stats don't have match-level granularity
+            # BUT: We need to filter for matches where they actually batted (career_df context)
+            
+            # Re-fetch raw batting data for this player to compute milestones correctly
+            raw_career_bat = self.raw_df[
+                (self.raw_df['striker'] == player_name) & 
+                (self.raw_df['start_date'] >= (pd.Timestamp.now() - pd.DateOffset(years=years)))
+            ]
+            
+            c_100s, c_50s, c_hs = get_batting_milestones(raw_career_bat)
+
             t_runs = career_df['runs'].sum()
             t_inns = career_df['innings'].sum()
             t_outs = career_df['dismissals'].sum()
@@ -763,106 +831,215 @@ class PlayerEngine:
             avg = round(t_runs / t_outs, 2) if t_outs > 0 else t_runs
             sr = round((t_runs / t_balls) * 100, 1) if t_balls > 0 else 0
             
+            # --- 2. DETAILED BOWLING CALCULATIONS ---
+            # Bowling Career (Global)
+            # Filter for bowling role in processed stats
+            bowl_career_df = p_stats[(p_stats['context'] == 'vs_team') & (p_stats['role'] == 'bowling')].copy()
+            
+            has_bowling = False
+            b_wkts = 0; b_avg = "-"; b_econ = "-"; b_bbi = "-"
+            
+            if not bowl_career_df.empty:
+                b_runs_conc = bowl_career_df['runs'].sum() # 'runs' col here is runs conceded due to processing script
+                b_balls = bowl_career_df['balls'].sum()
+                b_wkts = int(bowl_career_df['dismissals'].sum()) # 'dismissals' col here is wickets
+                
+                if b_balls > 60: # Threshold: Show bowling card if bowled > 10 overs in career (approx)
+                    has_bowling = True
+                    b_avg = round(b_runs_conc / b_wkts, 2) if b_wkts > 0 else "-"
+                    b_econ = round((b_runs_conc / b_balls) * 6, 2) if b_balls > 0 else 0
+                    
+                    # Calculate Best Bowling (BBI) from Raw
+                    raw_career_bowl = self.raw_df[
+                        (self.raw_df['bowler'] == player_name) & 
+                        (self.raw_df['start_date'] >= (pd.Timestamp.now() - pd.DateOffset(years=years)))
+                    ]
+                    if not raw_career_bowl.empty:
+                        # Wickets per match
+                        w_per_match = raw_career_bowl[raw_career_bowl['wicket_type'].isin(['bowled','caught','lbw','stumped','caught and bowled','hit wicket'])].groupby('match_id').count()['wicket_type']
+                        if not w_per_match.empty:
+                            best_w = w_per_match.max()
+                            # Find associated runs for that match - tricky without full grouping, 
+                            # simplifiction: just show Wickets
+                            b_bbi = f"{best_w} Wkts"
+            
+            # --- 3. RENDER CAREER CARD ---
+            bowl_html = ""
+            if has_bowling:
+                bowl_html = f"""
+                <div style="border-top:1px solid #ddd; margin-top:10px; padding-top:10px;">
+                    <div style="font-size:11px; color:#555; font-weight:bold; letter-spacing:1px; margin-bottom:5px;">BOWLING</div>
+                    <div style="display:flex; gap:15px; font-size:13px;">
+                        <div><b>{b_wkts}</b> Wkts</div>
+                        <div><b>{b_avg}</b> Avg</div>
+                        <div><b>{b_econ}</b> Econ</div>
+                        <div><b>{b_bbi}</b> Best</div>
+                    </div>
+                </div>
+                """
+
             display(HTML(f"""
-            <div style="background:#f9f9f9; border-left:4px solid #333; padding:10px 15px; margin-bottom:15px; font-family:'Segoe UI';">
-                <div style="font-size:12px; color:#777; font-weight:bold; letter-spacing:1px;">CAREER SUMMARY</div>
-                <div style="display:flex; gap:20px; margin-top:5px;">
-                    <div><b>{t_inns}</b> Inns</div>
-                    <div><b>{t_runs:,}</b> Runs</div>
-                    <div><b>{avg}</b> Avg</div>
-                    <div><b>{sr}</b> SR</div>
+            <div style="background:#fff; border-left:4px solid #222; padding:15px; margin-bottom:20px; font-family:'Segoe UI', sans-serif; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                <div style="font-size:14px; color:#222; font-weight:bold; letter-spacing:1px; margin-bottom:10px;">👤 CAREER SUMMARY <span style="font-weight:normal; color:#777; font-size:11px;">({time_label})</span></div>
+                
+                <div style="display:flex; gap:30px; align-items:flex-start;">
+                    <!-- BATTING -->
+                    <div style="flex:1;">
+                         <div style="font-size:11px; color:#555; font-weight:bold; letter-spacing:1px; margin-bottom:5px;">BATTING</div>
+                         <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; font-size:13px; margin-bottom:8px;">
+                            <div><b>{t_inns}</b> Inns</div>
+                            <div><b>{t_runs:,}</b> Runs</div>
+                            <div><b>{avg}</b> Avg</div>
+                            <div><b>{sr}</b> SR</div>
+                         </div>
+                         <div style="display:flex; gap:15px; font-size:12px; color:#444; background:#f4f4f4; padding:5px 8px; border-radius:4px;">
+                            <span><b>{c_100s}</b> 100s</span>
+                            <span><b>{c_50s}</b> 50s</span>
+                            <span><b>{c_hs}</b> HS</span>
+                         </div>
+                    </div>
+                    
+                    <!-- BOWLING (Conditional) -->
+                    {'<div style="width:1px; background:#eee;"></div><div style="flex:1;">' + bowl_html.replace('border-top:1px solid #ddd; margin-top:10px; padding-top:10px;', '') + '</div>' if has_bowling else ''}
                 </div>
             </div>
             """))
 
-        # --- B. VS OPPOSITION (Aggregated Cleanly) ---
-        if opposition and opposition != 'All':
-            # Filter specifically for this opponent
-            vs_opp = career_df[career_df['opponent'] == opposition].copy()
+        # --- B. VS OPPOSITION & VENUE (Dual Cards) ---
+        if (opposition and opposition != 'All') or venue_id:
             
-            if not vs_opp.empty:
-                print(f"⚔️ vs {opposition.upper()}")
+            # Helper to Render Mini Card
+            def render_mini_prob_card(title, df_bat, df_bowl, raw_bat_filter, raw_bowl_filter, context_label):
                 
-                # AGGREGATE to ensure single row (Fixes mashed text bug)
-                agg_runs = vs_opp['runs'].sum()
-                agg_inns = vs_opp['innings'].sum()
-                agg_outs = vs_opp['dismissals'].sum()
-                agg_balls = vs_opp['balls'].sum()
-                
-                agg_avg = round(agg_runs / agg_outs, 2) if agg_outs > 0 else agg_runs
-                agg_sr = round((agg_runs / agg_balls) * 100, 1) if agg_balls > 0 else 0
-                
-                # Create clean single-row dataframe
-                clean_df = pd.DataFrame([{
-                    'Inns': agg_inns, 'Runs': agg_runs, 'Avg': agg_avg, 
-                    'SR': agg_sr, 'Outs': agg_outs
-                }])
-                
-                # Display cleanly using HTML to force formatting
-                display(HTML(clean_df.to_html(index=False, border=0, justify="center", classes="table table-striped")))
-            else:
-                print(f"⚠️ No career stats found vs {opposition}.")
-
-            # --- D. H2H NIGHTMARES (Filtered by ACTIVE SQUAD) ---
-            if active_bowlers:
-                try:
-                    # Filter Raw Data: 
-                    # 1. Striker is our player
-                    # 2. Bowler is in the ACTIVE SQUAD list (The Fix)
-                    # 3. Is a wicket
-                    bunny_df = self.raw_df[
-                        (self.raw_df['striker'] == player_name) &
-                        (self.raw_df['bowler'].isin(active_bowlers)) & # <--- TARGETED FILTER
-                        (self.raw_df['wicket_type'].isin(['bowled','caught','lbw','stumped','caught and bowled','hit wicket']))
-                    ]
+                # Batting Stats
+                b_run=0; b_inn=0; b_avg="-"; b_sr="-"; b_100=0; b_50=0; b_hs=0
+                if not df_bat.empty:
+                    b_run = df_bat['runs'].sum()
+                    b_inn = df_bat['innings'].sum()
+                    b_out = df_bat['dismissals'].sum()
+                    b_ball = df_bat['balls'].sum()
+                    b_avg = round(b_run/b_out, 1) if b_out > 0 else b_run
+                    b_sr = int((b_run/b_ball)*100) if b_ball > 0 else 0
                     
-                    if not bunny_df.empty:
-                        print(f"\n🥊 H2H NIGHTMARES (Active {opposition} Bowlers)")
-                        bunnies = bunny_df['bowler'].value_counts().reset_index()
-                        bunnies.columns = ['Bowler', 'Outs']
-                        bunnies['Style'] = bunnies['Bowler'].map(BOWLER_STYLES).fillna('-')
-                        
-                        def highlight(val):
-                            color = '#d32f2f' if val >= 2 else '#333'
-                            weight = 'bold' if val >= 2 else 'normal'
-                            return f'color: {color}; font-weight: {weight}'
-                            
-                        display(bunnies.style.map(highlight, subset=['Outs']).hide(axis='index'))
-                    else:
-                        print(f"\n✅ No active {opposition} bowler has dismissed him yet.")
-                except Exception as e:
-                    print(e)
+                    # Milestones
+                    if not raw_bat_filter.empty:
+                         b_100, b_50, b_hs = get_batting_milestones(raw_bat_filter)
 
-        # --- C. AT VENUE (Filtered by Years) ---
-        if venue_id:
-            aliases = get_venue_aliases(venue_id)
-            if "_" in venue_id:
-                 parts = venue_id.split("_")
-                 if len(parts) > 1: aliases.append(parts[1])
-            venue_pattern = '|'.join([re.escape(v) for v in aliases if v])
-            v_display = venue_id.replace("IND_","").replace("AUS_","").replace("_", " ").title()
-            
-            try:
-                # 🚨 DATE FILTER APPLIED HERE
-                cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
+                # Bowling Stats
+                w_wkt=0; w_avg="-"; w_econ="-"; w_best="-"
+                has_bowl_context = False
                 
-                ven_df = self.raw_df[
-                    (self.raw_df['striker'] == player_name) &
-                    (self.raw_df['venue'].str.contains(venue_pattern, case=False, na=False)) &
-                    (self.raw_df['start_date'] >= cutoff_date) # 👈 Uses the argument
+                if not df_bowl.empty:
+                    w_rc = df_bowl['runs'].sum()
+                    w_bl = df_bowl['balls'].sum()
+                    w_wkt = int(df_bowl['dismissals'].sum())
+                    
+                    if w_bl > 12: # At least 2 overs to show context stats
+                        has_bowl_context = True
+                        w_avg = round(w_rc/w_wkt, 1) if w_wkt > 0 else "-"
+                        w_econ = round((w_rc/w_bl)*6, 1) if w_bl > 0 else 0
+                        # Best figures logic skipped for mini-card for speed/simplicity or can be added if needed
+
+                # Render HTML
+                html = f"""
+                <div style="background:#f8f9fa; border:1px solid #e9ecef; border-radius:6px; padding:12px; margin-bottom:10px;">
+                    <div style="font-weight:bold; color:#333; font-size:13px; margin-bottom:8px; border-bottom:2px solid #ffc107; display:inline-block; padding-bottom:2px;">{title}</div>
+                    
+                    <!-- BATTING -->
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap:5px; text-align:center; font-size:12px; margin-bottom:5px;">
+                        <div><div style="color:#777; font-size:10px;">Inns</div><b>{b_inn}</b></div>
+                        <div><div style="color:#777; font-size:10px;">Runs</div><b>{b_run}</b></div>
+                        <div><div style="color:#777; font-size:10px;">Avg</div><b>{b_avg}</b></div>
+                        <div><div style="color:#777; font-size:10px;">SR</div><b>{b_sr}</b></div>
+                        <div><div style="color:#777; font-size:10px;">HS</div><b>{b_hs}</b></div>
+                    </div>
+                    <div style="text-align:center; font-size:10px; color:#666; background:#e9ecef; border-radius:3px; padding:2px;">
+                        {b_100} Centuries &bull; {b_50} Fifties
+                    </div>
+                """
+                
+                if has_bowl_context:
+                    html += f"""
+                    <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #ccc;">
+                        <div style="font-size:11px; font-weight:bold; color:#555; margin-bottom:4px;">⚾ Bowling</div>
+                        <div style="display:flex; justify-content:space-between; font-size:12px;">
+                            <span><b>{w_wkt}</b> Wkts</span>
+                            <span><b>{w_avg}</b> Avg</span>
+                            <span><b>{w_econ}</b> Econ</span>
+                        </div>
+                    </div>
+                    """
+                html += "</div>"
+                return html
+
+            # --- PREPARE OPPONENT DATA ---
+            opp_html = ""
+            if opposition and opposition != 'All':
+                # Batting
+                ov_df = p_stats[(p_stats['context'] == 'vs_team') & (p_stats['role'] == 'batting') & (p_stats['opponent'] == opposition)]
+                # Bowling
+                ov_bowl_df = p_stats[(p_stats['context'] == 'vs_team') & (p_stats['role'] == 'bowling') & (p_stats['opponent'] == opposition)]
+                # Raw (for Milestones)
+                raw_opp_bat = self.raw_df[
+                    (self.raw_df['striker'] == player_name) & 
+                    (self.raw_df['bowling_team'] == opposition) &
+                    (self.raw_df['start_date'] >= (pd.Timestamp.now() - pd.DateOffset(years=years)))
                 ]
                 
-                if not ven_df.empty:
-                    print(f"\n🏟️ AT VENUE: {v_display} (Last {years} Years)")
-                    runs = ven_df['runs_off_bat'].sum()
-                    inns = len(ven_df['match_id'].unique())
-                    outs = ven_df['wicket_type'].notna().sum()
-                    avg = round(runs/outs, 1) if outs > 0 else runs
-                    sr = int((runs/len(ven_df))*100)
-                    hs = ven_df.groupby('match_id')['runs_off_bat'].sum().max()
-                    
-                    v_data = pd.DataFrame([{'Inns': inns, 'Runs': runs, 'Avg': avg, 'SR': sr, 'HS': hs}])
-                    display(HTML(v_data.to_html(index=False, border=0)))
-                else:
-                    print(f"\n🏟️ AT VENUE: {v_display} (No Data in last {years} Years)")
-            except: pass
+                opp_html = render_mini_prob_card(f"⚔️ vs {opposition.upper()}", ov_df, ov_bowl_df, raw_opp_bat, None, "vs Opp")
+
+            # --- PREPARE VENUE DATA ---
+            ven_html = ""
+            if venue_id:
+                aliases = get_venue_aliases(venue_id)
+                # Batting
+                # Note: 'bat_at_venue' doesn't use the 'role' column strictly in processed csv because we grouped by striker directly
+                # But our CSV structure has Role='batting' for context='at_venue' if source was batter
+                # Let's check CSV structure (Process script: line 91) -> Yes, role='batting'
+                
+                # We need to filter p_stats for matches matching venue pattern
+                # BUT p_stats 'opponent' column holds Venue Name for context='at_venue'
+                # AND Process script does NOT normalize venue names to IDs in the 'opponent' column, it keeps raw venue name? 
+                # Let's check process_player_stats.py... 
+                # Line 90: bat_at_venue.rename(columns={'striker': 'player', 'venue': 'opponent'}, inplace=True)
+                # It uses the raw 'venue' string from the DF. 
+                
+                # So we need to match partial strings.
+                # However, p_stats contains ALL rows.
+                # We can replicate logic: filter p_stats where context='at_venue' AND 'opponent' roughly matches.
+                # Since processed CSV has exact strings from raw data, doing a regex search on the 'opponent' column of p_stats is slow.
+                # BETTER: Use the raw_df logic for Venue milestones, but for aggregated stats, we might need to sum multiple rows if multiple aliases exist in CSV.
+                
+                ven_pattern = '|'.join([re.escape(v) for v in aliases])
+                
+                v_df = p_stats[
+                    (p_stats['context'] == 'at_venue') & 
+                    (p_stats['role'] == 'batting') & 
+                    (p_stats['opponent'].str.contains(ven_pattern, case=False, regex=True))
+                ]
+                
+                v_bowl_df = p_stats[
+                    (p_stats['context'] == 'at_venue') & 
+                    (p_stats['role'] == 'bowling') & 
+                    (p_stats['opponent'].str.contains(ven_pattern, case=False, regex=True))
+                ]
+                
+                # Raw
+                raw_ven_bat = self.raw_df[
+                    (self.raw_df['striker'] == player_name) & 
+                    (self.raw_df['venue'].str.contains(ven_pattern, case=False)) &
+                    (self.raw_df['start_date'] >= (pd.Timestamp.now() - pd.DateOffset(years=years)))
+                ]
+                
+                ven_html = render_mini_prob_card(f"🏟️ AT VENUE ({venue_id})", v_df, v_bowl_df, raw_ven_bat, None, "At Venue")
+
+            # --- DISPLAY SIDE-BY-SIDE ---
+            display(HTML(f"""
+            <div style="display:flex; gap:20px; margin-bottom:20px;">
+                <div style="flex:1;">{opp_html}</div>
+                <div style="flex:1;">{ven_html}</div>
+            </div>
+            """))
+            
+                
+

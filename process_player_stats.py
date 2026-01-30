@@ -5,41 +5,26 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # 🛠️ SETTINGS
-ZIP_PATH = 'data/raw_odi_backup.zip'
+ZIP_PATH = None 
+CSV_PATH = 'data/FINAL_ODI_MASTER.csv' # <--- UPDATED SOURCE
 OUTPUT_FILE = 'data/processed_player_stats.csv'
-METADATA_FILE = 'data/player_metadata.csv' # New file to map Player -> Country
+METADATA_FILE = 'data/player_metadata.csv'
 
 def process_ball_by_ball():
-    print(f"📂 Scanning {ZIP_PATH}...")
+    print(f"📂 Loading Master Database: {CSV_PATH}...")
     
-    all_match_data = []
-    
-    with zipfile.ZipFile(ZIP_PATH, 'r') as z:
-        csv_files = [f for f in z.namelist() if f.endswith('.csv')]
-        total_files = len(csv_files)
-        print(f"🚀 Found {total_files} files. Identifying Ball-by-Ball data...")
-        
-        for i, file_name in enumerate(csv_files):
-            if i % 200 == 0: print(f"   Scanning file {i}/{total_files}...", end='\r')
-            
-            with z.open(file_name) as f:
-                try:
-                    # Quick header check
-                    header_df = pd.read_csv(f, nrows=0)
-                    cols = set(header_df.columns)
-                    if 'striker' in cols and 'runs_off_bat' in cols and 'bowler' in cols:
-                        f.seek(0)
-                        df = pd.read_csv(f)
-                        all_match_data.append(df)
-                except:
-                    continue
+    try:
+        if os.path.exists(CSV_PATH):
+            full_df = pd.read_csv(CSV_PATH)
+            print(f"✅ Loaded {len(full_df)} rows.")
+        else:
+            print("❌ CSV File not found.")
+            return
 
-    if not all_match_data:
-        print("❌ No valid data found.")
+    except Exception as e:
+        print(f"❌ Error loading CSV: {e}")
         return
 
-    print(f"\n🧩 Merging {len(all_match_data)} matches...")
-    full_df = pd.concat(all_match_data, ignore_index=True)
     
     # --- PRE-PROCESSING ---
     print("🧹 Cleaning & Tagging Data...")

@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import difflib
 import re
+import os
 import logging  # <--- NEW IMPORT
 
 from venues import VENUE_MAP
@@ -42,20 +43,40 @@ class CricketAnalyzer:
         print(f"📂 Loading Database: {self.filepath}")
     
         # 1. Load Match Data
-        self.raw_df = pd.read_csv(self.filepath, low_memory=False)
-        self.raw_df.columns = self.raw_df.columns.str.strip().str.lower()
-        self.raw_df['start_date'] = pd.to_datetime(self.raw_df['start_date'], errors='coerce')
-        self.raw_df['year'] = self.raw_df['start_date'].dt.year
+        CACHE_PATH = self.filepath.replace('.csv', '.pkl')
         
-        # 🚨 SELF-HEALING: Fix missing 'season' column
-        if 'season' not in self.raw_df.columns:
-            self.raw_df['season'] = self.raw_df['year']
+        # Check if Cache Exists and is Valid (Newer than CSV)
+        use_cache = False
+        if os.path.exists(CACHE_PATH):
+            csv_mtime = os.path.getmtime(self.filepath)
+            cache_mtime = os.path.getmtime(CACHE_PATH)
+            if cache_mtime > csv_mtime:
+                use_cache = True
+        
+        if use_cache:
+            print(f"🚀 FAST LOAD: Reading from Cache ({CACHE_PATH})...")
+            self.raw_df = pd.read_pickle(CACHE_PATH)
+        else:
+            print(f"⏳ SLOW LOAD: Reading CSV and building cache...")
+            self.raw_df = pd.read_csv(self.filepath, low_memory=False)
+            self.raw_df.columns = self.raw_df.columns.str.strip().str.lower()
+            self.raw_df['start_date'] = pd.to_datetime(self.raw_df['start_date'], errors='coerce')
+            self.raw_df['year'] = self.raw_df['start_date'].dt.year
             
-        # 🚨 GLOBAL SORT
-        self.raw_df = self.raw_df.sort_values(['start_date', 'match_id'])
-        print(f"   Raw Data: {len(self.raw_df)} balls loaded (Sorted by Date).")
+            # 🚨 SELF-HEALING: Fix missing 'season' column
+            if 'season' not in self.raw_df.columns:
+                self.raw_df['season'] = self.raw_df['year']
+                
+            # 🚨 GLOBAL SORT
+            self.raw_df = self.raw_df.sort_values(['start_date', 'match_id'])
+            
+            # SAVE CACHE
+            print(f"💾 Saving Cache to {CACHE_PATH}...")
+            self.raw_df.to_pickle(CACHE_PATH)
+            
+        print(f"   Raw Data: {len(self.raw_df)} balls loaded.")
 
-        # 2. Load Player Stats & Metadata
+        # 2. Load Player Stats & Metadata & Squads
         try:
             self.player_df = pd.read_csv('data/processed_player_stats.csv')
             self.meta_df = pd.read_csv('data/player_metadata.csv')
@@ -63,7 +84,17 @@ class CricketAnalyzer:
         except FileNotFoundError:
             self.player_df = pd.DataFrame()
             self.meta_df = pd.DataFrame()
-            print("⚠️ Player Data Missing. Please run the processor script.")
+            
+        # 🆕 LOAD SQUADS DB (The Missing Link)
+        try:
+            self.squads_df = pd.read_csv('data/MATCH_SQUADS.csv')
+            # Minimize memory
+            self.squads_df = self.squads_df[['match_id', 'player', 'date', 'team']]
+            self.squads_df['match_id'] = self.squads_df['match_id'].astype(str) # Match raw_df type
+            print(f"✅ Squads Database Loaded: {len(self.squads_df)} entries.")
+        except FileNotFoundError:
+            self.squads_df = pd.DataFrame(columns=['match_id', 'player'])
+            print("⚠️ Squads DB Missing. 'DNB' logic will be usage-based only.")
         
         # 3. Build Match Summary & Clean Venues
         self._create_match_summary()
@@ -76,12 +107,18 @@ class CricketAnalyzer:
         # 🤖 INITIALIZE SUB-ENGINES
         # =========================================================================
         self.team_engine = TeamEngine(self.match_df)
-        self.player_engine = PlayerEngine(self.raw_df, self.player_df, self.meta_df)
+        self.team_engine = TeamEngine(self.match_df)
+        self.player_engine = PlayerEngine(self.raw_df, self.player_df, self.meta_df, self.squads_df)
         self.predictor_engine = PredictorEngine(self.raw_df, self.player_df)
 
     def reload_database(self):
         """Public method to trigger the reload safely."""
         print("\n🔄 RELOADING DATABASE FROM DISK...")
+        # Delete cache to force fresh load
+        CACHE_PATH = self.filepath.replace('.csv', '.pkl')
+        if os.path.exists(CACHE_PATH):
+            os.remove(CACHE_PATH)
+            print("🗑️ Cache cleared.")
         self.load_data()
         print("✅ DATABASE RELOAD COMPLETE.\n")
 
