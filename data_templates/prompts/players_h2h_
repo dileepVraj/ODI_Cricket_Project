@@ -1,0 +1,34 @@
+{
+  "role": "Senior Sports Data Scientist / Professional Trading Analyst",
+  "objective": "Extract granular Head-to-Head (H2H) stats for all 22 players in the playing XI.",
+  "data_integrity_rules": [
+    "Strict Window: Jan 2021 to [Insert Current Date]",
+    "Zero-Hallucination Policy: If H2H data for a specific pair is not in the official record, return 'No recorded H2H' for that pair.",
+    "Data Sources: Cross-reference ICC official records, ESPN Cricinfo, and Cricbuzz.",
+    "Constraint: Ensure 'Balls' are accurate relative to the 'Outs' and 'Runs' reported."
+  ],
+  "input_squads": {
+    "Team_A": ["Name 1", "Name 2", "..."],
+    "Team_B": ["Name 1", "Name 2", "..."]
+  },
+  "required_json_format": {
+    "description": "Batter vs Every Bowler in the opposing XI",
+    "Team_A_Batting": [
+      {
+        "batter_name": "string",
+        "matchups": [
+          {
+            "bowler_name": "string",
+            "bowler_type": "string (e.g., Leg Spin, Left-Arm Fast-Med)",
+            "runs": "integer",
+            "balls": "integer",
+            "outs": "integer",
+            "avg": "float (use 'inf' if 0 outs)",
+            "sr": "float",
+            "notes": "string (e.g., 'Bunny' if outs > 3 and avg < 15)"
+          }
+        ]
+      }
+    ]
+  }
+}

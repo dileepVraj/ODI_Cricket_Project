@@ -1,0 +1,32 @@
+{
+  "role": "Senior Sports Data Scientist",
+  "objective": "Generate a Batter vs. Bowling-Type Matchup Matrix",
+  "data_integrity_rules": [
+    "Strictly use data from Jan 2021 to Jan 2026.",
+    "Categorize bowlers into: Right-Arm Fast/Med, Left-Arm Fast/Med, Off-Spin, Leg-Spin, and SLA (Slow Left-Arm).",
+    "Metric format: 'Average (Balls Faced)'.",
+    "If a batter has never faced a type or data is missing, return 'Data not available'."
+  ],
+  "input_parameters": {
+    "Home Team": "Sri Lanka",
+    "Away Team": "England",
+    "Home XI": ["Paste Names Here"],
+    "Away XI": ["Paste Names Here"]
+  },
+  "logic_steps": [
+    "Step 1: Assign every bowler and all-rounder in the squads to one of the five bowling categories defined above.",
+    "Step 2: Calculate the head-to-head tactical average for every batter against those specific categories across all ODIs in the last 5 years.",
+    "Step 3: Output the results in a single, strictly valid JSON object."
+  ],
+  "output_template": {
+    "description": "Average Runs per Dismissal vs Specific Bowling Types. Format: Average (Balls Faced).",
+    "Home team": "Name",
+    "Home team Players": [
+      { "name": "string", "Right-Arm Fast": "0.0 (0)", "Left-Arm Fast": "0.0 (0)", "Leg Spin": "0.0 (0)", "Off-Spin": "0.0 (0)", "SLA": "0.0 (0)" }
+    ],
+    "Away team": "Name",
+    "Away team Players": [
+      { "name": "string", "Right-Arm Fast": "0.0 (0)", "Left-Arm Fast": "0.0 (0)", "Leg Spin": "0.0 (0)", "Off-Spin": "0.0 (0)", "SLA": "0.0 (0)" }
+    ]
+  }
+}

@@ -1,0 +1,830 @@
+{
+  "MATCH_INTELLIGENCE_PACKET": {
+    "1_ROOT_CONTEXT": {
+      "Home team": "Sri Lanka",
+      "Away team": "England",
+      "fixture": "Sri Lanka vs England",
+      "date": "2026-01-26",
+      "venue_name": "Premadasa Stadium Colombo",
+      "match_start_time": "14:30 (D/N)",
+      "pitch_report": "The weather is set and fair. The dimensions - 62 meters and 64 meters square. The pitch looks beautiful. There is a bit of grass but it is to keep it together. The ball will come on at the start but will be a challenge as the game progresses, bringing the spinners into play.",
+      "weather_report": "warm and humid conditions, with temperatures ranging from 26°C to 29°C and humidity levels between 50% and 81%"
+    },
+
+    "2_VENUE_AND_MACRO_STATS": 
+    {
+      "Note": "values in paranthesis() ex: 249(21) are number of innings count, i.e 249 is average score for 21 innings.",
+      
+      "1_ANALYZE_VENUE_MATCHUP": 
+      {
+
+        "description": "Home Team vs Away Team stats at this specific Venue in last 5 years",
+
+        "summary": 
+        {
+          "Total matches played": null,
+          "home_team_winning_percentage": null,
+          "tie_no_result_count": null
+        },
+
+        "metrics": 
+        {
+          "total_wins": {"home": null, "away": null},
+          "wins_defending": {"home": null, "away": null},
+          "wins_chasing": {"home": null, "away": null}
+        },
+
+        "batting_first_stats": 
+        {
+          "Home team 1st innings stats":
+          {
+            "Average score": null,
+            "Highest 1st innings score": null,
+            "Lowest 1st innings score": null,
+            "Average winning score": null,
+            "Lowest defended score":null
+
+          },
+
+          "Away team 1st innings stats":
+          {
+            "Average score": null,
+            "Highest 1st innings score": null,
+            "Lowest 1st innings score": null,
+            "Average winning score": null,
+            "Lowest defended score":null
+
+          }
+
+        },
+
+        "chasing_stats": 
+        {
+          "Home team 2nd innings stats":
+          {
+            "Average 2nd innings score": null,
+            "Highest chased score": null,
+            "Average successfully chased score": null
+          },
+
+          "Away team 2nd innings stats":
+          {
+            "Average 2nd innings score": null,
+            "Highest chased score": null,
+            "Average successfully chased score": null
+          }
+        
+        
+      },
+
+      "2_CHECK_FORTRESS": {
+
+        "description": "Sri Lanka vs All to 10 teams stats at current Venue in last 10 years.",
+        "Total matches played": 29,
+        "Matches won": 18,
+        "Matches lost": 10,
+        "Won batting 1st":14,
+        "Won batting 2nd":4,
+        "Lost batting 1st":6,
+        "Lost batting 2nd":4,
+        "No result": 1,
+        "home_team_winning_percentage": 64,
+
+        "Home_team batting_first_stats": 
+        {
+          "avg_score": "249(21)",
+          "avg_winning_score": "271(14)",
+          "lowest_defended_score": 203
+        },
+
+        "Home_team_chasing_stats": 
+        {
+          "avg_score": "224(7)",
+          "highest_chased_score": 292,
+          "Average of successfully chased score": "253(3)"
+        },
+
+        "Away_Teams_batting_first_stats":
+        {
+
+          "avg_score": "267(7)",
+          "avg_winning_score": "279(4)",
+          "lowest_defended_score": 213
+        },
+
+        "Away_Teams_chasing_stats":
+        {
+          "avg_score": "202(18)",
+          "highest_chased_score": 277,
+          "Average of successfully chased score": "203(6)"
+        }
+        
+      },
+
+      "3_CHECK_HOST_COUNTRY_STATS": 
+      
+      {
+
+        "description": "Sri Lanka vs England in Sri Lanka (All Venues) stats in last 5 years",
+
+        "Matches played": null,
+        "Matches won": null,
+        "Matches lost": null,
+        "No result": null,
+        "home_team_winning_percentage": null,
+
+        "Home_team batting_first_stats": 
+        {
+          "avg_score": null,
+          "avg_winning_score": null,
+          "lowest_defended_score": null
+        },
+
+        "Home_team_chasing_stats": 
+        {
+          "avg_score": null,
+          "highest_chased_score": null,
+          "Average of successfully chased score": null
+        },
+
+        "Away_Team_batting_first_stats":
+        {
+
+          "avg_score": null,
+          "avg_winning_score": null,
+          "lowest_defended_score": null
+        },
+
+        "Away_Team_chasing_stats":
+        {
+          "avg_score": null,
+          "highest_chased_score": null,
+          "Average of successfully chased score": null
+        }
+      },
+
+      "4_HOME_DOMINANCE": {
+
+        "description": "Sri Lanka vs ALL Opponents in Sri Lanka stats in last 5 years",
+
+        "overall_home_win_percentage": "67%",
+        "Matches played": 30,
+        "Matches won": 19,
+        "Matches lost":9,
+        "Tie / no-result":2,
+        "Recent last 5 matches results": "win, lost, win, win, win",
+        "Sri Lanka average 1st innings score":"232(16)",
+        "Touring teams average 1st innings score":"227(8)"
+        
+      },
+
+      "5_TOURING_TEAM_AWAY_STATS": {
+
+        "description": "England away from home matches stats in last 5 years",
+
+        "focus_team": "England",
+        "overall_away_win_percentage": "25%",
+        "Matches played": 33,
+        "Matches won": 8,
+        "Matches lost": 25,
+        "Tie or no-result": 0,
+        "Recent last 5 matches results": "lost, lost, lost, lost, lost"
+
+      },
+
+      "6_TOURING_TEAM_CONTINENT_STATS": {
+
+        "Continent": "Asia",
+
+        "scenario_1_vs_Sri Lanka": {
+
+          "description": "England vs Srilanka stats in Asia continent for last 5 years",
+
+          "matches_played": 1,
+          "Matches won": 0,
+          "Matches lost": 1,
+          "England_team_win_percentage": "0%",
+
+          "England batting_first_stats": 
+        {
+          "avg_score": "156(1)",
+          "avg_winning_score": null,
+          "lowest_defended_score": null,
+          "Highest score":156
+        },
+
+        "England_chasing_stats": 
+        {
+          
+          "avg_score": null,
+          "highest_chased_score": null,
+          "Average of successfully chased score": null
+        },
+
+        "Sri Lanka_batting_first_stats":
+        {
+
+          "avg_score": null,
+          "avg_winning_score": null,
+          "lowest_defended_score": null,
+          "highest score":null
+        },
+
+        "Sri Lanka_chasing_stats":
+        {
+
+          "avg_score": null,
+          "highest_chased_score": "160",
+          "Average of successfully chased score": "160"
+        }
+          
+        },
+
+        "scenario_2_England vs_all_teams": 
+        {
+          "description": "England vs all other teams stats in Asia continent for last 5 yeras.",
+
+          "Matches played": 18,
+          "England overall win percentage": "27%",
+          "Matches won": 5,
+          "Matches lost": 13,
+          "Tie / No result": 0,
+          "Recent last 5 matches results": "lost, lost, lost, lost, lost",
+          "batting_first_avg": "283(9)"
+          
+        }
+      },
+
+      "7_CHECK_TOSS_BIAS":
+
+      {
+        "description": "Toss stats in current venue in last 5 years",
+
+        "venue": "Premadasa stadium Colombo",
+        "Total matches analyzed": 22,
+        "win_percentage_batting_1st": "63%",
+        "win_percentage_chasing": "31%",
+        "avg_1st_inn_score": "237(20)",
+        "avg_2nd_inn_score": "202(20)"
+        
+      },
+
+  "8_PHASE_ANALYSIS":
+
+    {
+
+      "data":
+        {
+          "home_team": "Sri Lanka",
+          "away_team": "England",
+          "venue": "R Premadasa Stadium, Colombo",
+          "timeframe": "Jan 2021 to Jan 24, 2026",
+          "top_10_teams_list": ["India", "Australia", "South Africa", "Pakistan", "New Zealand", "England", "Sri Lanka", "Bangladesh", "Afghanistan", "West Indies"]
+
+        },
+
+        "description":"This section gives information about phase wise runs and wickets at {{venue}} for this {{timeframe}}",
+        
+      "1_overall_venue_baseline(all teams)": 
+        {
+          "description": "Average phase-wise runs and wickets split (Spin: S, Pace: P) in last 5 years",
+
+          "Innings sample size": 44,
+          "1st innings powerplay_1_10": "46/1 (S: 0, P: 1)",
+          "1st innings middle_11_40": "138/4 (S: 3, P: 1)",
+          "1st innings death_41_50": "72/3 (S: 1, P: 2)",
+          "2nd innings powerplay_1_10": "42/2 (S: 0, P: 2)",
+          "2nd innings middle_11_40": "118/5 (S: 4, P: 1)"
+        },
+
+        "2_home_team(Sri Lanka)_at_current venue": 
+        {
+          "description": "Sri Lanka performance vs all teams at RPS",
+
+          "Innings sample size": 25,
+          "1st innings powerplay_1_10": "48/1 (S: 0, P: 1)",
+          "1st innings middle_11_40": "139/4 (S: 3, P: 1)",
+          "1st innings death_41_50": "76/3 (S: 1, P: 2)",
+          "2nd innings powerplay_1_10": "41/2 (S: 0, P: 2)",
+          "2nd innings middle_11_40": "122/4 (S: 3, P: 1)"
+        },
+
+        "3_present_touring_team(England)_at_venue": 
+
+        {
+          "description": "England performance at RPS (Based on 2026 Series)",
+          "Innings sample size": 2,
+          "1st innings powerplay_1_10": "Data not available",
+          "1st innings middle_11_40": "Data not available",
+          "1st innings death_41_50": "Data not available",
+          "2nd innings powerplay_1_10": "41/1 (S: 0, P: 1)",
+          "2nd innings middle_11_40": "127/5 (S: 4, P: 1)"
+        },
+
+        "4_global_habits_scenario_1_bat_first": 
+        {
+          "description": "Overall 1st innings global stats (2021-2026)",
+          "Sri Lanka 1st innings powerplay_1_10": "51/1 (S: 0.1, P: 0.9)",
+          "Sri Lanka 1st innings middle_11_40": "144/4 (S: 2.2, P: 1.8)",
+          "Sri Lanka 1st innings death_41_50": "82/3 (S: 0.8, P: 2.2)",
+          "England 1st innings powerplay_1_10": "58/1 (S: 0.1, P: 0.9)",
+          "England 1st innings middle_11_40": "156/3 (S: 1.5, P: 1.5)",
+          "England 1st innings death_41_50": "94/4 (S: 0.5, P: 3.5)"
+        },
+
+        "5_global_habits_scenario_2_chasing": 
+        {
+          "description": "Overall 2nd innings global stats (2021-2026)",
+          "Sri Lanka 2nd innings powerplay_1_10": "48/2 (S: 0.2, P: 1.8)",
+          "Sri Lanka 2nd innings middle_11_40": "135/4 (S: 2.5, P: 1.5)",
+          "Sri Lanka 2nd innings death_41_50": "68/3 (S: 1.2, P: 1.8)",
+          "England 2nd innings powerplay_1_10": "55/1 (S: 0.2, P: 0.8)",
+          "England 2nd innings middle_11_40": "148/4 (S: 2.1, P: 1.9)",
+          "England 2nd innings death_41_50": "84/4 (S: 1.0, P: 3.0)"
+        }
+      }
+    },
+  
+
+    "3_MOMENTUM_STATS": 
+    {
+      "description":"This sectiong gives information about recent last 5 match results of home team vs current touring team and vs all teams.",
+      
+      "9_RECENT_FORM": 
+      {
+        "scenario_1_vs_opponent": 
+        {
+          "description": "Sri Lanka form vs England (Last 5)",
+          "form_string": "win, no-result, loss, loss, win"
+          
+        },
+
+        "scenario_2_vs_all_teams": 
+        {
+          "description": "Sri Lanka form vs All Teams (Last 5)",
+          "form_string": "loss, loss, loss, win, loss"
+          
+        }
+      }
+    },
+
+    "4_VIRTUAL_DUGOUT_SQUADS": 
+    {
+      
+            "description": "Experience analysis of the Playing XIs for the 2nd ODI (Jan 24, 2026). Stats strictly for the last 5 years.",
+
+            "1_SQUAD_COMPARISON": 
+            {
+              "Home team": 
+              {
+                "Squad": ["Pathum Nissanka", "Kamil Mishara", "Kusal Mendis", "Dhananjaya de Silva", "Charith Asalanka", "Janith Liyanage", "Pavan Rathnayake", "Dunith Wellalage", "Pramod Madushan", "Jeffrey Vandersay", "Asitha Fernando"],
+                "Total caps": 412,
+                "runs_bank": 10245,
+                "100's": 17,
+                "50's": 58,
+                "wickets": 214,
+                "Five wickets hauls": 4
+              },
+              "Away team": 
+              {
+                "Squad": ["Ben Duckett", "Rehan Ahmed", "Joe Root", "Jacob Bethell", "Harry Brook", "Jos Buttler", "Will Jacks", "Sam Curran", "Jamie Overton", "Liam Dawson", "Adil Rashid"],
+                "Total caps": 448,
+                "runs_bank": 11892,
+                "100's": 19,
+                "50's": 61,
+                "wickets": 263,
+                "Five wickets hauls": 2
+              }
+            }
+          }
+      },
+
+      "2_PLAYING_XI_STATS": 
+      {
+        "description": " This section gives information about detailed level information of each player from both teams.",
+        
+        "Home team Players": [
+    {
+      "player_no": 1,
+      "role / type": "Opening Batter",
+      "name": "Pathum Nissanka",
+      "Total innings": 76,
+      "recent_last_5_matches scores": "26, 21, 24, 24, 29",
+      "overall batting average": 41.52,
+      "batting_avg_vs_England": 31.25,
+      "batting_avg_at_venue": 51.10,
+      "Total runs scored at current venue": "613(14)",
+      "Highest score at current venue": 137,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "0.00",
+      "bowling economy at current venue": "0.00",
+      "wickets at current venue": "0(0)"
+    },
+    {
+      "player_no": 2,
+      "role / type": "Opening Batter",
+      "name": "Kamil Mishara",
+      "Total innings": 6,
+      "recent_last_5_matches scores": "5, 27, 4, 11, 2",
+      "overall batting average": 13.40,
+      "batting_avg_vs_England": 7.50,
+      "batting_avg_at_venue": 16.00,
+      "Total runs scored at current venue": "32(2)",
+      "Highest score at current venue": 27,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "6.50",
+      "bowling economy at current venue": "0.00",
+      "wickets at current venue": "0(0)"
+    },
+    {
+      "player_no": 3,
+      "role / type": "WK-Batter",
+      "name": "Kusal Mendis",
+      "Total innings": 72,
+      "recent_last_5_matches scores": "26, 93, 22, 14, 5",
+      "overall batting average": 35.80,
+      "batting_avg_vs_England": 38.40,
+      "batting_avg_at_venue": 47.40,
+      "Total runs scored at current venue": "1140(28)",
+      "Highest score at current venue": 143,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "8.40",
+      "bowling economy at current venue": "0.00",
+      "wickets at current venue": "0(0)"
+    },
+    {
+      "player_no": 4,
+      "role / type": "All-rounder",
+      "name": "Dhananjaya de Silva",
+      "Total innings": 55,
+      "recent_last_5_matches scores": "40, 10, 12, 4, 31",
+      "overall batting average": 28.60,
+      "batting_avg_vs_England": 25.40,
+      "batting_avg_at_venue": 32.10,
+      "Total runs scored at current venue": "481(18)",
+      "Highest score at current venue": 91,
+      "Bowling form": "1/20, 1/22, 0/14, 1/31, 2/40",
+      "Overall Bowling economy": "5.02",
+      "bowling economy at current venue": "4.94",
+      "wickets at current venue": "15(28)"
+    },
+    {
+      "player_no": 5,
+      "role / type": "Middle-order (C)",
+      "name": "Charith Asalanka",
+      "Total innings": 78,
+      "recent_last_5_matches scores": "31, 17, 6, 32, 71",
+      "overall batting average": 43.68,
+      "batting_avg_vs_England": 32.50,
+      "batting_avg_at_venue": 56.46,
+      "Total runs scored at current venue": "734(16)",
+      "Highest score at current venue": 127,
+      "Bowling form": "0/14, 1/7, 0/14, 0/10, 0/5",
+      "Overall Bowling economy": "5.08",
+      "bowling economy at current venue": "4.82",
+      "wickets at current venue": "9(24)"
+    },
+    {
+      "player_no": 6,
+      "role / type": "Middle-order",
+      "name": "Janith Liyanage",
+      "Total innings": 22,
+      "recent_last_5_matches scores": "12, 4, 54, 28, 19",
+      "overall batting average": 42.10,
+      "batting_avg_vs_England": 25.00,
+      "batting_avg_at_venue": 29.00,
+      "Total runs scored at current venue": "58(2)",
+      "Highest score at current venue": 46,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "6.12",
+      "bowling economy at current venue": "5.50",
+      "wickets at current venue": "0(6)"
+    },
+    {
+      "player_no": 7,
+      "role / type": "Batter",
+      "name": "Pavan Rathnayake",
+      "Total innings": 6,
+      "recent_last_5_matches scores": "29, 12, 1, 4, 0",
+      "overall batting average": 11.50,
+      "batting_avg_vs_England": 12.00,
+      "batting_avg_at_venue": 20.50,
+      "Total runs scored at current venue": "41(2)",
+      "Highest score at current venue": 29,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "6.80",
+      "bowling economy at current venue": "6.20",
+      "wickets at current venue": "0(2)"
+    },
+    {
+      "player_no": 8,
+      "role / type": "Spin All-rounder",
+      "name": "Dunith Wellalage",
+      "Total innings": 31,
+      "recent_last_5_matches scores": "20, 25, 12, 5, 14",
+      "overall batting average": 20.31,
+      "batting_avg_vs_England": 18.00,
+      "batting_avg_at_venue": 32.40,
+      "Total runs scored at current venue": "162(10)",
+      "Highest score at current venue": 67,
+      "Bowling form": "2/31, 2/33, 4/35, 1/46, 5/27",
+      "Overall Bowling economy": "5.10",
+      "bowling economy at current venue": "4.65",
+      "wickets at current venue": "24(15)"
+    },
+    {
+      "player_no": 9,
+      "role / type": "Pacer",
+      "name": "Pramod Madushan",
+      "Total innings": 14,
+      "recent_last_5_matches scores": "8, 0, 1, 4, 2",
+      "overall batting average": 5.20,
+      "batting_avg_vs_England": 4.00,
+      "batting_avg_at_venue": 11.50,
+      "Total runs scored at current venue": "23(2)",
+      "Highest score at current venue": 8,
+      "Bowling form": "1/31, 2/45, 1/55, 0/48, 2/38",
+      "Overall Bowling economy": "6.04",
+      "bowling economy at current venue": "5.80",
+      "wickets at current venue": "6(9)"
+    },
+    {
+      "player_no": 10,
+      "role / type": "Leg-spinner",
+      "name": "Jeffrey Vandersay",
+      "Total innings": 28,
+      "recent_last_5_matches scores": "0, 1, 0, 4, 1",
+      "overall batting average": 8.20,
+      "batting_avg_vs_England": 0.50,
+      "batting_avg_at_venue": 7.40,
+      "Total runs scored at current venue": "14(2)",
+      "Highest score at current venue": 4,
+      "Bowling form": "0/38, 2/42, 1/35, 1/41, 0/30",
+      "Overall Bowling economy": "5.48",
+      "bowling economy at current venue": "5.21",
+      "wickets at current venue": "11(14)"
+    },
+    {
+      "player_no": 11,
+      "role / type": "Pacer",
+      "name": "Asitha Fernando",
+      "Total innings": 12,
+      "recent_last_5_matches scores": "0, 0, 1, 2, 0",
+      "overall batting average": 2.10,
+      "batting_avg_vs_England": 0.00,
+      "batting_avg_at_venue": 1.50,
+      "Total runs scored at current venue": "3(2)",
+      "Highest score at current venue": 2,
+      "Bowling form": "0/22, 1/22, 1/31, 2/40, 0/12",
+      "Overall Bowling economy": "6.15",
+      "bowling economy at current venue": "5.90",
+      "wickets at current venue": "4(8)"
+    }
+  ],
+  "Away team players": [
+    {
+      "player_no": 1,
+      "role / type": "Opening Batter",
+      "name": "Ben Duckett",
+      "Total innings": 32,
+      "recent_last_5_matches scores": "39, 62, 107, 8, 41",
+      "overall batting average": 41.90,
+      "batting_avg_vs_Sri Lanka": 62.00,
+      "batting_avg_at_venue": 50.50,
+      "Total runs scored at current venue": "101(2)",
+      "Highest score at current venue": 62,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "0.00",
+      "bowling economy at current venue": "0.00",
+      "wickets at current venue": "0(2)"
+    },
+    {
+      "player_no": 2,
+      "role / type": "Leg-spinner",
+      "name": "Rehan Ahmed",
+      "Total innings": 14,
+      "recent_last_5_matches scores": "13, 0, 10, 4, 2",
+      "overall batting average": 15.20,
+      "batting_avg_vs_Sri Lanka": 6.50,
+      "batting_avg_at_venue": 6.50,
+      "Total runs scored at current venue": "13(2)",
+      "Highest score at current venue": 13,
+      "Bowling form": "1/20, 1/42, 1/35, 2/31, 0/48",
+      "Overall Bowling economy": "5.38",
+      "bowling economy at current venue": "4.25",
+      "wickets at current venue": "2(2)"
+    },
+    {
+      "player_no": 3,
+      "role / type": "Middle-order",
+      "name": "Joe Root",
+      "Total innings": 187,
+      "recent_last_5_matches scores": "63*, 61, 166, 4, 10",
+      "overall batting average": 48.63,
+      "batting_avg_vs_Sri Lanka": 61.95,
+      "batting_avg_at_venue": 44.50,
+      "Total runs scored at current venue": "124(2)",
+      "Highest score at current venue": 63,
+      "Bowling form": "2/13, 0/12, 1/22, 0/14, 0/5",
+      "Overall Bowling economy": "5.85",
+      "bowling economy at current venue": "4.20",
+      "wickets at current venue": "3(4)"
+    },
+    {
+      "player_no": 4,
+      "role / type": "Batter",
+      "name": "Jacob Bethell",
+      "Total innings": 18,
+      "recent_last_5_matches scores": "6, 15, 11, 18, 2",
+      "overall batting average": 34.46,
+      "batting_avg_vs_Sri Lanka": 10.50,
+      "batting_avg_at_venue": 10.50,
+      "Total runs scored at current venue": "21(2)",
+      "Highest score at current venue": 15,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "5.52",
+      "bowling economy at current venue": "5.40",
+      "wickets at current venue": "0(2)"
+    },
+    {
+      "player_no": 5,
+      "role / type": "Middle-order (C)",
+      "name": "Harry Brook",
+      "Total innings": 35,
+      "recent_last_5_matches scores": "28*, 6, 6, 34, 135",
+      "overall batting average": 36.56,
+      "batting_avg_vs_Sri Lanka": 12.00,
+      "batting_avg_at_venue": 12.00,
+      "Total runs scored at current venue": "34(2)",
+      "Highest score at current venue": 28,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "0.00",
+      "bowling economy at current venue": "0.00",
+      "wickets at current venue": "0(2)"
+    },
+    {
+      "player_no": 6,
+      "role / type": "WK-Batter",
+      "name": "Jos Buttler",
+      "Total innings": 170,
+      "recent_last_5_matches scores": "0, 4, 12, 28, 40",
+      "overall batting average": 38.87,
+      "batting_avg_vs_Sri Lanka": 47.63,
+      "batting_avg_at_venue": 4.00,
+      "Total runs scored at current venue": "4(2)",
+      "Highest score at current venue": 4,
+      "Bowling form": "not available",
+      "Overall Bowling economy": "0.00",
+      "bowling economy at current venue": "0.00",
+      "wickets at current venue": "0(2)"
+    },
+    {
+      "player_no": 7,
+      "role / type": "All-rounder",
+      "name": "Will Jacks",
+      "Total innings": 12,
+      "recent_last_5_matches scores": "0, 1, 14, 4, 12",
+      "overall batting average": 24.50,
+      "batting_avg_vs_Sri Lanka": 0.50,
+      "batting_avg_at_venue": 0.50,
+      "Total runs scored at current venue": "1(2)",
+      "Highest score at current venue": 1,
+      "Bowling form": "1/47, 0/11, 1/12, 0/14, 0/5",
+      "Overall Bowling economy": "5.12",
+      "bowling economy at current venue": "4.80",
+      "wickets at current venue": "1(2)"
+    },
+    {
+      "player_no": 8,
+      "role / type": "All-rounder",
+      "name": "Sam Curran",
+      "Total innings": 34,
+      "recent_last_5_matches scores": "0, 4, 1, 12, 28",
+      "overall batting average": 22.10,
+      "batting_avg_vs_Sri Lanka": 2.00,
+      "batting_avg_at_venue": 2.00,
+      "Total runs scored at current venue": "4(2)",
+      "Highest score at current venue": 4,
+      "Bowling form": "0/16, 1/44, 2/31, 2/45, 1/55",
+      "Overall Bowling economy": "5.92",
+      "bowling economy at current venue": "6.10",
+      "wickets at current venue": "2(2)"
+    },
+    {
+      "player_no": 9,
+      "role / type": "All-rounder",
+      "name": "Jamie Overton",
+      "Total innings": 10,
+      "recent_last_5_matches scores": "0, 22, 1, 4, 0",
+      "overall batting average": 26.44,
+      "batting_avg_vs_Sri Lanka": 11.00,
+      "batting_avg_at_venue": 11.00,
+      "Total runs scored at current venue": "22(2)",
+      "Highest score at current venue": 22,
+      "Bowling form": "2/21, 0/22, 1/22, 0/14",
+      "Overall Bowling economy": "5.38",
+      "bowling economy at current venue": "5.15",
+      "wickets at current venue": "2(2)"
+    },
+    {
+      "player_no": 10,
+      "role / type": "Spinner",
+      "name": "Liam Dawson",
+      "Total innings": 6,
+      "recent_last_5_matches scores": "0, 1, 9, 4, 2",
+      "overall batting average": 12.60,
+      "batting_avg_vs_Sri Lanka": 0.50,
+      "batting_avg_at_venue": 0.50,
+      "Total runs scored at current venue": "1(2)",
+      "Highest score at current venue": 1,
+      "Bowling form": "1/40, 1/44, 0/14, 2/42, 1/35",
+      "Overall Bowling economy": "5.42",
+      "bowling economy at current venue": "4.90",
+      "wickets at current venue": "2(2)"
+    },
+    {
+      "player_no": 11,
+      "role / type": "Leg-spinner",
+      "name": "Adil Rashid",
+      "Total innings": 132,
+      "recent_last_5_matches scores": "0, 8, 2, 0, 12",
+      "overall batting average": 16.74,
+      "batting_avg_vs_Sri Lanka": 4.00,
+      "batting_avg_at_venue": 4.00,
+      "Total runs scored at current venue": "8(2)",
+      "Highest score at current venue": 8,
+      "Bowling form": "2/34, 3/44, 2/31, 2/45, 1/55",
+      "Overall Bowling economy": "5.64",
+      "bowling economy at current venue": "4.40",
+      "wickets at current venue": "5(2)"
+    }
+  ]
+          
+      },
+
+      "Matchup Matris":
+      {
+        "description": "Average Runs per Dismissal vs Specific Bowling Types. Format: Average (Balls Faced).",
+        "Home team": "Sri Lanka",
+        "Sri Lanka Players": [
+          { "name": "Pathum Nissanka", "Left-Arm Fast-Med": "7.0 (66)", "Leg Spin": "29.5 (111)", "Off-Spin": "38.0 (124)", "SLA (Left-Arm)": "31.2 (84)" },
+          { "name": "Kamil Mishara", "Left-Arm Fast-Med": "Data not available", "Leg Spin": "6.0 (120)", "Off-Spin": "12.0 (45)", "SLA (Left-Arm)": "14.0 (38)" },
+          { "name": "Kusal Mendis", "Left-Arm Fast-Med": "47.0 (111)", "Leg Spin": "18.1 (82)", "Off-Spin": "46.5 (130)", "SLA (Left-Arm)": "28.4 (95)" },
+          { "name": "Dhananjaya de Silva", "Left-Arm Fast-Med": "15 (83)", "Leg Spin": "71.0 (62)", "Off-Spin": "32.0 (90)", "SLA (Left-Arm)": "22.5 (74)" },
+          { "name": "Charith Asalanka", "Left-Arm Fast-Med": "31.0 (106)", "Leg Spin": "70.0 (107)", "Off-Spin": "51.0 (115)", "SLA (Left-Arm)": "38.6 (88)" },
+          { "name": "Janith Liyanage", "Left-Arm Fast-Med": "7 (53)", "Leg Spin": "56 (73)", "Off-Spin": "24.0 (48)", "SLA (Left-Arm)": "31.0 (52)" },
+          { "name": "Pavan Rathnayake", "Left-Arm Fast-Med": "Data not available", "Leg Spin": "Data not available", "Off-Spin": "12.0 (34)", "SLA (Left-Arm)": "8.0 (22)" },
+          { "name": "Dunith Wellalage", "Left-Arm Fast-Med": "22 (122)", "Leg Spin": "6 (46)", "Off-Spin": "18.0 (55)", "SLA (Left-Arm)": "15.5 (40)" },
+          { "name": "Pramod Madushan", "Left-Arm Fast-Med": "0 (0)", "Leg Spin": "Data not available", "Off-Spin": "4.0 (12)", "SLA (Left-Arm)": "2.0 (8)" },
+          { "name": "Jeffrey Vandersay", "Left-Arm Fast-Med": "1 (100)", "Leg Spin": "18.0 (42)", "Off-Spin": "0.5 (10)", "SLA (Left-Arm)": "4.0 (15)" },
+          { "name": "Asitha Fernando", "Left-Arm Fast-Med": "Data not available", "Leg Spin": "0 (0)", "Off-Spin": "0.0 (2)", "SLA (Left-Arm)": "0.0 (4)" }
+        ],
+        "Away team": "England",
+        "England Players": [
+          { "name": "Ben Duckett", "Right-Arm Fast": "44.2 (115)", "Leg Spin": "38.5 (102)", "Off-Spin": "62.0 (92)", "SLA (Left-Arm)": "14.5 (88)" },
+          { "name": "Joe Root", "Right-Arm Fast": "52.4 (210)", "Leg Spin": "48.2 (156)", "Off-Spin": "61.2 (140)", "SLA (Left-Arm)": "36.5 (112)" },
+          { "name": "Harry Brook", "Right-Arm Fast": "38.2 (98)", "Leg Spin": "31.0 (76)", "Off-Spin": "35.5 (88)", "SLA (Left-Arm)": "22.4 (64)" },
+          { "name": "Jos Buttler", "Right-Arm Fast": "41.0 (145)", "Leg Spin": "44.8 (124)", "Off-Spin": "33.5 (105)", "SLA (Left-Arm)": "24.8 (92)" },
+          { "name": "Will Jacks", "Right-Arm Fast": "24.5 (66)", "Leg Spin": "26.2 (58)", "Off-Spin": "22.0 (44)", "SLA (Left-Arm)": "18.2 (55)" },
+          { "name": "Jacob Bethell", "Right-Arm Fast": "34.4 (72)", "Leg Spin": "12.0 (48)", "Off-Spin": "21.0 (33)", "SLA (Left-Arm)": "10.5 (25)" },
+          { "name": "Sam Curran", "Right-Arm Fast": "22.1 (90)", "Leg Spin": "18.5 (42)", "Off-Spin": "14.2 (38)", "SLA (Left-Arm)": "12.0 (20)" },
+          { "name": "Jamie Overton", "Right-Arm Fast": "26.4 (64)", "Leg Spin": "11.0 (22)", "Off-Spin": "18.0 (25)", "SLA (Left-Arm)": "11.0 (18)" },
+          { "name": "Liam Dawson", "Right-Arm Fast": "16.4 (58)", "Leg Spin": "14.2 (34)", "Off-Spin": "12.6 (30)", "SLA (Left-Arm)": "0.5 (10)" },
+          { "name": "Adil Rashid", "Right-Arm Fast": "16.7 (88)", "Leg Spin": "9.4 (40)", "Off-Spin": "12.0 (30)", "SLA (Left-Arm)": "4.0 (15)" },
+          { "name": "Rehan Ahmed", "Right-Arm Fast": "15.2 (44)", "Leg Spin": "13.0 (22)", "Off-Spin": "10.5 (18)", "SLA (Left-Arm)": "6.5 (12)" }
+        ]
+      },
+
+      "Batters vs Bowlers":
+            {
+              "description": "Complete head-to-head records for all 11 players per team. Period: Jan 2021 - Jan 2026.",
+              "SRI_LANKA_BATTING": [
+                { "batter": "Pathum Nissanka", "h2h": [ { "bowler": "Adil Rashid", "runs": 24, "balls": 17, "outs": 0, "sr": 141.2 }, { "bowler": "Sam Curran", "runs": 0, "balls": 1, "outs": 1, "sr": 0.0 }, { "bowler": "Jamie Overton", "runs": 12, "balls": 15, "outs": 0, "sr": 80.0 } ] },
+                { "batter": "Kamil Mishara", "h2h": [ { "bowler": "Adil Rashid", "runs": 5, "balls": 12, "outs": 1, "sr": 41.7 }, { "bowler": "Rehan Ahmed", "runs": 8, "balls": 10, "outs": 0, "sr": 80.0 } ] },
+                { "batter": "Kusal Mendis", "h2h": [ { "bowler": "Adil Rashid", "note": "Bunny", "runs": 34, "balls": 47, "outs": 4, "sr": 72.3 }, { "bowler": "Rehan Ahmed", "runs": 12, "balls": 14, "outs": 1, "sr": 85.7 } ] },
+                { "batter": "Dhananjaya de Silva", "h2h": [ { "bowler": "Adil Rashid", "runs": 34, "balls": 56, "outs": 0, "sr": 60.7 }, { "bowler": "Liam Dawson", "runs": 13, "balls": 17, "outs": 1, "sr": 76.5 }, { "bowler": "Sam Curran", "runs": 15, "balls": 16, "outs": 1, "sr": 93.8 } ] },
+                { "batter": "Charith Asalanka", "h2h": [ { "bowler": "Sam Curran", "runs": 3, "balls": 7, "outs": 1, "sr": 42.9 }, { "bowler": "Adil Rashid", "runs": 42, "balls": 38, "outs": 1, "sr": 110.5 }, { "bowler": "Will Jacks", "runs": 11, "balls": 14, "outs": 0, "sr": 78.6 } ] },
+                { "batter": "Janith Liyanage", "h2h": [ { "bowler": "Jamie Overton", "runs": 14, "balls": 12, "outs": 1, "sr": 116.7 }, { "bowler": "Liam Dawson", "runs": 9, "balls": 15, "outs": 0, "sr": 60.0 } ] },
+                { "batter": "Pavan Rathnayake", "h2h": [ { "bowler": "Adil Rashid", "runs": 4, "balls": 8, "outs": 1, "sr": 50.0 }, { "bowler": "Rehan Ahmed", "runs": 2, "balls": 5, "outs": 0, "sr": 40.0 } ] },
+                { "batter": "Dunith Wellalage", "h2h": [ { "bowler": "Adil Rashid", "runs": 12, "balls": 18, "outs": 1, "sr": 66.7 }, { "bowler": "Sam Curran", "runs": 6, "balls": 12, "outs": 0, "sr": 50.0 } ] },
+                { "batter": "Pramod Madushan", "h2h": [ { "bowler": "Jamie Overton", "runs": 1, "balls": 4, "outs": 1, "sr": 25.0 } ] },
+                { "batter": "Jeffrey Vandersay", "h2h": [ { "bowler": "Adil Rashid", "runs": 0, "balls": 4, "outs": 1, "sr": 0.0 } ] },
+                { "batter": "Asitha Fernando", "h2h": [ { "bowler": "Sam Curran", "runs": 1, "balls": 3, "outs": 1, "sr": 33.3 } ] }
+              ],
+              "ENGLAND_BATTING": [
+                { "batter": "Ben Duckett", "h2h": [ { "bowler": "Asitha Fernando", "runs": 18, "balls": 22, "outs": 0, "sr": 81.8 }, { "bowler": "Dunith Wellalage", "runs": 14, "balls": 28, "outs": 1, "sr": 50.0 } ] },
+                { "batter": "Rehan Ahmed", "h2h": [ { "bowler": "Jeffrey Vandersay", "runs": 8, "balls": 12, "outs": 1, "sr": 66.7 } ] },
+                { "batter": "Joe Root", "h2h": [ { "bowler": "D. de Silva", "runs": 25, "balls": 41, "outs": 1, "sr": 61.0 }, { "bowler": "Dunith Wellalage", "runs": 22, "balls": 34, "outs": 2, "sr": 64.7 } ] },
+                { "batter": "Jacob Bethell", "h2h": [ { "bowler": "Dunith Wellalage", "runs": 4, "balls": 10, "outs": 1, "sr": 40.0 } ] },
+                { "batter": "Harry Brook", "h2h": [ { "bowler": "Dunith Wellalage", "runs": 12, "balls": 18, "outs": 1, "sr": 66.7 }, { "bowler": "Jeffrey Vandersay", "runs": 14, "balls": 15, "outs": 1, "sr": 93.3 } ] },
+                { "batter": "Jos Buttler", "h2h": [ { "bowler": "Dunith Wellalage", "runs": 10, "balls": 24, "outs": 2, "sr": 41.7 }, { "bowler": "D. de Silva", "runs": 33, "balls": 45, "outs": 1, "sr": 73.3 } ] },
+                { "batter": "Will Jacks", "h2h": [ { "bowler": "Asitha Fernando", "runs": 2, "balls": 6, "outs": 1, "sr": 33.3 } ] },
+                { "batter": "Sam Curran", "h2h": [ { "bowler": "D. de Silva", "runs": 0, "balls": 1, "outs": 1, "sr": 0.0 } ] },
+                { "batter": "Jamie Overton", "h2h": [ { "bowler": "Pramod Madushan", "runs": 15, "balls": 12, "outs": 0, "sr": 125.0 } ] },
+                { "batter": "Liam Dawson", "h2h": [ { "bowler": "Jeffrey Vandersay", "runs": 4, "balls": 9, "outs": 1, "sr": 44.4 } ] },
+                { "batter": "Adil Rashid", "h2h": [ { "bowler": "Dunith Wellalage", "runs": 2, "balls": 12, "outs": 1, "sr": 16.7 } ] }
+              ]
+            }
+
+    }
+  }

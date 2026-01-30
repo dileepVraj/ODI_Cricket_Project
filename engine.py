@@ -2,28 +2,55 @@ import pandas as pd
 import numpy as np
 import difflib
 import re
+import logging  # <--- NEW IMPORT
+
 from venues import VENUE_MAP
 from core.team_engine import TeamEngine
 from core.player_engine import PlayerEngine
 from core.predictor import PredictorEngine
-from ai.gemini_client import GeminiOracle
+
+# ==============================================================================
+# 🛡️ JUPYTER-PROOF LOGGER SETUP
+# ==============================================================================
+logger = logging.getLogger("CricketAnalyzer")
+if logger.hasHandlers():
+    logger.handlers.clear()
+
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 class CricketAnalyzer:
     """
     🏗️ THE FACADE (Manager)
     This class manages Data Loading and delegates analysis to specialized Core Engines.
     It maintains the exact public API of the old Monolith for interface compatibility.
+    Now supports Hot Reloading (v3.0).
     """
     def __init__(self, filepath):
-        print(f"⚙️ Initializing Smart Engine (v2.0 - Modular)...")
-        print(f"📂 Loading Database: {filepath}")
+        self.filepath = filepath # Store for reloading
+        print(f"⚙️ Initializing Smart Engine (v2.1 - Robust)...")
+        self.load_data() # <--- CALLS THE NEW LOADER
+
+    def load_data(self):
+        """
+        🔥 HOT RELOAD FUNCTION
+        Reads the CSV again and rebuilds all sub-engines.
+        """
+        print(f"📂 Loading Database: {self.filepath}")
     
         # 1. Load Match Data
-        self.raw_df = pd.read_csv(filepath, low_memory=False)
+        self.raw_df = pd.read_csv(self.filepath, low_memory=False)
         self.raw_df.columns = self.raw_df.columns.str.strip().str.lower()
         self.raw_df['start_date'] = pd.to_datetime(self.raw_df['start_date'], errors='coerce')
         self.raw_df['year'] = self.raw_df['start_date'].dt.year
         
+        # 🚨 SELF-HEALING: Fix missing 'season' column
+        if 'season' not in self.raw_df.columns:
+            self.raw_df['season'] = self.raw_df['year']
+            
         # 🚨 GLOBAL SORT
         self.raw_df = self.raw_df.sort_values(['start_date', 'match_id'])
         print(f"   Raw Data: {len(self.raw_df)} balls loaded (Sorted by Date).")
@@ -52,22 +79,31 @@ class CricketAnalyzer:
         self.player_engine = PlayerEngine(self.raw_df, self.player_df, self.meta_df)
         self.predictor_engine = PredictorEngine(self.raw_df, self.player_df)
 
+    def reload_database(self):
+        """Public method to trigger the reload safely."""
+        print("\n🔄 RELOADING DATABASE FROM DISK...")
+        self.load_data()
+        print("✅ DATABASE RELOAD COMPLETE.\n")
+
     def _create_match_summary(self):
         print("   🔨 Building Match Summary...")
         wicket_col = 'is_wicket' if 'is_wicket' in self.raw_df.columns else 'player_dismissed'
         agg_func_wicket = 'sum' if wicket_col == 'is_wicket' else 'count'
         
+        # Handle Extras
         for col in ['wides', 'noballs', 'wide', 'no_ball']:
             if col in self.raw_df.columns: self.raw_df[col] = self.raw_df[col].fillna(0)
 
         w_col = 'wides' if 'wides' in self.raw_df.columns else 'wide'
         n_col = 'noballs' if 'noballs' in self.raw_df.columns else 'no_ball'
         
+        # Legal Ball Logic
         if w_col in self.raw_df.columns and n_col in self.raw_df.columns:
             self.raw_df['is_legal_ball'] = ((self.raw_df[w_col] == 0) & (self.raw_df[n_col] == 0)).astype(int)
         else:
             self.raw_df['is_legal_ball'] = 1 
 
+        # Group by Innings
         innings_stats = self.raw_df.groupby(['match_id', 'innings']).agg({
             'runs_off_bat': 'sum', 'extras': 'sum',
             'is_legal_ball': 'sum', wicket_col: agg_func_wicket 
@@ -87,10 +123,18 @@ class CricketAnalyzer:
         wickets = innings_stats.pivot(index='match_id', columns='innings', values='wickets').add_prefix('wickets_inn').reset_index()
         display_s = innings_stats.pivot(index='match_id', columns='innings', values='score_display').add_prefix('display_inn').reset_index()
         
-        cols = ['match_id', 'season', 'year', 'start_date', 'venue', 'batting_team', 'bowling_team', 'winner']
+        # 🚨 ROBUST COLUMN SELECTION
+        # Only select columns that definitely exist
+        cols = ['match_id', 'year', 'start_date', 'venue', 'batting_team', 'bowling_team', 'winner']
+        if 'season' in self.raw_df.columns: cols.append('season')
         if 'method' in self.raw_df.columns: cols.append('method')
+        
         meta = self.raw_df.drop_duplicates(subset='match_id')[cols].copy()
+        
+        # Polyfill missing columns for downstream compatibility
+        if 'season' not in meta.columns: meta['season'] = meta['year']
         if 'method' not in meta.columns: meta['method'] = np.nan
+            
         meta.rename(columns={'batting_team': 'team_bat_1', 'bowling_team': 'team_bat_2'}, inplace=True)
         
         self.match_df = pd.merge(meta, scores, on='match_id', how='left')
@@ -118,29 +162,21 @@ class CricketAnalyzer:
         unique_raw = self.match_df['venue'].unique()
         corrections = {}
         
-        # 1. Prepare Clean Keys Map
-        # Map: "narendra modi stadium" -> "Narendra Modi Stadium" (Original Key)
         clean_keys = {self._clean_string(k): k for k in VENUE_MAP.keys()}
         
         for raw in unique_raw:
             if not isinstance(raw, str): continue
             
-            # A. Exact Match
             if raw in VENUE_MAP:
                 corrections[raw] = VENUE_MAP[raw]; continue
             
-            # Clean the raw name
             clean_raw = self._clean_string(raw)
             
-            # B. Clean Exact Match
             if clean_raw in clean_keys:
                 corrections[raw] = VENUE_MAP[clean_keys[clean_raw]]; continue
             
-            # C. Substring Match (The Fix for "Stadium, City") 🕵️‍♂️
-            # Checks if a known venue key is inside the raw name
             found_substring = False
             for c_key, original_key in clean_keys.items():
-                # Logic: If known key is >5 chars and exists inside raw name
                 if len(c_key) > 5 and c_key in clean_raw:
                     corrections[raw] = VENUE_MAP[original_key]
                     found_substring = True
@@ -148,10 +184,9 @@ class CricketAnalyzer:
             
             if found_substring: continue
 
-            # D. Fuzzy Match (The Safety Net)
             matches = difflib.get_close_matches(raw, VENUE_MAP.keys(), n=1, cutoff=0.80)
             if matches: corrections[raw] = VENUE_MAP[matches[0]]
-            else: corrections[raw] = raw # Keep original if no match
+            else: corrections[raw] = raw 
             
         self.match_df['venue'] = self.match_df['venue'].map(corrections).fillna(self.match_df['venue'])
 
@@ -164,6 +199,9 @@ class CricketAnalyzer:
 
     def analyze_home_fortress(self, *args, **kwargs):
         return self.team_engine.analyze_home_fortress(*args, **kwargs)
+
+    def analyze_venue_matchup(self, stadium_name, home_team, opp_team, years_back=5, recorder=None):
+        return self.team_engine.analyze_home_fortress(stadium_name, home_team, opp_team, years_back, recorder)
 
     def analyze_venue_phases(self, *args, **kwargs):
         return self.team_engine.analyze_venue_phases(*args, **kwargs)
@@ -191,6 +229,9 @@ class CricketAnalyzer:
 
     def analyze_team_form(self, *args, **kwargs):
         return self.team_engine.analyze_team_form(*args, **kwargs)
+    
+    def check_recent_form(self, *args, **kwargs):
+        return self.team_engine.analyze_team_form(*args, **kwargs)
 
     def get_active_squad(self, *args, **kwargs):
         return self.player_engine.get_active_squad(*args, **kwargs)
@@ -206,6 +247,7 @@ class CricketAnalyzer:
     
     def get_last_match_xi(self, team_name):
         return self.player_engine.get_last_match_xi(team_name)
+    
 
 if __name__ == "__main__":
     print("✅ Facade Engine Loaded. Ready to serve.")

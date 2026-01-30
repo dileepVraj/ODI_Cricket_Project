@@ -384,7 +384,7 @@ class TeamEngine:
     # 🔍 ANALYSIS FUNCTIONS (Public API)
     # =================================================================================
 
-    def analyze_home_fortress(self, stadium_name, home_team, opp_team='All', years_back=10):
+    def analyze_home_fortress(self, stadium_name, home_team, opp_team='All', years_back=10, recorder=None):
         stadium_id = stadium_name
         if stadium_name not in VENUE_MAP.values():
             for k, v in VENUE_MAP.items():
@@ -405,45 +405,81 @@ class TeamEngine:
         df = self._apply_smart_filters(df)
         self._build_and_display_report(df, home_team, vis_label, f"FORTRESS REPORT ({vs_txt})", is_venue_mode=True)
 
-    def analyze_venue_phases(self, stadium_id, home_team=None, away_team=None, years=5):
+    # 🔗 BRIDGE FUNCTION (Connects Interface Button to Fortress Logic)
+    def analyze_venue_matchup(self, stadium_name, home_team, opp_team, years_back=5, recorder=None):
+        """
+        Redirects the 'Venue Matchup' button to the Fortress function, 
+        but ensures it runs in 'Matchup Mode' (specific opponent).
+        """
+        self.analyze_home_fortress(stadium_name, home_team, opp_team, years_back, recorder)
+
+    def analyze_venue_phases(self, stadium_id, home_team=None, away_team=None, years=5, recorder=None):
         import os
         from IPython.display import display, HTML
-        
+        from config.teams import TEAM_COLORS 
+
         file_path = 'data/processed_phase_stats.csv'
         if not os.path.exists(file_path): print("❌ Error: 'processed_phase_stats.csv' not found."); return
         
-        # 1. Load Data
         phase_df = pd.read_csv(file_path)
         
-        # 2. Smart Date Merge (PRESERVED)
+        # ---------------------------------------------------------
+        # 🚨 NUCLEAR FIX: ID NORMALIZATION (Handles "518" vs "518.0")
+        # ---------------------------------------------------------
+        if 'match_id' in phase_df.columns:
+            # remove decimals (.0), spaces, and force to string
+            phase_df['match_id'] = phase_df['match_id'].astype(str).str.split('.').str[0].str.strip()
+
+        # 2. Smart Date Merge
         if 'start_date' not in phase_df.columns and 'match_id' in phase_df.columns:
-            date_map = self.match_df.set_index('match_id')['start_date'].to_dict()
+            # Prepare Master Map (Apply same normalization)
+            temp_map_df = self.match_df.copy()
+            temp_map_df['match_id'] = temp_map_df['match_id'].astype(str).str.split('.').str[0].str.strip()
+            
+            date_map = temp_map_df.set_index('match_id')['start_date'].to_dict()
             phase_df['start_date'] = phase_df['match_id'].map(date_map)
             phase_df['start_date'] = pd.to_datetime(phase_df['start_date'])
+
         elif 'start_date' in phase_df.columns:
             phase_df['start_date'] = pd.to_datetime(phase_df['start_date'])
 
-        # 3. Apply Date Filter (PRESERVED)
-        if 'start_date' in phase_df.columns:
+        # 3. Filter by Venue (BEFORE Date Filter to debug availability)
+        # Check standard alias OR fuzzy match location
+        valid_aliases = [k for k, v in VENUE_MAP.items() if v == stadium_id]
+        valid_aliases.append(stadium_id)
+        search_terms = [x.lower() for x in valid_aliases]
+        
+        venue_stats = phase_df[phase_df['venue'].str.lower().isin(search_terms)].copy()
+        
+        # Fallback: Search by city name if ID match fails
+        if venue_stats.empty:
+            location_part = stadium_id.split('_')[-1].lower()
+            if len(location_part) > 3: 
+                venue_stats = phase_df[phase_df['venue'].str.lower().str.contains(location_part)]
+
+        if venue_stats.empty: 
+            print(f"❌ No phase data found for venue ID: '{stadium_id}' (Check 'processed_phase_stats.csv')")
+            return
+
+        # 4. Apply Date Filter & DEBUGGER
+        if 'start_date' in venue_stats.columns:
             cutoff = pd.Timestamp.now() - pd.DateOffset(years=years)
-            phase_df = phase_df[phase_df['start_date'] >= cutoff]
+            filtered_stats = venue_stats[venue_stats['start_date'] >= cutoff].copy()
+            
+            # 🔍 DEBUG: If filter kills all data, explain why
+            if filtered_stats.empty and not venue_stats.empty:
+                latest = venue_stats['start_date'].max()
+                print(f"⚠️ Venue found, but NO matches in last {years} years.")
+                print(f"   📅 Latest data available: {latest.date()} (Cutoff: {cutoff.date()})")
+                return
+            
+            venue_stats = filtered_stats
             start_year = cutoff.year
         else:
             print("⚠️ Warning: Could not map dates. Using all data.")
             start_year = "2015"
 
-        # 4. Filter by Venue (PRESERVED)
-        valid_aliases = [k for k, v in VENUE_MAP.items() if v == stadium_id]
-        valid_aliases.append(stadium_id)
-        search_terms = [x.lower() for x in valid_aliases]
-        venue_stats = phase_df[phase_df['venue'].str.lower().isin(search_terms)].copy()
-        
-        if venue_stats.empty:
-            location_part = stadium_id.split('_')[-1].lower()
-            if len(location_part) > 3: venue_stats = phase_df[phase_df['venue'].str.lower().str.contains(location_part)]
-        if venue_stats.empty: print(f"❌ No phase data found for venue ID: '{stadium_id}'"); return
-
-        # Helper for Total Runs (PRESERVED)
+        # Helper for Total Runs
         if 'total_runs' not in venue_stats.columns:
             venue_stats['total_runs'] = venue_stats['pp_runs'].fillna(0) + venue_stats['mid_runs'].fillna(0) + venue_stats['dth_runs'].fillna(0)
 
@@ -452,7 +488,6 @@ class TeamEngine:
         # -----------------------------------------------------------
         target_venue = venue_stats['venue'].iloc[0].upper()
         
-        # HTML Header
         display(HTML(f"""
         <div style="background:#f4f4f4; padding:10px; border-radius:5px; margin-bottom:10px; border-left: 5px solid #666;">
             <h3 style="margin:0; color:#333;">🕒 PHASE ANALYSIS: {target_venue}</h3>
@@ -460,7 +495,6 @@ class TeamEngine:
         </div>
         """))
         
-        # Aggregation Rules
         agg_rules = {
             'pp_runs': ['mean', 'count'], 'pp_wkts': 'mean',
             'mid_runs': ['mean', 'count'], 'mid_wkts': 'mean',
@@ -468,30 +502,21 @@ class TeamEngine:
             'total_runs': ['mean', 'count']
         }
         
-        # Helper to generate HTML Table for any dataframe
         def display_phase_html(stats_df, title, header_color="#333", bg_color="#fff"):
             summary = stats_df.groupby('innings').agg(agg_rules).round(1)
-            
             def get_stat(inn, col, stat):
                 try: return summary.loc[inn, (col, stat)]
                 except: return 0
 
-            # Rows Generation
             rows = ""
             phases = [("POWERPLAY (1-10)", 'pp'), ("MIDDLE (11-40)", 'mid'), ("DEATH (41-50)", 'dth')]
-            
             for name, p in phases:
-                # 1st Innings
                 r1 = get_stat(1, f'{p}_runs', 'mean'); c1 = int(get_stat(1, f'{p}_runs', 'count')); w1 = get_stat(1, f'{p}_wkts', 'mean')
                 str1 = f"<b>{r1}</b> ({c1}) / <span style='color:#d9534f'>{w1} w</span>"
-                
-                # 2nd Innings
                 r2 = get_stat(2, f'{p}_runs', 'mean'); c2 = int(get_stat(2, f'{p}_runs', 'count')); w2 = get_stat(2, f'{p}_wkts', 'mean')
                 str2 = f"<b>{r2}</b> ({c2}) / <span style='color:#d9534f'>{w2} w</span>"
-                
                 rows += f"<tr><td style='padding:5px;'>{name}</td><td style='padding:5px;'>{str1}</td><td style='padding:5px;'>{str2}</td></tr>"
 
-            # Render Table
             display(HTML(f"""
             <div style="margin-bottom:15px; border:1px solid #ddd; border-radius:5px; background:{bg_color};">
                 <div style="background:{header_color}; color:#fff; padding:5px 10px; font-weight:bold; font-size:13px;">{title}</div>
@@ -506,7 +531,6 @@ class TeamEngine:
             </div>
             """))
 
-        # Print Main Venue Stats
         display_phase_html(venue_stats, f"🏟️ OVERALL VENUE BASELINE (All Teams)", header_color="#555")
 
         # -----------------------------------------------------------
@@ -537,50 +561,33 @@ class TeamEngine:
                 
                 display(HTML(f"<h4 style='border-bottom:2px solid #ccc; padding-bottom:5px; margin-top:20px;'>⚔️ GLOBAL HABITS (Any Venue, Since {start_year})</h4>"))
 
-                # Helper for Row Generation (Logic Preserved: Runs=High Good, Wkts=Low Good)
                 def get_row_html(label, val_h, val_a, is_high_good):
                     diff = round(val_h - val_a, 1)
-                    # Logic: If high is good (Runs), diff>0 is Green. If low is good (Wkts), diff<0 is Green.
                     is_green = (diff > 0) if is_high_good else (diff < 0)
-                    
-                    color = "#28a745" if is_green else "#dc3545" # Green vs Red
+                    color = "#28a745" if is_green else "#dc3545"
                     arrow = "▲" if is_green else "▼"
-                    
-                    return f"""
-                    <tr style="border-bottom:1px dashed #eee;">
-                        <td style="padding:5px; color:#555;">{label}</td>
-                        <td style="padding:5px; font-weight:bold; color:{c1}">{val_h:.1f}</td>
-                        <td style="padding:5px; font-weight:bold; color:{c2}">{val_a:.1f}</td>
-                        <td style="padding:5px; color:{color}; font-weight:bold;">{arrow} {abs(diff)}</td>
-                    </tr>
-                    """
+                    return f"<tr style='border-bottom:1px dashed #eee;'><td style='padding:5px; color:#555;'>{label}</td><td style='padding:5px; font-weight:bold; color:{c1}'>{val_h:.1f}</td><td style='padding:5px; font-weight:bold; color:{c2}'>{val_a:.1f}</td><td style='padding:5px; color:{color}; font-weight:bold;'>{arrow} {abs(diff)}</td></tr>"
 
-                # --- SCENARIO 1: BAT FIRST ---
+                # Scenario 1: Bat First
                 h_avg_1 = h_stats[h_stats['innings'] == 1].mean(numeric_only=True)
                 a_avg_1 = a_stats[a_stats['innings'] == 1].mean(numeric_only=True)
                 
-                metrics = [
-                    ('pp_runs', 'Avg PP Runs', True), ('pp_wkts', 'Avg PP Wkts', False),
-                    ('mid_runs', 'Avg Mid Runs', True), ('mid_wkts', 'Avg Mid Wkts', False),
-                    ('dth_runs', 'Avg Death Runs', True), ('dth_wkts', 'Avg Death Wkts', False)
-                ]
+                metrics = [('pp_runs', 'Avg PP Runs', True), ('pp_wkts', 'Avg PP Wkts', False),
+                           ('mid_runs', 'Avg Mid Runs', True), ('mid_wkts', 'Avg Mid Wkts', False),
+                           ('dth_runs', 'Avg Death Runs', True), ('dth_wkts', 'Avg Death Wkts', False)]
                 
                 rows_1 = ""
-                for col, label, flag in metrics:
-                    rows_1 += get_row_html(label, h_avg_1.get(col, 0), a_avg_1.get(col, 0), flag)
+                for col, lbl, flg in metrics:
+                    rows_1 += get_row_html(lbl, h_avg_1.get(col,0), a_avg_1.get(col,0), flg)
 
-                # --- SCENARIO 2: CHASING ---
+                # Scenario 2: Chasing
                 h_avg_2 = h_stats[h_stats['innings'] == 2].mean(numeric_only=True)
                 a_avg_2 = a_stats[a_stats['innings'] == 2].mean(numeric_only=True)
                 
-                rows_2 = ""
-                # PP Score
-                rows_2 += get_row_html("Avg PP Score", h_avg_2.get('pp_runs',0), a_avg_2.get('pp_runs',0), True)
-                # Middle/Death Wickets (Focus on Collapse)
+                rows_2 = get_row_html("Avg PP Score", h_avg_2.get('pp_runs',0), a_avg_2.get('pp_runs',0), True)
                 rows_2 += get_row_html("Avg Mid Wkts", h_avg_2.get('mid_wkts',0), a_avg_2.get('mid_wkts',0), False)
                 rows_2 += get_row_html("Avg Death Wkts", h_avg_2.get('dth_wkts',0), a_avg_2.get('dth_wkts',0), False)
 
-                # Render Comparison Tables
                 display(HTML(f"""
                 <div style="display:flex; gap:20px;">
                     <div style="flex:1;">
@@ -599,8 +606,8 @@ class TeamEngine:
                     </div>
                 </div>
                 """))
-
-                # Strategic Alerts (PRESERVED LOGIC)
+                
+                # Strategic Alerts (PRESERVED)
                 venue_pp_1 = venue_stats[venue_stats['innings']==1]['pp_runs'].mean() if not venue_stats.empty else 0
                 h_pp_1 = h_avg_1.get('pp_runs', 0)
                 if h_pp_1 > venue_pp_1 + 5: 
@@ -613,10 +620,30 @@ class TeamEngine:
         # 5. Audit (PRESERVED)
         if 'match_id' in venue_stats.columns:
             used_match_ids = venue_stats['match_id'].unique()
-            audit_df = self.match_df[self.match_df['match_id'].isin(used_match_ids)]
+            # 🚨 FIX: Ensure main df IDs are normalized for audit lookup
+            audit_mask = self.match_df['match_id'].astype(str).str.split('.').str[0].str.strip().isin(used_match_ids)
+            audit_df = self.match_df[audit_mask]
             self._display_audit(audit_df, stadium_id)
+            
+        # 🚨 AI LOGGING: PHASE ANALYSIS (PRESERVED)
+        if recorder:
+            try:
+                # 1. Overall Venue Stats
+                venue_meta = {
+                    "pp_avg_1st": float(round(venue_stats[venue_stats['innings']==1]['pp_runs'].mean(), 1)),
+                    "pp_avg_2nd": float(round(venue_stats[venue_stats['innings']==2]['pp_runs'].mean(), 1)),
+                    "dth_avg_1st": float(round(venue_stats[venue_stats['innings']==1]['dth_runs'].mean(), 1)),
+                    "dth_avg_2nd": float(round(venue_stats[venue_stats['innings']==2]['dth_runs'].mean(), 1))
+                }
+                
+                recorder.log_venue_intel("phase_analysis", {
+                    "description_context": f"Phase Scoring Patterns at {stadium_id}",
+                    "strategic_insight": "Compare Powerplay & Death scoring rates against global averages.",
+                    "metrics": venue_meta
+                }, years, len(venue_stats))
+            except: pass
 
-    def analyze_venue_bias(self, stadium_name, years_back=10): # 👈 Checks logic with years_back
+    def analyze_venue_bias(self, stadium_name, years_back=10, recorder=None):
         print(f"\n🪙 TOSS BIAS REPORT: {stadium_name}")
         venue_id = stadium_name
         
@@ -640,9 +667,7 @@ class TeamEngine:
         clean_df = self._apply_smart_filters(venue_matches)
         
         # 🚨 SPLIT LOGIC HERE 🚨
-        
         # Dataset A: For Win Calculation (Include Rain/DL Results)
-        # We only exclude matches that were strictly "No Result"
         valid_results = clean_df[clean_df['status'] != '☔ Excluded (No Result)']
         
         # Dataset B: For Score Calculation (Keep Strict to protect Averages)
@@ -672,15 +697,15 @@ class TeamEngine:
         data = [
             {"Metric": "Win % Batting 1st", "Value": f"{bat1_pct}% ({bat1_wins})"},
             {"Metric": "Win % Chasing", "Value": f"{chase_pct}% ({chase_wins})"},
-            # Use 'valid_stats' (Strict) for Averages to ensure 150-run rain games don't ruin the stat
+            # Use 'valid_stats' (Strict) for Averages
             {"Metric": "Avg 1st Innings Score", "Value": self._get_avg_with_count(valid_stats, 'score_inn1')},
             {"Metric": "Avg 2nd Innings Score", "Value": self._get_avg_with_count(valid_stats, 'score_inn2')},
         ]
         display(pd.DataFrame(data).style.hide(axis='index'))
         
-        # 6. Show Match Audit (Show Result Dataset so you see the Rain match)
+        # 6. Show Match Audit
         self._display_audit(valid_results, venue_id)
-
+        
     def analyze_global_h2h(self, home_team, opp_team, years_back=5):
         cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         print(f"\n🌍 GLOBAL H2H CHECK: {home_team} vs {opp_team}")
@@ -690,7 +715,7 @@ class TeamEngine:
         df = self._apply_smart_filters(df)
         self._build_and_display_report(df, home_team, opp_team, f"GLOBAL RIVALRY REPORT", False)
 
-    def analyze_country_h2h(self, home_team, opp_team, country_name, years_back=10):
+    def analyze_country_h2h(self, home_team, opp_team, country_name, years_back=10, recorder=None):
         cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         print(f"\n🗺️ COUNTRY CHECK: {home_team} vs {opp_team} in {country_name.upper()}")
         country_map = {
@@ -705,7 +730,7 @@ class TeamEngine:
         df = self._apply_smart_filters(df)
         self._build_and_display_report(df, home_team, opp_team, f"HOST COUNTRY REPORT ({country_name})", False)
 
-    def analyze_home_dominance(self, home_team, years_back=10):
+    def analyze_home_dominance(self, home_team, years_back=10, recorder=None):
         print(f"\n🦁 HOME DOMINANCE: {home_team}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         c_codes = {'India':'IND_','England':'ENG_','Australia':'AUS_','South Africa':'SA_','New Zealand':'NZ_','Sri Lanka':'SL_','West Indies':'WI_','Pakistan':'PAK_','Bangladesh':'BAN_'}
         if home_team not in c_codes: print("❌ Unknown code."); return
@@ -713,7 +738,7 @@ class TeamEngine:
         if matches.empty: print("❌ No matches found."); return
         self._generate_matrix_report(matches, home_team, "DOMINANCE MATRIX")
 
-    def analyze_away_performance(self, team_name, years_back=5):
+    def analyze_away_performance(self, team_name, years_back=5, recorder=None):
         print(f"\n✈️ AWAY PERFORMANCE: {team_name}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         c_codes = {'India':'IND_','England':'ENG_','Australia':'AUS_','South Africa':'SA_','New Zealand':'NZ_','Sri Lanka':'SL_','West Indies':'WI_','Pakistan':'PAK_','Bangladesh':'BAN_'}
         if team_name not in c_codes: print("❌ Unknown code."); return
@@ -741,16 +766,18 @@ class TeamEngine:
         if opp_team != 'All': self._build_and_display_report(self._apply_smart_filters(matches), team_name, opp_team, f"REGION REPORT ({reg})", False)
         else: self._generate_matrix_report(matches, team_name, f"PERFORMANCE MATRIX: {reg.upper()}")
 
-    def analyze_team_form(self, team_name, opp_team='All', continent='All', limit=5):
+    def analyze_team_form(self, team_name, opp_team='All', continent='All', limit=5, recorder=None):
         title = f"📉 FORM: {team_name}"
         if opp_team != 'All': title += f" vs {opp_team}"
         if continent != 'All': title += f" in {continent}"
         print(title)
+        
         mask = (self.match_df['team_bat_1'] == team_name) | (self.match_df['team_bat_2'] == team_name)
         if opp_team != 'All': mask = mask & ((self.match_df['team_bat_1'] == opp_team) | (self.match_df['team_bat_2'] == opp_team))
         if continent != 'All':
             c_map = {'Asia':['IND_','PAK_','SL_','BAN_','AFG_','UAE_'], 'Europe':['ENG_','IRE_','SCO_','NED_'], 'Oceania':['AUS_','NZ_'], 'Africa':['SA_','ZIM_'], 'Americas':['WI_','USA_']}
             if continent in c_map: mask = mask & (self.match_df['venue'].astype(str).str.startswith(tuple(c_map[continent])))
+            
         df = self.match_df[mask].copy()
         if df.empty: print("❌ No matches found."); return
         
@@ -758,14 +785,26 @@ class TeamEngine:
         recent = df.sort_values('start_date', ascending=False).head(limit)
         
         data = []
+        form_str = [] # To store W/L/T string for AI
+        
         for _, row in recent.iterrows():
             bat1 = (row['team_bat_1'] == team_name)
             opp = row['team_bat_2'] if bat1 else row['team_bat_1']
             w = str(row['winner'])
-            if w == team_name: res = "✅ WIN"
-            elif w.lower() == 'tie': res = "🤝 TIE"
-            elif w.lower() in ['nan','no result','none']: res = "🌧️ NR"
-            else: res = "❌ LOSS"
+            
+            # Determine Result for UI and AI
+            if w == team_name: 
+                res = "✅ WIN"
+                form_str.append("W")
+            elif w.lower() == 'tie': 
+                res = "🤝 TIE"
+                form_str.append("T")
+            elif w.lower() in ['nan','no result','none']: 
+                res = "🌧️ NR"
+                form_str.append("NR")
+            else: 
+                res = "❌ LOSS"
+                form_str.append("L")
             
             s_my = row['score_inn1'] if bat1 else row['score_inn2']
             s_opp = row['score_inn2'] if bat1 else row['score_inn1']
@@ -784,5 +823,8 @@ class TeamEngine:
             elif 'TIE' in v: c = 'orange'
             elif 'NR' in v: c = 'gray'
             return f'color: {c}; font-weight: bold'
+        
         display(pd.DataFrame(data).style.map(col, subset=['Result']).hide(axis='index'))
         self._display_audit(recent, team_name)
+
+        

@@ -211,6 +211,7 @@ VENUE_MAP = {
     'R.Premadasa Stadium': 'SL_COLOMBO_RPS',
     'R. Premadasa Stadium': 'SL_COLOMBO_RPS',
     'R.Premadasa Stadium, Khettarama': 'SL_COLOMBO_RPS',
+    'R Premadasa Stadium, Colombo': 'SL_COLOMBO_RPS',
     'Sinhalese Sports Club Ground': 'SL_COLOMBO_SSC',
     'Pallekele International Cricket Stadium': 'SL_PALLEKELE',
     'Galle International Stadium': 'SL_GALLE',

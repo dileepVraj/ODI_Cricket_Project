@@ -1,0 +1,44 @@
+
+
+
+
+
+"Note": ""For the Phase-Wise stats, do NOT estimate or distribute total runs/wickets across 
+the phases. You must strictly look for the ball-by-ball or phase-summary logs on 
+Cricinfo/Cricbuzz. If you cannot find the exact Phase 1 (1-10), Phase 2 (11-40), or Phase 3 (41-50) 
+data points for a specific match, exclude that match from the averages entirely rather than 
+guessing.""
+
+{
+  "role": "Senior Quant & Predictive Modeler (International Cricket)",
+  "task": "8-Phase ODI Forensic Analysis",
+  "context": {
+    "home_team": "Sri Lanka",
+    "away_team": "England",
+    "venue": "R Premadasa Stadium, Colombo",
+    "timeframe": "Jan 2021 to Jan 24, 2026",
+    "top_10_teams_list": "India, Australia, South Africa, Pakistan, New Zealand, England, Sri Lanka, Bangladesh, Afghanistan, West Indies"
+  },
+  "operational_rules": [
+    "PHASE_STRUCTURE: Every data point MUST be split into P1 (1-10), P2 (11-40), and P3 (41-50).",
+    "TEAM_FILTER: For baseline metrics, only include matches where both teams are from {{top_10_teams_list}}.",
+    "STRICT_FORMAT: 'Runs/Wickets (Spin: X, Pace: Y)'.",
+    "PACE_SPIN_ONLY: Wickets must be bowler-credited only. Run-outs = 0.",
+  ],
+  "output_format": {
+    "8_PHASE_MODEL": {
+      "1_venue_baseline_1st_inn": "Phase-wise averages at {{venue}} for all matches between teams in {{top_10_teams_list}} (Batting 1st).",
+      "2_venue_baseline_2nd_inn": "Phase-wise averages at {{venue}} for all matches between teams in {{top_10_teams_list}} (Batting 2nd).",
+      "3_home_at_venue_phase_data": "Phase-wise metrics for {{home_team}} at {{venue}} (Both innings) against any team in {{top_10_teams_list}}.",
+      "4_away_at_venue_phase_data": "Phase-wise metrics for {{away_team}} at {{venue}} (Both innings) against any team in {{top_10_teams_list}}.",
+      "5_home_global_batting_first": "Phase-wise global stats for {{home_team}} vs all teams in {{top_10_teams_list}} when Batting 1st.",
+      "6_home_global_chasing": "Phase-wise global stats for {{home_team}} vs all teams in {{top_10_teams_list}} when Chasing.",
+      "7_away_global_batting_first": "Phase-wise global stats for {{away_team}} vs all teams in {{top_10_teams_list}} when Batting 1st.",
+      "8_away_global_chasing": "Phase-wise global stats for {{away_team}} vs all teams in {{top_10_teams_list}} when Chasing."
+    },
+    "DATA_VERIFICATION_LOG": {
+      "match_audit": "For each of the 8 sections, list the count of matches found and the dates/opponents used."
+    }
+  },
+  "final_instruction": "Return ONLY JSON. If data for a specific phase is unavailable, return 'Insufficient Data' for that phase."
+}

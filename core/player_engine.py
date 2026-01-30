@@ -2,7 +2,7 @@ import pandas as pd
 import ipywidgets as widgets
 from IPython.display import display, HTML
 from venues import get_venue_aliases
-from config.teams import TEAM_COLORS, BOWLER_STYLES
+from config.teams import TEAM_COLORS, BOWLER_STYLES, PLAYER_ROLES
 from core.predictor import PredictorEngine
 import re
 
@@ -43,16 +43,14 @@ class PlayerEngine:
             
         return sorted(list(squad))
 
-    def compare_squads(self, team_a_name, team_a_players, team_b_name, team_b_players, venue_id, years=5):
+    def compare_squads(self, team_a_name, team_a_players, team_b_name, team_b_players, venue_id, years=None, recorder=None):
         # 🎨 COLORS
         c1 = TEAM_COLORS.get(team_a_name, "#333")
         c2 = TEAM_COLORS.get(team_b_name, "#333")
         
-        # -------------------------------------------------------------
-        # 1. HEADER & SQUAD EXPERIENCE (Restored 50s & 5W)
-        # -------------------------------------------------------------
-        metrics_a = self._calculate_squad_metrics(team_a_name, team_a_players)
-        metrics_b = self._calculate_squad_metrics(team_b_name, team_b_players)
+        # 1. HEADER & SQUAD EXPERIENCE
+        metrics_a = self._calculate_squad_metrics(team_a_name, team_a_players, years) 
+        metrics_b = self._calculate_squad_metrics(team_b_name, team_b_players, years)
         
         avg_caps_a = int(metrics_a['Caps (Combined)'] / max(len(team_a_players), 1))
         avg_caps_b = int(metrics_b['Caps (Combined)'] / max(len(team_b_players), 1))
@@ -60,7 +58,7 @@ class PlayerEngine:
         display(HTML(f"""
         <div style="font-family: 'Segoe UI', Roboto, sans-serif; margin-bottom:25px;">
             <div style="background: linear-gradient(135deg, {c1} 0%, {c2} 100%); padding:12px; border-radius:8px 8px 0 0; color:white; text-align:center;">
-                <h3 style="margin:0; font-size:18px;">⚔️ SQUAD COMPARISON</h3>
+                <h3 style="margin:0; font-size:18px;">⚔️ SQUAD COMPARISON (Last {years} Years)</h3>
                 <div style="font-size:12px; opacity:0.9;">{team_a_name.upper()} vs {team_b_name.upper()}</div>
             </div>
             
@@ -106,198 +104,345 @@ class PlayerEngine:
         """))
 
         # -------------------------------------------------------------
-        # 2. PLAYER STATS (Smart Venue Logic)
+        # 2. PLAYER STATS SETUP
         # -------------------------------------------------------------
         aliases = get_venue_aliases(venue_id)
-        
         if "_" in venue_id:
-            suffix_key = venue_id.split("_", 1)[1] # "MCG"
+            suffix_key = venue_id.split("_", 1)[1] 
             suffix_aliases = get_venue_aliases(suffix_key)
             if suffix_aliases:
                 aliases = list(set(aliases + suffix_aliases))
-        
         if not aliases:
             aliases = [venue_id]
             if "_" in venue_id: aliases.append(venue_id.split("_", 1)[1])
 
         venue_pattern = '|'.join([re.escape(v) for v in aliases if v])
-        venue_display = venue_id.replace("IND_", "").replace("AUS_", "").replace("_", " ").title()
         
-        print("-" * 90)
-        print(f"📍 Analysis Venue: {venue_id}  |  Display: {venue_display}")
-        print(f"🔎 Final Regex: r'{venue_pattern}'")
-        print("-" * 90)
+        display(HTML(f"""
+        <div style="background:#334155; color:#e2e8f0; padding:10px 15px; border-radius:6px; margin:20px 0 10px 0; border-left:5px solid #34d399; font-family:'Segoe UI', sans-serif;">
+            <div style="font-weight:bold; font-size:14px;">📊 DETAILED PLAYER STATISTICS & VENUE METRICS</div>
+            <div style="font-size:11px; opacity:0.8; margin-top:2px;">
+                INCLUDES: Form, (vs Opponent), and Venue History ({venue_id})
+            </div>
+        </div>
+        """))
 
+        # --- NESTED FUNCTION: RENDER PRO TABLE ---
         def render_pro_table(team_name, players, opponent, color):
+            
+            # Use Global Role Map
+            role_map = PLAYER_ROLES
+            
+            # --- 1. FETCH DATA ---
+            if not players: return f"<div>No players selected for {team_name}</div>"
+            
             data = [self._get_stats(p, opponent, venue_pattern, years) for p in players]
             df = pd.DataFrame(data)
-            if df.empty: return f"<div>No data for {team_name}</div>"
+            
+            if df.empty: return f"<div>No data available for {team_name}</div>"
+
+            # --- 2. THRESHOLDS (Full Spectrum 4-Tier) ---
+            BAT_GREAT = 45; BAT_GOOD = 30; BAT_AVG = 20
+            BOWL_GREAT = 8; BOWL_GOOD = 4; BOWL_AVG = 2
+            MIN_VENUE_INNS = 3 
 
             rows = ""
             for i, row in df.iterrows():
                 bg = "#ffffff" if i % 2 == 0 else "#f8f9fa"
+                player_name = row['Player']
                 
-                bat_f = str(row.get('Bat Form', '-'))
-                bf_style = "color:#dc3545; font-weight:700;" if bat_f == '0' else "color:#495057;"
+                # --- 3. DETERMINE ROLE ---
+                role = role_map.get(player_name, 'Auto') 
                 
-                bowl_f = str(row.get('Bowl Form', '-'))
-                b_style = "color:#28a745; font-weight:700;" if 'w' in bowl_f and bowl_f != '0w' else "color:#6c757d;"
-                
-                v_avg = row.get('Ven Avg', '-')
-                v_inns = row.get('Ven Inns', 0)
-                v_avg_disp = f"<strong>{v_avg}</strong> ({v_inns})" if v_inns != '-' and v_inns > 0 else "-"
-                
-                v_runs = row.get('Ven Runs', '-')
-                v_hs = row.get('Ven HS', '-')
-                v_col_style = "color:#000;" if (v_runs != '-' and str(v_runs) != '0') else "color:#999;"
+                # --- 4. PARSE STATS ---
+                try:
+                    raw_bat = str(row.get('Bat Form',''))
+                    bat_scores = [int(x.replace('*','').strip()) for x in raw_bat.split(',') if x.replace('*','').strip().isdigit()]
+                    rec_bat_avg = sum(bat_scores) / len(bat_scores) if bat_scores else 0
+                except: rec_bat_avg = 0
 
-                v_wkts = row.get('Ven Wkts', '-')
-                v_m = row.get('Ven Matches', 0)
-                v_wkt_disp = f"<strong>{v_wkts}</strong> ({v_m})" if v_wkts != '-' and v_m > 0 else "-"
+                try:
+                    bowl_form_str = str(row.get('Bowl Form',''))
+                    rec_wkts = 0
+                    if '/' in bowl_form_str:
+                        for m in bowl_form_str.split(','):
+                            if '/' in m:
+                                p = m.split('/')
+                                if p[0].strip().isdigit(): rec_wkts += int(p[0].strip())
+                except: rec_wkts = 0
+
+                try: ven_avg = float(str(row.get('Ven Avg', 0)).replace('-','0').replace('DNB','0'))
+                except: ven_avg = 0
+                try: ven_wkts = int(str(row.get('Ven Wkts', 0)).replace('-','0'))
+                except: ven_wkts = 0
+                try: ven_inns = int(str(row.get('Ven Inns', 0)).replace('-','0'))
+                except: ven_inns = 0
+                try: ven_runs_int = int(str(row.get('Ven Runs', 0)).replace('-','0').replace('DNB','0'))
+                except: ven_runs_int = 0
+
+                # Auto-Role Fallback
+                if role == 'Auto':
+                    if rec_wkts >= 5 or ven_wkts >= 5: role = 'Bowler'
+                    else: role = 'Batter'
+
+                # --- 5. ICONS & BADGES ---
+                acronyms = []
                 
-                p_name = f"<span style='color:{color};'>{row['Player']}</span>"
+                # 🟢 ROLE ICONS (The Final Touch)
+                role_icon = ""
+                if role == 'Batter': role_icon = "🏏"
+                elif role == 'Bowler': role_icon = "⚾"
+                elif role == 'Batting All-Rounder': role_icon = "🏏⚾"
+                elif role == 'Bowling All-Rounder': role_icon = "⚾🏏"
+                
+                # Badge Helper
+                def get_badge(text, tier):
+                    if tier == 'GE': return f"<span style='color:#155724; background:#d4edda; border:1px solid #c3e6cb; font-weight:bold; font-size:9px; padding:1px 3px; border-radius:3px; margin-right:2px;'>{text}</span>" 
+                    if tier == 'GD': return f"<span style='color:#0f5132; background:#e2e3e5; border:1px solid #d6d8db; font-weight:bold; font-size:9px; padding:1px 3px; border-radius:3px; margin-right:2px;'>{text}</span>" 
+                    if tier == 'AV': return f"<span style='color:#856404; background:#fff3cd; border:1px solid #ffeeba; font-weight:bold; font-size:9px; padding:1px 3px; border-radius:3px; margin-right:2px;'>{text}</span>" 
+                    if tier == 'DP': return f"<span style='color:#721c24; background:#f8d7da; border:1px solid #f5c6cb; font-weight:bold; font-size:9px; padding:1px 3px; border-radius:3px; margin-right:2px;'>{text}</span>" 
+                    return ""
+
+                # === BATTING EVALUATION ===
+                if role in ['Batter', 'Batting All-Rounder', 'Bowling All-Rounder']:
+                    if rec_bat_avg >= BAT_GREAT: acronyms.append(get_badge("RBF-GE", "GE"))
+                    elif rec_bat_avg >= BAT_GOOD: acronyms.append(get_badge("RBF-GD", "GD"))
+                    elif rec_bat_avg >= BAT_AVG: acronyms.append(get_badge("RBF-AVG", "AV"))
+                    else: acronyms.append(get_badge("RBF-DIP", "DP"))
+                    
+                    if ven_inns >= MIN_VENUE_INNS:
+                        if ven_avg >= BAT_GREAT: acronyms.append(get_badge("VBF-GE", "GE"))
+                        elif ven_avg >= BAT_GOOD: acronyms.append(get_badge("VBF-GD", "GD"))
+                        elif ven_avg >= BAT_AVG: acronyms.append(get_badge("VBF-AVG", "AV"))
+                        else: acronyms.append(get_badge("VBF-DIP", "DP"))
+
+                # === BOWLING EVALUATION ===
+                if role in ['Bowler', 'Bowling All-Rounder', 'Batting All-Rounder']:
+                    if rec_wkts >= BOWL_GREAT: acronyms.append(get_badge("RBWF-GE", "GE"))
+                    elif rec_wkts >= BOWL_GOOD: acronyms.append(get_badge("RBWF-GD", "GD"))
+                    elif rec_wkts >= BOWL_AVG: acronyms.append(get_badge("RBWF-AVG", "AV"))
+                    else: acronyms.append(get_badge("RBWF-DIP", "DP"))
+
+                    if ven_inns >= MIN_VENUE_INNS:
+                        if ven_wkts >= 8: acronyms.append(get_badge("VWF-GE", "GE"))
+                        elif ven_wkts >= 5: acronyms.append(get_badge("VWF-GD", "GD"))
+                        elif ven_wkts >= 3: acronyms.append(get_badge("VWF-AVG", "AV"))
+                        else: acronyms.append(get_badge("VWF-DIP", "DP"))
+
+                # --- 6. RENDER ROWS ---
+                badges = " ".join(acronyms)
+                
+                # Name with Role Icon
+                p_name = f"<div style='font-weight:700; color:{color}; font-size:13px;'>{role_icon} {player_name}</div><div style='margin-top:3px;'>{badges}</div>"
+
+                bat_f = str(row.get('Bat Form', '-'))
+                v_runs_val = str(row.get('Ven Runs', '-'))
+                v_inns_val = str(row.get('Ven Inns', '-'))
+                v_runs_display = f"{v_runs_val} <span style='font-size:10px; color:#666;'>({v_inns_val})</span>" if v_runs_val not in ['-','0'] else v_runs_val
+                bowl_f = str(row.get('Bowl Form', '-'))
 
                 rows += f"""
-                <tr style="background:{bg}; border-bottom:1px solid #e9ecef; height:32px;">
-                    <td style="padding:6px 10px; text-align:right; font-weight:bold; font-size:12px; border-right:2px solid {color};">{p_name}</td>
-                    <td style="padding:6px;">{row['Inns']}</td>
-                    <td style="padding:6px; font-size:11px; {bf_style} white-space:nowrap;">{bat_f}</td>
-                    <td style="padding:6px; font-weight:600; background:#f1f3f5;">{row['Bat Avg']}</td>
-                    <td style="padding:6px;">{row['vs Opp']}</td>
-                    
-                    <td style="padding:6px; {v_col_style} background:#fff3cd; border-left:1px solid #ffeeba;">{v_avg_disp}</td>
-                    <td style="padding:6px; {v_col_style} background:#fff3cd;">{v_runs}</td>
-                    <td style="padding:6px; font-size:11px; color:#666; background:#fff3cd; border-right:1px solid #ffeeba;">{v_hs}</td>
-                    
-                    <td style="padding:6px; font-size:11px; {b_style} white-space:nowrap;">{bowl_f}</td>
-                    <td style="padding:6px;">{row.get('Bowl Econ', '-')}</td>
-                    <td style="padding:6px; background:#fff3cd;">{row.get('Ven Econ', '-')}</td>
-                    <td style="padding:6px; background:#fff3cd;">{v_wkt_disp}</td>
+                <tr style="background:{bg}; border-bottom:1px solid #dee2e6; font-family:'Segoe UI', sans-serif; font-size:12px; height:45px;">
+                    <td style="padding:4px 8px; text-align:left; border-right:3px solid {color}; vertical-align:middle;">{p_name}</td>
+                    <td style="padding:6px; vertical-align:middle;">{row['Inns']}</td>
+                    <td style="padding:6px; font-size:11px; color:#555; vertical-align:middle;">{bat_f}</td>
+                    <td style="padding:6px; font-weight:600; background:#f1f3f5; vertical-align:middle;">{row['Bat Avg']}</td>
+                    <td style="padding:6px; vertical-align:middle;">{row['vs Opp']}</td>
+                    <td style="padding:6px; background:#fff3cd; font-weight:bold; border-left:2px solid #ffeeba; vertical-align:middle;">{row['Ven Avg']}</td>
+                    <td style="padding:6px; background:#fff3cd; vertical-align:middle;">{v_runs_display}</td>
+                    <td style="padding:6px; background:#fff3cd; border-right:2px solid #ffeeba; vertical-align:middle;">{row['Ven HS']}</td>
+                    <td style="padding:6px; font-size:11px; color:#0d6efd; text-align:left; vertical-align:middle;">{bowl_f}</td>
+                    <td style="padding:6px; vertical-align:middle;">{row['Bowl Econ']}</td>
+                    <td style="padding:6px; background:#e8f4f8; font-weight:bold; color:#0c5460; vertical-align:middle;">{row['Ven Econ']}</td>
+                    <td style="padding:6px; background:#e8f4f8; font-weight:bold; color:#0c5460; vertical-align:middle;">{row['Ven Wkts']}</td>
                 </tr>"""
 
-            return f"""
-            <div style="margin-bottom:30px; font-family: 'Segoe UI', Roboto, sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius:6px; overflow:hidden;">
-                <div style="background:{color}; color:white; padding:8px 15px; font-weight:bold; letter-spacing:1px; font-size:13px; text-transform:uppercase;">
-                    {team_name}
+            # --- 7. LEGEND ---
+            legend_html = f"""
+            <div style="margin-top:5px; padding:10px 15px; background:#e2e8f0; border-radius:0 0 8px 8px; font-size:10px; color:#475569;">
+                <div style="font-weight:bold; margin-bottom:5px;">LEGEND (Last 5 Inns):</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div>
+                        <div style="font-weight:bold; margin-bottom:2px;">🏏 Batting (Avg)</div>
+                        <span style="background:#d4edda; color:#155724; padding:1px 4px; border-radius:3px;">GE &gt; 45</span>
+                        <span style="background:#e2e3e5; color:#0f5132; padding:1px 4px; border-radius:3px;">GD 30-45</span>
+                        <span style="background:#fff3cd; color:#856404; padding:1px 4px; border-radius:3px;">AVG 20-30</span>
+                        <span style="background:#f8d7da; color:#721c24; padding:1px 4px; border-radius:3px;">DIP &lt; 20</span>
+                    </div>
+                    <div>
+                        <div style="font-weight:bold; margin-bottom:2px;">⚾ Bowling (Wkts)</div>
+                        <span style="background:#cfe2ff; color:#084298; padding:1px 4px; border-radius:3px;">GE &gt; 8</span>
+                        <span style="background:#e2e3e5; color:#052c65; padding:1px 4px; border-radius:3px;">GD 4-7</span>
+                        <span style="background:#fff3cd; color:#664d03; padding:1px 4px; border-radius:3px;">AVG 2-3</span>
+                        <span style="background:#f8d7da; color:#721c24; padding:1px 4px; border-radius:3px;">DIP 0-1</span>
+                    </div>
                 </div>
-                <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center; color:#333;">
-                    <thead>
-                        <tr style="background:#343a40; color:white; font-size:11px; text-transform:uppercase;">
-                            <th style="padding:8px; text-align:right;">PLAYER</th>
-                            <th>INNS</th>
-                            <th>FORM</th>
-                            <th style="background:#495057;">AVG</th>
-                            <th>vs {opponent[:3].upper()}</th>
-                            
-                            <th style="background:#ffc107; color:#212529;">AVG ({venue_display})</th>
-                            <th style="background:#ffc107; color:#212529;">RUNS</th>
-                            <th style="background:#ffc107; color:#212529;">HS</th>
-                            
-                            <th>B.FORM</th>
-                            <th>ECON</th>
-                            <th style="background:#ffc107; color:#212529;">V.ECON</th>
-                            <th style="background:#ffc107; color:#212529;">WKTS ({venue_display})</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows}
-                    </tbody>
-                </table>
+            </div>
+            """
+
+            return f"""
+            <div style="margin-bottom:30px; border-radius:8px; overflow:hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border:1px solid #e0e0e0;">
+                <div style="background:{color}; color:white; padding:10px 15px; font-weight:bold; font-size:14px; letter-spacing:1px; text-transform:uppercase;">
+                    {team_name} <span style="font-size:11px; opacity:0.8; float:right;">(Last {years} Years)</span>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; min-width:1100px; border-collapse:collapse; text-align:center; color:#333;">
+                        <colgroup>
+                            <col style="width:200px;"> <col style="width:50px;">  <col style="width:160px;"> <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:220px;"> <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  
+                        </colgroup>
+                        <thead>
+                            <tr style="background:#343a40; color:white; font-size:11px; text-transform:uppercase; height:40px;">
+                                <th style="text-align:left; padding-left:10px;">Player & Signals</th>
+                                <th>Inns</th>
+                                <th>Form (Bat)</th>
+                                <th style="background:#495057;">Avg</th>
+                                <th>vs {opponent[:3].upper()}</th>
+                                <th style="background:#ffc107; color:#212529;">V.Avg</th>
+                                <th style="background:#ffc107; color:#212529;">V.Runs</th>
+                                <th style="background:#ffc107; color:#212529;">V.HS</th>
+                                <th style="text-align:left; padding-left:10px;">Form (Bowl)</th>
+                                <th>Econ</th>
+                                <th style="background:#17a2b8;">V.Econ</th>
+                                <th style="background:#17a2b8;">V.Wkts</th>
+                            </tr>
+                        </thead>
+                        <tbody>{rows}</tbody>
+                    </table>
+                </div>
+                {legend_html}
             </div>"""
 
+        # --- IMPORTANT: EXECUTE TABLE RENDER ---
         display(HTML(render_pro_table(team_a_name, team_a_players, team_b_name, c1)))
         display(HTML(render_pro_table(team_b_name, team_b_players, team_a_name, c2)))
 
         # -------------------------------------------------------------
-        # 3. TACTICAL MATRIX (ARCHETYPES)
+        # 3. TACTICAL MATRIX
         # -------------------------------------------------------------
         print("\n")
-        display(HTML(f"<div style='background:#444; color:white; padding:8px; border-radius:4px; font-weight:bold; margin-bottom:10px; font-family:sans-serif;'>📊 TACTICAL MATRIX: ARCHETYPES</div>"))
+        display(HTML(f"<div style='background:#444; color:white; padding:8px; border-radius:4px; font-weight:bold; margin-bottom:10px; font-family:sans-serif;'>📊 TACTICAL MATRIX: ARCHETYPES (Last {years} Years)</div>"))
         
-        self.analyze_squad_types(team_a_name, team_a_players, team_b_players)
+        self.analyze_squad_types(team_a_name, team_a_players, team_b_players, years, recorder=recorder)
         print("\n")
-        self.analyze_squad_types(team_b_name, team_b_players, team_a_players)
+        self.analyze_squad_types(team_b_name, team_b_players, team_a_players, years, recorder=recorder)
 
         # -------------------------------------------------------------
-        # 4. MATCHUPS (Live Data)
+        # 4. MATCHUPS
         # -------------------------------------------------------------
-        display(HTML(f"""
-        <div style="background:#343a40; color:white; padding:8px; border-radius:6px; font-weight:bold; margin-bottom:10px; font-family:'Segoe UI';">
-            ⚔️ HEAD-TO-HEAD MATCHUPS
-        </div>
-        """))
+        display(HTML(f"""<div style="background:#343a40; color:white; padding:8px; border-radius:6px; font-weight:bold; margin-bottom:10px; font-family:'Segoe UI';">⚔️ HEAD-TO-HEAD MATCHUPS</div>"""))
         
         left = widgets.Output(); right = widgets.Output()
         
         with left:
             display(HTML(f"<div style='font-weight:bold; color:{c1}; margin-bottom:10px; border-bottom:3px solid {c1};'>🛡️ {team_a_name.upper()} BATTING</div>"))
-            for p in team_a_players: self._display_batter_vs_bowlers(p, team_a_name, team_b_players)
+            for p in team_a_players: self._display_batter_vs_bowlers(p, team_a_name, team_b_players, recorder=recorder)
         
         with right:
             display(HTML(f"<div style='font-weight:bold; color:{c2}; margin-bottom:10px; border-bottom:3px solid {c2};'>🛡️ {team_b_name.upper()} BATTING</div>"))
-            for p in team_b_players: self._display_batter_vs_bowlers(p, team_b_name, team_a_players)
+            for p in team_b_players: self._display_batter_vs_bowlers(p, team_b_name, team_a_players, recorder=recorder)
             
         display(widgets.HBox([left, right], layout=widgets.Layout(width='100%', gap='30px')))
 
     # --- NEW: ARCHETYPE ANALYSIS ---
-    def analyze_squad_types(self, team_name, players, opposition_bowlers):
+    def analyze_squad_types(self, team_name, players, opposition_bowlers, years=None, recorder=None):
         """
         Generates a 'Tactical Breakdown' of how batters perform against
         the SPECIFIC bowling types present in the opposition's squad.
+        UPDATED: Smartly ignores pure batters to prevent false warnings.
         """
         
-        # 1. IDENTIFY OPPOSITION BOWLING TYPES
-        active_styles_count = {}
-        all_style_map = {}
+        # 📅 DYNAMIC DATE FILTER
+        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
+        window_df = self.raw_df[self.raw_df['start_date'] >= cutoff_date]
         
-        # Build Reverse Map to get ALL bowlers of a specific style from database
+        # 1. IDENTIFY OPPOSITION BOWLING TYPES & NAMES
+        active_styles_data = {} 
+        all_style_map = {}
+        missing_bowlers = [] 
+        
+        # Build Reverse Map
         for name, style in BOWLER_STYLES.items():
             if style not in all_style_map: all_style_map[style] = []
             all_style_map[style].append(name)
             
-        # Count types in Opposition XI
+        # Group bowlers by style
         for b in opposition_bowlers:
             style = BOWLER_STYLES.get(b, 'Unknown')
+            
+            # A. Explicit Ignore (if you used the Part-Timer tag)
+            if style == '🚫 Part-Timer':
+                continue
+
+            # B. Known Bowler -> Add to Matrix
             if style != 'Unknown':
-                active_styles_count[style] = active_styles_count.get(style, 0) + 1
-        
-        if not active_styles_count:
+                if style not in active_styles_data: 
+                    active_styles_data[style] = []
+                active_styles_data[style].append(b)
+            
+            # C. Unknown Player -> SMART CHECK
+            else:
+                # Check if they have actually bowled in the selected window
+                # We count the number of balls they delivered in the database
+                bowler_stats = window_df[window_df['bowler'] == b]
+                balls_delivered = len(bowler_stats)
+                
+                # 🚨 THRESHOLD: Only warn if they bowled more than 1 over (6 balls)
+                # This ignores pure batters (0 balls) and accidental 1-ball events.
+                if balls_delivered > 6:
+                    missing_bowlers.append(f"{b} ({balls_delivered} balls)")
+
+        # 🚨 DISPLAY WARNING ONLY FOR ACTIVE BOWLERS
+        if missing_bowlers:
+            print(f"⚠️ WARNING: The following ACTIVE BOWLERS in {team_name}'s opposition are missing from teams.py:")
+            print(f"   {', '.join(missing_bowlers)}")
+            print("   Please add them to config/teams.py to see them in the Matrix.")
+
+        if not active_styles_data: 
+            # If no styles found, it might be a data issue, but we don't spam print here anymore
             return
 
-        # 2. DISPLAY ATTACK BREAKDOWN
+        # 2. DISPLAY ATTACK BREAKDOWN (Enhanced Badges)
         c1 = TEAM_COLORS.get(team_name, "#333")
         
         style_badges = ""
-        for style, count in active_styles_count.items():
+        for style, bowlers_list in active_styles_data.items():
+            count = len(bowlers_list)
+            names_str = ", ".join(bowlers_list)
+            
             icon = style.split(' ')[0]
             name = style.split(' ', 1)[1] if ' ' in style else style
+            
             style_badges += f"""
-            <div style="background:#fff; border:1px solid #ddd; padding:4px 8px; border-radius:12px; font-size:11px; font-weight:bold; color:#555; display:flex; align-items:center; gap:4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                <span>{icon}</span>
-                <span>{name}</span>
-                <span style="background:{c1}; color:white; padding:1px 5px; border-radius:8px; font-size:10px;">{count}</span>
+            <div style="background:#fff; border:1px solid #ddd; padding:6px 10px; border-radius:8px; font-size:11px; font-weight:bold; color:#555; display:flex; flex-direction:column; align-items:center; gap:2px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-width: 100px;">
+                <div style="display:flex; align-items:center; gap:5px; margin-bottom:2px;">
+                    <span style="font-size:14px;">{icon}</span>
+                    <span>{name}</span>
+                    <span style="background:{c1}; color:white; padding:1px 6px; border-radius:10px; font-size:10px;">{count}</span>
+                </div>
+                <div style="font-size:9px; color:#777; font-weight:normal; text-align:center; max-width:140px; line-height:1.1;">
+                    {names_str}
+                </div>
             </div>
             """
 
         display(HTML(f"""
         <div style="font-family:'Segoe UI', sans-serif; margin-bottom:10px; border:1px solid #eee; border-radius:6px; overflow:hidden;">
             <div style="background:#f8f9fa; padding:6px 10px; font-weight:bold; color:#333; border-bottom:1px solid #eee; font-size:12px;">
-                🛡️ THREAT MATRIX: {team_name} Batters vs Opposition Types
+                🛡️ THREAT MATRIX: {team_name} Batters vs Opposition Team Bowler Types
             </div>
-            <div style="padding:8px; display:flex; flex-wrap:wrap; gap:6px; background:white;">
+            <div style="padding:10px; display:flex; flex-wrap:wrap; gap:8px; background:white;">
                 {style_badges}
             </div>
         </div>
         """))
 
         # 3. CALCULATE BATTER PERFORMANCE VS THESE TYPES
-        target_styles = list(active_styles_count.keys())
+        target_styles = list(active_styles_data.keys())
         table_data = []
         
         for batter in players:
             row = {'Player': batter}
             for style in target_styles:
-                # Use the proxy list (all bowlers of this type)
                 proxy_bowlers = all_style_map.get(style, [])
                 
                 if not proxy_bowlers:
@@ -305,9 +450,9 @@ class PlayerEngine:
                     continue
                 
                 try:
-                    style_df = self.raw_df[
-                        (self.raw_df['striker'] == batter) & 
-                        (self.raw_df['bowler'].isin(proxy_bowlers))
+                    style_df = window_df[
+                        (window_df['striker'] == batter) & 
+                        (window_df['bowler'].isin(proxy_bowlers))
                     ]
                     
                     if not style_df.empty:
@@ -320,6 +465,7 @@ class PlayerEngine:
                         
                         color = "#2e7d32" if avg > 40 else "#c62828" if avg < 25 else "#333"
                         row[style] = f"<span style='color:{color}; font-weight:bold;'>{avg}</span> <span style='font-size:10px; color:#999;'>({sr})</span>"
+                        row[f"{style}_raw"] = avg
                     else:
                         row[style] = "-"
                 except:
@@ -333,21 +479,15 @@ class PlayerEngine:
             
             rows_html = ""
             for _, r in df.iterrows():
-                cells = "".join([f"<td style='padding:6px; border-bottom:1px solid #eee; font-size:12px;'>{r[col]}</td>" for col in target_styles])
+                display_cols = [c for c in target_styles if c in r]
+                cells = "".join([f"<td style='padding:6px; border-bottom:1px solid #eee; font-size:12px;'>{r[col]}</td>" for col in display_cols])
                 rows_html += f"<tr><td style='padding:6px; font-weight:bold; text-align:right; border-right:2px solid {c1}; color:{c1}; font-size:12px;'>{r['Player']}</td>{cells}</tr>"
             
             display(HTML(f"""
             <div style="border:1px solid #ddd; border-radius:6px; overflow-x:auto; margin-bottom:20px;">
                 <table style="width:100%; border-collapse:collapse; text-align:center; font-family:sans-serif;">
-                    <thead>
-                        <tr>
-                            <th style="padding:6px; text-align:right; background:{c1}; color:white; font-size:11px;">BATTER</th>
-                            {headers}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows_html}
-                    </tbody>
+                    <thead><tr><th style="padding:6px; text-align:right; background:{c1}; color:white; font-size:11px;">BATTER</th>{headers}</tr></thead>
+                    <tbody>{rows_html}</tbody>
                 </table>
                 <div style="padding:4px; background:#fafafa; color:#777; font-size:9px; text-align:right;">
                     <i>Stats vs All bowlers of this type in database</i>
@@ -355,11 +495,31 @@ class PlayerEngine:
             </div>
             """))
 
+            if recorder:
+                for row in table_data:
+                    batter = row['Player']
+                    for style in target_styles:
+                        raw_key = f"{style}_raw"
+                        if raw_key in row:
+                            avg = row[raw_key]
+                            if avg < 25:
+                                recorder.log_tactical_alert("STRUCTURAL_WEAKNESS", f"{batter} struggles vs {style} (Avg {avg})")
+                            elif avg > 50:
+                                recorder.log_tactical_alert("DOMINANT_MATCHUP", f"{batter} dominates {style} (Avg {avg})")
+
+
     # --- HELPERS ---
 
-    def _calculate_squad_metrics(self, team, players):
-        mask = (self.raw_df['striker'].isin(players)) | (self.raw_df['bowler'].isin(players))
-        df = self.raw_df[mask]
+    def _calculate_squad_metrics(self, team, players, years=None):
+        # 📅 DYNAMIC DATE FILTER
+        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
+        
+        # Filter the Raw DB first
+        window_df = self.raw_df[self.raw_df['start_date'] >= cutoff_date]
+
+        mask = (window_df['striker'].isin(players)) | (window_df['bowler'].isin(players))
+        df = window_df[mask]
+        
         tr, c, f, tw, fw, caps = 0,0,0,0,0,0
         for p in players:
             pb = df[df['striker'] == p]; pw = df[df['bowler'] == p]
@@ -373,75 +533,153 @@ class PlayerEngine:
                 if not valid.empty: fw += (valid.groupby('match_id').count()['wicket_type']>=5).sum()
         return {'Caps (Combined)': caps, 'Total Runs': tr, '100s': c, '50s': f, 'Total Wickets': tw, '5-Wkt Hauls': fw}
 
-    def _get_stats(self, player, opp, venue_pattern, years=5):
-        # 1. Base Stats
-        bat = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == 'batting')]
-        raw_bat = self.raw_df[self.raw_df['striker'] == player].drop_duplicates('match_id').tail(5)
+    def _get_stats(self, player, opp, venue_pattern, years=None):
+        # 1. SETUP & DATE FILTER
+        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
+        
+        # Get ALL activity for this player (Batting OR Bowling)
+        # This ensures we know they played the match even if they did nothing in one discipline
+        all_activity = self.raw_df[
+            ((self.raw_df['striker'] == player) | (self.raw_df['bowler'] == player)) &
+            (self.raw_df['start_date'] >= cutoff_date)
+        ]
+        
+        if all_activity.empty:
+            return {
+                'Player': player, 'Inns': 0, 'Bat Form': "-", 'Bat Avg': "-", 'vs Opp': "-", 
+                'Ven Inns': "-", 'Ven Runs': "-", 'Ven Avg': "-", 'Ven HS': "-",
+                'Bowl Form': "-", 'Bowl Econ': "-", 'Ven Econ': "-", 'Ven Wkts': "-", 'Ven Matches': "-"
+            }
+
+        # Get Unique Match IDs sorted by Date (Newest First)
+        # 🚨 CRITICAL FIX: Explicit Sort to prevent random match selection
+        matches_played = all_activity.drop_duplicates('match_id').sort_values('start_date', ascending=False)
+        last_5_ids = matches_played['match_id'].head(5).tolist()
+
+        # ---------------------------------------------------------
+        # 2. BATTING FORM (Smart DNB)
+        # ---------------------------------------------------------
         form_bat = []
-        for m in raw_bat['match_id']:
-            d = self.raw_df[(self.raw_df['match_id']==m)&(self.raw_df['striker']==player)]
-            r = d['runs_off_bat'].sum(); out = d['wicket_type'].notna().any()
-            form_bat.append(f"{r}" if out else f"{r}*")
+        for m_id in last_5_ids:
+            # Check if they appeared as a striker
+            m_bat = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['striker'] == player)]
+            
+            if m_bat.empty:
+                # They played (we know from all_activity) but didn't bat -> DNB
+                form_bat.append("DNB")
+            else:
+                r = m_bat['runs_off_bat'].sum()
+                is_out = m_bat['wicket_type'].notna().any()
+                score = f"{int(r)}" if is_out else f"{int(r)}*"
+                form_bat.append(score)
 
-        car_inns = bat[bat['context']=='vs_team']['innings'].sum()
-        avg = round(bat[bat['context']=='vs_team']['runs'].sum()/bat[bat['context']=='vs_team']['dismissals'].sum(), 1) if not bat.empty and bat['dismissals'].sum()>0 else bat['runs'].sum()
-        opp_row = bat[(bat['context']=='vs_team')&(bat['opponent']==opp)]
-        opp_avg = round(opp_row['runs'].sum()/opp_row['dismissals'].sum(),1) if not opp_row.empty and opp_row['dismissals'].sum()>0 else "-"
+        # Career Batting Stats (Windowed)
+        bat_window = self.raw_df[(self.raw_df['striker'] == player) & (self.raw_df['start_date'] >= cutoff_date)]
+        car_inns = bat_window['match_id'].nunique()
+        total_runs = bat_window['runs_off_bat'].sum()
+        total_outs = bat_window['wicket_type'].count()
+        avg = round(total_runs / total_outs, 1) if total_outs > 0 else total_runs
 
-        # 2. VENUE BATTING
-        v_inns = 0; v_runs = 0; v_avg = "-"; v_hs = "-"
-        try:
-            raw_ven_bat = self.raw_df[
-                (self.raw_df['striker'] == player) & 
-                (self.raw_df['venue'].str.contains(venue_pattern, case=False, na=False)) & 
-                (self.raw_df['start_date'] >= pd.Timestamp.now() - pd.DateOffset(years=years)) 
-            ]
-            if not raw_ven_bat.empty:
-                match_scores = raw_ven_bat.groupby('match_id').agg({'runs_off_bat': 'sum','wicket_type': lambda x: 1 if x.notna().any() else 0})
-                v_inns = len(match_scores)
-                v_runs = int(match_scores['runs_off_bat'].sum())
-                v_outs = match_scores['wicket_type'].sum()
-                v_avg = round(v_runs/v_outs, 1) if v_outs > 0 else v_runs
-                v_hs = int(match_scores['runs_off_bat'].max()) 
-        except: pass
+        # vs Opponent
+        opp_df = bat_window[bat_window['bowling_team'] == opp]
+        opp_runs = opp_df['runs_off_bat'].sum()
+        opp_outs = opp_df['wicket_type'].count()
+        opp_avg = round(opp_runs / opp_outs, 1) if opp_outs > 0 else (opp_runs if not opp_df.empty else "-")
 
-        # 3. BOWLING
-        bowl = self.player_df[(self.player_df['player'] == player) & (self.player_df['role'] == 'bowling')]
-        v_wkts = 0; v_matches = 0; v_econ = "-"; econ = "-"
-        raw_bowl = self.raw_df[self.raw_df['bowler'] == player].drop_duplicates('match_id').tail(5)
+        # ---------------------------------------------------------
+        # 3. VENUE BATTING
+        # ---------------------------------------------------------
+        v_inns = "-"; v_runs_disp = "-"; v_avg = "-"; v_hs = "-"
+        ven_df = bat_window[bat_window['venue'].str.contains(venue_pattern, case=False, na=False)]
+        
+        if not ven_df.empty:
+            match_scores = ven_df.groupby('match_id')['runs_off_bat'].sum()
+            v_inns = len(match_scores)
+            v_runs_total = match_scores.sum()
+            v_outs_total = ven_df['wicket_type'].count()
+            v_hs_val = match_scores.max()
+            
+            v_runs_disp = int(v_runs_total)
+            v_avg = round(v_runs_total / v_outs_total, 1) if v_outs_total > 0 else v_runs_total
+            v_hs = int(v_hs_val)
+        else:
+            # Check if they played at venue but DNB
+            ven_activity = all_activity[all_activity['venue'].str.contains(venue_pattern, case=False, na=False)]
+            if not ven_activity.empty:
+                v_runs_disp = "DNB"
+
+        # ---------------------------------------------------------
+        # 4. BOWLING FORM (Strict Legal Balls)
+        # ---------------------------------------------------------
         form_bowl = []
-        for m in raw_bowl['match_id']:
-            d = self.raw_df[(self.raw_df['match_id']==m)&(self.raw_df['bowler']==player)]
-            w = d['wicket_type'].isin(['bowled','caught','lbw','stumped','caught and bowled','hit wicket']).sum()
-            form_bowl.append(f"{w}w")
-        c_r = bowl[bowl['context']=='vs_team']['runs'].sum(); c_b = bowl[bowl['context']=='vs_team']['balls'].sum()
-        econ = round(c_r/c_b*6, 1) if c_b>0 else "-"
+        for m_id in last_5_ids:
+            # Check if they bowled
+            m_bowl = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['bowler'] == player)]
+            
+            if m_bowl.empty:
+                # Played but didn't bowl
+                form_bowl.append("-") 
+            else:
+                # Wickets (Standard 6)
+                wkts = m_bowl['wicket_type'].isin(['bowled','caught','lbw','stumped','caught and bowled','hit wicket']).sum()
+                
+                # Runs (Bat + Wide + NB)
+                wides = m_bowl['wides'].sum() if 'wides' in m_bowl.columns else 0
+                nbs = m_bowl['noballs'].sum() if 'noballs' in m_bowl.columns else 0
+                runs = m_bowl['runs_off_bat'].sum() + wides + nbs
+                
+                # Legal Balls (Exclude Wides/NBs for over count)
+                # Note: 'wides' column > 0 means it's an illegal ball. Same for 'noballs'.
+                legal_mask = (m_bowl['wides'].fillna(0) == 0) & (m_bowl['noballs'].fillna(0) == 0)
+                legal_balls = m_bowl[legal_mask].shape[0]
+                
+                overs = legal_balls // 6
+                balls = legal_balls % 6
+                overs_disp = f"{overs}.{balls}" if balls > 0 else f"{overs}"
+                
+                form_bowl.append(f"{wkts}/{int(runs)} ({overs_disp})")
 
-        # 4. VENUE BOWLING
-        try:
-            raw_ven_bowl = self.raw_df[
-                (self.raw_df['bowler'] == player) & 
-                (self.raw_df['venue'].str.contains(venue_pattern, case=False, na=False)) &
-                (self.raw_df['start_date'] >= pd.Timestamp.now() - pd.DateOffset(years=years))
-            ]
-            if not raw_ven_bowl.empty:
-                v_matches = len(raw_ven_bowl['match_id'].unique()) 
-                v_wkts = raw_ven_bowl['wicket_type'].isin(['bowled','caught','lbw','stumped','caught and bowled','hit wicket']).sum()
-                runs_conceded = raw_ven_bowl['runs_off_bat'].sum() + raw_ven_bowl['extras'].sum()
-                total_balls = len(raw_ven_bowl) 
-                if total_balls > 0: v_econ = round((runs_conceded / total_balls) * 6, 1)
-        except: pass
+        # Bowling Career
+        bowl_window = self.raw_df[(self.raw_df['bowler'] == player) & (self.raw_df['start_date'] >= cutoff_date)]
+        econ = "-"
+        if not bowl_window.empty:
+            legal_mask = (bowl_window['wides'].fillna(0) == 0) & (bowl_window['noballs'].fillna(0) == 0)
+            legal_b = bowl_window[legal_mask].shape[0]
+            total_rc = bowl_window['runs_off_bat'].sum() + bowl_window['wides'].sum() + bowl_window['noballs'].sum()
+            if legal_b > 0:
+                econ = round((total_rc / legal_b) * 6, 2)
+
+        # Venue Bowling
+        v_wkts = "-"; v_econ = "-"; v_matches = "-"
+        ven_bowl = bowl_window[bowl_window['venue'].str.contains(venue_pattern, case=False, na=False)]
+        if not ven_bowl.empty:
+            v_matches = ven_bowl['match_id'].nunique()
+            v_wkts = ven_bowl['wicket_type'].isin(['bowled','caught','lbw','stumped','caught and bowled','hit wicket']).sum()
+            
+            legal_mask = (ven_bowl['wides'].fillna(0) == 0) & (ven_bowl['noballs'].fillna(0) == 0)
+            v_legal = ven_bowl[legal_mask].shape[0]
+            v_rc = ven_bowl['runs_off_bat'].sum() + ven_bowl['wides'].sum() + ven_bowl['noballs'].sum()
+            if v_legal > 0:
+                v_econ = round((v_rc / v_legal) * 6, 2)
 
         return {
-            'Player': player, 'Inns': car_inns, 'Bat Form': ", ".join(form_bat[::-1]), 
-            'Bat Avg': avg, 'vs Opp': opp_avg, 
-            'Ven Inns': v_inns if v_inns > 0 else "-", 'Ven Runs': v_runs if v_runs != 0 or v_inns > 0 else "-", 
-            'Ven Avg': v_avg, 'Ven HS': v_hs,
-            'Bowl Form': ", ".join(form_bowl[::-1]), 'Bowl Econ': econ, 'Ven Econ': v_econ,
-            'Ven Wkts': v_wkts if v_wkts > 0 else "-", 'Ven Matches': v_matches
+            'Player': player, 
+            'Inns': car_inns, 
+            'Bat Form': ", ".join(form_bat), # Removed reversal, matches are already sorted Newest->Oldest
+            'Bat Avg': avg, 
+            'vs Opp': opp_avg, 
+            'Ven Inns': v_inns, 
+            'Ven Runs': v_runs_disp, 
+            'Ven Avg': v_avg, 
+            'Ven HS': v_hs,
+            'Bowl Form': ", ".join(form_bowl), 
+            'Bowl Econ': econ, 
+            'Ven Econ': v_econ,
+            'Ven Wkts': v_wkts, 
+            'Ven Matches': v_matches
         }
 
-    def _display_batter_vs_bowlers(self, batter, bat_team, bowlers):
+    def _display_batter_vs_bowlers(self, batter, bat_team, bowlers, recorder=None):
         # LIVE RAW DATA CALCULATION
         batter_df = self.raw_df[
             (self.raw_df['striker'] == batter) & 
@@ -463,9 +701,16 @@ class PlayerEngine:
             b = row['bowler']; r = row['Runs']; bl = row['Balls']; o = row['Outs']
             style_tag = BOWLER_STYLES.get(b, 'Unknown')
             bunny_tag = " (🐰 Bunny)" if o >= 3 else ""
+            
+            # Calculate Avg/SR here for both display and AI
+            avg = round(r/o, 1) if o > 0 else r
+            sr = round(r/bl*100, 1) if bl > 0 else 0
+            
             data.append({
-                'Bowler': f"{b} ({style_tag}){bunny_tag}", 'Runs': r, 'Balls': bl, 'Outs': o, 
-                'Avg': round(r/o, 1) if o > 0 else r, 'SR': round(r/bl*100, 1)
+                'Bowler': f"{b} ({style_tag}){bunny_tag}", 
+                'Runs': r, 'Balls': bl, 'Outs': o, 
+                'Avg': avg, 'SR': sr,
+                'RawName': b, 'RawStyle': style_tag # Store raw names for AI logging
             })
 
         if data:
@@ -473,6 +718,7 @@ class PlayerEngine:
             display(HTML(f"<div style='font-weight:700; color:{hex}; font-size:12px; margin-top:8px;'>🏏 {batter}</div>"))
             df = pd.DataFrame(data).sort_values('Balls', ascending=False)
             
+            # Display Logic (Preserved)
             def color_rows(row):
                 val = row['Outs']
                 color = '#333'; weight = 'normal'
@@ -481,7 +727,9 @@ class PlayerEngine:
                 elif val == 0: color = '#2e7d32'; weight = 'bold'
                 return [f'color: {color}; font-weight: {weight}' if col == 'Bowler' else '' for col in row.index]
 
-            styler = df.style.apply(color_rows, axis=1).format("{:.1f}", subset=['SR', 'Avg']).hide(axis='index')
+            # Filter columns for display (Hide RawName/RawStyle)
+            display_cols = ['Bowler', 'Runs', 'Balls', 'Outs', 'Avg', 'SR']
+            styler = df[display_cols].style.apply(color_rows, axis=1).format("{:.1f}", subset=['SR', 'Avg']).hide(axis='index')
             styler.set_table_styles([{'selector': 'th', 'props': [('background-color', '#f8f9fa'), ('color', '#495057'), ('font-size', '10px'), ('border-bottom', '2px solid #dee2e6')]}])
             display(styler)
     

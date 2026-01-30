@@ -1,0 +1,239 @@
+{
+  "MATCH_INTELLIGENCE_PACKET": {
+    "1_ROOT_CONTEXT": {
+      "fixture": "Home Team vs Away Team",
+      "date": "YYYY-MM-DD",
+      "venue_name": "Stadium Name, City",
+      "match_start_time": "14:30 (D/N)",
+      "pitch_report": "Paste the specific pitch report details here...",
+      "weather_report": "Paste weather forecast here..."
+    },
+
+    "2_VENUE_AND_MACRO_STATS": {
+      "1_ANALYZE_VENUE_MATCHUP": {
+        "description": "Home Team vs Away Team at this specific Venue",
+        "summary": {
+          "matches_played": 0,
+          "home_win_pct": 0.0,
+          "tie_no_result_count": 0
+        },
+        "metrics": {
+          "total_wins": {"home": 0, "away": 0},
+          "wins_defending": {"home": 0, "away": 0},
+          "wins_chasing": {"home": 0, "away": 0}
+        },
+        "batting_first_stats": {
+          "avg_score": 0,
+          "high_score": 0,
+          "low_score": 0,
+          "avg_winning_score": 0,
+          "lowest_defended_score": 0
+        },
+        "chasing_stats": {
+          "avg_score": 0,
+          "highest_chased_score": 0,
+          "avg_successful_chase_score": 0,
+          "avg_failed_chase_score": 0
+        },
+        "venue_averages_bottom_line": {
+          "1st_inn_avg": "231 (7)",
+          "2nd_inn_avg": "215 (7)",
+          "avg_winning_score": 245
+        },
+        "matches_audit": [
+          "2025-10-25 | Sydney | Winner: Ind | Bat1: Aus (236/10) | Bat2: Ind (237/1)"
+        ]
+      },
+
+      "2_CHECK_FORTRESS": {
+        "description": "Home Team vs ALL TEAMS at this Venue",
+        "home_win_pct": 0.0,
+        "is_fortress": "Yes/No",
+        "batting_first_stats": {
+          "avg_score": 0,
+          "avg_winning_score": 0,
+          "lowest_defended_score": 0
+        },
+        "chasing_stats": {
+          "avg_score": 0,
+          "highest_chased_score": 0
+        },
+        "matches_audit": []
+      },
+
+      "3_CHECK_HOST_COUNTRY_STATS": {
+        "description": "Home Team vs Away Team inside Host Country (All Venues)",
+        "home_win_pct": 0.0,
+        "matches_played": 0,
+        "key_metrics": {
+          "avg_1st_inn_score": 0,
+          "avg_winning_score": 0,
+          "highest_chased_score": 0
+        }
+      },
+
+      "4_HOME_DOMINANCE": {
+        "description": "Home Team vs ALL Opponents in Host Country",
+        "overall_home_win_pct": 0.0,
+        "opponent_breakdown": [
+          {
+            "opponent": "England",
+            "matches": 0,
+            "won": 0,
+            "lost": 0,
+            "win_pct": 0,
+            "last_5_form": "❌ ✅ ✅ ✅ ❌",
+            "avg_1st_inn_home": "234 (8)",
+            "avg_1st_inn_opp": "359 (7)"
+          }
+        ]
+      },
+
+      "5_AWAY_STATS": {
+        "description": "Away Team vs All Teams (Global Travel Record)",
+        "focus_team": "AWAY_TEAM_NAME",
+        "overall_away_win_pct": 0.0,
+        "country_breakdown": [
+          {
+            "host_country": "India",
+            "matches": 0,
+            "won": 0,
+            "lost": 0,
+            "win_pct": 0,
+            "last_5_form": "❌ ❌ ✅ ❌ ❌"
+          }
+        ]
+      },
+
+      "6_CONTINENT_STATS": {
+        "scenario_1_vs_home_team": {
+          "description": "Away Team vs Home Team in this Continent",
+          "matches_played": 0,
+          "away_team_win_pct": 0.0,
+          "batting_first_avg": 0,
+          "chasing_avg": 0
+        },
+        "scenario_2_vs_all_teams": {
+          "description": "Away Team vs ALL Teams in this Continent",
+          "matches_played": 0,
+          "away_team_win_pct": 0.0,
+          "batting_first_avg": 0,
+          "chasing_avg": 0
+        }
+      },
+
+      "7_CHECK_TOSS_BIAS": {
+        "venue": "Name",
+        "win_pct_batting_1st": 0.0,
+        "win_pct_chasing": 0.0,
+        "avg_1st_inn_score": 0,
+        "avg_2nd_inn_score": 0,
+        "bias_verdict": "Bat First / Bowl First / Neutral"
+      },
+
+      "8_PHASE_ANALYSIS": {
+        "1_overall_venue_baseline": {
+          "powerplay_1_10": "1st Inn: 59.0/2wkts | 2nd Inn: 51.0/2wkts",
+          "middle_11_40": "1st Inn: 140/4wkts | 2nd Inn: 150/4wkts",
+          "death_41_50": "1st Inn: 58/3wkts | 2nd Inn: 50/1wkts"
+        },
+        "2_home_team_at_venue": {
+          "powerplay_1_10": "1st Inn: -- | 2nd Inn: --",
+          "death_41_50": "1st Inn: -- | 2nd Inn: --"
+        },
+        "3_away_team_at_venue": {
+          "powerplay_1_10": "1st Inn: -- | 2nd Inn: --",
+          "death_41_50": "1st Inn: -- | 2nd Inn: --"
+        },
+        "4_global_habits_scenario_1_bat_first": {
+          "pp_runs_diff": "Home 59 vs Away 55 (+4)",
+          "death_runs_diff": "Home 60 vs Away 50 (+10)"
+        },
+        "5_global_habits_scenario_2_chasing": {
+          "pp_runs_diff": "Home 62 vs Away 63 (-1)",
+          "mid_wkts_diff": "Home 4 vs Away 5 (-1)"
+        }
+      }
+    },
+
+    "3_MOMENTUM_STATS": {
+      "9_RECENT_FORM": {
+        "scenario_1_vs_opponent": {
+          "description": "Home Team form vs Away Team (Last 5)",
+          "form_string": "W L W W L",
+          "matches": [
+            "Date | Venue | Result | Scores"
+          ]
+        },
+        "scenario_2_vs_all_teams": {
+          "description": "Home Team form vs All Teams (Last 5)",
+          "form_string": "W W W L W",
+          "matches": [
+            "Date | Venue | Result | Scores"
+          ]
+        }
+      }
+    },
+
+    "4_VIRTUAL_DUGOUT_SQUADS": {
+      "1_SQUAD_COMPARISON": {
+        "home_team": {
+          "caps": 530,
+          "avg_caps": 48,
+          "runs_bank": 9262,
+          "centuries": 12,
+          "wickets_bank": 531
+        },
+        "away_team": {
+          "caps": 536,
+          "avg_caps": 48,
+          "runs_bank": 13156,
+          "centuries": 24,
+          "wickets_bank": 334
+        }
+      },
+
+      "2_PLAYING_XI_STATS": {
+        "home_team_players": [
+          {
+            "name": "Player Name",
+            "form_last_5": "23, 61, 0, 3, 7",
+            "bat_avg_overall": 23.5,
+            "bat_avg_vs_opponent": 0.0,
+            "bat_avg_at_venue": 23.0,
+            "wkts_at_venue": "5 (3 matches)"
+          }
+        ],
+        "away_team_players": [
+          {
+            "name": "Player Name",
+            "form_last_5": "...",
+            "bat_avg_overall": 0.0,
+            "bat_avg_vs_opponent": 0.0,
+            "bat_avg_at_venue": 0.0,
+            "wkts_at_venue": "..."
+          }
+        ]
+      },
+
+      "3_HEAD_TO_HEAD_MATCHUPS": {
+        "home_batting": [
+          {
+            "batter": "Batter Name",
+            "matchups": [
+              "vs Bowler Name (Style): Runs, Balls, Outs, Avg (BUNNY ALERT if 3+ outs)"
+            ]
+          }
+        ],
+        "away_batting": [
+          {
+            "batter": "Batter Name",
+            "matchups": [
+              "vs Bowler Name (Style): Runs, Balls, Outs, Avg"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

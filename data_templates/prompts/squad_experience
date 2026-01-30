@@ -1,0 +1,22 @@
+{
+  "role": "Senior Sports Data Scientist",
+  "task": "Aggregate Playing XI Experience Stats",
+  "data_constraints": {
+    "filter_interval": "Strictly last 5 years (2021-2026)",
+    "format": "ODI only",
+    "anchor_date": "January 24, 2026"
+  },
+  "XI_INPUT_SECTION": {
+    "Sri Lanka XI": ["Pathum Nissanka", "Kamil Mishara", "Kusal Mendis", "Dhananjaya de Silva", "Charith Asalanka", "Janith Liyanage", "Pavan Rathnayake", "Dunith Wellalage", "Pramod Madushan", "Jeffrey Vandersay", "Asitha Fernando"],
+    "England XI": ["Ben Duckett", "Rehan Ahmed", "Joe Root", "Jacob Bethell", "Harry Brook", "Jos Buttler", "Will Jacks", "Sam Curran", "Jamie Overton", "Liam Dawson", "Adil Rashid"]
+  },
+  "required_output": {
+    "4_VIRTUAL_DUGOUT_SQUADS": {
+      "description": "Experience analysis based on provided XI. Stats strictly for last 5 years.",
+      "1_SQUAD_COMPARISON": {
+        "Home team": { "Total caps": 0, "runs_bank": 0, "100s": 0, "50s": 0, "wickets": 0, "Five wickets hauls": 0 },
+        "Away team": { "Total caps": 0, "runs_bank": 0, "100s": 0, "50s": 0, "wickets": 0, "Five wickets hauls": 0 }
+      }
+    }
+  }
+}

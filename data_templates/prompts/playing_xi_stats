@@ -1,0 +1,29 @@
+{
+  "role": "Senior Sports Data Scientist",
+  "objective": "Populate a JSON schema with verified ODI statistics. Zero tolerance for estimation.",
+  "data_integrity_rules": {
+    "filter": "Strictly Jan 2021 to [Current Date], 2026",
+    "source_priority": "Official ICC/Board Scorecards > ESPN Cricinfo > Cricbuzz",
+    "hallucination_gate": "If a specific metric (e.g., Venue Economy) is not explicitly found in the scorecard for the defined period, return 'Data not available'. Do NOT calculate or guess.",
+    "consistency_check": "Ensure 'Total Innings' matches the sum of matches found in the recent form and venue history."
+  },
+  "input_squads": {
+    "Home XI": [],
+    "Away XI": []
+  },
+  "required_metrics_per_player": {
+    "player_no": "Integer",
+    "name": "String",
+    "role": "String",
+    "total_innings": "Integer (2021-2026)",
+    "recent_last_5_scores": "String (Comma separated)",
+    "overall_batting_average": "Decimal",
+    "batting_avg_vs_opponent": "Decimal",
+    "batting_avg_at_venue": "Decimal",
+    "total_runs_at_venue_with_innings": "String format 'Runs(Innings)'",
+    "highest_score_at_venue": "Integer",
+    "overall_bowling_economy": "Decimal",
+    "venue_bowling_economy": "Decimal",
+    "wickets_at_venue_with_matches": "String format 'Wickets(Matches)'"
+  }
+}

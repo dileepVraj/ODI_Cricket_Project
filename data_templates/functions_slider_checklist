@@ -1,0 +1,32 @@
+Here is the **"Golden Rule" Checklist** for selecting the time range (`years`) before logging data.
+
+The AI is only as smart as the history you feed it. If you feed it 10 years of data for "Current Form," it gets confused by ancient history. If you feed it 1 year for "Venue Bias," it panics from lack of sample size.
+
+Use this checklist to adjust your slider **BEFORE** clicking each analysis button.
+
+### 🎚️ The "Slider Adjustment" Checklist
+
+| Analysis Type (Button) | 📅 Ideal Years | 💡 Why? (The "Quant" Logic) |
+| --- | --- | --- |
+| **1. Analyze Venue Matchup** | **5 Years** | **The "Sweet Spot."** Captures enough matches to show H2H trends (e.g., India vs Aus at Wankhede) without including outdated matches from a different era. |
+| **2. Check Fortress** | **10 Years** | **Max it out.** A "Fortress" is built over decades. You need to prove long-term dominance. 2 years is just good form; 10 years is a fortress. |
+| **3. Host Country Stats** | **5 Years** | **Cycle Relevance.** Covers the current ODI World Cup cycle. Teams usually keep a core squad for ~4 years. |
+| **4. Home Dominance** | **5-8 Years** | **Established Pattern.** Shows if the home team is a bully in their own conditions over a significant period. |
+| **5. Away Stats (Travel)** | **5 Years** | **Sample Size.** Touring teams play infrequently in specific countries. You need 5 years to find enough matches to judge their "travel sickness." |
+| **7. Check Toss Bias** | **3-5 Years** | **Curator Trends.** Pitches change! A pitch re-laid 6 years ago behaves differently now. 3-5 years captures the *current* soil behavior. |
+| **8. Phase Analysis** | **3 Years** | **Evolution of Game.** Scoring rates have exploded recently. Data from 2015 (260 par score) corrupts the data for 2025 (320 par score). Keep it recent. |
+| **9. Recent Form** | **1-2 Years** | **Recency Bias.** Form is temporary. A century scored 4 years ago is irrelevant to today's match. Keep this very tight. |
+| **⚔️ Squad Comparison** | **3-5 Years** | **Prime Window.** Most players peak in a 3-5 year window. This captures their "Active Career" stats effectively without counting their rookie years. |
+
+---
+
+### 🚀 Pro Workflow for Maximum Accuracy
+
+If you want the **perfect** AI report, don't just leave the slider on "5". Do this quick "Slider Dance" as you log:
+
+1. **Set Slider to 10**  Click **Check Fortress**. *(Logs deep history)*
+2. **Set Slider to 5**  Click **Matchup** & **Toss Bias**. *(Logs standard context)*
+3. **Set Slider to 3**  Click **Phase Analysis**. *(Logs modern scoring rates)*
+4. **Set Slider to 2**  Click **Recent Form**. *(Logs immediate momentum)*
+
+Then generate your report. The AI will receive a "Layered" dataset: deep history where it matters, and fresh data where it counts.
