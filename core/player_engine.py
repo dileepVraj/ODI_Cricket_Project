@@ -1,6 +1,23 @@
 import pandas as pd
-import ipywidgets as widgets
-from IPython.display import display, HTML
+try:
+    import ipywidgets as widgets
+    from IPython.display import display, HTML
+except ImportError:
+    # 🛡️ HEADLESS MODE FALLBACK (For Testing/Backend)
+    # This allows the engine to run without Jupyter installed
+    class MockWidget:
+        def __init__(self, *args, **kwargs): pass
+        def __enter__(self): return self
+        def __exit__(self, *args): pass
+        
+    class MockModule:
+        Output = MockWidget
+        HBox = MockWidget
+        Layout = MockWidget
+        
+    widgets = MockModule()
+    def display(*args, **kwargs): pass
+    def HTML(*args, **kwargs): return ""
 from venues import get_venue_aliases
 from config.teams import TEAM_COLORS, BOWLER_STYLES, PLAYER_ROLES
 from core.predictor import PredictorEngine

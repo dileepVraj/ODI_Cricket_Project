@@ -280,42 +280,42 @@ class TeamEngine:
             {"Metric": "Tied / No Result", "Value": tie_nr}, # 1
             {"Metric": f"{home_team} Win %", "Value": f"{rate}%"}, # 2
             
-            {"Metric": "HDR_HOME", "Value": ""}, # 3
+            {"Metric": "--- HOME PERFORMANCE ---", "Value": ""}, # 3
             {"Metric": "Total Wins", "Value": h_wins}, # 4
             {"Metric": "Won Batting 1st (Defended)", "Value": h_win_bat1}, # 5
             {"Metric": "Won Batting 2nd (Chased)", "Value": h_win_bat2}, # 6
             
-            {"Metric": "HDR_VIS", "Value": ""}, # 7
+            {"Metric": "--- VISITOR PERFORMANCE ---", "Value": ""}, # 7
             {"Metric": "Total Wins", "Value": v_wins}, # 8
             {"Metric": "Won Batting 1st (Defended)", "Value": v_win_bat1}, # 9
             {"Metric": "Won Batting 2nd (Chased)", "Value": v_win_bat2}, # 10
 
-            {"Metric": "HDR_OV", "Value": ""}, # 11
+            {"Metric": "--- VENUE AVERAGES ---", "Value": ""}, # 11
             {"Metric": "Overall Avg 1st Innings", "Value": self._get_avg_with_count(valid_1st, 'score_inn1')}, # 12
             {"Metric": "Overall Avg 2nd Innings", "Value": self._get_avg_with_count(valid_2nd, 'score_inn2')}, # 13
             {"Metric": "Avg 1st Innings Winning Score", "Value": self._get_avg_with_count(valid_1st[valid_1st['winner']==valid_1st['team_bat_1']], 'score_inn1')}, # 14
 
-            {"Metric": "HDR_BAT1_H", "Value": ""}, # 15
+            {"Metric": f"--- BATTING 1ST ({home_team.upper()}) ---", "Value": ""}, # 15
             {"Metric": "Average 1st Innings", "Value": h_stats['avg_1st']}, # 16
             {"Metric": "Highest 1st Innings", "Value": h_stats['high_1st']}, # 17
             {"Metric": "Lowest 1st Innings", "Value": h_stats['low_1st']}, # 18
             {"Metric": "Avg Winning Score", "Value": h_stats['avg_1st_win']}, # 19
             {"Metric": "Lowest Defended Score", "Value": h_stats['low_defended']}, # 20
             
-            {"Metric": "HDR_BAT1_V", "Value": ""}, # 21
+            {"Metric": f"--- BATTING 1ST ({visitor_label.upper()}) ---", "Value": ""}, # 21
             {"Metric": "Average 1st Innings", "Value": v_stats['avg_1st']}, # 22
             {"Metric": "Highest 1st Innings", "Value": v_stats['high_1st']}, # 23
             {"Metric": "Lowest 1st Innings", "Value": v_stats['low_1st']}, # 24
             {"Metric": "Avg Winning Score", "Value": v_stats['avg_1st_win']}, # 25
             {"Metric": "Lowest Defended Score", "Value": v_stats['low_defended']}, # 26
             
-            {"Metric": "HDR_CHASE_H", "Value": ""}, # 27
+            {"Metric": f"--- CHASING ({home_team.upper()}) ---", "Value": ""}, # 27
             {"Metric": "Average 2nd Innings", "Value": h_stats['avg_2nd']}, # 28
             {"Metric": "Highest Chased", "Value": h_stats['high_chased']}, # 29
             {"Metric": "Avg Successful Chase", "Value": h_stats['avg_succ']}, # 30
             {"Metric": "Avg Failed Chase", "Value": h_stats['avg_fail']}, # 31
             
-            {"Metric": "HDR_CHASE_V", "Value": ""}, # 32
+            {"Metric": f"--- CHASING ({visitor_label.upper()}) ---", "Value": ""}, # 32
             {"Metric": "Average 2nd Innings", "Value": v_stats['avg_2nd']}, # 33
             {"Metric": "Highest Chased", "Value": v_stats['high_chased']}, # 34
             {"Metric": "Avg Successful Chase", "Value": v_stats['avg_succ']}, # 35
@@ -323,6 +323,7 @@ class TeamEngine:
         ]
         self._display_report(data, home_team, visitor_label, title)
         self._display_audit(df, home_team)
+        return data  # <--- RETURN DATA FOR TESTING
 
     def _generate_matrix_report(self, matches, team_name, title, is_away=False):
         """Helper for Matrix Reports (Global, Dominance, Away)"""
@@ -376,9 +377,11 @@ class TeamEngine:
             'Opp Avg (1st)': self._get_avg_with_count(top_val[top_val['team_bat_1'] != team_name], 'score_inn1')
         }])
         
+        final_df = pd.concat([ov, df], ignore_index=True)
         print(f"\n📊 {title}")
-        display(pd.concat([ov, df], ignore_index=True).style.hide(axis='index'))
+        display(final_df.style.hide(axis='index'))
         self._display_audit(matches, team_name)
+        return final_df.to_dict(orient='records')
 
     # =================================================================================
     # 🔍 ANALYSIS FUNCTIONS (Public API)
@@ -403,7 +406,8 @@ class TeamEngine:
         if df.empty: print(f"❌ No matches found."); return
         
         df = self._apply_smart_filters(df)
-        self._build_and_display_report(df, home_team, vis_label, f"FORTRESS REPORT ({vs_txt})", is_venue_mode=True)
+        df = self._apply_smart_filters(df)
+        return self._build_and_display_report(df, home_team, vis_label, f"FORTRESS REPORT ({vs_txt})", is_venue_mode=True)
 
     # 🔗 BRIDGE FUNCTION (Connects Interface Button to Fortress Logic)
     def analyze_venue_matchup(self, stadium_name, home_team, opp_team, years_back=5, recorder=None):
@@ -411,7 +415,7 @@ class TeamEngine:
         Redirects the 'Venue Matchup' button to the Fortress function, 
         but ensures it runs in 'Matchup Mode' (specific opponent).
         """
-        self.analyze_home_fortress(stadium_name, home_team, opp_team, years_back, recorder)
+        return self.analyze_home_fortress(stadium_name, home_team, opp_team, years_back, recorder)
 
     def analyze_venue_phases(self, stadium_id, home_team=None, away_team=None, years=5, recorder=None):
         import os
@@ -713,7 +717,7 @@ class TeamEngine:
         df = self.match_df[mask].copy()
         if df.empty: print("❌ No global matches found."); return
         df = self._apply_smart_filters(df)
-        self._build_and_display_report(df, home_team, opp_team, f"GLOBAL RIVALRY REPORT", False)
+        return self._build_and_display_report(df, home_team, opp_team, f"GLOBAL RIVALRY REPORT", False)
 
     def analyze_country_h2h(self, home_team, opp_team, country_name, years_back=10, recorder=None):
         cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
@@ -728,7 +732,7 @@ class TeamEngine:
         df = self.match_df[v_mask & m_mask].copy()
         if df.empty: print(f"❌ No matches found."); return
         df = self._apply_smart_filters(df)
-        self._build_and_display_report(df, home_team, opp_team, f"HOST COUNTRY REPORT ({country_name})", False)
+        return self._build_and_display_report(df, home_team, opp_team, f"HOST COUNTRY REPORT ({country_name})", False)
 
     def analyze_home_dominance(self, home_team, years_back=10, recorder=None):
         print(f"\n🦁 HOME DOMINANCE: {home_team}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
@@ -736,7 +740,7 @@ class TeamEngine:
         if home_team not in c_codes: print("❌ Unknown code."); return
         matches = self.match_df[(self.match_df['venue'].str.startswith(c_codes[home_team])) & ((self.match_df['team_bat_1'] == home_team) | (self.match_df['team_bat_2'] == home_team)) & (self.match_df['start_date'] >= cutoff)].copy()
         if matches.empty: print("❌ No matches found."); return
-        self._generate_matrix_report(matches, home_team, "DOMINANCE MATRIX")
+        return self._generate_matrix_report(matches, home_team, "DOMINANCE MATRIX")
 
     def analyze_away_performance(self, team_name, years_back=5, recorder=None):
         print(f"\n✈️ AWAY PERFORMANCE: {team_name}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
@@ -744,13 +748,13 @@ class TeamEngine:
         if team_name not in c_codes: print("❌ Unknown code."); return
         matches = self.match_df[((self.match_df['team_bat_1'] == team_name) | (self.match_df['team_bat_2'] == team_name)) & (~self.match_df['venue'].astype(str).str.startswith(c_codes[team_name])) & (self.match_df['start_date'] >= cutoff)].copy()
         if matches.empty: print("❌ No matches found."); return
-        self._generate_matrix_report(matches, team_name, "AWAY PERFORMANCE MATRIX", is_away=True)
+        return self._generate_matrix_report(matches, team_name, "AWAY PERFORMANCE MATRIX", is_away=True)
 
     def analyze_global_performance(self, team_name, years_back=5):
         print(f"\n🌍 GLOBAL PERFORMANCE: {team_name} vs Top 10"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         matches = self.match_df[((self.match_df['team_bat_1'] == team_name) | (self.match_df['team_bat_2'] == team_name)) & (self.match_df['start_date'] >= cutoff)].copy()
         if matches.empty: print("❌ No matches found."); return
-        self._generate_matrix_report(matches, team_name, "GLOBAL PERFORMANCE MATRIX")
+        return self._generate_matrix_report(matches, team_name, "GLOBAL PERFORMANCE MATRIX")
 
     def analyze_continent_performance(self, team_name, continent, opp_team='All', years_back=5):
         reg = "Global" if continent == 'All' else continent
@@ -764,7 +768,7 @@ class TeamEngine:
         matches = self.match_df[mask].copy()
         if matches.empty: print("❌ No matches found."); return
         if opp_team != 'All': self._build_and_display_report(self._apply_smart_filters(matches), team_name, opp_team, f"REGION REPORT ({reg})", False)
-        else: self._generate_matrix_report(matches, team_name, f"PERFORMANCE MATRIX: {reg.upper()}")
+        else: return self._generate_matrix_report(matches, team_name, f"PERFORMANCE MATRIX: {reg.upper()}")
 
     def analyze_team_form(self, team_name, opp_team='All', continent='All', limit=5, recorder=None):
         title = f"📉 FORM: {team_name}"

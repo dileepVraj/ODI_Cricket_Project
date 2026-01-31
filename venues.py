@@ -45,6 +45,7 @@ VENUE_MAP = {
     'Ekana Cricket Stadium': 'IND_LUCKNOW',
     'Greenfield International Stadium': 'IND_TRIVANDRUM',
     'Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium': 'IND_VISAKHAPATNAM',
+    'Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium, Visakhapatnam': 'IND_VISAKHAPATNAM',
     'JSCA International Stadium Complex': 'IND_RANCHI',
     'Saurashtra Cricket Association Stadium': 'IND_RAJKOT',
     'Vidarbha Cricket Association Stadium, Jamtha': 'IND_NAGPUR',
@@ -59,7 +60,14 @@ VENUE_MAP = {
     'Madhavrao Scindia Cricket Ground, Rajkot': 'IND_RAJKOT',
     'Holkar Cricket Stadium': 'IND_INDORE',
     'Holkar Cricket Stadium, Indore': 'IND_INDORE', 
+    'Holkar Cricket Stadium, Indore': 'IND_INDORE', 
     'Indore': 'IND_INDORE',
+    
+    'Kotambi Stadium': 'IND_VADODARA',
+    'Kotambi Stadium, Vadodara': 'IND_VADODARA',
+    'Vadodara': 'IND_VADODARA',
+    'Moti Bagh Stadium': 'IND_VADODARA',
+    'IPCL Sports Complex Ground': 'IND_VADODARA',
     
     # --- 🇦🇺 AUSTRALIA ---
     'Melbourne Cricket Ground': 'AUS_MELBOURNE',

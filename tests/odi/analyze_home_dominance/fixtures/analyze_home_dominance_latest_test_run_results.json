@@ -1,0 +1,870 @@
+{
+    "Teams considered": [
+        "Australia",
+        "Bangladesh",
+        "England",
+        "India",
+        "New Zealand",
+        "Pakistan",
+        "South Africa",
+        "Sri Lanka",
+        "West Indies"
+    ],
+    "Australia": {
+        "team": "Australia",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 41,
+                "Won": 26,
+                "Lost": 15,
+                "Tie/NR": 0,
+                "Win %": "63%",
+                "Last 5": "\u274c \u2705 \u2705 \u2705 \u274c",
+                "Australia Avg (1st)": "280 (26)",
+                "Opp Avg (1st)": "251 (14)"
+            },
+            {
+                "Opponent": "India",
+                "Mat": 9,
+                "Won": 5,
+                "Lost": 4,
+                "Tie/NR": 0,
+                "Win %": "55%",
+                "Last 5": "\u274c \u2705 \u2705 \u274c \u2705",
+                "Australia Avg (1st)": "302 (6)",
+                "Opp Avg (1st)": "283 (2)"
+            },
+            {
+                "Opponent": "England",
+                "Mat": 8,
+                "Won": 4,
+                "Lost": 4,
+                "Tie/NR": 0,
+                "Win %": "50%",
+                "Last 5": "\u2705 \u2705 \u2705 \u274c \u2705",
+                "Australia Avg (1st)": "302 (4)",
+                "Opp Avg (1st)": "261 (4)"
+            },
+            {
+                "Opponent": "Pakistan",
+                "Mat": 8,
+                "Won": 5,
+                "Lost": 3,
+                "Tie/NR": 0,
+                "Win %": "62%",
+                "Last 5": "\u274c \u274c \u2705 \u2705 \u2705",
+                "Australia Avg (1st)": "252 (6)",
+                "Opp Avg (1st)": "233 (2)"
+            },
+            {
+                "Opponent": "New Zealand",
+                "Mat": 7,
+                "Won": 7,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "Australia Avg (1st)": "281 (6)",
+                "Opp Avg (1st)": "232 (1)"
+            },
+            {
+                "Opponent": "South Africa",
+                "Mat": 6,
+                "Won": 2,
+                "Lost": 4,
+                "Tie/NR": 0,
+                "Win %": "33%",
+                "Last 5": "\u2705 \u274c \u274c \u274c \u2705",
+                "Australia Avg (1st)": "271 (3)",
+                "Opp Avg (1st)": "297 (3)"
+            },
+            {
+                "Opponent": "West Indies",
+                "Mat": 3,
+                "Won": 3,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705",
+                "Australia Avg (1st)": "258 (1)",
+                "Opp Avg (1st)": "158 (2)"
+            }
+        ]
+    },
+    "Bangladesh": {
+        "team": "Bangladesh",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 30,
+                "Won": 16,
+                "Lost": 12,
+                "Tie/NR": 2,
+                "Win %": "57%",
+                "Last 5": "\u2705 \ud83c\udf27\ufe0f \u2705 \u2705 \u274c",
+                "Bangladesh Avg (1st)": "243 (14)",
+                "Opp Avg (1st)": "243 (12)"
+            },
+            {
+                "Opponent": "West Indies",
+                "Mat": 9,
+                "Won": 7,
+                "Lost": 1,
+                "Tie/NR": 1,
+                "Win %": "87%",
+                "Last 5": "\u2705 \ud83c\udf27\ufe0f \u2705 \u2705 \u2705",
+                "Bangladesh Avg (1st)": "263 (4)",
+                "Opp Avg (1st)": "165 (4)"
+            },
+            {
+                "Opponent": "Sri Lanka",
+                "Mat": 9,
+                "Won": 5,
+                "Lost": 4,
+                "Tie/NR": 0,
+                "Win %": "55%",
+                "Last 5": "\u2705 \u274c \u2705 \u274c \u2705",
+                "Bangladesh Avg (1st)": "236 (4)",
+                "Opp Avg (1st)": "258 (3)"
+            },
+            {
+                "Opponent": "England",
+                "Mat": 6,
+                "Won": 2,
+                "Lost": 4,
+                "Tie/NR": 0,
+                "Win %": "33%",
+                "Last 5": "\u2705 \u274c \u274c \u274c \u2705",
+                "Bangladesh Avg (1st)": "242 (4)",
+                "Opp Avg (1st)": "317 (2)"
+            },
+            {
+                "Opponent": "India",
+                "Mat": 3,
+                "Won": 2,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "66%",
+                "Last 5": "\u274c \u2705 \u2705",
+                "Bangladesh Avg (1st)": "271 (1)",
+                "Opp Avg (1st)": "297 (2)"
+            },
+            {
+                "Opponent": "New Zealand",
+                "Mat": 3,
+                "Won": 0,
+                "Lost": 2,
+                "Tie/NR": 1,
+                "Win %": "0%",
+                "Last 5": "\u274c \u274c \ud83c\udf27\ufe0f",
+                "Bangladesh Avg (1st)": "171 (1)",
+                "Opp Avg (1st)": "254 (1)"
+            }
+        ]
+    },
+    "England": {
+        "team": "England",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 75,
+                "Won": 50,
+                "Lost": 18,
+                "Tie/NR": 7,
+                "Win %": "73%",
+                "Last 5": "\u2705 \u274c \u274c \u2705 \u2705",
+                "England Avg (1st)": "301 (31)",
+                "Opp Avg (1st)": "270 (25)"
+            },
+            {
+                "Opponent": "Australia",
+                "Mat": 16,
+                "Won": 10,
+                "Lost": 6,
+                "Tie/NR": 0,
+                "Win %": "62%",
+                "Last 5": "\u274c \u2705 \u2705 \u274c \u274c",
+                "England Avg (1st)": "334 (5)",
+                "Opp Avg (1st)": "257 (7)"
+            },
+            {
+                "Opponent": "Pakistan",
+                "Mat": 15,
+                "Won": 11,
+                "Lost": 3,
+                "Tie/NR": 1,
+                "Win %": "78%",
+                "Last 5": "\u2705 \u2705 \u2705 \u274c \u2705",
+                "England Avg (1st)": "321 (6)",
+                "Opp Avg (1st)": "288 (7)"
+            },
+            {
+                "Opponent": "South Africa",
+                "Mat": 10,
+                "Won": 5,
+                "Lost": 4,
+                "Tie/NR": 1,
+                "Win %": "55%",
+                "Last 5": "\u2705 \u274c \u274c \ud83c\udf27\ufe0f \u2705",
+                "England Avg (1st)": "244 (6)",
+                "Opp Avg (1st)": "331 (2)"
+            },
+            {
+                "Opponent": "Sri Lanka",
+                "Mat": 9,
+                "Won": 5,
+                "Lost": 1,
+                "Tie/NR": 3,
+                "Win %": "83%",
+                "Last 5": "\ud83c\udf27\ufe0f \u2705 \u2705 \u274c \u2705",
+                "England Avg (1st)": "324 (1)",
+                "Opp Avg (1st)": "228 (4)"
+            },
+            {
+                "Opponent": "West Indies",
+                "Mat": 9,
+                "Won": 8,
+                "Lost": 0,
+                "Tie/NR": 1,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "England Avg (1st)": "384 (2)",
+                "Opp Avg (1st)": "269 (3)"
+            },
+            {
+                "Opponent": "India",
+                "Mat": 7,
+                "Won": 4,
+                "Lost": 3,
+                "Tie/NR": 0,
+                "Win %": "57%",
+                "Last 5": "\u274c \u2705 \u274c \u2705 \u2705",
+                "England Avg (1st)": "257 (6)",
+                "Opp Avg (1st)": "256 (1)"
+            },
+            {
+                "Opponent": "New Zealand",
+                "Mat": 7,
+                "Won": 5,
+                "Lost": 1,
+                "Tie/NR": 1,
+                "Win %": "83%",
+                "Last 5": "\u2705 \u2705 \u2705 \u274c \ud83c\udf27\ufe0f",
+                "England Avg (1st)": "318 (4)",
+                "Opp Avg (1st)": "-"
+            },
+            {
+                "Opponent": "Bangladesh",
+                "Mat": 2,
+                "Won": 2,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705",
+                "England Avg (1st)": "386 (1)",
+                "Opp Avg (1st)": "305 (1)"
+            }
+        ]
+    },
+    "India": {
+        "team": "India",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 74,
+                "Won": 52,
+                "Lost": 21,
+                "Tie/NR": 1,
+                "Win %": "71%",
+                "Last 5": "\u274c \u274c \u2705 \u2705 \u274c",
+                "India Avg (1st)": "311 (33)",
+                "Opp Avg (1st)": "254 (37)"
+            },
+            {
+                "Opponent": "Australia",
+                "Mat": 21,
+                "Won": 12,
+                "Lost": 9,
+                "Tie/NR": 0,
+                "Win %": "57%",
+                "Last 5": "\u274c \u2705 \u274c \u2705 \u2705",
+                "India Avg (1st)": "276 (8)",
+                "Opp Avg (1st)": "271 (12)"
+            },
+            {
+                "Opponent": "New Zealand",
+                "Mat": 16,
+                "Won": 11,
+                "Lost": 5,
+                "Tie/NR": 0,
+                "Win %": "68%",
+                "Last 5": "\u274c \u274c \u2705 \u2705 \u2705",
+                "India Avg (1st)": "328 (7)",
+                "Opp Avg (1st)": "247 (9)"
+            },
+            {
+                "Opponent": "West Indies",
+                "Mat": 11,
+                "Won": 8,
+                "Lost": 2,
+                "Tie/NR": 1,
+                "Win %": "80%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "India Avg (1st)": "310 (5)",
+                "Opp Avg (1st)": "240 (5)"
+            },
+            {
+                "Opponent": "England",
+                "Mat": 10,
+                "Won": 8,
+                "Lost": 2,
+                "Tie/NR": 0,
+                "Win %": "80%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "India Avg (1st)": "324 (6)",
+                "Opp Avg (1st)": "305 (4)"
+            },
+            {
+                "Opponent": "South Africa",
+                "Mat": 7,
+                "Won": 5,
+                "Lost": 2,
+                "Tie/NR": 0,
+                "Win %": "71%",
+                "Last 5": "\u2705 \u274c \u2705 \u2705 \u2705",
+                "India Avg (1st)": "344 (3)",
+                "Opp Avg (1st)": "215 (3)"
+            },
+            {
+                "Opponent": "Sri Lanka",
+                "Mat": 7,
+                "Won": 6,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "85%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "India Avg (1st)": "308 (4)",
+                "Opp Avg (1st)": "215 (2)"
+            },
+            {
+                "Opponent": "Pakistan",
+                "Mat": 1,
+                "Won": 1,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705",
+                "India Avg (1st)": "-",
+                "Opp Avg (1st)": "191 (1)"
+            },
+            {
+                "Opponent": "Bangladesh",
+                "Mat": 1,
+                "Won": 1,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705",
+                "India Avg (1st)": "-",
+                "Opp Avg (1st)": "256 (1)"
+            }
+        ]
+    },
+    "New Zealand": {
+        "team": "New Zealand",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 63,
+                "Won": 48,
+                "Lost": 13,
+                "Tie/NR": 2,
+                "Win %": "78%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "New Zealand Avg (1st)": "277 (26)",
+                "Opp Avg (1st)": "243 (26)"
+            },
+            {
+                "Opponent": "Bangladesh",
+                "Mat": 12,
+                "Won": 11,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "91%",
+                "Last 5": "\u274c \u2705 \u2705 \u2705 \u2705",
+                "New Zealand Avg (1st)": "267 (5)",
+                "Opp Avg (1st)": "231 (6)"
+            },
+            {
+                "Opponent": "India",
+                "Mat": 11,
+                "Won": 5,
+                "Lost": 4,
+                "Tie/NR": 2,
+                "Win %": "55%",
+                "Last 5": "\ud83c\udf27\ufe0f \ud83c\udf27\ufe0f \u2705 \u2705 \u2705",
+                "New Zealand Avg (1st)": "258 (2)",
+                "Opp Avg (1st)": "269 (6)"
+            },
+            {
+                "Opponent": "Pakistan",
+                "Mat": 8,
+                "Won": 8,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "New Zealand Avg (1st)": "291 (4)",
+                "Opp Avg (1st)": "262 (1)"
+            },
+            {
+                "Opponent": "England",
+                "Mat": 8,
+                "Won": 5,
+                "Lost": 3,
+                "Tie/NR": 0,
+                "Win %": "62%",
+                "Last 5": "\u2705 \u2705 \u2705 \u274c \u2705",
+                "New Zealand Avg (1st)": "223 (2)",
+                "Opp Avg (1st)": "245 (6)"
+            },
+            {
+                "Opponent": "Sri Lanka",
+                "Mat": 8,
+                "Won": 7,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "87%",
+                "Last 5": "\u274c \u2705 \u2705 \u2705 \u2705",
+                "New Zealand Avg (1st)": "332 (4)",
+                "Opp Avg (1st)": "208 (3)"
+            },
+            {
+                "Opponent": "West Indies",
+                "Mat": 6,
+                "Won": 6,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "New Zealand Avg (1st)": "297 (2)",
+                "Opp Avg (1st)": "204 (2)"
+            },
+            {
+                "Opponent": "South Africa",
+                "Mat": 5,
+                "Won": 2,
+                "Lost": 3,
+                "Tie/NR": 0,
+                "Win %": "40%",
+                "Last 5": "\u274c \u2705 \u274c \u2705 \u274c",
+                "New Zealand Avg (1st)": "219 (2)",
+                "Opp Avg (1st)": "275 (2)"
+            },
+            {
+                "Opponent": "Australia",
+                "Mat": 5,
+                "Won": 4,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "80%",
+                "Last 5": "\u2705 \u2705 \u2705 \u274c \u2705",
+                "New Zealand Avg (1st)": "280 (5)",
+                "Opp Avg (1st)": "-"
+            }
+        ]
+    },
+    "Pakistan": {
+        "team": "Pakistan",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 27,
+                "Won": 19,
+                "Lost": 8,
+                "Tie/NR": 0,
+                "Win %": "70%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u274c",
+                "Pakistan Avg (1st)": "284 (9)",
+                "Opp Avg (1st)": "278 (18)"
+            },
+            {
+                "Opponent": "New Zealand",
+                "Mat": 11,
+                "Won": 5,
+                "Lost": 6,
+                "Tie/NR": 0,
+                "Win %": "45%",
+                "Last 5": "\u274c \u274c \u274c \u274c \u2705",
+                "Pakistan Avg (1st)": "285 (4)",
+                "Opp Avg (1st)": "298 (7)"
+            },
+            {
+                "Opponent": "Sri Lanka",
+                "Mat": 5,
+                "Won": 5,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "Pakistan Avg (1st)": "302 (2)",
+                "Opp Avg (1st)": "265 (3)"
+            },
+            {
+                "Opponent": "South Africa",
+                "Mat": 4,
+                "Won": 3,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "75%",
+                "Last 5": "\u2705 \u274c \u2705 \u2705",
+                "Pakistan Avg (1st)": "269 (1)",
+                "Opp Avg (1st)": "252 (3)"
+            },
+            {
+                "Opponent": "Australia",
+                "Mat": 3,
+                "Won": 2,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "66%",
+                "Last 5": "\u2705 \u2705 \u274c",
+                "Pakistan Avg (1st)": "-",
+                "Opp Avg (1st)": "290 (3)"
+            },
+            {
+                "Opponent": "West Indies",
+                "Mat": 3,
+                "Won": 3,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705",
+                "Pakistan Avg (1st)": "272 (2)",
+                "Opp Avg (1st)": "305 (1)"
+            },
+            {
+                "Opponent": "Bangladesh",
+                "Mat": 1,
+                "Won": 1,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705",
+                "Pakistan Avg (1st)": "-",
+                "Opp Avg (1st)": "193 (1)"
+            }
+        ]
+    },
+    "South Africa": {
+        "team": "South Africa",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 65,
+                "Won": 41,
+                "Lost": 23,
+                "Tie/NR": 1,
+                "Win %": "64%",
+                "Last 5": "\u274c \u274c \u274c \u274c \u2705",
+                "South Africa Avg (1st)": "280 (28)",
+                "Opp Avg (1st)": "271 (31)"
+            },
+            {
+                "Opponent": "Australia",
+                "Mat": 13,
+                "Won": 11,
+                "Lost": 2,
+                "Tie/NR": 0,
+                "Win %": "84%",
+                "Last 5": "\u2705 \u2705 \u2705 \u274c \u274c",
+                "South Africa Avg (1st)": "324 (7)",
+                "Opp Avg (1st)": "291 (6)"
+            },
+            {
+                "Opponent": "India",
+                "Mat": 12,
+                "Won": 5,
+                "Lost": 7,
+                "Tie/NR": 0,
+                "Win %": "41%",
+                "Last 5": "\u274c \u2705 \u274c \u2705 \u2705",
+                "South Africa Avg (1st)": "215 (6)",
+                "Opp Avg (1st)": "274 (5)"
+            },
+            {
+                "Opponent": "England",
+                "Mat": 11,
+                "Won": 6,
+                "Lost": 4,
+                "Tie/NR": 1,
+                "Win %": "60%",
+                "Last 5": "\u274c \u2705 \u2705 \u274c \ud83c\udf27\ufe0f",
+                "South Africa Avg (1st)": "272 (3)",
+                "Opp Avg (1st)": "293 (6)"
+            },
+            {
+                "Opponent": "Pakistan",
+                "Mat": 11,
+                "Won": 4,
+                "Lost": 7,
+                "Tie/NR": 0,
+                "Win %": "36%",
+                "Last 5": "\u274c \u274c \u274c \u274c \u2705",
+                "South Africa Avg (1st)": "256 (5)",
+                "Opp Avg (1st)": "280 (5)"
+            },
+            {
+                "Opponent": "Sri Lanka",
+                "Mat": 10,
+                "Won": 10,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
+                "South Africa Avg (1st)": "327 (4)",
+                "Opp Avg (1st)": "191 (4)"
+            },
+            {
+                "Opponent": "Bangladesh",
+                "Mat": 6,
+                "Won": 4,
+                "Lost": 2,
+                "Tie/NR": 0,
+                "Win %": "66%",
+                "Last 5": "\u274c \u2705 \u274c \u2705 \u2705",
+                "South Africa Avg (1st)": "292 (3)",
+                "Opp Avg (1st)": "262 (3)"
+            },
+            {
+                "Opponent": "West Indies",
+                "Mat": 2,
+                "Won": 1,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "50%",
+                "Last 5": "\u2705 \u274c",
+                "South Africa Avg (1st)": "-",
+                "Opp Avg (1st)": "297 (2)"
+            }
+        ]
+    },
+    "Sri Lanka": {
+        "team": "Sri Lanka",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 62,
+                "Won": 31,
+                "Lost": 27,
+                "Tie/NR": 4,
+                "Win %": "53%",
+                "Last 5": "\u274c \u274c \u2705 \u2705 \u274c",
+                "Sri Lanka Avg (1st)": "244 (33)",
+                "Opp Avg (1st)": "269 (14)"
+            },
+            {
+                "Opponent": "India",
+                "Mat": 13,
+                "Won": 3,
+                "Lost": 9,
+                "Tie/NR": 1,
+                "Win %": "25%",
+                "Last 5": "\u2705 \u2705 \ud83c\udf27\ufe0f \u274c \u274c",
+                "Sri Lanka Avg (1st)": "218 (8)",
+                "Opp Avg (1st)": "271 (3)"
+            },
+            {
+                "Opponent": "Australia",
+                "Mat": 12,
+                "Won": 6,
+                "Lost": 6,
+                "Tie/NR": 0,
+                "Win %": "50%",
+                "Last 5": "\u2705 \u2705 \u274c \u2705 \u2705",
+                "Sri Lanka Avg (1st)": "228 (10)",
+                "Opp Avg (1st)": "291 (1)"
+            },
+            {
+                "Opponent": "Bangladesh",
+                "Mat": 11,
+                "Won": 8,
+                "Lost": 2,
+                "Tie/NR": 1,
+                "Win %": "80%",
+                "Last 5": "\u2705 \u274c \u2705 \u2705 \u2705",
+                "Sri Lanka Avg (1st)": "279 (6)",
+                "Opp Avg (1st)": "243 (4)"
+            },
+            {
+                "Opponent": "England",
+                "Mat": 8,
+                "Won": 2,
+                "Lost": 5,
+                "Tie/NR": 1,
+                "Win %": "28%",
+                "Last 5": "\u274c \u274c \u2705 \u2705 \u274c",
+                "Sri Lanka Avg (1st)": "245 (2)",
+                "Opp Avg (1st)": "357 (1)"
+            },
+            {
+                "Opponent": "South Africa",
+                "Mat": 8,
+                "Won": 4,
+                "Lost": 4,
+                "Tie/NR": 0,
+                "Win %": "50%",
+                "Last 5": "\u2705 \u274c \u2705 \u2705 \u2705",
+                "Sri Lanka Avg (1st)": "247 (5)",
+                "Opp Avg (1st)": "323 (2)"
+            },
+            {
+                "Opponent": "West Indies",
+                "Mat": 6,
+                "Won": 5,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "83%",
+                "Last 5": "\u274c \u2705 \u2705 \u2705 \u2705",
+                "Sri Lanka Avg (1st)": "326 (2)",
+                "Opp Avg (1st)": "239 (2)"
+            },
+            {
+                "Opponent": "New Zealand",
+                "Mat": 3,
+                "Won": 2,
+                "Lost": 0,
+                "Tie/NR": 1,
+                "Win %": "100%",
+                "Last 5": "\ud83c\udf27\ufe0f \u2705 \u2705",
+                "Sri Lanka Avg (1st)": "-",
+                "Opp Avg (1st)": "209 (1)"
+            },
+            {
+                "Opponent": "Pakistan",
+                "Mat": 1,
+                "Won": 1,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705",
+                "Sri Lanka Avg (1st)": "-",
+                "Opp Avg (1st)": "-"
+            }
+        ]
+    },
+    "West Indies": {
+        "team": "West Indies",
+        "years_back": 10,
+        "expected_output": [
+            {
+                "Opponent": "\u26a1 OVERALL",
+                "Mat": 58,
+                "Won": 23,
+                "Lost": 33,
+                "Tie/NR": 2,
+                "Win %": "41%",
+                "Last 5": "\u2705 \u2705 \u274c \u2705 \u2705",
+                "West Indies Avg (1st)": "236 (20)",
+                "Opp Avg (1st)": "269 (29)"
+            },
+            {
+                "Opponent": "India",
+                "Mat": 14,
+                "Won": 2,
+                "Lost": 10,
+                "Tie/NR": 2,
+                "Win %": "16%",
+                "Last 5": "\u274c \u2705 \u274c \u274c \u274c",
+                "West Indies Avg (1st)": "204 (4)",
+                "Opp Avg (1st)": "274 (5)"
+            },
+            {
+                "Opponent": "England",
+                "Mat": 13,
+                "Won": 6,
+                "Lost": 7,
+                "Tie/NR": 0,
+                "Win %": "46%",
+                "Last 5": "\u2705 \u274c \u2705 \u2705 \u274c",
+                "West Indies Avg (1st)": "280 (5)",
+                "Opp Avg (1st)": "290 (6)"
+            },
+            {
+                "Opponent": "Bangladesh",
+                "Mat": 9,
+                "Won": 4,
+                "Lost": 5,
+                "Tie/NR": 0,
+                "Win %": "44%",
+                "Last 5": "\u2705 \u2705 \u2705 \u274c \u274c",
+                "West Indies Avg (1st)": "185 (3)",
+                "Opp Avg (1st)": "284 (5)"
+            },
+            {
+                "Opponent": "Australia",
+                "Mat": 7,
+                "Won": 2,
+                "Lost": 5,
+                "Tie/NR": 0,
+                "Win %": "28%",
+                "Last 5": "\u274c \u2705 \u274c \u274c \u274c",
+                "West Indies Avg (1st)": "183 (3)",
+                "Opp Avg (1st)": "243 (4)"
+            },
+            {
+                "Opponent": "Pakistan",
+                "Mat": 6,
+                "Won": 3,
+                "Lost": 3,
+                "Tie/NR": 0,
+                "Win %": "50%",
+                "Last 5": "\u2705 \u2705 \u274c \u274c \u274c",
+                "West Indies Avg (1st)": "269 (3)",
+                "Opp Avg (1st)": "295 (2)"
+            },
+            {
+                "Opponent": "South Africa",
+                "Mat": 3,
+                "Won": 2,
+                "Lost": 1,
+                "Tie/NR": 0,
+                "Win %": "66%",
+                "Last 5": "\u2705 \u274c \u2705",
+                "West Indies Avg (1st)": "285 (1)",
+                "Opp Avg (1st)": "265 (2)"
+            },
+            {
+                "Opponent": "New Zealand",
+                "Mat": 3,
+                "Won": 1,
+                "Lost": 2,
+                "Tie/NR": 0,
+                "Win %": "33%",
+                "Last 5": "\u274c \u274c \u2705",
+                "West Indies Avg (1st)": "301 (1)",
+                "Opp Avg (1st)": "201 (2)"
+            },
+            {
+                "Opponent": "Sri Lanka",
+                "Mat": 3,
+                "Won": 3,
+                "Lost": 0,
+                "Tie/NR": 0,
+                "Win %": "100%",
+                "Last 5": "\u2705 \u2705 \u2705",
+                "West Indies Avg (1st)": "-",
+                "Opp Avg (1st)": "259 (3)"
+            }
+        ]
+    }
+}
