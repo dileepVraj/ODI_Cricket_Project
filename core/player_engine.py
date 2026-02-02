@@ -44,12 +44,33 @@ class PlayerEngine:
         self.predictor = PredictorEngine(raw_df, player_df)
 
     def get_active_squad(self, team_name):
+        """
+        Retrieves the list of active players for a team from the metadata.
+        
+        Args:
+            team_name (str): Name of the team.
+
+        Returns:
+            list: List of player names (sorted).
+        """
         if self.meta_df.empty: return []
         team_players = self.meta_df[self.meta_df['team'].str.lower() == team_name.lower()]
         return sorted(team_players['player'].unique().tolist())
         
     def get_last_match_xi(self, team_name):
-        """Smart Fetch: Retrieves players from the last match using Squads DB (Preferred) or Backfill."""
+        """
+        Smart Fetch: Retrieves players from the last match using Squads DB (Preferred) or Backfill.
+        
+        Logic:
+        1. Checks `squads_df` for the most recent match ID for the team.
+        2. If not found, scans `raw_df` match-by-match (backwards) to find the last 11 players used.
+
+        Args:
+            team_name (str): The team to fetch the XI for.
+
+        Returns:
+            list: List of 11 player names (sorted).
+        """
         
         # 1. Try Squads DB First
         if not self.squads_df.empty:
@@ -82,6 +103,24 @@ class PlayerEngine:
         return sorted(list(squad))
 
     def compare_squads(self, team_a_name, team_a_players, team_b_name, team_b_players, venue_id, years=None, recorder=None):
+        """
+        Generates a comprehensive Squad Comparison Dashboard.
+
+        Includes:
+        1. **Squad Experience**: Caps, Runs, Wickets comparison.
+        2. **Detailed Player Stats**: Recent Form (Bat/Bowl), Venue History, Head-to-Head stats.
+        3. **Tactical Matrix**: How batters perform against specific bowling types (using `analyze_squad_types`).
+        4. **Key Matchups**: Specific Batter vs Bowler history.
+
+        Args:
+            team_a_name (str): Home/Primary Team Name.
+            team_a_players (list): List of Player Names for Team A.
+            team_b_name (str): Away/Secondary Team Name.
+            team_b_players (list): List of Player Names for Team B.
+            venue_id (str): Venue ID for statistics.
+            years (int): Lookback period.
+            recorder (SnapshotRecorder, optional): For AI logging.
+        """
         # 🎨 COLORS
         c1 = TEAM_COLORS.get(team_a_name, "#333")
         c2 = TEAM_COLORS.get(team_b_name, "#333")
@@ -386,7 +425,19 @@ class PlayerEngine:
         """
         Generates a 'Tactical Breakdown' of how batters perform against
         the SPECIFIC bowling types present in the opposition's squad.
-        UPDATED: Smartly ignores pure batters to prevent false warnings.
+        
+        Process:
+        1. Identifies Bowling Styles of the opposition players.
+        2. Filters match data for the batting team vs those styles.
+        3. Computes Average, Strike Rate, and Dismissals per style.
+        4. Renders a color-coded matrix (Red=Struggle, Green=Dominant).
+
+        Args:
+            team_name (str): The batting team.
+            players (list): The list of batters.
+            opposition_bowlers (list): The list of opposition bowlers.
+            years (int): Lookback period.
+            recorder (SnapshotRecorder, optional): For AI logging.
         """
         
         # 📅 DYNAMIC DATE FILTER
@@ -549,6 +600,18 @@ class PlayerEngine:
     # --- HELPERS ---
 
     def _calculate_squad_metrics(self, team, players, years=None):
+        """
+        Internal Helper: Computes aggregated stats for a list of players.
+        Used by the Squad Comparison header.
+
+        Args:
+            team (str): Team Name.
+            players (list): List of players.
+            years (int): Lookback period.
+
+        Returns:
+            dict: Aggregated metrics (Caps, Runs, Wickets, 100s, 50s, 5Ws).
+        """
         # 📅 DYNAMIC DATE FILTER
         cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
         
@@ -572,6 +635,24 @@ class PlayerEngine:
         return {'Caps (Combined)': caps, 'Total Runs': tr, '100s': c, '50s': f, 'Total Wickets': tw, '5-Wkt Hauls': fw}
 
     def _get_stats(self, player, opp, venue_pattern, years=None):
+        """
+        Internal Helper: Fetches comprehensive stats for a single player.
+        
+        Generates:
+        - Batting Form (Last 5)
+        - Bowling Form (Last 5)
+        - Venue Stats (Avg, Strike Rate, Wickets)
+        - Head-to-Head Stats vs Opponent
+
+        Args:
+            player (str): Player Name.
+            opp (str): Opposition Team Name.
+            venue_pattern (str): Regex pattern for venue matching.
+            years (int): Lookback.
+
+        Returns:
+            dict: Dictionary of stats for the pro table row.
+        """
         # 1. SETUP & DATE FILTER
         cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
         
@@ -738,6 +819,16 @@ class PlayerEngine:
         }
 
     def _display_batter_vs_bowlers(self, batter, bat_team, bowlers, recorder=None):
+        """
+        Internal Helper: Renders the 'Head-to-Head Matchups' table for a specific batter.
+        Shows performance against specific opposition bowlers.
+
+        Args:
+            batter (str): Batter Name.
+            bat_team (str): Batting Team.
+            bowlers (list): List of Opposition Bowlers.
+            recorder (SnapshotRecorder, optional): For AI logging.
+        """
         # LIVE RAW DATA CALCULATION
         batter_df = self.raw_df[
             (self.raw_df['striker'] == batter) & 
@@ -794,10 +885,24 @@ class PlayerEngine:
     def analyze_player_profile(self, player_name, opposition=None, venue_id=None, active_bowlers=None, years=10):
         """
         Generates a Context-Aware Player Dashboard.
-        FIXED:
+        
+        Features:
+        - **Global Career Stats**: Batting/Bowling summary.
+        - **Head-to-Head**: Detailed breakdown vs specific Team.
+        - **Venue History**: Performance at the specific stadium.
+        - **Matchups**: H2H vs active bowlers (if provided).
+        
+        Refinements:
         1. Aggregates 'vs Opposition' stats into one clean row.
         2. Filters 'H2H Nightmares' to ONLY show bowlers in the selected active squad.
         3. Accepts 'years' parameter for Venue Stats filtering.
+
+        Args:
+            player_name (str): The player to analyze.
+            opposition (str, optional): Opposition Team Name.
+            venue_id (str, optional): Venue ID.
+            active_bowlers (list, optional): List of active opposition bowlers for matchups.
+            years (int): Lookback period.
         """
         import numpy as np
         

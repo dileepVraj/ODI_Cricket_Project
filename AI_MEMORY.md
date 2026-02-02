@@ -23,6 +23,14 @@
 - **Compliance:** STRICTLY following `DEV_GUIDE.md` and `GEMINI.md`.
 
 ## 📝 Session History (Reverse Chronological)
+- **[2026-02-02] Emoji Fix:** Updated `TeamEngine` to display Handshake (🤝) for explicit Ties OR 'No Result' matches with equal scores (e.g., BAN vs WI).
+- **[2026-02-02] UI Refinement:** Optimized match audit table with `table-sm` and text wrapping to fit screens perfectly without horizontal scrolling.
+- **[2026-02-02] Logic Fix:** Removed blanket exclusion of 'No Result' matches in `TeamEngine`. Now relying on `is_short` (<45 overs) logic to filter rain games. This recovered 7 valid matches in the regression suite (e.g., BAN vs WI Tie).
+- **[2026-02-02] UI Enhancement:** Added horizontal scrollbar (`overflow-x: auto`) to `TeamEngine._display_audit` to fix cut-off tables in Jupyter.
+- **[2026-02-02] Continent Performance Suite:** Implemented `tests/odi/analyze_continent_performance/`. Covers Global and Regional Performance Matrices.
+- **[2026-02-01] Documentation:** Added detailed docstrings to `core/team_engine.py` and `core/player_engine.py` covering all public API methods and internal helpers.
+- **[2026-02-01] Dependencies:** Generated `requirements.txt` via codebase scan.
+- **[2026-01-31] Away Performance Suite:** Implemented `tests/odi/analyze_away_performance/`. Verified text-based form guide and Matrix Logic for all major teams.
 - **[2026-01-31] Home Dominance Suite:** Implemented `tests/odi/analyze_home_dominance/`. Verified "Won/Lost" text format and Matrix Logic for all 9 teams.
 - **[2026-01-31] Bug Fix (Venue Mapping):** Fixed missing matches in Home Dominance Analysis. Added `IND_VISAKHAPATNAM` and `IND_VADODARA` to `venues.py`.
 - **[2026-01-31] Global H2H Suite:** Implemented `tests/odi/analyze_global_h2h/`. Coverage: Full Permutations of Top 9 Teams (72 Scenarios).

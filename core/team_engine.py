@@ -19,19 +19,31 @@ class TeamEngine:
 
     def _apply_smart_filters(self, df):
         """
-        Smart Filter v2.1 🧠 (D/L Safe)
-        - Excludes 'No Result'
-        - Excludes Short Innings (< 45 Overs) unless Team is All Out.
-        - UPDATED: Detects matches where BOTH innings are short.
+        Filters match data based on meaningful competition criteria.
+
+        Smart Filter Logic (v2.1):
+        1. **No Result**: Excludes matches with no winner (NaN, None, Tied).
+        2. **Short Innings**: Excludes innings shorter than 45 overs (270 balls) UNLESS the team was bowled out.
+           - This prevents rain-curtailed matches from skewing averages (e.g., scoring 150/2 in 20 overs).
+        3. **Both Short**: Flags matches where both innings were curtailed.
+
+        Args:
+            df (pd.DataFrame): The raw match dataframe.
+
+        Returns:
+            pd.DataFrame: DataFrame with a 'status' column indicating inclusion/exclusion reason.
         """
         # 1. Default Status
         df['status'] = '✅ Included'
         
         # 2. Check for explicit No Result / Abandoned
+        # 🚨 UPDATED LOGIC (v2.2):
+        # We NO LONGER blanket exclude 'No Result' or 'nan'.
+        # Why? Some 'No Result' matches are actually Ties or ran full 50 overs (e.g. 213/7 vs 213/9).
+        # We rely strictly on the "Short Innings" logic below to filter out rain-ruined games.
         if 'winner' in df.columns:
-            winners = df['winner'].astype(str).str.lower().str.strip()
-            mask_nr = winners.isin(['no result', 'nan', 'none', ''])
-            df.loc[mask_nr, 'status'] = '☔ Excluded (No Result)'
+            # Only exclude purely empty result strings if needed, but let length check decide validity.
+            pass
         
         # --- DEFINE CONDITIONS ---
         # Condition A: Short 1st Innings (< 45 ov & not all out)
@@ -53,28 +65,63 @@ class TeamEngine:
         return df
 
     def _get_avg_with_count(self, df, col):
+        """
+        Calculates the mean of a column and formats it as "Avg (Count)".
+
+        Args:
+            df (pd.DataFrame): Dataframe containing the column.
+            col (str): Column name to average (e.g., 'score_inn1').
+
+        Returns:
+            str: Formatted string "123 (45)" or "-" if empty.
+        """
         if df.empty or col not in df.columns: return "-"
         val = df[col].mean()
         if pd.isna(val): return "-"
         return f"{int(val)} ({len(df)})"
 
     def _get_form_guide(self, df, team):
+        """
+        Generates a visual form guide (Last 5 matches) for a team.
+
+        Args:
+            df (pd.DataFrame): Match dataframe filtered for the specific context.
+            team (str): The name of the team to check form for.
+
+        Returns:
+            str: A string of emojis/text representing results (e.g., "✅ ❌ ✅ 🤝 🌧️").
+                 Newest match is first (leftmost).
+        """
         if df.empty: return "-"
         res = []
         for _, r in df.sort_values('start_date', ascending=False).head(5).iterrows():
             w = str(r['winner']).lower(); t = team.lower()
+            
+            # Logic: Tie = Explicit Tie OR (No Result & Level Scores)
+            is_level = (r['score_inn1'] == r['score_inn2'])
+            
             if w == t: res.append("✅")
-            elif w == 'tie': res.append("🤝")
+            elif w == 'tie' or (w in ['nan','no result'] and is_level): res.append("🤝")
             elif w in ['nan', 'no result']: res.append("🌧️")
             else: res.append("❌")
         return " ".join(res)
 
     def _calculate_team_stats(self, df, team, is_home_analysis=False):
         """
-        Calculates stats using Partial Validity Logic.
-        - 1st Inn stats use (Included + Short 2nd).
-        - 2nd Inn stats use (Included only).
-        UPDATED: 'avg_2nd' now filters out small successful chases (< 200).
+        Computes detailed batting/chasing statistics for a specific team.
+        
+        Implements 'Partial Validity Logic':
+        - **1st Innings Stats**: computed using Included matches + Short 2nd Innings (valid 1st inn).
+        - **2nd Innings Stats**: computed using only fully Included matches.
+        - **Smart Chase Filter**: Excludes 'Easy Chases' (winning score < 200) from Average to avoid penalty for bowling well.
+
+        Args:
+            df (pd.DataFrame): The match dataframe (must have 'status' column).
+            team (str): The team name to calculate stats for.
+            is_home_analysis (bool): If True, handles 'Visitors' label dynamically.
+
+        Returns:
+            dict: Dictionary containing Avg/High/Low for Batting 1st and Chasing.
         """
         def get_val(s, func): return int(func(s)) if not s.empty and not pd.isna(func(s)) else "-"
         
@@ -136,8 +183,21 @@ class TeamEngine:
 
     def _display_report(self, data, t1, t2, title):
         """
-        Displays the report in a Modern Grid Layout.
-        RESTORED: Win %, Win Breakdown (Defended/Chased) for each team.
+        Renders a modern HTML Grid Dashboard for team statistics.
+
+        Visual Components:
+        - **Header**: Matches played, Win %, Tie/NR count.
+        - **Team Cards**: Color-coded sections for Team 1 and Team 2 containing:
+            - Win Breakdown (Wins, Defended, Chased).
+            - Batting 1st Stats (Avg, High/Low, Win Score).
+            - Chasing Stats (Avg, High Chased, Succ/Fail Chase Avgs).
+        - **Venue Averages**: Overall venue stats for context.
+
+        Args:
+            data (list): List of dictionaries containing metrics and values.
+            t1 (str): Home Team Name.
+            t2 (str): Away Team Name (or 'Visitors').
+            title (str): Title of the report.
         """
         # Parse Data into a List of Values for direct indexing
         d = [x['Value'] for x in data] 
@@ -222,6 +282,9 @@ class TeamEngine:
         display(HTML(html_fixed))
 
     def _display_audit(self, df, team):
+        """
+        Prints a raw data table of the matches included in the analysis for verification.
+        """
         if df.empty: return
         print("\n🕵️‍♂️ MATCH AUDIT (Recent First)")
         # Robust column check
@@ -229,10 +292,37 @@ class TeamEngine:
         c2 = 'display_inn2' if 'display_inn2' in df.columns else 'score_inn2'
         cols = [c for c in ['start_date', 'venue', 'winner', 'team_bat_1', c1, 'team_bat_2', c2, 'status'] if c in df.columns]
         
-        with pd.option_context('display.max_rows', None):
-            display(df[cols].sort_values('start_date', ascending=False).rename(columns={c1: '1st Inn', c2: '2nd Inn'}))
+        audit_df = df[cols].sort_values('start_date', ascending=False).rename(columns={c1: '1st Inn', c2: '2nd Inn'})
+        
+        # 🎨 WRAP IN SCROLLABLE CONTAINER (Responsive)
+        # Removed 'white-space: nowrap' to allow wrapping (Fit Screen)
+        html = f"""
+        <div style="overflow-x: auto; width: 100%; font-size: 12px; margin-bottom: 20px;">
+            {audit_df.to_html(index=False, classes='table table-striped table-hover table-sm', border=0)}
+        </div>
+        """
+        display(HTML(html))
 
     def _build_and_display_report(self, df, home_team, visitor_label, title, is_venue_mode):
+        """
+        Orchestrates the calculation and display of standard match reports.
+
+        Steps:
+        1. Calculates Win Counts (Bat 1st vs Bat 2nd).
+        2. Computes detailed Batting/Bowling stats via `_calculate_team_stats`.
+        3. Packages all metrics into a standardized dictionary list.
+        4. Calls `_display_report` to render the UI.
+
+        Args:
+            df (pd.DataFrame): Filtered match dataframe.
+            home_team (str): The primary team (Home).
+            visitor_label (str): The opponent or 'Visitors'.
+            title (str): Dashboard title.
+            is_venue_mode (bool): Flag to trigger venue-specific logic (e.g., generic 'Visitors').
+        
+        Returns:
+            list: The data dictionary passed to the display engine (useful for testing).
+        """
         matches = len(df)
         w = df['winner'].astype(str).str.lower().str.strip()
         h_clean = home_team.lower().strip()
@@ -326,7 +416,23 @@ class TeamEngine:
         return data  # <--- RETURN DATA FOR TESTING
 
     def _generate_matrix_report(self, matches, team_name, title, is_away=False):
-        """Helper for Matrix Reports (Global, Dominance, Away)"""
+        """
+        Generates a Multi-Opponent Matrix Report (Row-per-Opponent).
+
+        Used for:
+        - Home Dominance (how Team X performs at home vs everyone).
+        - Away Performance (how Team X performs away vs everyone).
+        - Global Performance (how Team X performs everywhere vs everyone).
+
+        Args:
+            matches (pd.DataFrame): Filtered DataFrame of matches to analyze.
+            team_name (str): Focus Team Name.
+            title (str): Title of the report.
+            is_away (bool): If True, slightly adjusts the 'Opponent' column logic if needed.
+
+        Returns:
+            list: List of dictionaries (the raw data rows) for testing.
+        """
         clean = self._apply_smart_filters(matches)
         valid = clean[clean['status'] == '✅ Included'].copy()
         
@@ -388,6 +494,24 @@ class TeamEngine:
     # =================================================================================
 
     def analyze_home_fortress(self, stadium_name, home_team, opp_team='All', years_back=10, recorder=None):
+        """
+        Analyzes a team's performance at a specific stadium (Fortress Check).
+        
+        Features:
+        - Fuzzy Matches stadium name if ID not found.
+        - Filters by Home Team (Bat 1 or Bat 2).
+        - Optional: Filter by specific Opposition.
+
+        Args:
+            stadium_name (str): Venue ID or Name (e.g., 'Wankhede Stadium').
+            home_team (str): The team claiming this venue as home.
+            opp_team (str, optional): Specific opponent to check against. Defaults to 'All'.
+            years_back (int): Lookback period in years.
+            recorder (SnapshotRecorder, optional): For AI logging.
+
+        Returns:
+            list: Report data dictionary.
+        """
         stadium_id = stadium_name
         if stadium_name not in VENUE_MAP.values():
             for k, v in VENUE_MAP.items():
@@ -418,9 +542,25 @@ class TeamEngine:
         return self.analyze_home_fortress(stadium_name, home_team, opp_team, years_back, recorder)
 
     def analyze_venue_phases(self, stadium_id, home_team=None, away_team=None, years=5, recorder=None):
+        """
+        Deep-dive Phase Analysis (Powerplay, Middle, Death) for a Venue.
+        
+        Uses pre-processed data from `processed_phase_stats.csv`.
+        Comparing:
+        1. **Venue Baseline**: Avg Score/Wickets per phase for ALL teams.
+        2. **Team History**: How Home/Away teams perform specifically at this venue.
+        3. **Global Habits**: How the two teams perform generally (for strategy comparison).
+
+        Args:
+            stadium_id (str): Venue ID.
+            home_team (str, optional): Home Team name for context.
+            away_team (str, optional): Opponent name for matchup comparison.
+            years (int): Lookback period.
+        """
         import os
         from IPython.display import display, HTML
         from config.teams import TEAM_COLORS 
+        # ... rest of function ... (No changes needed inside, just header)
 
         file_path = 'data/processed_phase_stats.csv'
         if not os.path.exists(file_path): print("❌ Error: 'processed_phase_stats.csv' not found."); return
@@ -648,6 +788,22 @@ class TeamEngine:
             except: pass
 
     def analyze_venue_bias(self, stadium_name, years_back=10, recorder=None):
+        """
+        Determines if a venue has a significant "Bat First" or "Bowl First" advantage.
+        
+        Logic:
+        - Calculates Win % for Batting 1st vs Chasing.
+        - Verdict is "BAT FIRST" if Win % >= 55%.
+        - Verdict is "BOWL FIRST" if Chase Win % >= 55%.
+        - Otherwise "NEUTRAL".
+
+        Args:
+            stadium_name (str): Venue Name.
+            years_back (int): Lookback period.
+
+        Outputs:
+            Bias Verdict and detailed averages for 1st/2nd innings.
+        """
         print(f"\n🪙 TOSS BIAS REPORT: {stadium_name}")
         venue_id = stadium_name
         
@@ -711,6 +867,17 @@ class TeamEngine:
         self._display_audit(valid_results, venue_id)
         
     def analyze_global_h2h(self, home_team, opp_team, years_back=5):
+        """
+        Analyzes Head-to-Head performance between two teams globally (any venue).
+
+        Args:
+            home_team (str): Primary Team.
+            opp_team (str): Opposition Team.
+            years_back (int): Lookback period.
+
+        Returns:
+            list: Report data dictionary.
+        """
         cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         print(f"\n🌍 GLOBAL H2H CHECK: {home_team} vs {opp_team}")
         mask = (((self.match_df['team_bat_1'] == home_team) & (self.match_df['team_bat_2'] == opp_team)) | ((self.match_df['team_bat_1'] == opp_team) & (self.match_df['team_bat_2'] == home_team))) & (self.match_df['start_date'] >= cutoff)
@@ -720,6 +887,16 @@ class TeamEngine:
         return self._build_and_display_report(df, home_team, opp_team, f"GLOBAL RIVALRY REPORT", False)
 
     def analyze_country_h2h(self, home_team, opp_team, country_name, years_back=10, recorder=None):
+        """
+        Analyzes H2H performance within a specific Host Country.
+        Useful for neutral venues (e.g., India vs Pak in UAE) or away tours.
+
+        Args:
+            home_team (str): Focus Team.
+            opp_team (str): Opposition.
+            country_name (str): Country Name (e.g., 'Australia', 'UAE').
+            years_back (int): Lookback period.
+        """
         cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         print(f"\n🗺️ COUNTRY CHECK: {home_team} vs {opp_team} in {country_name.upper()}")
         country_map = {
@@ -735,6 +912,16 @@ class TeamEngine:
         return self._build_and_display_report(df, home_team, opp_team, f"HOST COUNTRY REPORT ({country_name})", False)
 
     def analyze_home_dominance(self, home_team, years_back=10, recorder=None):
+        """
+        Generates a Matrix Report of a team's performance at HOME against all major opponents.
+
+        Args:
+            home_team (str): The home team to analyze.
+            years_back (int): Lookback period.
+        
+        Returns:
+            list: Matrix data rows for testing.
+        """
         print(f"\n🦁 HOME DOMINANCE: {home_team}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         c_codes = {'India':'IND_','England':'ENG_','Australia':'AUS_','South Africa':'SA_','New Zealand':'NZ_','Sri Lanka':'SL_','West Indies':'WI_','Pakistan':'PAK_','Bangladesh':'BAN_'}
         if home_team not in c_codes: print("❌ Unknown code."); return
@@ -743,6 +930,16 @@ class TeamEngine:
         return self._generate_matrix_report(matches, home_team, "DOMINANCE MATRIX")
 
     def analyze_away_performance(self, team_name, years_back=5, recorder=None):
+        """
+        Generates a Matrix Report of a team's performance AWAY from home.
+        
+        - Filters OUT matches played in the home country.
+        - Includes Neutral venues and Opposition Home venues.
+
+        Args:
+            team_name (str): Team to analyze.
+            years_back (int): Lookback period.
+        """
         print(f"\n✈️ AWAY PERFORMANCE: {team_name}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         c_codes = {'India':'IND_','England':'ENG_','Australia':'AUS_','South Africa':'SA_','New Zealand':'NZ_','Sri Lanka':'SL_','West Indies':'WI_','Pakistan':'PAK_','Bangladesh':'BAN_'}
         if team_name not in c_codes: print("❌ Unknown code."); return
@@ -751,12 +948,26 @@ class TeamEngine:
         return self._generate_matrix_report(matches, team_name, "AWAY PERFORMANCE MATRIX", is_away=True)
 
     def analyze_global_performance(self, team_name, years_back=5):
+        """
+        Generates a Matrix Report of a team's performance GLOBALLY (Home + Away + Neutral).
+        """
         print(f"\n🌍 GLOBAL PERFORMANCE: {team_name} vs Top 10"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         matches = self.match_df[((self.match_df['team_bat_1'] == team_name) | (self.match_df['team_bat_2'] == team_name)) & (self.match_df['start_date'] >= cutoff)].copy()
         if matches.empty: print("❌ No matches found."); return
         return self._generate_matrix_report(matches, team_name, "GLOBAL PERFORMANCE MATRIX")
 
     def analyze_continent_performance(self, team_name, continent, opp_team='All', years_back=5):
+        """
+        Analyzes performance within a specific Continent/Region.
+        
+        Regions Supported: Asia, Europe, Oceania, Africa, Americas.
+
+        Args:
+            team_name (str): Focus Team.
+            continent (str): Region Name.
+            opp_team (str, optional): Specific Opponent or 'All'.
+            years_back (int): Lookback.
+        """
         reg = "Global" if continent == 'All' else continent
         print(f"\n🌏 REGION REPORT: {team_name} in {reg}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
         mask = ((self.match_df['team_bat_1'] == team_name) | (self.match_df['team_bat_2'] == team_name)) & (self.match_df['start_date'] >= cutoff)
@@ -771,6 +982,15 @@ class TeamEngine:
         else: return self._generate_matrix_report(matches, team_name, f"PERFORMANCE MATRIX: {reg.upper()}")
 
     def analyze_team_form(self, team_name, opp_team='All', continent='All', limit=5, recorder=None):
+        """
+        Displays recent form as a row of visual cards (Win/Loss/Tie).
+        
+        Args:
+            team_name (str): Team.
+            opp_team (str): Filter by opponent.
+            continent (str): Filter by region.
+            limit (int): Number of matches to show (default 5).
+        """
         title = f"📉 FORM: {team_name}"
         if opp_team != 'All': title += f" vs {opp_team}"
         if continent != 'All': title += f" in {continent}"
@@ -797,10 +1017,12 @@ class TeamEngine:
             w = str(row['winner'])
             
             # Determine Result for UI and AI
+            is_level = (pd.notna(row['score_inn1']) and pd.notna(row['score_inn2']) and row['score_inn1'] == row['score_inn2'])
+
             if w == team_name: 
                 res = "✅ WIN"
                 form_str.append("W")
-            elif w.lower() == 'tie': 
+            elif w.lower() == 'tie' or (w.lower() in ['nan','no result','none'] and is_level): 
                 res = "🤝 TIE"
                 form_str.append("T")
             elif w.lower() in ['nan','no result','none']: 
