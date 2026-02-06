@@ -1,0 +1,915 @@
+{
+    "Toss bias report": {
+        "Grounds in Australia": {
+            "AUS_ADELAIDE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 7,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "28% (2)",
+                "Win % Chasing": "71% (5)",
+                "Avg 1st innings score": "258 (7)",
+                "Avg 2nd innings score": "251 (7)"
+            },
+            "AUS_BRISBANE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (1)",
+                "Win % Chasing": "50% (1)",
+                "Avg 1st innings score": "269 (2)",
+                "Avg 2nd innings score": "225 (2)"
+            },
+            "AUS_CAIRNS": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "75% (3)",
+                "Win % Chasing": "25% (1)",
+                "Avg 1st innings score": "247 (4)",
+                "Avg 2nd innings score": "188 (4)"
+            },
+            "AUS_CANBERRA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 3,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "66% (2)",
+                "Win % Chasing": "33% (1)",
+                "Avg 1st innings score": "255 (3)",
+                "Avg 2nd innings score": "212 (3)"
+            },
+            "AUS_HOBART": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 1,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "100% (1)",
+                "Win % Chasing": "0% (0)",
+                "Avg 1st innings score": "320 (1)",
+                "Avg 2nd innings score": "280 (1)"
+            },
+            "AUS_MACKAY": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "100% (2)",
+                "Win % Chasing": "0% (0)",
+                "Avg 1st innings score": "354 (2)",
+                "Avg 2nd innings score": "174 (2)"
+            },
+            "AUS_MELBOURNE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 7,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "28% (2)",
+                "Win % Chasing": "71% (5)",
+                "Avg 1st innings score": "258 (7)",
+                "Avg 2nd innings score": "212 (7)"
+            },
+            "AUS_PERTH_OPTUS": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "25% (1)",
+                "Win % Chasing": "75% (3)",
+                "Avg 1st innings score": "183 (3)",
+                "Avg 2nd innings score": "181 (3)"
+            },
+            "AUS_PERTH_WACA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 1,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (1)",
+                "Avg 1st innings score": "263 (1)",
+                "Avg 2nd innings score": "265 (1)"
+            },
+            "AUS_SYDNEY": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 10,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "90% (9)",
+                "Win % Chasing": "10% (1)",
+                "Avg 1st innings score": "306 (10)",
+                "Avg 2nd innings score": "251 (10)"
+            },
+            "AUS_TOWNSVILLE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 3,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (3)",
+                "Avg 1st innings score": "145 (3)",
+                "Avg 2nd innings score": "147 (3)"
+            }
+        },
+        "Grounds in Bangladesh": {
+            "BAN_CHATTOGRAM": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 9,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (3)",
+                "Win % Chasing": "66% (6)",
+                "Avg 1st innings score": "281 (9)",
+                "Avg 2nd innings score": "239 (9)"
+            },
+            "BAN_DHAKA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 25,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "55% (15)",
+                "Win % Chasing": "37% (10)",
+                "Avg 1st innings score": "228 (24)",
+                "Avg 2nd innings score": "189 (24)"
+            },
+            "BAN_SYLHET": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 6,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "57% (4)",
+                "Win % Chasing": "28% (2)",
+                "Avg 1st innings score": "256 (5)",
+                "Avg 2nd innings score": "185 (5)"
+            }
+        },
+        "Grounds in England": {
+            "ENG_BIRMINGHAM": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 12,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "30% (4)",
+                "Win % Chasing": "61% (8)",
+                "Avg 1st innings score": "289 (9)",
+                "Avg 2nd innings score": "257 (9)"
+            },
+            "ENG_BRISTOL": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "14% (1)",
+                "Win % Chasing": "42% (3)",
+                "Avg 1st innings score": "284 (3)",
+                "Avg 2nd innings score": "243 (3)"
+            },
+            "ENG_CARDIFF": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 12,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (4)",
+                "Win % Chasing": "66% (8)",
+                "Avg 1st innings score": "271 (12)",
+                "Avg 2nd innings score": "243 (12)"
+            },
+            "ENG_CHELMSFORD": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "33% (1)",
+                "Win % Chasing": "33% (1)",
+                "Avg 1st innings score": "296 (2)",
+                "Avg 2nd innings score": "294 (2)"
+            },
+            "ENG_DERBY": "Insufficient Data",
+            "ENG_DURHAM": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 7,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "42% (3)",
+                "Win % Chasing": "57% (4)",
+                "Avg 1st innings score": "279 (6)",
+                "Avg 2nd innings score": "246 (6)"
+            },
+            "ENG_LEEDS": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 8,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "44% (4)",
+                "Win % Chasing": "44% (4)",
+                "Avg 1st innings score": "261 (8)",
+                "Avg 2nd innings score": "236 (8)"
+            },
+            "ENG_LONDON_LORDS": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 13,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "78% (11)",
+                "Win % Chasing": "14% (2)",
+                "Avg 1st innings score": "272 (12)",
+                "Avg 2nd innings score": "221 (12)"
+            },
+            "ENG_LONDON_OVAL": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 17,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "36% (7)",
+                "Win % Chasing": "52% (10)",
+                "Avg 1st innings score": "282 (14)",
+                "Avg 2nd innings score": "233 (14)"
+            },
+            "ENG_MANCHESTER": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 12,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "66% (8)",
+                "Win % Chasing": "33% (4)",
+                "Avg 1st innings score": "261 (10)",
+                "Avg 2nd innings score": "230 (10)"
+            },
+            "ENG_NORTHAMPTON": "Insufficient Data",
+            "ENG_NOTTINGHAM": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 10,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (6)",
+                "Win % Chasing": "33% (4)",
+                "Avg 1st innings score": "326 (11)",
+                "Avg 2nd innings score": "278 (11)"
+            },
+            "ENG_SOUTHAMPTON": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 11,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (4)",
+                "Win % Chasing": "58% (7)",
+                "Avg 1st innings score": "267 (8)",
+                "Avg 2nd innings score": "268 (8)"
+            },
+            "ENG_TAUNTON": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (1)",
+                "Win % Chasing": "50% (1)",
+                "Avg 1st innings score": "314 (2)",
+                "Avg 2nd innings score": "294 (2)"
+            }
+        },
+        "Grounds in India": {
+            "IND_AHMEDABAD": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 8,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (4)",
+                "Win % Chasing": "50% (4)",
+                "Avg 1st innings score": "254 (8)",
+                "Avg 2nd innings score": "215 (8)"
+            },
+            "IND_BANGALORE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 7,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "42% (3)",
+                "Win % Chasing": "57% (4)",
+                "Avg 1st innings score": "287 (6)",
+                "Avg 2nd innings score": "248 (6)"
+            },
+            "IND_CHENNAI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 6,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (2)",
+                "Win % Chasing": "66% (4)",
+                "Avg 1st innings score": "254 (5)",
+                "Avg 2nd innings score": "251 (5)"
+            },
+            "IND_CUTTACK": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 3,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (1)",
+                "Win % Chasing": "66% (2)",
+                "Avg 1st innings score": "333 (3)",
+                "Avg 2nd innings score": "330 (3)"
+            },
+            "IND_DELHI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 6,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "66% (4)",
+                "Win % Chasing": "33% (2)",
+                "Avg 1st innings score": "286 (6)",
+                "Avg 2nd innings score": "212 (6)"
+            },
+            "IND_DHARAMSALA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 6,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (3)",
+                "Win % Chasing": "50% (3)",
+                "Avg 1st innings score": "265 (5)",
+                "Avg 2nd innings score": "238 (5)"
+            },
+            "IND_GUWAHATI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (1)",
+                "Win % Chasing": "50% (1)",
+                "Avg 1st innings score": "347 (2)",
+                "Avg 2nd innings score": "316 (2)"
+            },
+            "IND_HYDERABAD": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 5,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "60% (3)",
+                "Win % Chasing": "40% (2)",
+                "Avg 1st innings score": "307 (5)",
+                "Avg 2nd innings score": "270 (5)"
+            },
+            "IND_INDORE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "75% (3)",
+                "Win % Chasing": "25% (1)",
+                "Avg 1st innings score": "353 (4)",
+                "Avg 2nd innings score": "275 (4)"
+            },
+            "IND_JAIPUR": "Insufficient Data",
+            "IND_KANPUR": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 1,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "100% (1)",
+                "Win % Chasing": "0% (0)",
+                "Avg 1st innings score": "337 (1)",
+                "Avg 2nd innings score": "331 (1)"
+            },
+            "IND_KOLKATA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 8,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "62% (5)",
+                "Win % Chasing": "37% (3)",
+                "Avg 1st innings score": "262 (8)",
+                "Avg 2nd innings score": "203 (8)"
+            },
+            "IND_LUCKNOW": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 5,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "60% (3)",
+                "Win % Chasing": "40% (2)",
+                "Avg 1st innings score": "252 (4)",
+                "Avg 2nd innings score": "196 (4)"
+            },
+            "IND_MOHALI(I.S BINDRA)": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "25% (1)",
+                "Win % Chasing": "75% (3)",
+                "Avg 1st innings score": "327 (4)",
+                "Avg 2nd innings score": "295 (4)"
+            },
+            "IND_MUMBAI_BRABOURNE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 1,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "100% (1)",
+                "Win % Chasing": "0% (0)",
+                "Avg 1st innings score": "377 (1)",
+                "Avg 2nd innings score": "153 (1)"
+            },
+            "IND_MUMBAI_WANKHEDE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 7,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "57% (4)",
+                "Win % Chasing": "42% (3)",
+                "Avg 1st innings score": "309 (6)",
+                "Avg 2nd innings score": "224 (6)"
+            },
+            "IND_NAGPUR": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 3,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (1)",
+                "Win % Chasing": "66% (2)",
+                "Avg 1st innings score": "246 (3)",
+                "Avg 2nd innings score": "245 (3)"
+            },
+            "IND_PUNE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 10,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (5)",
+                "Win % Chasing": "50% (5)",
+                "Avg 1st innings score": "310 (10)",
+                "Avg 2nd innings score": "265 (10)"
+            },
+            "IND_RAIPUR": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (2)",
+                "Avg 1st innings score": "233 (2)",
+                "Avg 2nd innings score": "236 (2)"
+            },
+            "IND_RAJKOT": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 3,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "66% (2)",
+                "Win % Chasing": "33% (1)",
+                "Avg 1st innings score": "325 (3)",
+                "Avg 2nd innings score": "292 (3)"
+            },
+            "IND_RANCHI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "75% (3)",
+                "Win % Chasing": "25% (1)",
+                "Avg 1st innings score": "300 (4)",
+                "Avg 2nd innings score": "284 (4)"
+            },
+            "IND_TRIVANDRUM": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (1)",
+                "Win % Chasing": "50% (1)",
+                "Avg 1st innings score": "104 (1)",
+                "Avg 2nd innings score": "105 (1)"
+            },
+            "IND_VADODARA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 1,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (1)",
+                "Avg 1st innings score": "300 (1)",
+                "Avg 2nd innings score": "306 (1)"
+            },
+            "IND_VISAKHAPATNAM": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 5,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "33% (2)",
+                "Win % Chasing": "50% (3)",
+                "Avg 1st innings score": "263 (6)",
+                "Avg 2nd innings score": "215 (6)"
+            }
+        },
+        "Grounds in Ireland": {
+            "IRE_BELFAST": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "40% (2)",
+                "Win % Chasing": "40% (2)",
+                "Avg 1st innings score": "232 (3)",
+                "Avg 2nd innings score": "218 (3)"
+            },
+            "IRE_BREADY": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 1,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (1)",
+                "Avg 1st innings score": "254 (1)",
+                "Avg 2nd innings score": "258 (1)"
+            },
+            "IRE_DUBLIN": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 21,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "41% (10)",
+                "Win % Chasing": "45% (11)",
+                "Avg 1st innings score": "293 (19)",
+                "Avg 2nd innings score": "238 (19)"
+            }
+        },
+        "Grounds in New Zealand": {
+            "NZ_AUCKLAND": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 6,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "66% (4)",
+                "Win % Chasing": "33% (2)",
+                "Avg 1st innings score": "263 (6)",
+                "Avg 2nd innings score": "202 (6)"
+            },
+            "NZ_CHRISTCHURCH": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 8,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "55% (5)",
+                "Win % Chasing": "33% (3)",
+                "Avg 1st innings score": "277 (7)",
+                "Avg 2nd innings score": "237 (7)"
+            },
+            "NZ_DUNEDIN": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 5,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "60% (3)",
+                "Win % Chasing": "40% (2)",
+                "Avg 1st innings score": "263 (4)",
+                "Avg 2nd innings score": "196 (4)"
+            },
+            "NZ_HAMILTON": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 15,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "37% (6)",
+                "Win % Chasing": "56% (9)",
+                "Avg 1st innings score": "244 (13)",
+                "Avg 2nd innings score": "214 (13)"
+            },
+            "NZ_MT_MAUNGANUI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 9,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "44% (4)",
+                "Win % Chasing": "55% (5)",
+                "Avg 1st innings score": "275 (8)",
+                "Avg 2nd innings score": "257 (8)"
+            },
+            "NZ_NAPIER": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 5,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "20% (1)",
+                "Win % Chasing": "80% (4)",
+                "Avg 1st innings score": "224 (3)",
+                "Avg 2nd innings score": "201 (3)"
+            },
+            "NZ_NELSON": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 5,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "40% (2)",
+                "Win % Chasing": "60% (3)",
+                "Avg 1st innings score": "285 (4)",
+                "Avg 2nd innings score": "242 (4)"
+            },
+            "NZ_WELLINGTON": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 5,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "60% (3)",
+                "Win % Chasing": "40% (2)",
+                "Avg 1st innings score": "252 (5)",
+                "Avg 2nd innings score": "213 (5)"
+            },
+            "NZ_WELLINGTON_BASIN": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "75% (3)",
+                "Win % Chasing": "25% (1)",
+                "Avg 1st innings score": "255 (3)",
+                "Avg 2nd innings score": "196 (3)"
+            },
+            "NZ_WHANGAREI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 1,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (1)",
+                "Avg 1st innings score": "248 (1)",
+                "Avg 2nd innings score": "249 (1)"
+            }
+        },
+        "Grounds in Pakistan": {
+            "PAK_FAISALABAD": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 3,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (3)",
+                "Avg 1st innings score": "225 (3)",
+                "Avg 2nd innings score": "226 (3)"
+            },
+            "PAK_KARACHI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 12,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (6)",
+                "Win % Chasing": "50% (6)",
+                "Avg 1st innings score": "284 (12)",
+                "Avg 2nd innings score": "253 (12)"
+            },
+            "PAK_LAHORE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 8,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "37% (3)",
+                "Win % Chasing": "62% (5)",
+                "Avg 1st innings score": "301 (8)",
+                "Avg 2nd innings score": "276 (8)"
+            },
+            "PAK_MULTAN": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "75% (3)",
+                "Win % Chasing": "25% (1)",
+                "Avg 1st innings score": "297 (4)",
+                "Avg 2nd innings score": "195 (4)"
+            },
+            "PAK_RAWALPINDI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 8,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "22% (2)",
+                "Win % Chasing": "66% (6)",
+                "Avg 1st innings score": "269 (9)",
+                "Avg 2nd innings score": "267 (9)"
+            }
+        },
+        "Grounds in South Africa": {
+            "SA_BLOEMFONTEIN": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 6,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (3)",
+                "Win % Chasing": "50% (3)",
+                "Avg 1st innings score": "287 (6)",
+                "Avg 2nd innings score": "244 (6)"
+            },
+            "SA_CAPETOWN": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 9,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "55% (5)",
+                "Win % Chasing": "44% (4)",
+                "Avg 1st innings score": "293 (8)",
+                "Avg 2nd innings score": "258 (8)"
+            },
+            "SA_CENTURION": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 12,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "38% (5)",
+                "Win % Chasing": "53% (7)",
+                "Avg 1st innings score": "276 (11)",
+                "Avg 2nd innings score": "238 (11)"
+            },
+            "SA_DURBAN": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 5,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "33% (2)",
+                "Win % Chasing": "50% (3)",
+                "Avg 1st innings score": "287 (4)",
+                "Avg 2nd innings score": "258 (4)"
+            },
+            "SA_EAST_LONDON": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "100% (2)",
+                "Win % Chasing": "0% (0)",
+                "Avg 1st innings score": "352 (2)",
+                "Avg 2nd innings score": "228 (2)"
+            },
+            "SA_GQEBERHA(Port.Elz)": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 7,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "14% (1)",
+                "Win % Chasing": "85% (6)",
+                "Avg 1st innings score": "221 (7)",
+                "Avg 2nd innings score": "212 (7)"
+            },
+            "SA_JOHANNESBURG": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 33,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (17)",
+                "Win % Chasing": "47% (16)",
+                "Avg 1st innings score": "230 (32)",
+                "Avg 2nd innings score": "192 (32)"
+            },
+            "SA_KIMBERLEY": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 3,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (1)",
+                "Win % Chasing": "66% (2)",
+                "Avg 1st innings score": "247 (3)",
+                "Avg 2nd innings score": "229 (3)"
+            },
+            "SA_PAARL": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 7,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "57% (4)",
+                "Win % Chasing": "42% (3)",
+                "Avg 1st innings score": "284 (7)",
+                "Avg 2nd innings score": "244 (7)"
+            },
+            "SA_POTCHEFSTROOM": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 3,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (1)",
+                "Win % Chasing": "66% (2)",
+                "Avg 1st innings score": "284 (3)",
+                "Avg 2nd innings score": "249 (3)"
+            }
+        },
+        "Grounds in Sri Lanka": {
+            "SL_COLOMBO_RPS": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 35,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "59% (22)",
+                "Win % Chasing": "35% (13)",
+                "Avg 1st innings score": "247 (33)",
+                "Avg 2nd innings score": "205 (33)"
+            },
+            "SL_COLOMBO_SSC": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (1)",
+                "Win % Chasing": "50% (1)",
+                "Avg 1st innings score": "284 (2)",
+                "Avg 2nd innings score": "250 (2)"
+            },
+            "SL_DAMBULLA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 8,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "30% (3)",
+                "Win % Chasing": "50% (5)",
+                "Avg 1st innings score": "235 (6)",
+                "Avg 2nd innings score": "223 (6)"
+            },
+            "SL_GALLE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (2)",
+                "Avg 1st innings score": "235 (2)",
+                "Avg 2nd innings score": "240 (2)"
+            },
+            "SL_HAMBANTOTA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "25% (1)",
+                "Win % Chasing": "75% (3)",
+                "Avg 1st innings score": "286 (3)",
+                "Avg 2nd innings score": "233 (3)"
+            },
+            "SL_PALLEKELE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 20,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "31% (7)",
+                "Win % Chasing": "59% (13)",
+                "Avg 1st innings score": "250 (12)",
+                "Avg 2nd innings score": "216 (12)"
+            }
+        },
+        "Grounds in UAE": {
+            "UAE_ABU_DHABI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 12,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "66% (8)",
+                "Win % Chasing": "33% (4)",
+                "Avg 1st innings score": "241 (12)",
+                "Avg 2nd innings score": "194 (12)"
+            },
+            "UAE_DUBAI": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 43,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "40% (18)",
+                "Win % Chasing": "56% (25)",
+                "Avg 1st innings score": "218 (43)",
+                "Avg 2nd innings score": "185 (43)"
+            },
+            "UAE_SHARJAH": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 15,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (5)",
+                "Win % Chasing": "66% (10)",
+                "Avg 1st innings score": "242 (15)",
+                "Avg 2nd innings score": "222 (15)"
+            }
+        },
+        "Grounds in West Indies": {
+            "WI_ANTIGUA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 11,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "27% (3)",
+                "Win % Chasing": "72% (8)",
+                "Avg 1st innings score": "259 (10)",
+                "Avg 2nd innings score": "246 (10)"
+            },
+            "WI_BARBADOS": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 18,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "31% (6)",
+                "Win % Chasing": "63% (12)",
+                "Avg 1st innings score": "240 (17)",
+                "Avg 2nd innings score": "210 (17)"
+            },
+            "WI_DOMINICA": "Insufficient Data",
+            "WI_GRENADA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 2,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (1)",
+                "Win % Chasing": "50% (1)",
+                "Avg 1st innings score": "418 (1)",
+                "Avg 2nd innings score": "389 (1)"
+            },
+            "WI_GUYANA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 11,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "33% (4)",
+                "Win % Chasing": "58% (7)",
+                "Avg 1st innings score": "215 (10)",
+                "Avg 2nd innings score": "199 (10)"
+            },
+            "WI_JAMAICA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "25% (1)",
+                "Win % Chasing": "75% (3)",
+                "Avg 1st innings score": "228 (3)",
+                "Avg 2nd innings score": "221 (3)"
+            },
+            "WI_ST_KITTS": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 7,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "42% (3)",
+                "Win % Chasing": "57% (4)",
+                "Avg 1st innings score": "291 (7)",
+                "Avg 2nd innings score": "265 (7)"
+            },
+            "WI_ST_LUCIA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 1,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "0% (0)",
+                "Win % Chasing": "100% (1)",
+                "Avg 1st innings score": "113 (1)",
+                "Avg 2nd innings score": "115 (1)"
+            },
+            "WI_TAROUBA": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 4,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (2)",
+                "Win % Chasing": "50% (2)",
+                "Avg 1st innings score": "308 (3)",
+                "Avg 2nd innings score": "175 (3)"
+            },
+            "WI_TRINIDAD": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 6,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "57% (4)",
+                "Win % Chasing": "28% (2)",
+                "Avg 1st innings score": "299 (3)",
+                "Avg 2nd innings score": "275 (3)"
+            }
+        },
+        "Grounds in Zimbabwe": {
+            "ZIM_BULAWAYO": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 23,
+                "Bias Verdict": "Bat First",
+                "Win % Batting First": "57% (15)",
+                "Win % Chasing": "30% (8)",
+                "Avg 1st innings score": "254 (23)",
+                "Avg 2nd innings score": "199 (23)"
+            },
+            "ZIM_BULAWAYO_BAC": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 6,
+                "Bias Verdict": "Neutral",
+                "Win % Batting First": "50% (3)",
+                "Win % Chasing": "50% (3)",
+                "Avg 1st innings score": "258 (6)",
+                "Avg 2nd innings score": "205 (6)"
+            },
+            "ZIM_HARARE": {
+                "Period": "Last 10 years",
+                "Matches analyzed": 55,
+                "Bias Verdict": "Bat Second",
+                "Win % Batting First": "36% (21)",
+                "Win % Chasing": "58% (34)",
+                "Avg 1st innings score": "245 (48)",
+                "Avg 2nd innings score": "222 (48)"
+            },
+            "ZIM_HARARE_TAKASHINGA": "Insufficient Data"
+        }
+    }
+}

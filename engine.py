@@ -75,6 +75,15 @@ class CricketAnalyzer:
             self.raw_df.to_pickle(CACHE_PATH)
             
         print(f"   Raw Data: {len(self.raw_df)} balls loaded.")
+        
+        # 🚑 EMERGENCY FIX: Derive critical columns if missing
+        if 'bowling_team' not in self.raw_df.columns and 'team_bat_1' in self.raw_df.columns:
+            print("🔧 Deriving batting/bowling teams from match metadata...")
+            # Innings 1: Team 1 bats, Team 2 bowls
+            # Innings 2: Team 2 bats, Team 1 bowls
+            # Using numpy where for speed
+            self.raw_df['batting_team'] = np.where(self.raw_df['innings'] == 1, self.raw_df['team_bat_1'], self.raw_df['team_bat_2'])
+            self.raw_df['bowling_team'] = np.where(self.raw_df['innings'] == 1, self.raw_df['team_bat_2'], self.raw_df['team_bat_1'])
 
         # 2. Load Player Stats & Metadata & Squads
         try:
@@ -162,17 +171,36 @@ class CricketAnalyzer:
         
         # 🚨 ROBUST COLUMN SELECTION
         # Only select columns that definitely exist
-        cols = ['match_id', 'year', 'start_date', 'venue', 'batting_team', 'bowling_team', 'winner']
-        if 'season' in self.raw_df.columns: cols.append('season')
-        if 'method' in self.raw_df.columns: cols.append('method')
+        available_cols = self.raw_df.columns.tolist()
         
-        meta = self.raw_df.drop_duplicates(subset='match_id')[cols].copy()
+        # Define core targets and their fallback aliases
+        target_map = {
+            'match_id': ['match_id'],
+            'year': ['year'], 
+            'start_date': ['start_date'], 
+            'venue': ['venue'], 
+            'team_bat_1': ['batting_team', 'team_bat_1'], 
+            'team_bat_2': ['bowling_team', 'team_bat_2'], 
+            'winner': ['winner']
+        }
         
-        # Polyfill missing columns for downstream compatibility
-        if 'season' not in meta.columns: meta['season'] = meta['year']
-        if 'method' not in meta.columns: meta['method'] = np.nan
-            
-        meta.rename(columns={'batting_team': 'team_bat_1', 'bowling_team': 'team_bat_2'}, inplace=True)
+        selected_cols = []
+        rename_map = {}
+        
+        for target, aliases in target_map.items():
+            found = next((c for c in aliases if c in available_cols), None)
+            if found:
+                selected_cols.append(found)
+                if found != target:
+                    rename_map[found] = target
+        
+        if 'season' in available_cols: selected_cols.append('season')
+        if 'method' in available_cols: selected_cols.append('method')
+        
+        meta = self.raw_df.drop_duplicates(subset='match_id')[selected_cols].copy()
+        
+        if rename_map:
+            meta.rename(columns=rename_map, inplace=True)
         
         self.match_df = pd.merge(meta, scores, on='match_id', how='left')
         self.match_df = pd.merge(self.match_df, balls, on='match_id', how='left')

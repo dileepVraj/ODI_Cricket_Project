@@ -150,8 +150,19 @@ Sentiment Analysis: (Long Term) Scrape Twitter/News for "Player Morale" flags
     1.  Mark completed tasks as `[x]` in the "Active Tasks" list.
     2.  Add a bullet point to "Session History" explaining what files you changed.
     3.  If you changed the architecture (e.g., added a new function), update "Current Architecture State."
-    4.  *Crucial:* This allows future sessions to know what you did. Do not skip this.
+    4.  **Anti-Patterns (New):** If a bug was caused by a specific mistake (e.g., assuming a column exists), you MUST log it in the "Anti-Patterns & Lessons Learned" section.
+    5.  *Crucial:* This allows future sessions to know what you did and **what to avoid**. Do not skip this.
 
+
+### 7. The "Bug Post-Mortem" Rule
+* **Trigger:** Whenever identifying and fixing a logic or data-integrity bug.
+* **Rule:** You MUST create a formal documentation file in `docs/bug_fixes/`.
+* **Action:**
+    * Create a file: `docs/bug_fixes/YYYY-MM-DD_short_description.md`.
+    * Include: **Problem Statement**, **Root Cause**, **Implementation Fix**, and **Verification Results**.
+    * *Reason:* Ensures that subtle bugs (like date boundary issues) are understood by future agents and developers to prevent re-introduction.
+
+---
 
 ## 🔄 7. Operational Workflows & Data Maintenance
 

@@ -1809,25 +1809,25 @@
             "expected_output": [
                 {
                     "Opponent": "\u26a1 OVERALL",
-                    "Mat": 46,
+                    "Mat": 45,
                     "Won": 27,
-                    "Lost": 19,
+                    "Lost": 18,
                     "Tie/NR": 0,
-                    "Win %": "58%",
+                    "Win %": "60%",
                     "Last 5": "\u274c \u2705 \u2705 \u2705 \u274c",
                     "Australia Avg (1st)": "280 (26)",
-                    "Opp Avg (1st)": "258 (19)"
+                    "Opp Avg (1st)": "256 (18)"
                 },
                 {
                     "Opponent": "New Zealand",
-                    "Mat": 12,
+                    "Mat": 11,
                     "Won": 8,
-                    "Lost": 4,
+                    "Lost": 3,
                     "Tie/NR": 0,
-                    "Win %": "66%",
+                    "Win %": "72%",
                     "Last 5": "\u2705 \u2705 \u2705 \u2705 \u274c",
                     "Australia Avg (1st)": "281 (6)",
-                    "Opp Avg (1st)": "272 (6)"
+                    "Opp Avg (1st)": "265 (5)"
                 },
                 {
                     "Opponent": "India",
@@ -2002,25 +2002,14 @@
             "expected_output": [
                 {
                     "Opponent": "\u26a1 OVERALL",
-                    "Mat": 70,
-                    "Won": 48,
+                    "Mat": 69,
+                    "Won": 47,
                     "Lost": 20,
                     "Tie/NR": 2,
                     "Win %": "70%",
                     "Last 5": "\u2705 \u2705 \u2705 \u2705 \u2705",
-                    "New Zealand Avg (1st)": "276 (27)",
+                    "New Zealand Avg (1st)": "275 (26)",
                     "Opp Avg (1st)": "250 (32)"
-                },
-                {
-                    "Opponent": "Australia",
-                    "Mat": 12,
-                    "Won": 4,
-                    "Lost": 8,
-                    "Tie/NR": 0,
-                    "Win %": "33%",
-                    "Last 5": "\u274c \u274c \u274c \u274c \u2705",
-                    "New Zealand Avg (1st)": "272 (6)",
-                    "Opp Avg (1st)": "281 (6)"
                 },
                 {
                     "Opponent": "Bangladesh",
@@ -2043,6 +2032,17 @@
                     "Last 5": "\ud83c\udf27\ufe0f \ud83c\udf27\ufe0f \u2705 \u2705 \u2705",
                     "New Zealand Avg (1st)": "258 (2)",
                     "Opp Avg (1st)": "269 (6)"
+                },
+                {
+                    "Opponent": "Australia",
+                    "Mat": 11,
+                    "Won": 3,
+                    "Lost": 8,
+                    "Tie/NR": 0,
+                    "Win %": "27%",
+                    "Last 5": "\u274c \u274c \u274c \u274c \u2705",
+                    "New Zealand Avg (1st)": "265 (5)",
+                    "Opp Avg (1st)": "281 (6)"
                 },
                 {
                     "Opponent": "England",
@@ -2317,22 +2317,22 @@
             "expected_output": [
                 {
                     "Opponent": "\u26a1 OVERALL",
-                    "Mat": 11,
-                    "Won": 4,
+                    "Mat": 10,
+                    "Won": 3,
                     "Lost": 6,
                     "Tie/NR": 1,
-                    "Win %": "40%",
+                    "Win %": "33%",
                     "Last 5": "\u2705 \u274c \u274c \u2705 \ud83c\udf27\ufe0f",
                     "England Avg (1st)": "293 (6)",
                     "Opp Avg (1st)": "272 (3)"
                 },
                 {
                     "Opponent": "South Africa",
-                    "Mat": 11,
-                    "Won": 4,
+                    "Mat": 10,
+                    "Won": 3,
                     "Lost": 6,
                     "Tie/NR": 1,
-                    "Win %": "40%",
+                    "Win %": "33%",
                     "Last 5": "\u2705 \u274c \u274c \u2705 \ud83c\udf27\ufe0f",
                     "England Avg (1st)": "293 (6)",
                     "Opp Avg (1st)": "272 (3)"
@@ -2410,11 +2410,11 @@
             "expected_output": [
                 {
                     "Opponent": "\u26a1 OVERALL",
-                    "Mat": 65,
+                    "Mat": 64,
                     "Won": 41,
-                    "Lost": 23,
+                    "Lost": 22,
                     "Tie/NR": 1,
-                    "Win %": "64%",
+                    "Win %": "65%",
                     "Last 5": "\u274c \u274c \u274c \u274c \u2705",
                     "South Africa Avg (1st)": "280 (28)",
                     "Opp Avg (1st)": "271 (31)"
@@ -2442,17 +2442,6 @@
                     "Opp Avg (1st)": "274 (5)"
                 },
                 {
-                    "Opponent": "England",
-                    "Mat": 11,
-                    "Won": 6,
-                    "Lost": 4,
-                    "Tie/NR": 1,
-                    "Win %": "60%",
-                    "Last 5": "\u274c \u2705 \u2705 \u274c \ud83c\udf27\ufe0f",
-                    "South Africa Avg (1st)": "272 (3)",
-                    "Opp Avg (1st)": "293 (6)"
-                },
-                {
                     "Opponent": "Pakistan",
                     "Mat": 11,
                     "Won": 4,
@@ -2462,6 +2451,17 @@
                     "Last 5": "\u274c \u274c \u274c \u274c \u2705",
                     "South Africa Avg (1st)": "256 (5)",
                     "Opp Avg (1st)": "280 (5)"
+                },
+                {
+                    "Opponent": "England",
+                    "Mat": 10,
+                    "Won": 6,
+                    "Lost": 3,
+                    "Tie/NR": 1,
+                    "Win %": "66%",
+                    "Last 5": "\u274c \u2705 \u2705 \u274c \ud83c\udf27\ufe0f",
+                    "South Africa Avg (1st)": "272 (3)",
+                    "Opp Avg (1st)": "293 (6)"
                 },
                 {
                     "Opponent": "Sri Lanka",

@@ -55,7 +55,7 @@ class PredictorEngine:
     def predict_score(self, batting_team, batting_players, bowling_team, bowling_players, venue_id, years=5):
         # 1. SETUP DYNAMIC WINDOW
         # We slice the Raw DB once to improve performance
-        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
+        cutoff_date = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)
         window_df = self.raw_df[self.raw_df['start_date'] >= cutoff_date].copy()
         
         # 2. VENUE INTELLIGENCE (From Window)

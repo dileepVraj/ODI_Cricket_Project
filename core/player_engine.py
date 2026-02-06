@@ -85,8 +85,9 @@ class PlayerEngine:
                 return sorted(team_squads[team_squads['match_id'] == str(last_match_id)]['player'].unique().tolist())
 
         # 2. Fallback to Raw Data Backfill (Legacy)
-        mask = (self.raw_df['batting_team'] == team_name) | (self.raw_df['bowling_team'] == team_name)
-        team_matches = self.raw_df[mask]
+        base_df = self.raw_df
+        mask = (base_df['batting_team'] == team_name) | (base_df['bowling_team'] == team_name)
+        team_matches = base_df[mask]
         
         if team_matches.empty: return []
         
@@ -125,9 +126,21 @@ class PlayerEngine:
         c1 = TEAM_COLORS.get(team_a_name, "#333")
         c2 = TEAM_COLORS.get(team_b_name, "#333")
         
+        # 0. PERFORMANCE OPTIMIZATION: Create Squad Context Subset
+        all_matchup_players = list(set(team_a_players) | set(team_b_players))
+        cutoff_date = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)
+        
+        # O(N) single filter for the whole comparison
+        squad_context_df = self.raw_df[
+            ((self.raw_df['striker'].isin(all_matchup_players)) | 
+             (self.raw_df['non_striker'].isin(all_matchup_players)) | 
+             (self.raw_df['bowler'].isin(all_matchup_players))) &
+            (self.raw_df['start_date'] >= cutoff_date)
+        ]
+
         # 1. HEADER & SQUAD EXPERIENCE
-        metrics_a = self._calculate_squad_metrics(team_a_name, team_a_players, years) 
-        metrics_b = self._calculate_squad_metrics(team_b_name, team_b_players, years)
+        metrics_a = self._calculate_squad_metrics(team_a_name, team_a_players, years, context_df=squad_context_df) 
+        metrics_b = self._calculate_squad_metrics(team_b_name, team_b_players, years, context_df=squad_context_df)
         
         avg_caps_a = int(metrics_a['Caps (Combined)'] / max(len(team_a_players), 1))
         avg_caps_b = int(metrics_b['Caps (Combined)'] / max(len(team_b_players), 1))
@@ -213,7 +226,7 @@ class PlayerEngine:
             # --- 1. FETCH DATA ---
             if not players: return f"<div>No players selected for {team_name}</div>"
             
-            data = [self._get_stats(p, opponent, venue_pattern, years) for p in players]
+            data = [self._get_stats(p, opponent, venue_pattern, years, context_df=squad_context_df) for p in players]
             df = pd.DataFrame(data)
             
             if df.empty: return f"<div>No data available for {team_name}</div>"
@@ -399,9 +412,9 @@ class PlayerEngine:
         print("\n")
         display(HTML(f"<div style='background:#444; color:white; padding:8px; border-radius:4px; font-weight:bold; margin-bottom:10px; font-family:sans-serif;'>📊 TACTICAL MATRIX: ARCHETYPES (Last {years} Years)</div>"))
         
-        self.analyze_squad_types(team_a_name, team_a_players, team_b_players, years, recorder=recorder)
+        self.analyze_squad_types(team_a_name, team_a_players, team_b_players, years, recorder=recorder, context_df=squad_context_df)
         print("\n")
-        self.analyze_squad_types(team_b_name, team_b_players, team_a_players, years, recorder=recorder)
+        self.analyze_squad_types(team_b_name, team_b_players, team_a_players, years, recorder=recorder, context_df=squad_context_df)
 
         # -------------------------------------------------------------
         # 4. MATCHUPS
@@ -412,16 +425,16 @@ class PlayerEngine:
         
         with left:
             display(HTML(f"<div style='font-weight:bold; color:{c1}; margin-bottom:10px; border-bottom:3px solid {c1};'>🛡️ {team_a_name.upper()} BATTING</div>"))
-            for p in team_a_players: self._display_batter_vs_bowlers(p, team_a_name, team_b_players, recorder=recorder)
+            for p in team_a_players: self._display_batter_vs_bowlers(p, team_a_name, team_b_players, recorder=recorder, context_df=squad_context_df)
         
         with right:
             display(HTML(f"<div style='font-weight:bold; color:{c2}; margin-bottom:10px; border-bottom:3px solid {c2};'>🛡️ {team_b_name.upper()} BATTING</div>"))
-            for p in team_b_players: self._display_batter_vs_bowlers(p, team_b_name, team_a_players, recorder=recorder)
+            for p in team_b_players: self._display_batter_vs_bowlers(p, team_b_name, team_a_players, recorder=recorder, context_df=squad_context_df)
             
         display(widgets.HBox([left, right], layout=widgets.Layout(width='100%', gap='30px')))
 
     # --- NEW: ARCHETYPE ANALYSIS ---
-    def analyze_squad_types(self, team_name, players, opposition_bowlers, years=None, recorder=None):
+    def analyze_squad_types(self, team_name, players, opposition_bowlers, years=None, recorder=None, context_df=None):
         """
         Generates a 'Tactical Breakdown' of how batters perform against
         the SPECIFIC bowling types present in the opposition's squad.
@@ -441,8 +454,9 @@ class PlayerEngine:
         """
         
         # 📅 DYNAMIC DATE FILTER
-        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
-        window_df = self.raw_df[self.raw_df['start_date'] >= cutoff_date]
+        cutoff_date = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)
+        base_df = context_df if context_df is not None else self.raw_df
+        window_df = base_df[base_df['start_date'] >= cutoff_date]
         
         # 1. IDENTIFY OPPOSITION BOWLING TYPES & NAMES
         active_styles_data = {} 
@@ -488,7 +502,7 @@ class PlayerEngine:
 
         if not active_styles_data: 
             # If no styles found, it might be a data issue, but we don't spam print here anymore
-            return
+            return [] # 🟢 RETURN EMPTY LIST FOR REGRESSION
 
         # 2. DISPLAY ATTACK BREAKDOWN (Enhanced Badges)
         c1 = TEAM_COLORS.get(team_name, "#333")
@@ -596,10 +610,12 @@ class PlayerEngine:
                             elif avg > 50:
                                 recorder.log_tactical_alert("DOMINANT_MATCHUP", f"{batter} dominates {style} (Avg {avg})")
 
+        return table_data # 🟢 RETURN DATA FOR REGRESSION
+
 
     # --- HELPERS ---
 
-    def _calculate_squad_metrics(self, team, players, years=None):
+    def _calculate_squad_metrics(self, team, players, years=None, context_df=None):
         """
         Internal Helper: Computes aggregated stats for a list of players.
         Used by the Squad Comparison header.
@@ -613,10 +629,11 @@ class PlayerEngine:
             dict: Aggregated metrics (Caps, Runs, Wickets, 100s, 50s, 5Ws).
         """
         # 📅 DYNAMIC DATE FILTER
-        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
+        cutoff_date = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)
         
-        # Filter the Raw DB first
-        window_df = self.raw_df[self.raw_df['start_date'] >= cutoff_date]
+        # Filter the context or raw DB
+        base_df = context_df if context_df is not None else self.raw_df
+        window_df = base_df[base_df['start_date'] >= cutoff_date]
 
         mask = (window_df['striker'].isin(players)) | (window_df['bowler'].isin(players))
         df = window_df[mask]
@@ -634,7 +651,7 @@ class PlayerEngine:
                 if not valid.empty: fw += (valid.groupby('match_id').count()['wicket_type']>=5).sum()
         return {'Caps (Combined)': caps, 'Total Runs': tr, '100s': c, '50s': f, 'Total Wickets': tw, '5-Wkt Hauls': fw}
 
-    def _get_stats(self, player, opp, venue_pattern, years=None):
+    def _get_stats(self, player, opp, venue_pattern, years=None, context_df=None):
         """
         Internal Helper: Fetches comprehensive stats for a single player.
         
@@ -654,13 +671,15 @@ class PlayerEngine:
             dict: Dictionary of stats for the pro table row.
         """
         # 1. SETUP & DATE FILTER
-        cutoff_date = pd.Timestamp.now() - pd.DateOffset(years=years)
+        cutoff_date = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)
         
         # Get ALL activity for this player (Batting OR Bowling)
         # This is ALWAYS needed for the actual score lookup later
-        all_activity = self.raw_df[
-            ((self.raw_df['striker'] == player) | (self.raw_df['bowler'] == player)) &
-            (self.raw_df['start_date'] >= cutoff_date)
+        base_df = context_df if context_df is not None else self.raw_df
+        
+        all_activity = base_df[
+            ((base_df['striker'] == player) | (base_df['bowler'] == player)) &
+            (base_df['start_date'] >= cutoff_date)
         ]
         
         # OPTIMIZED MATCH IDENTIFICATION (Using Squads if available)
@@ -701,7 +720,7 @@ class PlayerEngine:
         for m_id in last_5_ids:
             m_id = str(m_id)
             # Check if they appeared as a striker
-            m_bat = self.raw_df[(self.raw_df['match_id'] == m_id) & (self.raw_df['striker'] == player)]
+            m_bat = base_df[(base_df['match_id'] == m_id) & (base_df['striker'] == player)]
             
             if m_bat.empty:
                 # In Squad but did not bat (or Fallback DNB)
@@ -713,16 +732,18 @@ class PlayerEngine:
                 form_bat.append(score)
 
         # Career Batting Stats (Windowed)
-        bat_window = self.raw_df[(self.raw_df['striker'] == player) & (self.raw_df['start_date'] >= cutoff_date)]
+        bat_window = base_df[(base_df['striker'] == player) & (base_df['start_date'] >= cutoff_date)]
         car_inns = bat_window['match_id'].nunique()
         total_runs = bat_window['runs_off_bat'].sum()
-        total_outs = bat_window['wicket_type'].count()
+        # 🚨 REFINEMENT: Count only when THIS player was the one dismissed (covers non-striker run-outs too)
+        total_outs = base_df[(base_df['player_dismissed'] == player) & (base_df['start_date'] >= cutoff_date)].shape[0]
         avg = round(total_runs / total_outs, 1) if total_outs > 0 else total_runs
 
         # vs Opponent
         opp_df = bat_window[bat_window['bowling_team'] == opp]
         opp_runs = opp_df['runs_off_bat'].sum()
-        opp_outs = opp_df['wicket_type'].count()
+        # 🚨 REFINEMENT: Check if player was out against this target team
+        opp_outs = base_df[(base_df['player_dismissed'] == player) & (base_df['bowling_team'] == opp) & (base_df['start_date'] >= cutoff_date)].shape[0]
         opp_avg = round(opp_runs / opp_outs, 1) if opp_outs > 0 else (opp_runs if not opp_df.empty else "-")
 
         # ---------------------------------------------------------
@@ -779,7 +800,7 @@ class PlayerEngine:
                 form_bowl.append(f"{wkts}/{int(runs)} ({overs_disp})")
 
         # Bowling Career
-        bowl_window = self.raw_df[(self.raw_df['bowler'] == player) & (self.raw_df['start_date'] >= cutoff_date)]
+        bowl_window = base_df[(base_df['bowler'] == player) & (base_df['start_date'] >= cutoff_date)]
         econ = "-"
         if not bowl_window.empty:
             legal_mask = (bowl_window['wides'].fillna(0) == 0) & (bowl_window['noballs'].fillna(0) == 0)
@@ -818,7 +839,7 @@ class PlayerEngine:
             'Ven Matches': v_matches
         }
 
-    def _display_batter_vs_bowlers(self, batter, bat_team, bowlers, recorder=None):
+    def _display_batter_vs_bowlers(self, batter, bat_team, bowlers, recorder=None, context_df=None):
         """
         Internal Helper: Renders the 'Head-to-Head Matchups' table for a specific batter.
         Shows performance against specific opposition bowlers.
@@ -830,9 +851,10 @@ class PlayerEngine:
             recorder (SnapshotRecorder, optional): For AI logging.
         """
         # LIVE RAW DATA CALCULATION
-        batter_df = self.raw_df[
-            (self.raw_df['striker'] == batter) & 
-            (self.raw_df['bowler'].isin(bowlers))
+        base_df = context_df if context_df is not None else self.raw_df
+        batter_df = base_df[
+            (base_df['striker'] == batter) & 
+            (base_df['bowler'].isin(bowlers))
         ].copy()
 
         if batter_df.empty: return
@@ -840,10 +862,10 @@ class PlayerEngine:
         matchup_stats = batter_df.groupby('bowler').agg({
             'runs_off_bat': 'sum',           
             'match_id': 'count',             
-            'wicket_type': lambda x: x.isin(['bowled','caught','lbw','stumped','caught and bowled','hit wicket']).sum()
+            'player_dismissed': lambda x: (x == batter).sum() # Only count if the specific batter was dismissed by this bowler
         }).reset_index()
         
-        matchup_stats.rename(columns={'match_id': 'Balls', 'runs_off_bat': 'Runs', 'wicket_type': 'Outs'}, inplace=True)
+        matchup_stats.rename(columns={'match_id': 'Balls', 'runs_off_bat': 'Runs', 'player_dismissed': 'Outs'}, inplace=True)
 
         data = []
         for _, row in matchup_stats.iterrows():
@@ -881,6 +903,61 @@ class PlayerEngine:
             styler = df[display_cols].style.apply(color_rows, axis=1).format("{:.1f}", subset=['SR', 'Avg']).hide(axis='index')
             styler.set_table_styles([{'selector': 'th', 'props': [('background-color', '#f8f9fa'), ('color', '#495057'), ('font-size', '10px'), ('border-bottom', '2px solid #dee2e6')]}])
             display(styler)
+            
+        return data # 🟢 RETURN DATA FOR REGRESSION
+
+    def _generate_comparison_payload(self, team_a_name, team_a_players, team_b_name, team_b_players, venue_id, years=None):
+        """
+        REGRESSION HELPER: Generates the raw data dictionary for the Squad Comparison feature.
+        Used by automated tests to verify logic without HTML parsing.
+        """
+        # 1. SETUP
+        aliases = get_venue_aliases(venue_id)
+        if "_" in venue_id:
+            suffix_key = venue_id.split("_", 1)[1] 
+            suffix_aliases = get_venue_aliases(suffix_key)
+            if suffix_aliases:
+                aliases = list(set(aliases + suffix_aliases))
+        if not aliases:
+            aliases = [venue_id]
+            if "_" in venue_id: aliases.append(venue_id.split("_", 1)[1])
+        venue_pattern = '|'.join([re.escape(v) for v in aliases if v])
+
+        # 0. PERFORMANCE OPTIMIZATION: Create Squad Context Subset
+        all_matchup_players = list(set(team_a_players) | set(team_b_players))
+        cutoff_date = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)
+        
+        squad_context_df = self.raw_df[
+            ((self.raw_df['striker'].isin(all_matchup_players)) | 
+             (self.raw_df['non_striker'].isin(all_matchup_players)) | 
+             (self.raw_df['bowler'].isin(all_matchup_players))) &
+            (self.raw_df['start_date'] >= cutoff_date)
+        ]
+
+        # 2. SQUAD METRICS
+        squad_a = self._calculate_squad_metrics(team_a_name, team_a_players, years, context_df=squad_context_df)
+        squad_b = self._calculate_squad_metrics(team_b_name, team_b_players, years, context_df=squad_context_df)
+
+        # 3. TACTICAL MATRIX
+        matrix_a = self.analyze_squad_types(team_a_name, team_a_players, team_b_players, years, context_df=squad_context_df)
+        matrix_b = self.analyze_squad_types(team_b_name, team_b_players, team_a_players, years, context_df=squad_context_df)
+
+        # 4. MATCHUPS (Bunnies)
+        matchups_a = {}
+        for p in team_a_players:
+            m_data = self._display_batter_vs_bowlers(p, team_a_name, team_b_players, context_df=squad_context_df)
+            if m_data: matchups_a[p] = m_data
+            
+        matchups_b = {}
+        for p in team_b_players:
+            m_data = self._display_batter_vs_bowlers(p, team_b_name, team_a_players, context_df=squad_context_df)
+            if m_data: matchups_b[p] = m_data
+
+        return {
+            'SquadComparison': {team_a_name: squad_a, team_b_name: squad_b},
+            'TacticalMatrix': {team_a_name: matrix_a, team_b_name: matrix_b},
+            'Matchups': {team_a_name: matchups_a, team_b_name: matchups_b}
+        }
     
     def analyze_player_profile(self, player_name, opposition=None, venue_id=None, active_bowlers=None, years=10):
         """
@@ -941,7 +1018,7 @@ class PlayerEngine:
             # Re-fetch raw batting data for this player to compute milestones correctly
             raw_career_bat = self.raw_df[
                 (self.raw_df['striker'] == player_name) & 
-                (self.raw_df['start_date'] >= (pd.Timestamp.now() - pd.DateOffset(years=years)))
+                (self.raw_df['start_date'] >= (pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)))
             ]
             
             c_100s, c_50s, c_hs = get_batting_milestones(raw_career_bat)
@@ -974,7 +1051,7 @@ class PlayerEngine:
                     # Calculate Best Bowling (BBI) from Raw
                     raw_career_bowl = self.raw_df[
                         (self.raw_df['bowler'] == player_name) & 
-                        (self.raw_df['start_date'] >= (pd.Timestamp.now() - pd.DateOffset(years=years)))
+                        (self.raw_df['start_date'] >= (pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)))
                     ]
                     if not raw_career_bowl.empty:
                         # Wickets per match
@@ -1105,7 +1182,7 @@ class PlayerEngine:
                 raw_opp_bat = self.raw_df[
                     (self.raw_df['striker'] == player_name) & 
                     (self.raw_df['bowling_team'] == opposition) &
-                    (self.raw_df['start_date'] >= (pd.Timestamp.now() - pd.DateOffset(years=years)))
+                    (self.raw_df['start_date'] >= (pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)))
                 ]
                 
                 opp_html = render_mini_prob_card(f"⚔️ vs {opposition.upper()}", ov_df, ov_bowl_df, raw_opp_bat, None, "vs Opp")
@@ -1150,7 +1227,7 @@ class PlayerEngine:
                 raw_ven_bat = self.raw_df[
                     (self.raw_df['striker'] == player_name) & 
                     (self.raw_df['venue'].str.contains(ven_pattern, case=False)) &
-                    (self.raw_df['start_date'] >= (pd.Timestamp.now() - pd.DateOffset(years=years)))
+                    (self.raw_df['start_date'] >= (pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)))
                 ]
                 
                 ven_html = render_mini_prob_card(f"🏟️ AT VENUE ({venue_id})", v_df, v_bowl_df, raw_ven_bat, None, "At Venue")

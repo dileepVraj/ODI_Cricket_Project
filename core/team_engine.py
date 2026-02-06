@@ -33,6 +33,17 @@ class TeamEngine:
         Returns:
             pd.DataFrame: DataFrame with a 'status' column indicating inclusion/exclusion reason.
         """
+        # --- ROBUST COLUMN MAPPING (v2.3) ---
+        cols = df.columns.tolist()
+        b1_col = next((c for c in cols if 'ball' in c and 'inn1' in c), None)
+        w1_col = next((c for c in cols if 'wicket' in c and 'inn1' in c), None)
+        b2_col = next((c for c in cols if 'ball' in c and 'inn2' in c), None)
+        w2_col = next((c for c in cols if 'wicket' in c and 'inn2' in c), None)
+        
+        # Robust Team Name Detection
+        t1_col = next((c for c in cols if 'team' in c and 'bat' in c and '1' in c), 'team_bat_1')
+        t2_col = next((c for c in cols if 'team' in c and 'bat' in c and '2' in c), 'team_bat_2')
+
         # 1. Default Status
         df['status'] = '✅ Included'
         
@@ -47,11 +58,17 @@ class TeamEngine:
         
         # --- DEFINE CONDITIONS ---
         # Condition A: Short 1st Innings (< 45 ov & not all out)
-        is_short_1 = (df['balls_inn1'] < 270) & (df['wickets_inn1'] < 10)
+        if b1_col and w1_col:
+            is_short_1 = (df[b1_col] < 270) & (df[w1_col] < 10)
+        else:
+            is_short_1 = pd.Series([False]*len(df), index=df.index)
         
         # Condition B: Short 2nd Innings (< 45 ov & not all out & not natural win)
-        nat_win = (df['winner'] == df['team_bat_2']) & (df['score_inn2'] > df['score_inn1'])
-        is_short_2 = (df['balls_inn2'] < 270) & (df['wickets_inn2'] < 10) & (~nat_win)
+        if b2_col and w2_col and 'winner' in cols and 'score_inn2' in cols and 'score_inn1' in cols:
+            nat_win = (df['winner'] == df[t2_col]) & (df['score_inn2'] > df['score_inn1'])
+            is_short_2 = (df[b2_col] < 270) & (df[w2_col] < 10) & (~nat_win)
+        else:
+            is_short_2 = pd.Series([False]*len(df), index=df.index)
         
         # --- APPLY STATUS ---
         
@@ -76,9 +93,14 @@ class TeamEngine:
             str: Formatted string "123 (45)" or "-" if empty.
         """
         if df.empty or col not in df.columns: return "-"
-        val = df[col].mean()
-        if pd.isna(val): return "-"
-        return f"{int(val)} ({len(df)})"
+        
+        # 🚨 CRITICAL: We must average the MATCH-LEVEL scores, not the row-level (duplicated) scores
+        match_scores = df.groupby('match_id')[col].first()
+        
+        val = match_scores.mean()
+        if pd.isna(val) or val == 0: return "-"
+        
+        return f"{int(val)} ({len(match_scores)})"
 
     def _get_form_guide(self, df, team):
         """
@@ -517,7 +539,7 @@ class TeamEngine:
             for k, v in VENUE_MAP.items():
                 if k.lower() in stadium_name.lower(): stadium_id = v; break
         
-        cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
+        cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years_back)
         vis_label = opp_team if opp_team != 'All' else "Visitors"
         vs_txt = f"vs {vis_label}"
         
@@ -607,7 +629,7 @@ class TeamEngine:
 
         # 4. Apply Date Filter & DEBUGGER
         if 'start_date' in venue_stats.columns:
-            cutoff = pd.Timestamp.now() - pd.DateOffset(years=years)
+            cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years)
             filtered_stats = venue_stats[venue_stats['start_date'] >= cutoff].copy()
             
             # 🔍 DEBUG: If filter kills all data, explain why
@@ -769,23 +791,88 @@ class TeamEngine:
             audit_df = self.match_df[audit_mask]
             self._display_audit(audit_df, stadium_id)
             
-        # 🚨 AI LOGGING: PHASE ANALYSIS (PRESERVED)
+                # 🚨 AI LOGGING & RETURN DATA: PHASE ANALYSIS
+        # We construct a comprehensive data packet for regression testing
+        
+        def safe_get(df, inn, col):
+            try: return float(round(df[df['innings']==inn][col].mean(), 1)) if not df[df['innings']==inn].empty else 0
+            except: return 0
+
+        # 1. Venue Baseline
+        venue_meta = {
+            "pp_avg_1st": safe_get(venue_stats, 1, 'pp_runs'), "pp_wkts_1st": safe_get(venue_stats, 1, 'pp_wkts'),
+            "mid_avg_1st": safe_get(venue_stats, 1, 'mid_runs'), "mid_wkts_1st": safe_get(venue_stats, 1, 'mid_wkts'),
+            "dth_avg_1st": safe_get(venue_stats, 1, 'dth_runs'), "dth_wkts_1st": safe_get(venue_stats, 1, 'dth_wkts'),
+            
+            "pp_avg_2nd": safe_get(venue_stats, 2, 'pp_runs'), "pp_wkts_2nd": safe_get(venue_stats, 2, 'pp_wkts'),
+            "mid_avg_2nd": safe_get(venue_stats, 2, 'mid_runs'), "mid_wkts_2nd": safe_get(venue_stats, 2, 'mid_wkts'),
+            "dth_avg_2nd": safe_get(venue_stats, 2, 'dth_runs'), "dth_wkts_2nd": safe_get(venue_stats, 2, 'dth_wkts'),
+        }
+
+        # 2. Home/Away Context at Venue
+        home_context = {}
+        if home_team and home_team != 'All':
+            h_venue = venue_stats[venue_stats['team'] == home_team]
+            if not h_venue.empty:
+                home_context = {
+                   "pp_avg_1st": safe_get(h_venue, 1, 'pp_runs'), "dth_avg_1st": safe_get(h_venue, 1, 'dth_runs'),
+                   "pp_avg_2nd": safe_get(h_venue, 2, 'pp_runs'), "dth_avg_2nd": safe_get(h_venue, 2, 'dth_runs')
+                }
+        
+        away_context = {}
+        if away_team and away_team != 'All':
+            a_venue = venue_stats[venue_stats['team'] == away_team]
+            if not a_venue.empty:
+                away_context = {
+                   "pp_avg_1st": safe_get(a_venue, 1, 'pp_runs'), "dth_avg_1st": safe_get(a_venue, 1, 'dth_runs'),
+                   "pp_avg_2nd": safe_get(a_venue, 2, 'pp_runs'), "dth_avg_2nd": safe_get(a_venue, 2, 'dth_runs')
+                }
+
+        # 3. Global Habits & Alerts
+        global_habits = {}
+        alerts = []
+        
+        if home_team and away_team and away_team != 'All':
+             h_stats = phase_df[phase_df['team'] == home_team]
+             a_stats = phase_df[phase_df['team'] == away_team]
+             if not h_stats.empty and not a_stats.empty:
+                 # Bat First Scenario
+                 global_habits['bat_first'] = {
+                     'h_pp_runs': safe_get(h_stats, 1, 'pp_runs'), 'a_pp_runs': safe_get(a_stats, 1, 'pp_runs'),
+                     'h_mid_runs': safe_get(h_stats, 1, 'mid_runs'), 'a_mid_runs': safe_get(a_stats, 1, 'mid_runs'),
+                     'h_dth_runs': safe_get(h_stats, 1, 'dth_runs'), 'a_dth_runs': safe_get(a_stats, 1, 'dth_runs')
+                 }
+                 # Chase Scenario
+                 global_habits['chasing'] = {
+                     'h_mid_wkts': safe_get(h_stats, 2, 'mid_wkts'), 'a_mid_wkts': safe_get(a_stats, 2, 'mid_wkts')
+                 }
+                 
+                 # Recalculate Alerts for Capture
+                 venue_pp_1 = safe_get(venue_stats, 1, 'pp_runs')
+                 if global_habits['bat_first']['h_pp_runs'] > venue_pp_1 + 5: 
+                     alerts.append(f"EDGE: {home_team} (1st Inn) outscores venue avg")
+
+                 if global_habits['chasing']['h_mid_wkts'] > 3.0:
+                     alerts.append(f"RISK: {home_team} collapses chasing")
+
+        return_packet = {
+            "venue_baseline": venue_meta,
+            "home_at_venue": home_context,
+            "away_at_venue": away_context,
+            "global_habits": global_habits,
+            "alerts": alerts
+        }
+        
         if recorder:
             try:
-                # 1. Overall Venue Stats
-                venue_meta = {
-                    "pp_avg_1st": float(round(venue_stats[venue_stats['innings']==1]['pp_runs'].mean(), 1)),
-                    "pp_avg_2nd": float(round(venue_stats[venue_stats['innings']==2]['pp_runs'].mean(), 1)),
-                    "dth_avg_1st": float(round(venue_stats[venue_stats['innings']==1]['dth_runs'].mean(), 1)),
-                    "dth_avg_2nd": float(round(venue_stats[venue_stats['innings']==2]['dth_runs'].mean(), 1))
-                }
-                
                 recorder.log_venue_intel("phase_analysis", {
                     "description_context": f"Phase Scoring Patterns at {stadium_id}",
                     "strategic_insight": "Compare Powerplay & Death scoring rates against global averages.",
                     "metrics": venue_meta
                 }, years, len(venue_stats))
             except: pass
+            
+        return return_packet
 
     def analyze_venue_bias(self, stadium_name, years_back=10, recorder=None):
         """
@@ -817,7 +904,7 @@ class TeamEngine:
                 print("❌ Venue not found."); return
 
         # 2. Filter by Date & Venue
-        cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
+        cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years_back)
         venue_matches = self.match_df[
             (self.match_df['venue'] == venue_id) & 
             (self.match_df['start_date'] >= cutoff)
@@ -838,12 +925,18 @@ class TeamEngine:
             return
 
         # 4. Calculate Stats (Using Result Dataset)
-        total = len(valid_results)
-        bat1_wins = len(valid_results[valid_results['winner'] == valid_results['team_bat_1']])
-        chase_wins = len(valid_results[valid_results['winner'] == valid_results['team_bat_2']])
+        # 🚨 CRITICAL FIX: Use nunique() for matches, not len() (which counts balls)
+        total = valid_results['match_id'].nunique()
         
-        bat1_pct = int((bat1_wins / total) * 100)
-        chase_pct = int((chase_wins / total) * 100)
+        # Filter for matches won by Bat 1 / Bat 2
+        # We must group by match_id to count wins, as 'winner' is repeated on every ball
+        matches_won = valid_results.groupby('match_id').first()
+        
+        bat1_wins = len(matches_won[matches_won['winner'] == matches_won['team_bat_1']])
+        chase_wins = len(matches_won[matches_won['winner'] == matches_won['team_bat_2']])
+        
+        bat1_pct = int((bat1_wins / total) * 100) if total > 0 else 0
+        chase_pct = int((chase_wins / total) * 100) if total > 0 else 0
         
         bias = "NEUTRAL ⚖️"
         if bat1_pct >= 55: bias = "BAT FIRST 🏏"
@@ -865,6 +958,7 @@ class TeamEngine:
         
         # 6. Show Match Audit
         self._display_audit(valid_results, venue_id)
+        return data
         
     def analyze_global_h2h(self, home_team, opp_team, years_back=5):
         """
@@ -878,7 +972,7 @@ class TeamEngine:
         Returns:
             list: Report data dictionary.
         """
-        cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
+        cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years_back)
         print(f"\n🌍 GLOBAL H2H CHECK: {home_team} vs {opp_team}")
         mask = (((self.match_df['team_bat_1'] == home_team) & (self.match_df['team_bat_2'] == opp_team)) | ((self.match_df['team_bat_1'] == opp_team) & (self.match_df['team_bat_2'] == home_team))) & (self.match_df['start_date'] >= cutoff)
         df = self.match_df[mask].copy()
@@ -897,7 +991,7 @@ class TeamEngine:
             country_name (str): Country Name (e.g., 'Australia', 'UAE').
             years_back (int): Lookback period.
         """
-        cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
+        cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years_back)
         print(f"\n🗺️ COUNTRY CHECK: {home_team} vs {opp_team} in {country_name.upper()}")
         country_map = {
             'India': ['India', 'IND_'], 'Australia': ['Australia', 'AUS_'], 'England': ['England', 'ENG_'], 'South Africa': ['South Africa', 'SA_'], 'New Zealand': ['New Zealand', 'NZ_'], 'Sri Lanka': ['Sri Lanka', 'SL_'], 'West Indies': ['West Indies', 'WI_'], 'Pakistan': ['Pakistan', 'PAK_'], 'Bangladesh': ['Bangladesh', 'BAN_'], 'UAE': ['UAE', 'Dubai', 'Sharjah']
@@ -922,7 +1016,7 @@ class TeamEngine:
         Returns:
             list: Matrix data rows for testing.
         """
-        print(f"\n🦁 HOME DOMINANCE: {home_team}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
+        print(f"\n🦁 HOME DOMINANCE: {home_team}"); cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years_back)
         c_codes = {'India':'IND_','England':'ENG_','Australia':'AUS_','South Africa':'SA_','New Zealand':'NZ_','Sri Lanka':'SL_','West Indies':'WI_','Pakistan':'PAK_','Bangladesh':'BAN_'}
         if home_team not in c_codes: print("❌ Unknown code."); return
         matches = self.match_df[(self.match_df['venue'].str.startswith(c_codes[home_team])) & ((self.match_df['team_bat_1'] == home_team) | (self.match_df['team_bat_2'] == home_team)) & (self.match_df['start_date'] >= cutoff)].copy()
@@ -940,7 +1034,7 @@ class TeamEngine:
             team_name (str): Team to analyze.
             years_back (int): Lookback period.
         """
-        print(f"\n✈️ AWAY PERFORMANCE: {team_name}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
+        print(f"\n✈️ AWAY PERFORMANCE: {team_name}"); cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years_back)
         c_codes = {'India':'IND_','England':'ENG_','Australia':'AUS_','South Africa':'SA_','New Zealand':'NZ_','Sri Lanka':'SL_','West Indies':'WI_','Pakistan':'PAK_','Bangladesh':'BAN_'}
         if team_name not in c_codes: print("❌ Unknown code."); return
         matches = self.match_df[((self.match_df['team_bat_1'] == team_name) | (self.match_df['team_bat_2'] == team_name)) & (~self.match_df['venue'].astype(str).str.startswith(c_codes[team_name])) & (self.match_df['start_date'] >= cutoff)].copy()
@@ -951,7 +1045,7 @@ class TeamEngine:
         """
         Generates a Matrix Report of a team's performance GLOBALLY (Home + Away + Neutral).
         """
-        print(f"\n🌍 GLOBAL PERFORMANCE: {team_name} vs Top 10"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
+        print(f"\n🌍 GLOBAL PERFORMANCE: {team_name} vs Top 10"); cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years_back)
         matches = self.match_df[((self.match_df['team_bat_1'] == team_name) | (self.match_df['team_bat_2'] == team_name)) & (self.match_df['start_date'] >= cutoff)].copy()
         if matches.empty: print("❌ No matches found."); return
         return self._generate_matrix_report(matches, team_name, "GLOBAL PERFORMANCE MATRIX")
@@ -969,7 +1063,7 @@ class TeamEngine:
             years_back (int): Lookback.
         """
         reg = "Global" if continent == 'All' else continent
-        print(f"\n🌏 REGION REPORT: {team_name} in {reg}"); cutoff = pd.Timestamp.now() - pd.DateOffset(years=years_back)
+        print(f"\n🌏 REGION REPORT: {team_name} in {reg}"); cutoff = pd.Timestamp.now().floor('D') - pd.DateOffset(years=years_back)
         mask = ((self.match_df['team_bat_1'] == team_name) | (self.match_df['team_bat_2'] == team_name)) & (self.match_df['start_date'] >= cutoff)
         if continent != 'All':
             c_map = {'Asia':['IND_','PAK_','SL_','BAN_','AFG_','UAE_'], 'Europe':['ENG_','IRE_','SCO_','NED_'], 'Oceania':['AUS_','NZ_'], 'Africa':['SA_','ZIM_'], 'Americas':['WI_','USA_']}
@@ -1052,5 +1146,11 @@ class TeamEngine:
         
         display(pd.DataFrame(data).style.map(col, subset=['Result']).hide(axis='index'))
         self._display_audit(recent, team_name)
+        
+        # 🚨 AI LOGGING & RETURN DATA: RECENT FORM
+        return {
+            "summary_code": form_str, # ['W', 'L', 'NR'] - Easy to assert sequence
+            "matches": data           # Full details for audit
+        }
 
         

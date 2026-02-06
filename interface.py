@@ -387,13 +387,36 @@ class TraderCockpit:
     def update_home_list(self, c=None):
         if self.home_select.value:
             t=self.home_select.value; b=self.bot.raw_df
-            sq=sorted(list(set(b[b['batting_team']==t]['striker'].unique()) | set(b[b['bowling_team']==t]['bowler'].unique())))
+            # 🚨 ROBUST: Use team_bat_1/2 + innings if batting_team missing
+            if 'batting_team' in b.columns:
+                strikers = b[b['batting_team']==t]['striker'].unique()
+                bowlers = b[b['bowling_team']==t]['bowler'].unique()
+            else:
+                # T is Batting: (Team1 & Inn1) OR (Team2 & Inn2)
+                mask_bat = ((b['team_bat_1']==t) & (b['innings']==1)) | ((b['team_bat_2']==t) & (b['innings']==2))
+                # T is Bowling: (Team2 & Inn1) OR (Team1 & Inn2)
+                mask_bowl = ((b['team_bat_2']==t) & (b['innings']==1)) | ((b['team_bat_1']==t) & (b['innings']==2))
+                
+                strikers = b[mask_bat]['striker'].unique()
+                bowlers = b[mask_bowl]['bowler'].unique()
+                
+            sq=sorted(list(set(strikers) | set(bowlers)))
             self.home_search.options=sq; self.home_search.value=''; self.home_squad_box.options=[]
             
     def update_away_list(self, c=None):
         if self.away_select.value:
             t=self.away_select.value; b=self.bot.raw_df
-            sq=sorted(list(set(b[b['batting_team']==t]['striker'].unique()) | set(b[b['bowling_team']==t]['bowler'].unique())))
+            if 'batting_team' in b.columns:
+                strikers = b[b['batting_team']==t]['striker'].unique()
+                bowlers = b[b['bowling_team']==t]['bowler'].unique()
+            else:
+                mask_bat = ((b['team_bat_1']==t) & (b['innings']==1)) | ((b['team_bat_2']==t) & (b['innings']==2))
+                mask_bowl = ((b['team_bat_2']==t) & (b['innings']==1)) | ((b['team_bat_1']==t) & (b['innings']==2))
+                
+                strikers = b[mask_bat]['striker'].unique()
+                bowlers = b[mask_bowl]['bowler'].unique()
+                
+            sq=sorted(list(set(strikers) | set(bowlers)))
             self.away_search.options=sq; self.away_search.value=''; self.away_squad_box.options=[]
 
     # --- HELPER: FORMAT WITH SERIAL NUMBERS ---
