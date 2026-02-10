@@ -1,0 +1,46 @@
+{
+    "timestamp": "2026-02-09 16:06:14",
+    "summary": {
+        "pass": 9,
+        "fail": 0
+    },
+    "failures": [],
+    "details": [
+        {
+            "item": "Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "England",
+            "status": "PASS"
+        },
+        {
+            "item": "India",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies",
+            "status": "PASS"
+        }
+    ]
+}

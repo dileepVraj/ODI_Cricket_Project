@@ -19,9 +19,13 @@ The application follows a **Model-View-Controller (MVC)** hybrid pattern tailore
     * **Storage:** `data/FINAL_ODI_MASTER.csv`, `processed_player_stats.csv`.
 
 2.  **Logic Layer (The Brains - `core/`)**
-    * **`player_engine.py`**: Micro-analysis. Handles individual player form, matchups, and archetypes.
-    * **`team_engine.py`**: Macro-analysis. Handles Team Fortresses, Venue Bias, and **Phase Analysis** (Powerplay/Death Run Rates).
-    * **`predictor.py`**: Predictive modeling. Uses weighted factors to forecast match scores.
+    * **`player_engine.py`**: Micro-analysis. Handles individual player form, matchups, and archetypes. Features the **Threat Matrix** for tactical breakdown.
+    * **`team_engine.py`**: Macro-analysis. Handles Team Fortresses, Venue Bias, and Regional Performance.
+    * **`predictor.py`**: Predictive modeling. Uses weighted factors to forecast match outcomes.
+
+4.  **Verification Layer (The Quality Guard - `tests/odi/truth_bridge/`)**
+    * **Truth Bridge**: Advanced auto-diagnosis system that distinguishes between `DATA_DRIFT` and `LOGIC_REGRESSION`.
+    * **Ground Truth**: JSON-based snapshots used to detect unintended shifts in engine logic.
 
 3.  **Presentation Layer (The Face)**
     * **`interface.py`**: The UI Builder. Uses `ipywidgets` to render Tabs:
@@ -161,6 +165,30 @@ Sentiment Analysis: (Long Term) Scrape Twitter/News for "Player Morale" flags
     * Create a file: `docs/bug_fixes/YYYY-MM-DD_short_description.md`.
     * Include: **Problem Statement**, **Root Cause**, **Implementation Fix**, and **Verification Results**.
     * *Reason:* Ensures that subtle bugs (like date boundary issues) are understood by future agents and developers to prevent re-introduction.
+
+---
+
+## 🧪 8. The Truth Bridge Testing Protocol
+
+Our testing is built on the **Truth Bridge** architecture. This is a non-destructive verification system.
+
+### A. Core Workflow
+1.  **SEED MODE**: Run `SEED_MODE="1" python test_runner.py` to capture a baseline of current engine outputs.
+2.  **REFACTOR**: Make your code changes.
+3.  **VALIDATE**: Run `python test_runner.py`.
+    *   **PASS**: Engine matches baseline exactly.
+    *   **DATA_DRIFT**: Results changed because new matches were added (Expected).
+    *   **LOGIC_REGRESSION**: Results changed despite Match IDs being identical (Critical Bug).
+
+### B. Verification Suites
+| Suite | Purpose |
+| :--- | :--- |
+| `analyze_venue_matchup` | Verifies Toss Bias and Ground Par stats. |
+| `check_fortress` | Validates Home Dominance and Smart Chasing Filters. |
+| `compare_squads` | Ensures Batter vs Bowler tactical parity. |
+| `global_performance` | Validates high-level team win/loss metrics. |
+
+---
 
 ---
 

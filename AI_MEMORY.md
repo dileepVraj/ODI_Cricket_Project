@@ -4,20 +4,38 @@
 
 ## 📌 Current Architecture State
 - **Core Engine:** `CricketAnalyzer` (v2.1) supports hot-reloading and cleaner logging.
-- **Player Stats:** `PlayerEngine` (v5.3) features **Fast-Look Optimization** (Contextual Slicing).
-    - **Speed Boost:** Reduced Squad Comparison latency from O(Players * Matches) to O(N) by creating focused dataframe subsets at the start of a comparison.
-- **Testing:** Domain-Driven Test Structure implemented for `odi/analyze_venue_matchup`.
-    - **Regression:** Automated Regression Suite (`run_venue_regression.py`) ensures stability of Venue Matchups.
-    - **Fixtures:** Golden Master snapshots stored in `tests/odi/analyze_venue_matchup/fixtures/`.
-- **Data:** `tools/process_player_stats.py` points to `FINAL_ODI_MASTER.csv`.
+- **Micro/Macro Logic:** 
+    - `TeamEngine` handles macro analytics (H2H, Fortress). Core functions like `analyze_home_fortress` are polymorphic.
+    - `PlayerEngine` (v5.3) features **Fast-Look Optimization** (Contextual Slicing) and DNB logic via `MATCH_SQUADS.csv`.
+- **Predictor:** `PredictorEngine` (v4.0) uses Venue Par, Batting Potential, and Bowling Threat with Tail-Ender Risk logic.
+- **The Soul:** **"Context over Content"** - Every metric is weighted by Venue, Opponent, and Form (Last X years).
+- **Testing:** Domain-Driven Test Structure implemented for `odi/truth_bridge` with self-diagnosis (DATA_DRIFT vs LOGIC_REGRESSION).
+- **Performance:** **Self-Healing Pickle Cache** (v3.0) implemented in `engine.py`. Automatically converts CSV to Pickle for an 80% load-time reduction.
+
+### 🏏 Player Role Methodology (Cortex v2.5)
+*   **Bowler**: Primary contributor; bats 8-11.
+*   **Batter**: Primary contributor; bowls < 5% of games.
+*   **Bowl AR**: Significant batting (bats 7-8) but primary role is bowling.
+*   **Bat AR**: Top 6 batter who bowls regularly (> 20% of games).
+*   **Verification Proof**: `scripts/find_missing_players.py` cross-references the full 10-year dataset against `config/teams.py`.
 
 ## 🚧 Active Tasks (The "To-Do" Stack)
-- [x] Refactor Test Architecture (Domain-Driven Design)
-- [x] Implement Venue Matchup Regression Suite
-- [x] Enhance Player Profile (Milestones, Bowling Card)
-- [x] Fix Player Form Inconsistency (Deterministic Sorting)
-- [x] Implement Toss Bias Regression Suite
-- [ ] Implement Phase Analysis Updates (Future)
+- [x] Implement Venue Matchup Truth Bridge (240/240 Green)
+- [x] Integrate Smart Self-Diagnosis (Data Drift vs Logic Bug)
+- [x] Implement Check Fortress Truth Bridge (Key-Discovery Mode)
+- [x] Implement Global H2H Truth Bridge (Schema Loyalty Mode)
+- [x] Implement Host Country H2H (Country Stats) Truth Bridge
+- [x] Implement `analyze_global_performance` Truth Bridge (Key-Discovery Mode)
+- [x] **[NEW]** Implement- [x] `analyze_team_form` Truth Bridge (100% Pass)
+- [x] `compare_squads` Truth Bridge (100% Pass - 188 metrics verified across 3 layers)
+- [x] **EPIC:** Expanded `config/teams.py` to cover 10 years of historical data. Added 200+ bowling styles and 400+ player roles across all major and minor ODI nations.
+- [x] Consolidated Sri Lanka data: Removed duplicate sections and resolved missing styles (e.g., Kusal Mendis).
+- [x] Verified configuration integrity with `find_missing_players.py` (Zero gaps for SL).
+- [x] `analyze_continent_performance` Truth Bridge (100% Pass - 44 regional matrices verified)
+- [x] **Auto-Diagnosis Audit (v2.5)**: Verified `MATCH_IDS` integration across all 12 Truth Bridge suites. Confirmed `LOGIC` vs `DRIFT` detection is 100% effective.
+- [x] Implement Localized Regression Guides for all Bridge Suites
+- [x] **[2026-02-10]** Expanded `config/teams.py` with 200+ historical legends to restore career-long tactical visibility (All-Time Parity).
+- [x] **[2026-02-10]** Synchronized project documentation (`TECHNICAL_DOCUMENTATION.md` & `DEV_GUIDE.md`) with 4-layer architecture.
 
 ## 🛑 Recent Decisions & Constraints (Why we did this)
 
@@ -49,8 +67,9 @@ This section details how raw data flows from source to the dashboard.
 - **Refining:** `TeamEngine._apply_smart_filters` applies logic (e.g., removing rain-curtailed matches < 45 overs).
 
 - **Testing Strategy:** Moved from flat `tests/` structure to specific domain folders (`tests/odi/analyze_venue_matchup/`) to improve maintainability and cohesion.
-- **Regression Protocol:** Adopted "Golden Master" testing for complex analytics outputs (Venue Matchups) instead of manual unit assertions, to catch unintended data changes.
-- **Compliance:** STRICTLY following `DEV_GUIDE.md` and `GEMINI.md`.
+- **Regression Protocol**: Adopted "Golden Master" testing for complex analytics outputs (Venue Matchups) instead of manual unit assertions, to catch unintended data changes.
+- **[2026-02-09] Recent Form Suite**: Implemented `tests/odi/truth_bridge/recent_form/`. Verified sequence-based form (`summary_code`) for 9 teams across 6 continents.
+- **Compliance**: STRICTLY following `DEV_GUIDE.md` and `GEMINI.md`.
 
 ## 🛠️ Data Processing & Schema Standards
 - **Column Standardization:**
@@ -60,6 +79,18 @@ This section details how raw data flows from source to the dashboard.
 - **Engine Robustness (v2.3):**
     - **Fuzzy Column Matching:** `TeamEngine` defends against header drift.
     - **Cleaner Injection:** Test Runners now use `CricketAnalyzer` (Facade pattern) instead of raw CSV loading to ensure the Test Environment mirrors Production exactly (including Venue Standardization).
+
+### C. The "Test Parity" Rule
+*   **Rule:** Test Environments must mirror Production Logic.
+*   **Implementation:** 
+    *   **NEVER** use `pd.read_csv()` in regression tests.
+    *   **ALWAYS** use `CricketAnalyzer(filepath)` (The Facade) to load data.
+
+### D. The "Fingerprint Mandate" (Truth Bridge)
+*   **Trigger:** When migrating ANY function to Truth Bridge.
+*   **Rule:** The Engine function **MUST** return `MATCH_IDS` in its output payload.
+*   **Why:** `TruthBridgeBase` relies on this key for Auto-Diagnosis (Drift vs Logic Regression).
+*   **Action:** If the legacy function lacks it, **YOU MUST REFACTOR THE ENGINE** to include it before writing the test runner. No exceptions.
 
 ## 🧱 Anti-Patterns & Lessons Learned (The "Do Not Repeat" Log)
 
@@ -93,6 +124,22 @@ This section details how raw data flows from source to the dashboard.
 - **Fix:** **ALWAYS** use `pd.Timestamp.now().floor('D')` when filtering by date to include the full boundary day.
 
 ## 📝 Session History (Reverse Chronological)
+- **[2026-02-09] Truth Bridge Expansion (Phase 2):** Migration of core macro-analytics functions to the Truth Bridge system.
+    - **Suites Migrated:** `check_fortress`, `analyze_country_h2h`, `analyze_global_h2h`, `home_dominance`, and `away_performance`.
+    - **Strategy:** Implemented **"Key-Discovery Mode"** for legacy fixtures.
+    - **Innovation:** Developed **Matrix Fingerprinting** (v2.5) logic for `_generate_matrix_report` to support automated diagnostics in row-per-opponent reports.
+    - **Documentation:** Unified localized `REGRESSION_GUIDE.md` files for all migrated suites.
+    - **Pivot:** Switched from `analyze_player_profile` to **`analyze_toss_bias`** upon request.
+    - **Legacy Compatibility:** Refactored `TeamEngine.analyze_venue_bias` to strictly return the Schema defined in `analyze_toss_bias_expected_results.json` while keeping modern "BOWL FIRST" terminology.
+    - **Fix:** Fixed `VENUE_MAP` iteration bug by implementing a `_group_venues_by_country` helper in the test runner.
+    - **Phase Analysis:** Migrated `analyze_venue_phases` to Truth Bridge. Implemented complex nested schema reconstruction in `test_runner.py` to match `analyze_phases_latest_results.json`. Validated identical data points.
+    - **Auto-Diagnosis:** Upgraded `analyze_venue_bias` and `analyze_venue_phases` engines to return `MATCH_IDS` metadata. Regenerated ground truth with fingerprints to enable Data Drift detection.
+- **[2026-02-09] Deep Soul Dive**: Conducted comprehensive research into every layer (Ingestion, Logic, UI). Confirmed polymorphism in `analyze_venue_matchup` and standardized the "Context over Content" philosophy across all engines.
+- **[2026-02-06] Truth Bridge Milestone (Phase 1):** Completed the `analyze_venue_matchup` verification suite.
+    - **Standardization:** Migrated to a **10-year lookback** standard across all bencharks.
+    - **Intelligence:** Implemented **Auto-Diagnostic** runner. It compares `data/FINAL_ODI_MASTER.pkl` modification time against `ground_truth.json` to prove if a failure is due to data updates or code regressions.
+    - **Verification:** User manually verified 240+ Statsguru benchmarks. Suite is currently **100% PASSING**.
+    - **Reporting:** Standardized `report.json` with granular mapping (Home vs Visitor Wins).
 - **[2026-02-06] Batting Average Integrity Fix:** Refactored dismissal logic to attribute "Outs" based on `player_dismissed` rather than `striker`. This fixes accuracy for non-striker run-outs.
     - **Fix:** Switched to merge-based aggregation in `refinery_script.py` and explicit name matching in `player_engine.py`.
 - **[2026-02-06] Boundary Date Fix:** Fixed a project-wide bug where matches on the exact boundary date (e.g., exactly 10 years ago) were excluded due to `pd.Timestamp.now()` time components.

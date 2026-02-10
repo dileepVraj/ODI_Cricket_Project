@@ -1,0 +1,762 @@
+{
+    "timestamp": "2026-02-09 16:28:10",
+    "summary": {
+        "pass": 188,
+        "fail": 0
+    },
+    "failures": [],
+    "details": [
+        {
+            "item": "Australia_vs_Bangladesh > SquadMetrics > Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > SquadMetrics > Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > A Zampa",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > AT Carey",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > C Connolly",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > JR Hazlewood",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > MA Starc",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > MJ Owen",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > MR Marsh",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > MT Renshaw",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > MW Short",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > NT Ellis",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Australia > TM Head",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Mahidul Islam Ankon",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Mehedi Hasan Miraz",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Mustafizur Rahman",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Nasum Ahmed",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Nazmul Hossain Shanto",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Nurul Hasan",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Rishad Hossain",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Saif Hassan",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Soumya Sarkar",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Tanvir Islam",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Tactical > Bangladesh > Towhid Hridoy",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Matchups > Australia > AT Carey",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Matchups > Australia > MR Marsh",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Matchups > Bangladesh > Mehedi Hasan Miraz",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Matchups > Bangladesh > Mustafizur Rahman",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Matchups > Bangladesh > Nazmul Hossain Shanto",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Matchups > Bangladesh > Soumya Sarkar",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Matchups > Bangladesh > Towhid Hridoy",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia_vs_Bangladesh > Fingerprint",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > SquadMetrics > England",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > SquadMetrics > India",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > AU Rashid",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > BM Duckett",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > HC Brook",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > J Overton",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > JC Buttler",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > JE Root",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > JG Bethell",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > LA Dawson",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > Rehan Ahmed",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > SM Curran",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > England > WG Jacks",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > Arshdeep Singh",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > Harshit Rana",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > KL Rahul",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > Kuldeep Yadav",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > Mohammed Siraj",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > Nithish Kumar Reddy",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > RA Jadeja",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > RG Sharma",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > SS Iyer",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > Shubman Gill",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Tactical > India > V Kohli",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > England > AU Rashid",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > England > BM Duckett",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > England > HC Brook",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > England > J Overton",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > England > JC Buttler",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > England > JE Root",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > England > JG Bethell",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > India > KL Rahul",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > India > Kuldeep Yadav",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > India > RA Jadeja",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > India > RG Sharma",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > India > SS Iyer",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > India > Shubman Gill",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Matchups > India > V Kohli",
+            "status": "PASS"
+        },
+        {
+            "item": "England_vs_India > Fingerprint",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > SquadMetrics > New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > SquadMetrics > Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > DJ Mitchell",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > DP Conway",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > GD Phillips",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > HM Nicholls",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > JR Lennox",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > KA Jamieson",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > KDC Clarke",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > MG Bracewell",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > MJ Hay",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > WA Young",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > New Zealand > ZGF Foulkes",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Agha Salman",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Babar Azam",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Faheem Ashraf",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Faisal Akram",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Fakhar Zaman",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Haris Rauf",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Haseebullah Khan",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Hussain Talat",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Mohammad Rizwan",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Mohammad Wasim",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Tactical > Pakistan > Shaheen Shah Afridi",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > New Zealand > DJ Mitchell",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > New Zealand > DP Conway",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > New Zealand > GD Phillips",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > New Zealand > HM Nicholls",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > New Zealand > MG Bracewell",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > New Zealand > MJ Hay",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > New Zealand > WA Young",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > Pakistan > Agha Salman",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > Pakistan > Babar Azam",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > Pakistan > Faheem Ashraf",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > Pakistan > Fakhar Zaman",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > Pakistan > Mohammad Rizwan",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Matchups > Pakistan > Shaheen Shah Afridi",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand_vs_Pakistan > Fingerprint",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > SquadMetrics > South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > SquadMetrics > Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > AK Markram",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > C Bosch",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > D Brevis",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > KA Maharaj",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > L Ngidi",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > M Jansen",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > MP Breetzke",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > OEG Baartman",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > Q de Kock",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > RD Rickelton",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > South Africa > T Bavuma",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > AM Fernando",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > BKG Mendis",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > DM de Silva",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > DN Wellalage",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > J Liyanage",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > JDF Vandersay",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > K Mishara",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > KIC Asalanka",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > P Nissanka",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > P Rathnayake",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Tactical > Sri Lanka > PWH de Silva",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > South Africa > AK Markram",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > South Africa > KA Maharaj",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > South Africa > L Ngidi",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > South Africa > Q de Kock",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > South Africa > T Bavuma",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > Sri Lanka > BKG Mendis",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > Sri Lanka > DM de Silva",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > Sri Lanka > KIC Asalanka",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > Sri Lanka > P Nissanka",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Matchups > Sri Lanka > PWH de Silva",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa_vs_Sri Lanka > Fingerprint",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > SquadMetrics > Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > SquadMetrics > West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Mahidul Islam Ankon",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Mehedi Hasan Miraz",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Mustafizur Rahman",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Nasum Ahmed",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Nazmul Hossain Shanto",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Nurul Hasan",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Rishad Hossain",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Saif Hassan",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Soumya Sarkar",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Tanvir Islam",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > Bangladesh > Towhid Hridoy",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > AWJ Auguste",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > JD Campbell",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > JNT Seales",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > JP Greaves",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > K Pierre",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > KU Carty",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > MW Forde",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > RL Chase",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > SD Hope",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > SE Rutherford",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Tactical > West Indies > SK Springer",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Mahidul Islam Ankon",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Mehedi Hasan Miraz",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Mustafizur Rahman",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Nasum Ahmed",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Nazmul Hossain Shanto",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Nurul Hasan",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Rishad Hossain",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Saif Hassan",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Soumya Sarkar",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Tanvir Islam",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > Bangladesh > Towhid Hridoy",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > West Indies > AWJ Auguste",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > West Indies > JNT Seales",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > West Indies > JP Greaves",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > West Indies > K Pierre",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > West Indies > KU Carty",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > West Indies > RL Chase",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > West Indies > SD Hope",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Matchups > West Indies > SE Rutherford",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh_vs_West Indies > Fingerprint",
+            "status": "PASS"
+        }
+    ]
+}

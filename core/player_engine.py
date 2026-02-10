@@ -956,7 +956,8 @@ class PlayerEngine:
         return {
             'SquadComparison': {team_a_name: squad_a, team_b_name: squad_b},
             'TacticalMatrix': {team_a_name: matrix_a, team_b_name: matrix_b},
-            'Matchups': {team_a_name: matchups_a, team_b_name: matchups_b}
+            'Matchups': {team_a_name: matchups_a, team_b_name: matchups_b},
+            'MATCH_IDS': ",".join(map(str, sorted(squad_context_df['match_id'].unique().tolist())))
         }
     
     def analyze_player_profile(self, player_name, opposition=None, venue_id=None, active_bowlers=None, years=10):
@@ -1239,6 +1240,3 @@ class PlayerEngine:
                 <div style="flex:1;">{ven_html}</div>
             </div>
             """))
-            
-                
-

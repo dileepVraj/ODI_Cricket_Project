@@ -170,13 +170,19 @@ class TeamEngine:
         if 'is_chased' in df.columns: l2 = bat2[bat2['is_chased'] == False]
         else: l2 = bat2[bat2['winner'] != bat2['team_bat_2']]
 
-        # 🚀 4. SMART FILTER: Competitive 2nd Innings (NEW ADDITION)
-        # We assume if the row is in 'w2', it was a win.
-        # Logic: Keep if (Team Lost) OR (Team Won AND Score >= 200).
-        # This removes "Easy Chases" (e.g. 150/2) from dragging down the average.
-        
+        # 🚀 4. SMART FILTER: Competitive 2nd Innings (DELIBERATE DESIGN CHOICE)
+        # ---------------------------------------------------------------------------------
+        # NOTE FOR DEVELOPERS: We EXCLUDE 'Easy Chases' (Winning Score < 200) from the 
+        # general 'Avg Score' metric. 
+        # 
+        # RATIONALE: If a team bowls out an opponent for 140 and chases it down easily, 
+        # including that score would artificially drag down their "Batting Power" average.
+        # We only want 'Competitive' chases (>= 200) or ANY loss to reflect in the BAT2 Avg.
+        # 
+        # IF USER ASKS: "Why is the count smaller than the total wins in the Avg Score?" 
+        # ANSWER: We are protecting the team's chasing average from small Targets.
+        # ---------------------------------------------------------------------------------
         is_win = bat2.index.isin(w2.index)
-        # Keep if NOT a win OR Score is substantial
         mask_competitive = (~is_win) | (bat2['score_inn2'] >= 200)
         smart_bat2 = bat2[mask_competitive]
 
@@ -187,9 +193,10 @@ class TeamEngine:
             'avg_1st_win': self._get_avg_with_count(w1, 'score_inn1'),
             'low_defended': get_val(w1['score_inn1'], np.min),
             
-            # 👇 UPDATED: Uses smart_bat2 instead of bat2
+            # Use 'smart_bat2' for the general average to protect the metric
             'avg_2nd': self._get_avg_with_count(smart_bat2, 'score_inn2'), 
             
+            # Use raw 'w2' for success average (Win is a win regardless of score)
             'high_chased': get_val(w2['score_inn2'], np.max),
             'avg_succ': self._get_avg_with_count(w2, 'score_inn2'),
             'avg_fail': self._get_avg_with_count(l2, 'score_inn2')
@@ -432,6 +439,8 @@ class TeamEngine:
             {"Metric": "Highest Chased", "Value": v_stats['high_chased']}, # 34
             {"Metric": "Avg Successful Chase", "Value": v_stats['avg_succ']}, # 35
             {"Metric": "Avg Failed Chase", "Value": v_stats['avg_fail']}, # 36
+            # 🕵️‍♂️ HIDDEN METRIC: Match IDs for Fingerprinting (v2.5)
+            {"Metric": "MATCH_IDS", "Value": ",".join(df['match_id'].astype(str).unique().tolist())}, 
         ]
         self._display_report(data, home_team, visitor_label, title)
         self._display_audit(df, home_team)
@@ -480,7 +489,8 @@ class TeamEngine:
                 'Opponent': opp, 'Mat': len(full), 'Won': wins, 'Lost': loss, 'Tie/NR': tie_nr, 'Win %': f"{pct}%",
                 'Last 5': self._get_form_guide(full, team_name),
                 f'{team_name} Avg (1st)': self._get_avg_with_count(val[val['team_bat_1'] == team_name], 'score_inn1'),
-                'Opp Avg (1st)': self._get_avg_with_count(val[val['team_bat_1'] != team_name], 'score_inn1')
+                'Opp Avg (1st)': self._get_avg_with_count(val[val['team_bat_1'] != team_name], 'score_inn1'),
+                'MATCH_IDS': ",".join(map(str, full['match_id'].unique().tolist()))
             })
             
         df = pd.DataFrame(stats).sort_values('Mat', ascending=False)
@@ -502,12 +512,14 @@ class TeamEngine:
             'Opponent': '⚡ OVERALL', 'Mat': len(top_full), 'Won': t_w, 'Lost': t_l, 'Tie/NR': t_nr, 'Win %': f"{t_pct}%",
             'Last 5': self._get_form_guide(top_full, team_name),
             f'{team_name} Avg (1st)': self._get_avg_with_count(top_val[top_val['team_bat_1'] == team_name], 'score_inn1'),
-            'Opp Avg (1st)': self._get_avg_with_count(top_val[top_val['team_bat_1'] != team_name], 'score_inn1')
+            'Opp Avg (1st)': self._get_avg_with_count(top_val[top_val['team_bat_1'] != team_name], 'score_inn1'),
+            'MATCH_IDS': ",".join(map(str, top_full['match_id'].unique().tolist()))
         }])
         
         final_df = pd.concat([ov, df], ignore_index=True)
         print(f"\n📊 {title}")
-        display(final_df.style.hide(axis='index'))
+        # 🧹 RESTORE CLEAN UI: Hide internal diagnostics from visual display
+        display(final_df.drop(columns=['MATCH_IDS'], errors='ignore').style.hide(axis='index'))
         self._display_audit(matches, team_name)
         return final_df.to_dict(orient='records')
 
@@ -860,7 +872,8 @@ class TeamEngine:
             "home_at_venue": home_context,
             "away_at_venue": away_context,
             "global_habits": global_habits,
-            "alerts": alerts
+            "alerts": alerts,
+            "MATCH_IDS": ",".join(venue_stats['match_id'].unique().astype(str)) if 'match_id' in venue_stats.columns else "" # 🧬 TRUTH BRIDGE FINGERPRINT
         }
         
         if recorder:
@@ -947,18 +960,31 @@ class TeamEngine:
         print(f"🏟️ Matches Analyzed: {total} | 📊 Bias Verdict: {bias}")
         print("-" * 40)
         
-        data = [
+        data_for_display = [
             {"Metric": "Win % Batting 1st", "Value": f"{bat1_pct}% ({bat1_wins})"},
             {"Metric": "Win % Chasing", "Value": f"{chase_pct}% ({chase_wins})"},
             # Use 'valid_stats' (Strict) for Averages
             {"Metric": "Avg 1st Innings Score", "Value": self._get_avg_with_count(valid_stats, 'score_inn1')},
             {"Metric": "Avg 2nd Innings Score", "Value": self._get_avg_with_count(valid_stats, 'score_inn2')},
         ]
-        display(pd.DataFrame(data).style.hide(axis='index'))
+        display(pd.DataFrame(data_for_display).style.hide(axis='index'))
         
         # 6. Show Match Audit
         self._display_audit(valid_results, venue_id)
-        return data
+
+        # 7. Construct Legacy-Compatible Payload
+        # Schema: "Period", "Matches analyzed", "Bias Verdict", "Win % Batting First", ...
+        payload = {
+            "Period": f"Last {years_back} years",
+            "Matches analyzed": total,
+            "Bias Verdict": bias.replace(" 🏏", "").replace(" 🥎", "").replace(" ⚖️", ""), # Strip emojis for clean data
+            "Win % Batting First": f"{bat1_pct}% ({bat1_wins})",
+            "Win % Chasing": f"{chase_pct}% ({chase_wins})",
+            "Avg 1st innings score": self._get_avg_with_count(valid_stats, 'score_inn1'),
+            "Avg 2nd innings score": self._get_avg_with_count(valid_stats, 'score_inn2'),
+            "MATCH_IDS": ",".join(valid_results['match_id'].unique().astype(str)) # 🧬 TRUTH BRIDGE FINGERPRINT
+        }
+        return payload
         
     def analyze_global_h2h(self, home_team, opp_team, years_back=5):
         """
@@ -1150,7 +1176,6 @@ class TeamEngine:
         # 🚨 AI LOGGING & RETURN DATA: RECENT FORM
         return {
             "summary_code": form_str, # ['W', 'L', 'NR'] - Easy to assert sequence
-            "matches": data           # Full details for audit
+            "matches": data,           # Full details for audit
+            "MATCH_IDS": ",".join(map(str, sorted(recent['match_id'].unique().tolist())))
         }
-
-        

@@ -11,6 +11,8 @@ graph TD
     C -->|Sub-Engines| D[PlayerEngine & TeamEngine]
     D --> E[Interface Layer (ipywidgets)]
     E --> F[User Dashboard (app.py)]
+    D -.->|Verification| G[🌉 Truth Bridge]
+    G -.->|Validation| B
 ```
 
 ---
@@ -25,6 +27,7 @@ graph TD
 ### Low-Level (Core Processing)
 *   **Data Processing:** `pandas` (Vectorized operations for speed)
 *   **Performance:** `numpy` (Numerical compute), Pre-computed CSV indexes
+*   **Verification:** `pytest` (Standard Bridge Tests) + JSON Snapshot Compare
 *   **Utilities:** `glob`, `os`, `json` (Standard library for file IO)
 
 ---
@@ -40,11 +43,15 @@ graph TD
 ### B. Updating Data
 When new match logs (JSON) arrive:
 1.  Place `.json` files in `data/json_source/`.
-2.  Run the pipeline:
-    ```bash
-    python utils/json_converter.py
-    ```
-3.  Restart the dashboard kernel to load fresh stats.
+2.  Run the pipeline: `python utils/json_converter.py`
+3.  **Audit Configuration**: Run `python scripts/find_missing_players.py` to ensure new players are mapped in `config/teams.py`.
+4.  Restart the dashboard kernel.
+
+### C. Quality Control (Truth Bridge)
+Before trusting engine results after a code change:
+1.  Navigate to `tests/odi/truth_bridge/`.
+2.  Run a specific validator, e.g., `python tests/odi/truth_bridge/analyze_venue_matchup/test_runner.py`.
+3.  Verify the `report.json` shows `PASS` (or `DATA_DRIFT` for fresh data).
 
 ---
 
@@ -69,17 +76,17 @@ When new match logs (JSON) arrive:
 ### 🧠 Logic Engines (`core/`)
 
 #### `core/player_engine.py` (The Heavy Lifter)
-**Role:** Calculates individual player stats, form, and matchups.
 *   **`PlayerEngine`**:
-    *   `analyze_player_profile()`: The master function for the Player Card. Orchestrates specific sub-calculations.
-    *   `_get_stats()`: Calculates Batting/Bowling avg, SR, and **Form** (Last 5 matches). *Critically uses `squads_df` to detect DNB vs Absent.*
-    *   `get_last_match_xi()`: Smart-fetches the latest Playing XI for pre-populating dropdowns.
-    *   `render_pro_table()`: Generates the HTML for the "Detailed Stats" grid (Batting/Bowling summary).
+    *   `analyze_player_profile()`: Master orchestration for the Player Card.
+    *   `analyze_squad_types()`: **[TACTICAL]** Generates the "Threat Matrix" (Batter vs. Opposition Bowling Types).
+    *   `_get_stats()`: Context-aware stats (DNB logic via `MATCH_SQUADS.csv`).
+    *   `_calculate_squad_metrics()`: Aggregated team stats (Caps, Runs, Wickets).
 
 #### `core/team_engine.py`
-**Role:** Calculates team-level metrics and H2H logs.
 *   **`TeamEngine`**:
-    *   `analyze_head_to_head()`: Generates the "Win % Matrix" and recent match history between two teams.
+    *   `analyze_head_to_head()`: Win % Matrix and recent history.
+    *   `analyze_home_fortress()`: **[SMART FILTER]** Calculates home dominance. Excludes "Easy Chases" (< 200) from general averages to prevent Batting Power deflation.
+    *   `analyze_continent_performance()`: Regional dominance analysis.
 
 ### 🛠️ Utilities (`utils/`)
 
@@ -100,9 +107,26 @@ When new match logs (JSON) arrive:
 *   **`MATCH_INFO.csv`**: Meta-data (Winner, Venue, Dates) for fast lookups.
 *   **`player_metadata.csv`**: Unique list of players mapped to their primary teams.
 
+### 💾 Tactical Configuration (`config/`)
+*   **`config/teams.py`**: The "Source of Truth" for tactical analysis.
+    *   **10-Year Coverage**: All international players since 2014 are mapped.
+    *   **Historical Legends**: 200+ pre-2014 legends mapped to support career-long tactical visibility.
+    *   **Maintenance**: Guided by `find_missing_players.py` and `check_bowler_coverage.py`.
+
 ---
 
-## 5. 🧩 Key Design Patterns
+## 5. ⚡ Performance & Caching (The Fast-Load Path)
+
+To handle 1M+ rows efficiently, the engine implements a **Self-Healing Pickle Cache**:
+
+1.  **Detection**: On startup, `CricketAnalyzer` checks for a `.pkl` file matching the database name (e.g., `FINAL_ODI_MASTER.pkl`).
+2.  **Validation**: It compares the `mtime` (modified time) of the CSV vs. the Pickle.
+3.  **The Fast Path**: If the Pickle is newer, it loads via `pd.read_pickle()` (**~80% faster** than CSV).
+4.  **The Slow Path (Auto-Rebuild)**: If the CSV is newer (user updated the data), the engine performs a "Slow Load", cleans the data, and **automatically regenerates** the Pickle file for the next session.
+
+---
+
+## 6. 🧩 Key Design Patterns
 1.  **Dependency Injection:** `engine.py` creates `raw_df` once and "injects" it into `PlayerEngine` and `TeamEngine`. Efficient memory usage.
 2.  **Facade Pattern:** `CricketAnalyzer` hides the complexity of sub-engines from the UI (`interface.py`).
 3.  **Defensive Coding:** "Nan-Safe" math (e.g., `avg = runs / outs if outs > 0 else runs`) prevents dashboard crashes on dirty data.

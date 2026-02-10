@@ -1,0 +1,1341 @@
+{
+    "timestamp": "2026-02-09 11:07:04",
+    "summary": {
+        "pass": 237,
+        "fail": 3
+    },
+    "failures": [
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Wellington",
+            "status": "FAIL",
+            "diagnosis": "LOGIC_REGRESSION: Identical matches detected, but engine calculation differs. Potential Bug.",
+            "mismatches": [
+                {
+                    "metric": "Data Availability",
+                    "expected": {
+                        "Matches Played": 1,
+                        "Tied / No Result": 0,
+                        "Home Win %": "0%",
+                        "Home Total Wins": 0,
+                        "Visitor Total Wins": 1,
+                        "Overall Avg 1st Innings": "281 (1)",
+                        "Overall Avg 2nd Innings": "283 (1)"
+                    },
+                    "actual": "No data available"
+                }
+            ]
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "hamilton",
+            "status": "FAIL",
+            "diagnosis": "DATA_DRIFT: New matches detected in dataset. Baseline needs update.",
+            "mismatches": [
+                {
+                    "metric": "Matches Played",
+                    "expected": 2,
+                    "actual": 1
+                },
+                {
+                    "metric": "Home Total Wins",
+                    "expected": 2,
+                    "actual": 1
+                },
+                {
+                    "metric": "Overall Avg 1st Innings",
+                    "expected": "263 (2)",
+                    "actual": "281 (1)"
+                },
+                {
+                    "metric": "Overall Avg 2nd Innings",
+                    "expected": "224 (2)",
+                    "actual": "257 (1)"
+                }
+            ]
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Gqeberha",
+            "status": "FAIL",
+            "diagnosis": "LOGIC_REGRESSION: Identical matches detected, but engine calculation differs. Potential Bug.",
+            "mismatches": [
+                {
+                    "metric": "Data Availability",
+                    "expected": {
+                        "Matches Played": 1,
+                        "Tied / No Result": 0,
+                        "Home Win %": "0%",
+                        "Home Total Wins": 0,
+                        "Visitor Total Wins": 1,
+                        "Overall Avg 1st Innings": "262 (1)",
+                        "Overall Avg 2nd Innings": "263 (1)"
+                    },
+                    "actual": "No data available"
+                }
+            ]
+        }
+    ],
+    "details": [
+        {
+            "matchup": "Australia vs England",
+            "venue": "Melbourne",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs England",
+            "venue": "Sydney",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs England",
+            "venue": "Adelaide",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs England",
+            "venue": "Brisbane",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs England",
+            "venue": "Perth",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs England",
+            "venue": "Hobart",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs England",
+            "venue": "Canberra",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs England",
+            "venue": "Cairns",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs England",
+            "venue": "Mackay",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Melbourne",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Sydney",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Adelaide",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Brisbane",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Perth",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Hobart",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Canberra",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Cairns",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs India",
+            "venue": "Mackay",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Melbourne",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Sydney",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Adelaide",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Brisbane",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Perth",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Hobart",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Canberra",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Cairns",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs New Zealand",
+            "venue": "Mackay",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Melbourne",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Sydney",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Adelaide",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Brisbane",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Perth",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Hobart",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Canberra",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Cairns",
+            "status": "PASS"
+        },
+        {
+            "matchup": "Australia vs South Africa",
+            "venue": "Mackay",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Lords London",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Lords oval",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Birmingham",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Manchester",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Leeds",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Nottingham",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Southampton",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Cardiff",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs Australia",
+            "venue": "Bristol",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Lords London",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Lords oval",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Birmingham",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Manchester",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Leeds",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Nottingham",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Southampton",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Cardiff",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs India",
+            "venue": "Bristol",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Lords London",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Lords oval",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Birmingham",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Manchester",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Leeds",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Nottingham",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Southampton",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Cardiff",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs New Zealand",
+            "venue": "Bristol",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Lords London",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Lords oval",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Birmingham",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Manchester",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Leeds",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Nottingham",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Southampton",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Cardiff",
+            "status": "PASS"
+        },
+        {
+            "matchup": "England vs South Africa",
+            "venue": "Bristol",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Wankhede",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Brabourne",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Ahmedabad",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Kolkata",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Chennai",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Banglore",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Delhi",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Hyderabad",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Dharamsala",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Mohali",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Pune",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Jaipur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Kanpur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Cuttack",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Indore",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Guwahati",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Lucknow",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Trivandrum",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Vishakapatnam",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Ranchi",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Rajkot",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Nagpur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs England",
+            "venue": "Raipur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Wankhede",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Brabourne",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Ahmedabad",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Kolkata",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Chennai",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Banglore",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Delhi",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Hyderabad",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Dharamsala",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Mohali",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Pune",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Jaipur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Kanpur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Cuttack",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Indore",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Guwahati",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Lucknow",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Trivandrum",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Vishakapatnam",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Ranchi",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Rajkot",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Nagpur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs Australia",
+            "venue": "Raipur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Wankhede",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Brabourne",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Ahmedabad",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Kolkata",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Chennai",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Banglore",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Delhi",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Hyderabad",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Dharamsala",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Mohali",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Pune",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Jaipur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Kanpur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Cuttack",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Indore",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Guwahati",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Lucknow",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Trivandrum",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Vishakapatnam",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Ranchi",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Rajkot",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Nagpur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs New Zealand",
+            "venue": "Raipur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Wankhede",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Brabourne",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Ahmedabad",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Kolkata",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Chennai",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Banglore",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Delhi",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Hyderabad",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Dharamsala",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Mohali",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Pune",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Jaipur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Kanpur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Cuttack",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Indore",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Guwahati",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Lucknow",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Trivandrum",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Vishakapatnam",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Ranchi",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Rajkot",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Nagpur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "India vs South Africa",
+            "venue": "Raipur",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Auckland",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Wellington",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Wellington_basin",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "hamilton",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Christchurch",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Napier",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Dunedin",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Mt_Maunganui",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Nelson",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs England",
+            "venue": "Whangarei",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Auckland",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Wellington",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Wellington_basin",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "hamilton",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Christchurch",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Napier",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Dunedin",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Mt_Maunganui",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Nelson",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs India",
+            "venue": "Whangarei",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Auckland",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Wellington",
+            "status": "FAIL",
+            "diagnosis": "LOGIC_REGRESSION: Identical matches detected, but engine calculation differs. Potential Bug.",
+            "mismatches": [
+                {
+                    "metric": "Data Availability",
+                    "expected": {
+                        "Matches Played": 1,
+                        "Tied / No Result": 0,
+                        "Home Win %": "0%",
+                        "Home Total Wins": 0,
+                        "Visitor Total Wins": 1,
+                        "Overall Avg 1st Innings": "281 (1)",
+                        "Overall Avg 2nd Innings": "283 (1)"
+                    },
+                    "actual": "No data available"
+                }
+            ]
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Wellington_basin",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "hamilton",
+            "status": "FAIL",
+            "diagnosis": "DATA_DRIFT: New matches detected in dataset. Baseline needs update.",
+            "mismatches": [
+                {
+                    "metric": "Matches Played",
+                    "expected": 2,
+                    "actual": 1
+                },
+                {
+                    "metric": "Home Total Wins",
+                    "expected": 2,
+                    "actual": 1
+                },
+                {
+                    "metric": "Overall Avg 1st Innings",
+                    "expected": "263 (2)",
+                    "actual": "281 (1)"
+                },
+                {
+                    "metric": "Overall Avg 2nd Innings",
+                    "expected": "224 (2)",
+                    "actual": "257 (1)"
+                }
+            ]
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Christchurch",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Napier",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Dunedin",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Mt_Maunganui",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Nelson",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs Australia",
+            "venue": "Whangarei",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Auckland",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Wellington",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Wellington_basin",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "hamilton",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Christchurch",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Napier",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Dunedin",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Mt_Maunganui",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Nelson",
+            "status": "PASS"
+        },
+        {
+            "matchup": "New Zealand vs South Africa",
+            "venue": "Whangarei",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Johannesburg",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Centurion",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Durban",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Gqeberha",
+            "status": "FAIL",
+            "diagnosis": "LOGIC_REGRESSION: Identical matches detected, but engine calculation differs. Potential Bug.",
+            "mismatches": [
+                {
+                    "metric": "Data Availability",
+                    "expected": {
+                        "Matches Played": 1,
+                        "Tied / No Result": 0,
+                        "Home Win %": "0%",
+                        "Home Total Wins": 0,
+                        "Visitor Total Wins": 1,
+                        "Overall Avg 1st Innings": "262 (1)",
+                        "Overall Avg 2nd Innings": "263 (1)"
+                    },
+                    "actual": "No data available"
+                }
+            ]
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Paarl",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Bloemfontein",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Potchefstroom",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "East_London",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs England",
+            "venue": "Kimberley",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "Johannesburg",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "Centurion",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "Durban",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "Gqeberha",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "Paarl",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "Bloemfontein",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "Potchefstroom",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "East_London",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs India",
+            "venue": "Kimberley",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "Johannesburg",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "Centurion",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "Durban",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "Gqeberha",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "Paarl",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "Bloemfontein",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "Potchefstroom",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "East_London",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs Australia",
+            "venue": "Kimberley",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "Johannesburg",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "Centurion",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "Durban",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "Gqeberha",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "Paarl",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "Bloemfontein",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "Potchefstroom",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "East_London",
+            "status": "PASS"
+        },
+        {
+            "matchup": "South Africa vs New Zealand",
+            "venue": "Kimberley",
+            "status": "PASS"
+        }
+    ],
+    "metadata": {
+        "data_last_modified": "2026-02-03 11:37:47",
+        "truth_last_modified": "2026-02-06 22:06:49",
+        "lookback_years": 10
+    }
+}
