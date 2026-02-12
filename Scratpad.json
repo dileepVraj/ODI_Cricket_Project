@@ -1,22 +1,14 @@
 {
-    "Toss bias report": {
-        "Wankhede cricket stadium": {
-            "Period": "Last 5 years",
-            "Matches analyzed": 28,
-            "Bias Verdict": "Bat First",
-            "Win % Batting First": "57%(16)",
-            "Win % Chasing": "35%(10)",
-            "Avg 1st innings score": "235(25)",
-            "Avg 2nd innings score": "205(25"
-        },
-        "RPS stadium Colombo Sri Lanka": {
-            "Period": "Last 5 years",
-            "Matches analyzed": 28,
-            "Bias Verdict": "Bat Second",
-            "Win % Batting First": "57%(16)",
-            "Win % Chasing": "35%(10)",
-            "Avg 1st innings score": "235(25)",
-            "Avg 2nd innings score": "205(25"
-        }
+    "ICC ODI Rankings": {
+        "India": 1,
+        "New Zealand": 2,
+        "Australia": 3,
+        "Pakistan": 4,
+        "South Africa": 5,
+        "Sri Lanka": 6,
+        "Afghanistan": 7,
+        "England": 8,
+        "West Indies": 9,
+        "Bangladesh": 10
     }
 }

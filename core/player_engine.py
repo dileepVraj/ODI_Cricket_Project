@@ -553,7 +553,7 @@ class PlayerEngine:
         table_data = []
         
         for batter in players:
-            row = {'Player': batter}
+            row = {'Player': batter, 'Role': self._get_player_role(batter)}
             for style in target_styles:
                 proxy_bowlers = all_style_map.get(style, [])
                 

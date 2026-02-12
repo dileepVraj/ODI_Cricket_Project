@@ -300,7 +300,15 @@ def transform_team_form(raw_dict, team_name):
     if not raw_dict or not isinstance(raw_dict, dict):
         return {"error": "No data returned from engine"}
 
-    summary = raw_dict.get("summary_code", [])
+    summary_raw = raw_dict.get("summary_code", [])
+    summary = []
+    
+    # Extract just the code (W, L, T, NR) from "W: against India"
+    for item in summary_raw:
+        if ":" in item:
+            summary.append(item.split(":")[0].strip())
+        else:
+            summary.append(item)
 
     wins = summary.count("W")
     losses = summary.count("L")
@@ -315,7 +323,7 @@ def transform_team_form(raw_dict, team_name):
         "ties": ties,
         "no_results": no_results,
         "total": len(summary),
-        "win_pct": round((wins / len(summary)) * 100) if len(summary) > 0 else 0,
+        "win_pct": round((wins / (len(summary) - no_results - ties)) * 100) if (len(summary) - no_results - ties) > 0 else 0,
     }
 
 
@@ -365,21 +373,27 @@ def transform_dominance_matrix(raw_list, team_name):
         lost = _safe_int(row.get("Lost", row.get("L", 0)))
         form_guide = _strip_emojis(str(row.get("Last 5", "-")))
 
+        # Professional Win %: exclude Ties/NR from denominator
+        decisions = played - _safe_int(row.get("Tie/NR", row.get("T", 0)))
+        
         total_matches += played
         total_wins += won
         total_losses += lost
-
+        
         if played > 0:
             opponent_records.append({
                 "opponent": opp_clean,
                 "played": played,
                 "won": won,
                 "lost": lost,
-                "win_pct": round((won / played) * 100) if played > 0 else 0,
+                "win_pct": round((won / decisions) * 100) if decisions > 0 else 0,
                 "form": form_guide,
             })
 
-    win_pct = round((total_wins / total_matches) * 100) if total_matches > 0 else 0
+    # Overall Win %: Exclude NR/Ties from sum total
+    total_nr_ties = sum([_safe_int(row.get("Tie/NR", 0)) for row in raw_list if "OVERALL" not in str(row.get("Opponent", "")).upper()])
+    total_decisions = total_matches - total_nr_ties
+    win_pct = round((total_wins / total_decisions) * 100) if total_decisions > 0 else 0
 
     return {
         "team": team_name,

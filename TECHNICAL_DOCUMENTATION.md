@@ -13,6 +13,8 @@ graph TD
     E --> F[User Dashboard (app.py)]
     D -.->|Verification| G[🌉 Truth Bridge]
     G -.->|Validation| B
+    D -->|Match Pack Pipeline| H[Transformer → Interpreter → Generator]
+    H --> I[Match Pack JSON Report]
 ```
 
 ---
@@ -78,15 +80,35 @@ Before trusting engine results after a code change:
 #### `core/player_engine.py` (The Heavy Lifter)
 *   **`PlayerEngine`**:
     *   `analyze_player_profile()`: Master orchestration for the Player Card.
-    *   `analyze_squad_types()`: **[TACTICAL]** Generates the "Threat Matrix" (Batter vs. Opposition Bowling Types).
+    *   `analyze_squad_types()`: **[TACTICAL]** Generates the "Threat Matrix" (Batter vs. Opposition Bowling Types). v3.3: Includes `Role` metadata per player.
     *   `_get_stats()`: Context-aware stats (DNB logic via `MATCH_SQUADS.csv`).
     *   `_calculate_squad_metrics()`: Aggregated team stats (Caps, Runs, Wickets).
 
 #### `core/team_engine.py`
 *   **`TeamEngine`**:
-    *   `analyze_head_to_head()`: Win % Matrix and recent history.
-    *   `analyze_home_fortress()`: **[SMART FILTER]** Calculates home dominance. Excludes "Easy Chases" (< 200) from general averages to prevent Batting Power deflation.
+    *   `analyze_head_to_head()`: Win % Matrix and recent history. v3.3: Win % excludes Ties/NR from denominator.
+    *   `analyze_home_fortress()`: **[SMART FILTER]** Calculates home dominance.
+    *   `analyze_team_form()`: Returns opponent-aware form sequences (e.g., `"W: against India"`).
     *   `analyze_continent_performance()`: Regional dominance analysis.
+
+#### `core/transformer.py` (The Data Cleaner)
+*   **Purpose:** Receives raw dicts from `TeamEngine`/`PlayerEngine` and produces clean, typed data structures.
+*   **Key Functions:**
+    *   `transform_h2h_report()` / `transform_h2h_slim()`: Parses H2H metric lists.
+    *   `transform_team_form()`: Extracts W/L/T/NR codes from opponent-aware form sequences.
+    *   `transform_dominance_matrix()`: Builds per-opponent win records. v3.3: Professional Win % (excludes Ties/NR).
+    *   `transform_player_stats()`: Normalizes batting/bowling/venue metrics.
+
+#### `core/interpreter.py` (The Intelligence Layer)
+*   **Purpose:** Adds context tags, narratives, and condition weights to clean data.
+*   **Key Methods:**
+    *   `interpret_h2h()`: Dominance tags (`HOME_DOMINANT`, `COMPETITIVE`, `EVENLY_MATCHED`).
+    *   `interpret_form()`: **v3.3 Rank-Weighted Momentum** using `ODI_RANKINGS`. Wins vs Top 3 teams are "Giant Killers" (+2.5), losses to associates are "Momentum Killers" (-2.5).
+    *   `interpret_fortress()`: Fortress status (`FORTRESS_CONFIRMED`, `NEUTRAL_GROUND`).
+    *   `interpret_toss_bias()`: Toss alignment with venue bias.
+    *   `interpret_conditions()`: Pitch/Time/Toss condition adjustments.
+    *   `analyze_bowling_roster()`: v3.3: Experience-weighted pitch suitability.
+    *   `generate_executive_summary()`: Synthesizes all chapters into a TL;DR prediction.
 
 ### 🛠️ Utilities (`utils/`)
 
@@ -109,9 +131,19 @@ Before trusting engine results after a code change:
 
 ### 💾 Tactical Configuration (`config/`)
 *   **`config/teams.py`**: The "Source of Truth" for tactical analysis.
+    *   **`TEAM_COLORS`**: Hex color codes for all teams.
+    *   **`ODI_RANKINGS`**: Official ICC ODI Rankings (1-10) used for rank-weighted momentum analysis.
+    *   **`BOWLER_STYLES`**: Bowling type classification for every player.
+    *   **`PLAYER_ROLES`**: Role classification (Batter, Bowler, Bat AR, Bowl AR).
     *   **10-Year Coverage**: All international players since 2014 are mapped.
     *   **Historical Legends**: 200+ pre-2014 legends mapped to support career-long tactical visibility.
     *   **Maintenance**: Guided by `find_missing_players.py` and `check_bowler_coverage.py`.
+
+### 📊 Match Pack Reports (`reports/`)
+*   **`reports/match_pack_generator.py`**: The Combat Manual orchestrator.
+    *   **4-Chapter Structure**: Macro Context → Battlefield → Tactical Engine → Player Intelligence.
+    *   **v3.3 Enhancements**: Battlefield Timeline, Role-Based Tactical Narratives, Granular Player Stats.
+    *   **Output**: JSON reports saved to `reports/MatchPack_<Team1>_vs_<Team2>_<timestamp>.json`.
 
 ---
 
@@ -130,3 +162,5 @@ To handle 1M+ rows efficiently, the engine implements a **Self-Healing Pickle Ca
 1.  **Dependency Injection:** `engine.py` creates `raw_df` once and "injects" it into `PlayerEngine` and `TeamEngine`. Efficient memory usage.
 2.  **Facade Pattern:** `CricketAnalyzer` hides the complexity of sub-engines from the UI (`interface.py`).
 3.  **Defensive Coding:** "Nan-Safe" math (e.g., `avg = runs / outs if outs > 0 else runs`) prevents dashboard crashes on dirty data.
+4.  **3-Stage Pipeline (Match Pack):** Raw Engine Data → `Transformer` (clean) → `Interpreter` (contextualize) → `Generator` (orchestrate). Each layer is independently testable.
+5.  **Rank-Weighted Analysis:** `ODI_RANKINGS` in `config/teams.py` drives quality-aware momentum scoring, ensuring results against stronger teams carry more analytical weight.

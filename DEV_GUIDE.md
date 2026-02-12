@@ -21,7 +21,12 @@ The application follows a **Model-View-Controller (MVC)** hybrid pattern tailore
 2.  **Logic Layer (The Brains - `core/`)**
     * **`player_engine.py`**: Micro-analysis. Handles individual player form, matchups, and archetypes. Features the **Threat Matrix** for tactical breakdown.
     * **`team_engine.py`**: Macro-analysis. Handles Team Fortresses, Venue Bias, and Regional Performance.
+    * **`transformer.py`**: Data Cleaner. Converts raw engine dicts into clean, typed structures for the Match Pack pipeline.
+    * **`interpreter.py`**: Intelligence Layer. Adds context tags (dominance, momentum, fortress status), narratives, and condition weights. Uses `ODI_RANKINGS` for rank-weighted momentum.
     * **`predictor.py`**: Predictive modeling. Uses weighted factors to forecast match outcomes.
+
+2b. **Report Generation Layer (`reports/`)**
+    * **`match_pack_generator.py`**: The "Combat Manual" orchestrator. Builds a 4-chapter JSON report (Macro Context → Battlefield → Tactical Engine → Player Intelligence) by calling engines silently and piping data through the Transformer → Interpreter pipeline.
 
 4.  **Verification Layer (The Quality Guard - `tests/odi/truth_bridge/`)**
     * **Truth Bridge**: Advanced auto-diagnosis system that distinguishes between `DATA_DRIFT` and `LOGIC_REGRESSION`.
@@ -67,12 +72,18 @@ The application follows a **Model-View-Controller (MVC)** hybrid pattern tailore
 ├── venues.py                # Venue Name Normalization Logic
 │
 ├── config/
-│   ├── teams.py             # STATIC DATA (Colors, Roles, Squads)
+│   ├── teams.py             # STATIC DATA (Colors, Roles, Squads, ODI_RANKINGS)
 │
 ├── core/
 │   ├── player_engine.py     # Micro-Stats (Player vs Player)
 │   ├── team_engine.py       # Macro-Stats (Phase Analysis, Fortresses)
+│   ├── transformer.py       # Data Cleaner (Raw → Typed Dicts)
+│   ├── interpreter.py       # Intelligence Layer (Context, Narratives, ODI_RANKINGS)
 │   ├── predictor.py         # Algo-Prediction Model
+│
+├── reports/
+│   ├── match_pack_generator.py  # Combat Manual Orchestrator (4-Chapter JSON)
+│   └── MatchPack_*.json         # Generated Match Pack Reports
 │
 ├── data/
 │   ├── FINAL_ODI_MASTER.csv # The Big Data (Ignored by Git LFS)

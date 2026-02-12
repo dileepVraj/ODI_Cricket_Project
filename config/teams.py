@@ -30,6 +30,20 @@ TEAM_COLORS = {
     'Netherlands': '#FF6600', 'Visitors': '#808080'
 }
 
+# ICC ODI Rankings (v3.3 Refinement)
+ODI_RANKINGS = {
+    "India": 1,
+    "New Zealand": 2,
+    "Australia": 3,
+    "Pakistan": 4,
+    "South Africa": 5,
+    "Sri Lanka": 6,
+    "Afghanistan": 7,
+    "England": 8,
+    "West Indies": 9,
+    "Bangladesh": 10
+}
+
 # Bowling Style Categories (For Reference & Consistency)
 STYLE_RIGHT_PACE = '⚡ Right-Arm Fast/Med'
 STYLE_LEFT_PACE = '⚡ Left-Arm Fast/Med'

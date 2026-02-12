@@ -1,0 +1,2906 @@
+{
+  "meta": {
+    "report_type": "ODI_Match_Pack",
+    "version": "3.2",
+    "generated_at": "2026-02-12 16:03:27",
+    "home_team": "Australia",
+    "away_team": "India",
+    "venue": "AUS_SYDNEY",
+    "home_xi": [
+      "A Zampa",
+      "AT Carey",
+      "C Connolly",
+      "JR Hazlewood",
+      "MA Starc",
+      "MJ Owen",
+      "MR Marsh",
+      "MT Renshaw",
+      "MW Short",
+      "NT Ellis",
+      "TM Head"
+    ],
+    "away_xi": [
+      "Arshdeep Singh",
+      "Harshit Rana",
+      "KL Rahul",
+      "Kuldeep Yadav",
+      "Mohammed Siraj",
+      "Nithish Kumar Reddy",
+      "RA Jadeja",
+      "RG Sharma",
+      "SS Iyer",
+      "Shubman Gill",
+      "V Kohli"
+    ],
+    "match_context": {
+      "time": "8:00 IST",
+      "toss": "Home Won & Batting",
+      "pitch": "The one thing you know about this square, it is rock hard, and this pitch is really hard. When the pitch is hard, there'll be a few cracks here in SCG. You can see there are cracks running down, vertically down the track, so the quicks will be looking at this, trying to line a few up. And there is some green live grass as well, so that means with these two brand new balls, there should be a little bit of movement. But the one thing about SCG is that the ball goes through nicely, so there's a lot of value for your shots here, which makes it a high-sporting ground. Historically, it's a high-scoring ground. The ball goes through really well. This could be the best batting pitch of the series so far. We are in for a very good contest today."
+    }
+  },
+  "Executive_Summary": {
+    "prediction": "Australia slight favourites despite some risk factors.",
+    "key_factors": [
+      "Fortress venue: Australia win 80% here (8/10 matches).",
+      "Toss decision aligns with venue bias — tactical advantage gained."
+    ],
+    "risk_alerts": [
+      "Australia recent form is COLD (4/10 wins).",
+      "India recent form is COLD (5/10 wins).",
+      "Pitch favours spin — India has more specialist spinners than Australia."
+    ],
+    "condition_adjustments": "SPIN_BOOST | SEAM_BOOST | TOSS_ALIGNED"
+  },
+  "Chapter_1_Macro_Context": {
+    "chapter_description": "High-level rivalry and momentum analysis. Covers head-to-head records, recent form for both teams, and home/away performance matrices.",
+    "global_h2h_4y": {
+      "section_description": "Head-to-head record between Australia and India over Last 4 Years. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 12,
+        "home_wins": 6,
+        "away_wins": 6,
+        "no_result": 0,
+        "home_win_pct": 50,
+        "home_won_batting_first": 2,
+        "home_won_chasing": 4,
+        "away_won_batting_first": 1,
+        "away_won_chasing": 5
+      },
+      "context": {
+        "timeline": "Last 4 Years",
+        "dominance": "COMPETITIVE",
+        "dominance_reasoning": "Win rate of 50% falls within the 45-55% competitive band.",
+        "intensity": "TIGHT",
+        "intensity_reasoning": "Gap of 0 points — very tight contest historically."
+      },
+      "narrative": "This rivalry is evenly split over Last 4 Years — both teams have won 6 of 12 decided matches. In this matchup, chasing has produced 9 wins vs 3 batting first."
+    },
+    "global_h2h_8y": {
+      "section_description": "Head-to-head record between Australia and India over Last 8 Years. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 27,
+        "home_wins": 13,
+        "away_wins": 14,
+        "no_result": 0,
+        "home_win_pct": 48,
+        "home_won_batting_first": 7,
+        "home_won_chasing": 6,
+        "away_won_batting_first": 5,
+        "away_won_chasing": 9
+      },
+      "context": {
+        "timeline": "Last 8 Years",
+        "dominance": "COMPETITIVE",
+        "dominance_reasoning": "Win rate of 48% falls within the 45-55% competitive band.",
+        "intensity": "TIGHT",
+        "intensity_reasoning": "Gap of 4 points — very tight contest historically."
+      },
+      "narrative": "India lead this rivalry with a 52% win rate over Last 8 Years (14 wins from 27 matches). In this matchup, chasing has produced 15 wins vs 12 batting first."
+    },
+    "home_form": {
+      "global": {
+        "section_description": "Recent form analysis for Australia (Global). Shows momentum direction, current streaks, and whether form is improving or declining.",
+        "data": {
+          "team": "Australia",
+          "sequence": [
+            "L",
+            "W",
+            "W",
+            "W",
+            "L",
+            "L",
+            "L",
+            "W",
+            "L",
+            "L"
+          ],
+          "wins": 4,
+          "losses": 6,
+          "ties": 0,
+          "no_results": 0,
+          "total": 10,
+          "win_pct": 40
+        },
+        "context": {
+          "filter": "Global",
+          "momentum": "COLD",
+          "momentum_reasoning": "Momentum score: -3.5. Significant momentum loss — struggling to defend rankings or secure quality wins.",
+          "trend": "TRENDING_UP",
+          "trend_reasoning": "Recent 5 matches: 3W/2L (60% WR) vs earlier 5 matches: 1W/4L (20% WR). Improvement of 40 percentage points.",
+          "streak": "",
+          "streak_reasoning": ""
+        },
+        "narrative": "Australia have won 4 and lost 6 of their last 10 ODIs (Global), a 40% win rate. They are struggling with only 3 win(s) from their last 5."
+      },
+      "vs_opponent": {
+        "section_description": "Recent form analysis for Australia (vs India). Shows momentum direction, current streaks, and whether form is improving or declining.",
+        "data": {
+          "team": "Australia",
+          "sequence": [
+            "L",
+            "W",
+            "W",
+            "L",
+            "W",
+            "L",
+            "W",
+            "L",
+            "L",
+            "W"
+          ],
+          "wins": 5,
+          "losses": 5,
+          "ties": 0,
+          "no_results": 0,
+          "total": 10,
+          "win_pct": 50
+        },
+        "context": {
+          "filter": "vs India",
+          "momentum": "COLD",
+          "momentum_reasoning": "Momentum score: -3.5. Significant momentum loss — struggling to defend rankings or secure quality wins.",
+          "trend": "FLAT",
+          "trend_reasoning": "Recent 5 matches: 60% WR vs earlier 5: 40% WR. Difference of 20pp — no significant trend.",
+          "streak": "",
+          "streak_reasoning": ""
+        },
+        "narrative": "Australia have won 5 and lost 5 of their last 10 ODIs (vs India), a 50% win rate. They are struggling with only 3 win(s) from their last 5."
+      }
+    },
+    "away_form": {
+      "global": {
+        "section_description": "Recent form analysis for India (Global). Shows momentum direction, current streaks, and whether form is improving or declining.",
+        "data": {
+          "team": "India",
+          "sequence": [
+            "L",
+            "L",
+            "W",
+            "W",
+            "L",
+            "W",
+            "W",
+            "L",
+            "L",
+            "W"
+          ],
+          "wins": 5,
+          "losses": 5,
+          "ties": 0,
+          "no_results": 0,
+          "total": 10,
+          "win_pct": 50
+        },
+        "context": {
+          "filter": "Global",
+          "momentum": "COLD",
+          "momentum_reasoning": "Momentum score: -6.5. Significant momentum loss — struggling to defend rankings or secure quality wins.",
+          "trend": "FLAT",
+          "trend_reasoning": "Recent 5 matches: 40% WR vs earlier 5: 60% WR. Difference of 20pp — no significant trend.",
+          "streak": "2 consecutive losses",
+          "streak_reasoning": "The last 2 results are all 'L'."
+        },
+        "narrative": "India have won 5 and lost 5 of their last 10 ODIs (Global), a 50% win rate. They are struggling with only 2 win(s) from their last 5. Currently on a streak of 2 consecutive losses."
+      },
+      "vs_opponent": {
+        "section_description": "Recent form analysis for India (vs Australia). Shows momentum direction, current streaks, and whether form is improving or declining.",
+        "data": {
+          "team": "India",
+          "sequence": [
+            "W",
+            "L",
+            "L",
+            "W",
+            "L",
+            "W",
+            "L",
+            "W",
+            "W",
+            "L"
+          ],
+          "wins": 5,
+          "losses": 5,
+          "ties": 0,
+          "no_results": 0,
+          "total": 10,
+          "win_pct": 50
+        },
+        "context": {
+          "filter": "vs Australia",
+          "momentum": "COLD",
+          "momentum_reasoning": "Momentum score: -6.5. Significant momentum loss — struggling to defend rankings or secure quality wins.",
+          "trend": "FLAT",
+          "trend_reasoning": "Recent 5 matches: 40% WR vs earlier 5: 60% WR. Difference of 20pp — no significant trend.",
+          "streak": "",
+          "streak_reasoning": ""
+        },
+        "narrative": "India have won 5 and lost 5 of their last 10 ODIs (vs Australia), a 50% win rate. They are struggling with only 2 win(s) from their last 5."
+      }
+    },
+    "country_h2h": {
+      "section_description": "Head-to-head record between Australia and India over In-Country, 8Y. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 9,
+        "home_wins": 5,
+        "away_wins": 4,
+        "no_result": 0,
+        "home_win_pct": 55,
+        "home_won_batting_first": 3,
+        "home_won_chasing": 2,
+        "away_won_batting_first": 1,
+        "away_won_chasing": 3
+      },
+      "context": {
+        "timeline": "In-Country, 8Y",
+        "dominance": "COMPETITIVE",
+        "dominance_reasoning": "Win rate of 55% falls within the 45-55% competitive band.",
+        "intensity": "MODERATE",
+        "intensity_reasoning": "Gap of 10 points — moderate separation."
+      },
+      "narrative": "Australia lead this rivalry with a 55% win rate over In-Country, 8Y (5 wins from 9 matches). In this matchup, chasing has produced 5 wins vs 4 batting first."
+    },
+    "home_dominance": {
+      "section_description": "Overall home performance matrix for Australia against all major opponents. Identifies which teams they dominate and struggle against home.",
+      "data": {
+        "team": "Australia",
+        "overall": {
+          "matches": 18,
+          "wins": 13,
+          "losses": 5,
+          "win_pct": 72
+        },
+        "vs_opponents": [
+          {
+            "opponent": "India",
+            "played": 3,
+            "won": 2,
+            "lost": 1,
+            "win_pct": 67,
+            "form": ""
+          },
+          {
+            "opponent": "England",
+            "played": 3,
+            "won": 3,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          },
+          {
+            "opponent": "South Africa",
+            "played": 3,
+            "won": 1,
+            "lost": 2,
+            "win_pct": 33,
+            "form": ""
+          },
+          {
+            "opponent": "New Zealand",
+            "played": 3,
+            "won": 3,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          },
+          {
+            "opponent": "Pakistan",
+            "played": 3,
+            "won": 1,
+            "lost": 2,
+            "win_pct": 33,
+            "form": ""
+          },
+          {
+            "opponent": "West Indies",
+            "played": 3,
+            "won": 3,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          }
+        ]
+      },
+      "context": {
+        "strength": "STRONG",
+        "strength_reasoning": "72% win rate at home (13/18) — above 65% threshold.",
+        "mode": "HOME"
+      },
+      "narrative": "Australia win 72% of home matches (13/18). Best record vs England (100%, 3/3). Worst record vs South Africa (33%, 1/3)."
+    },
+    "away_performance": {
+      "section_description": "Overall away performance matrix for India against all major opponents. Identifies which teams they dominate and struggle against away.",
+      "data": {
+        "team": "India",
+        "overall": {
+          "matches": 34,
+          "wins": 19,
+          "losses": 11,
+          "win_pct": 63
+        },
+        "vs_opponents": [
+          {
+            "opponent": "West Indies",
+            "played": 6,
+            "won": 5,
+            "lost": 1,
+            "win_pct": 83,
+            "form": ""
+          },
+          {
+            "opponent": "New Zealand",
+            "played": 5,
+            "won": 2,
+            "lost": 1,
+            "win_pct": 67,
+            "form": ""
+          },
+          {
+            "opponent": "Sri Lanka",
+            "played": 5,
+            "won": 2,
+            "lost": 2,
+            "win_pct": 50,
+            "form": ""
+          },
+          {
+            "opponent": "Bangladesh",
+            "played": 5,
+            "won": 2,
+            "lost": 3,
+            "win_pct": 40,
+            "form": ""
+          },
+          {
+            "opponent": "Australia",
+            "played": 4,
+            "won": 2,
+            "lost": 2,
+            "win_pct": 50,
+            "form": ""
+          },
+          {
+            "opponent": "England",
+            "played": 3,
+            "won": 2,
+            "lost": 1,
+            "win_pct": 67,
+            "form": ""
+          },
+          {
+            "opponent": "South Africa",
+            "played": 3,
+            "won": 2,
+            "lost": 1,
+            "win_pct": 67,
+            "form": ""
+          },
+          {
+            "opponent": "Pakistan",
+            "played": 3,
+            "won": 2,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          }
+        ]
+      },
+      "context": {
+        "strength": "STRONG_TRAVELLER",
+        "strength_reasoning": "63% win rate away (19/34) — winning more than losing on the road.",
+        "mode": "AWAY"
+      },
+      "narrative": "India win 63% of away matches (19/34). Best record vs Pakistan (100%, 2/3). Worst record vs Bangladesh (40%, 2/5)."
+    }
+  },
+  "Chapter_2_Battlefield": {
+    "chapter_description": "Venue-specific intelligence. Analyses whether the ground is a fortress for the home team, the head-to-head record at this specific venue, and historical toss impact.",
+    "fortress_check": {
+      "section_description": "Evaluates whether this venue is a 'fortress' for Australia based on their historical win rate here. Includes key score thresholds (lowest defended, highest chased).",
+      "data": {
+        "matches_played": 10,
+        "home_wins": 8,
+        "away_wins": 2,
+        "no_result": 0,
+        "home_win_pct": 80,
+        "batting_first": {
+          "home_avg_score": 306,
+          "home_avg_winning_score": 315,
+          "home_lowest_defended": 258,
+          "home_won_batting_first": 8,
+          "away_avg_score": 302,
+          "away_avg_winning_score": 302,
+          "away_lowest_defended": 302,
+          "away_won_batting_first": 1
+        },
+        "chasing": {
+          "home_highest_chase": 0,
+          "home_avg_successful_chase": 0,
+          "home_won_chasing": 0,
+          "away_highest_chase": 237,
+          "away_avg_successful_chase": 237,
+          "away_won_chasing": 1
+        },
+        "avg_winning_score": 314
+      },
+      "context": {
+        "fortress_status": "FORTRESS_CONFIRMED",
+        "fortress_reasoning": "Australia win 80% here (8/10) — exceeds 60% fortress threshold.",
+        "batting_first_bias": "STRONG",
+        "defend_threshold": 258,
+        "chase_ceiling": 237
+      },
+      "narrative": "This venue is a confirmed fortress for Australia (80% win rate, 8/10 matches). Average winning score here is 315. Lowest successfully defended score is 258. Visitors have never chased above 237 here."
+    },
+    "venue_h2h": {
+      "section_description": "Head-to-head record between Australia and India over At This Venue, 15Y. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 8,
+        "home_wins": 5,
+        "away_wins": 2,
+        "no_result": 1,
+        "home_win_pct": 71,
+        "batting_first": {
+          "home_avg_score": 313,
+          "home_avg_winning_score": 326,
+          "home_lowest_defended": 252,
+          "home_won_batting_first": 5,
+          "away_avg_score": 0,
+          "away_avg_winning_score": 0,
+          "away_lowest_defended": 0,
+          "away_won_batting_first": 0
+        },
+        "chasing": {
+          "home_highest_chase": 0,
+          "home_avg_successful_chase": 0,
+          "home_won_chasing": 0,
+          "away_highest_chase": 331,
+          "away_avg_successful_chase": 284,
+          "away_won_chasing": 2
+        },
+        "avg_winning_score": 326
+      },
+      "context": {
+        "timeline": "At This Venue, 15Y",
+        "dominance": "HOME_DOMINANT",
+        "dominance_reasoning": "Australia win 71% which exceeds the 65% dominance threshold.",
+        "intensity": "ONE_SIDED",
+        "intensity_reasoning": "Gap of 42 points from neutral indicates a one-sided record."
+      },
+      "narrative": "Australia lead this rivalry with a 71% win rate over At This Venue, 15Y (5 wins from 8 matches). In this matchup, batting first has produced 5 wins vs 2 chasing."
+    },
+    "toss_bias": {
+      "section_description": "Analyses whether batting first or chasing has historically won more at this venue (Last 7 years). Combined with live toss information to assess alignment.",
+      "data": {
+        "period": "Last 7 years",
+        "matches_analyzed": 6,
+        "bat_first_wins": 5,
+        "bat_first_win_pct": 83,
+        "chase_wins": 1,
+        "chase_win_pct": 16,
+        "avg_1st_innings": 299,
+        "avg_2nd_innings": 242,
+        "score_drop_2nd_innings": 57,
+        "verdict": "BAT FIRST"
+      },
+      "context": {
+        "verdict": "BAT FIRST",
+        "strength": "STRONG",
+        "strength_reasoning": "67pp gap between bat-first (83%) and chase (16%) win rates — strong bias.",
+        "toss_alignment": "TOSS_ALIGNED",
+        "toss_reasoning": "Toss winner chose to bat, which aligns with venue bias (BAT FIRST).",
+        "toss_winner_advantage": true
+      },
+      "narrative": "This venue favours batting first (83% bat-first win rate vs 16% chasing, 6 matches over Last 7 years). Average 1st innings score is 299, dropping to 242 in the 2nd — a 57-run depression suggesting the pitch deteriorates. Toss decision is toss aligned."
+    },
+    "battlefield_timeline": {
+      "section_description": "Historical scoring and win-percentage trends at this venue.",
+      "data": {
+        "recent_3y_bat_first_win_pct": 50,
+        "all_time_bat_first_win_pct": 83,
+        "trend": "INCREASING_CHASE"
+      },
+      "narrative": "Recent 3-year trend shows a 33% decrease in Batting First success compared to the long-term average."
+    }
+  },
+  "Chapter_3_Tactical_Engine": {
+    "chapter_description": "Phase-by-phase scoring patterns at this venue and globally. Identifies powerplay, middle-overs, and death-overs tendencies for both teams, plus condition adjustments from pitch/time/toss inputs.",
+    "phase_analysis": {
+      "section_description": "Scoring and wicket-loss patterns across Powerplay (overs 1-10), Middle Overs (11-40), and Death Overs (41-50) for both teams. venue_baseline = all teams at this venue; home_at_venue/away_at_venue = team-specific at venue; global_habits = team's overall patterns across all venues. CAVEAT: IMPORTANT: 2nd innings death-over stats (overs 41-50) have an inherent sampling bias. Many chases conclude before the death overs if the target is low or the batting team collapses early. These averages only reflect matches that DID reach the death phase, which tend to be close/high-scoring games. Interpret with caution.",
+      "data": {
+        "venue_baseline": {
+          "pp_avg_1st": 59.0,
+          "pp_wkts_1st": 2.0,
+          "mid_avg_1st": 140.7,
+          "mid_wkts_1st": 4.0,
+          "dth_avg_1st": 58.3,
+          "dth_wkts_1st": 3.0,
+          "pp_avg_2nd": 51.0,
+          "pp_wkts_2nd": 2.0,
+          "mid_avg_2nd": 150.7,
+          "mid_wkts_2nd": 4.3,
+          "dth_avg_2nd": 5.0,
+          "dth_wkts_2nd": 0.7
+        },
+        "home_at_venue": {
+          "pp_avg_1st": 59.0,
+          "pp_wkts_1st": 2.0,
+          "mid_avg_1st": 140.7,
+          "mid_wkts_1st": 4.0,
+          "dth_avg_1st": 58.3,
+          "dth_wkts_1st": 3.0,
+          "pp_avg_2nd": 0,
+          "pp_wkts_2nd": 0,
+          "mid_avg_2nd": 0,
+          "mid_wkts_2nd": 0,
+          "dth_avg_2nd": 0,
+          "dth_wkts_2nd": 0
+        },
+        "away_at_venue": {
+          "pp_avg_1st": 0,
+          "pp_wkts_1st": 0,
+          "mid_avg_1st": 0,
+          "mid_wkts_1st": 0,
+          "dth_avg_1st": 0,
+          "dth_wkts_1st": 0,
+          "pp_avg_2nd": 68.0,
+          "pp_wkts_2nd": 0.0,
+          "mid_avg_2nd": 169.0,
+          "mid_wkts_2nd": 1.0,
+          "dth_avg_2nd": 0.0,
+          "dth_wkts_2nd": 0.0
+        },
+        "global_habits": {
+          "bat_first": {
+            "home_team_pp_runs": 50.3,
+            "home_team_pp_wkts": 1.2,
+            "home_team_mid_runs": 149.0,
+            "home_team_mid_wkts": 3.6,
+            "home_team_dth_runs": 69.7,
+            "home_team_dth_wkts": 2.9,
+            "away_team_pp_runs": 49.2,
+            "away_team_pp_wkts": 1.2,
+            "away_team_mid_runs": 153.5,
+            "away_team_mid_wkts": 3.3,
+            "away_team_dth_runs": 66.9,
+            "away_team_dth_wkts": 2.8
+          },
+          "chasing": {
+            "home_team_pp_runs": 55.5,
+            "home_team_pp_wkts": 1.4,
+            "home_team_mid_runs": 132.5,
+            "home_team_mid_wkts": 3.3,
+            "home_team_dth_runs": 27.9,
+            "home_team_dth_wkts": 1.1,
+            "away_team_pp_runs": 52.0,
+            "away_team_pp_wkts": 1.3,
+            "away_team_mid_runs": 142.9,
+            "away_team_mid_wkts": 3.3,
+            "away_team_dth_runs": 30.6,
+            "away_team_dth_wkts": 1.2
+          }
+        },
+        "alerts": [
+          "RISK: Australia collapses chasing"
+        ]
+      },
+      "context": {
+        "alerts": [
+          "RISK: Australia collapses chasing"
+        ]
+      },
+      "narrative": "Powerplay is key at this venue (PP avg 59.0 vs Death avg 58.3 in 1st innings). Note: 2nd innings death-over averages may be understated as many chases end before overs 41-50. RISK: Australia collapses chasing"
+    },
+    "condition_weights": {
+      "adjustments": [
+        "SPIN_BOOST",
+        "SEAM_BOOST",
+        "TOSS_ALIGNED"
+      ],
+      "weights": {
+        "spin_weight": 1.2,
+        "pace_weight": 1.15
+      },
+      "pitch_report": "The one thing you know about this square, it is rock hard, and this pitch is really hard. When the pitch is hard, there'll be a few cracks here in SCG. You can see there are cracks running down, vertically down the track, so the quicks will be looking at this, trying to line a few up. And there is some green live grass as well, so that means with these two brand new balls, there should be a little bit of movement. But the one thing about SCG is that the ball goes through nicely, so there's a lot of value for your shots here, which makes it a high-sporting ground. Historically, it's a high-scoring ground. The ball goes through really well. This could be the best batting pitch of the series so far. We are in for a very good contest today.",
+      "match_time": "8:00 IST",
+      "toss_decision": "Home Won & Batting"
+    }
+  },
+  "Chapter_4_Player_Intelligence": {
+    "chapter_description": "Player-level analysis: squad aggregate comparison, tactical matrix (per-player stats), individual matchups, per-player batting/bowling form + venue metrics, and bowling roster composition vs pitch conditions.",
+    "squad_comparison": {
+      "section_description": "Aggregate squad metrics comparing Australia and India. Shows combined experience (caps), run-scoring depth (total runs, centuries, fifties), and wicket-taking ability (total wickets, 5-wicket hauls).",
+      "data": {
+        "Australia": {
+          "Caps (Combined)": 627,
+          "Total Runs": 10067,
+          "100s": 12,
+          "50s": 55,
+          "Total Wickets": 679,
+          "5-Wkt Hauls": 15
+        },
+        "India": {
+          "Caps (Combined)": 1182,
+          "Total Runs": 38626,
+          "100s": 107,
+          "50s": 209,
+          "Total Wickets": 557,
+          "5-Wkt Hauls": 6
+        }
+      },
+      "narrative": "India have significantly more experience (1182 vs 627 combined caps). India have more centurions (107 vs 12 centuries). Australia have superior bowling depth (679 vs 557 wickets)."
+    },
+    "tactical_matrix": {
+      "section_description": "Per-player batting average vs each bowling type in the opposing squad. Format: 'Avg (StrikeRate)'. Low averages vs a bowling type indicate vulnerability. High averages with high strike rate indicate domination of that bowling type.",
+      "data": {
+        "Australia": [
+          {
+            "Player": "A Zampa",
+            "Role": "Bowler",
+            "⚡ Left-Arm Fast/Med": "3.3 (31)",
+            "⚡ Left-Arm Fast/Med_raw": 3.3,
+            "⚡ Right-Arm Fast/Med": "10.8 (75)",
+            "⚡ Right-Arm Fast/Med_raw": 10.8,
+            "🌀 Left-Arm Unorthodox": "10 (71)",
+            "🌀 Left-Arm Unorthodox_raw": "10",
+            "🌀 Slow Left-Arm Orth": "7.5 (42)",
+            "🌀 Slow Left-Arm Orth_raw": 7.5,
+            "🌀 Off Spin": "21 (44)",
+            "🌀 Off Spin_raw": "21",
+            "🌀 Leg Spin": "18.0 (79)",
+            "🌀 Leg Spin_raw": 18.0
+          },
+          {
+            "Player": "AT Carey",
+            "Role": "Batter",
+            "⚡ Left-Arm Fast/Med": "35.8 (93)",
+            "⚡ Left-Arm Fast/Med_raw": 35.8,
+            "⚡ Right-Arm Fast/Med": "46.0 (81)",
+            "⚡ Right-Arm Fast/Med_raw": 46.0,
+            "🌀 Left-Arm Unorthodox": "19.4 (104)",
+            "🌀 Left-Arm Unorthodox_raw": 19.4,
+            "🌀 Slow Left-Arm Orth": "30.9 (82)",
+            "🌀 Slow Left-Arm Orth_raw": 30.9,
+            "🌀 Off Spin": "62.6 (99)",
+            "🌀 Off Spin_raw": 62.6,
+            "🌀 Leg Spin": "31.6 (99)",
+            "🌀 Leg Spin_raw": 31.6
+          },
+          {
+            "Player": "C Connolly",
+            "Role": "Batting All-Rounder",
+            "⚡ Left-Arm Fast/Med": "5 (100)",
+            "⚡ Left-Arm Fast/Med_raw": "5",
+            "⚡ Right-Arm Fast/Med": "26.5 (62)",
+            "⚡ Right-Arm Fast/Med_raw": 26.5,
+            "🌀 Left-Arm Unorthodox": "3 (37)",
+            "🌀 Left-Arm Unorthodox_raw": "3",
+            "🌀 Slow Left-Arm Orth": "17 (85)",
+            "🌀 Slow Left-Arm Orth_raw": "17",
+            "🌀 Off Spin": "16.0 (80)",
+            "🌀 Off Spin_raw": 16.0,
+            "🌀 Leg Spin": "-"
+          },
+          {
+            "Player": "JR Hazlewood",
+            "Role": "Bowler",
+            "⚡ Left-Arm Fast/Med": "5.0 (41)",
+            "⚡ Left-Arm Fast/Med_raw": 5.0,
+            "⚡ Right-Arm Fast/Med": "27.0 (84)",
+            "⚡ Right-Arm Fast/Med_raw": 27.0,
+            "🌀 Left-Arm Unorthodox": "6.0 (85)",
+            "🌀 Left-Arm Unorthodox_raw": 6.0,
+            "🌀 Slow Left-Arm Orth": "13 (130)",
+            "🌀 Slow Left-Arm Orth_raw": "13",
+            "🌀 Off Spin": "15 (125)",
+            "🌀 Off Spin_raw": "15",
+            "🌀 Leg Spin": "10.0 (58)",
+            "🌀 Leg Spin_raw": 10.0
+          },
+          {
+            "Player": "MA Starc",
+            "Role": "Bowler",
+            "⚡ Left-Arm Fast/Med": "9.1 (80)",
+            "⚡ Left-Arm Fast/Med_raw": 9.1,
+            "⚡ Right-Arm Fast/Med": "16.2 (82)",
+            "⚡ Right-Arm Fast/Med_raw": 16.2,
+            "🌀 Left-Arm Unorthodox": "18.0 (52)",
+            "🌀 Left-Arm Unorthodox_raw": 18.0,
+            "🌀 Slow Left-Arm Orth": "15.3 (54)",
+            "🌀 Slow Left-Arm Orth_raw": 15.3,
+            "🌀 Off Spin": "17.0 (65)",
+            "🌀 Off Spin_raw": 17.0,
+            "🌀 Leg Spin": "10.8 (76)",
+            "🌀 Leg Spin_raw": 10.8
+          },
+          {
+            "Player": "MJ Owen",
+            "Role": "Batter",
+            "⚡ Left-Arm Fast/Med": "-",
+            "⚡ Right-Arm Fast/Med": "20.0 (200)",
+            "⚡ Right-Arm Fast/Med_raw": 20.0,
+            "🌀 Left-Arm Unorthodox": "-",
+            "🌀 Slow Left-Arm Orth": "15 (125)",
+            "🌀 Slow Left-Arm Orth_raw": "15",
+            "🌀 Off Spin": "2.0 (33)",
+            "🌀 Off Spin_raw": 2.0,
+            "🌀 Leg Spin": "-"
+          },
+          {
+            "Player": "MR Marsh",
+            "Role": "Batting All-Rounder",
+            "⚡ Left-Arm Fast/Med": "23.9 (103)",
+            "⚡ Left-Arm Fast/Med_raw": 23.9,
+            "⚡ Right-Arm Fast/Med": "37.9 (103)",
+            "⚡ Right-Arm Fast/Med_raw": 37.9,
+            "🌀 Left-Arm Unorthodox": "31.7 (107)",
+            "🌀 Left-Arm Unorthodox_raw": 31.7,
+            "🌀 Slow Left-Arm Orth": "44.4 (76)",
+            "🌀 Slow Left-Arm Orth_raw": 44.4,
+            "🌀 Off Spin": "208.0 (74)",
+            "🌀 Off Spin_raw": 208.0,
+            "🌀 Leg Spin": "33.3 (82)",
+            "🌀 Leg Spin_raw": 33.3
+          },
+          {
+            "Player": "MT Renshaw",
+            "Role": "Batter",
+            "⚡ Left-Arm Fast/Med": "14 (100)",
+            "⚡ Left-Arm Fast/Med_raw": "14",
+            "⚡ Right-Arm Fast/Med": "43 (107)",
+            "⚡ Right-Arm Fast/Med_raw": "43",
+            "🌀 Left-Arm Unorthodox": "9 (90)",
+            "🌀 Left-Arm Unorthodox_raw": "9",
+            "🌀 Slow Left-Arm Orth": "14.0 (73)",
+            "🌀 Slow Left-Arm Orth_raw": 14.0,
+            "🌀 Off Spin": "27.0 (90)",
+            "🌀 Off Spin_raw": 27.0,
+            "🌀 Leg Spin": "-"
+          },
+          {
+            "Player": "MW Short",
+            "Role": "Batting All-Rounder",
+            "⚡ Left-Arm Fast/Med": "23.5 (102)",
+            "⚡ Left-Arm Fast/Med_raw": 23.5,
+            "⚡ Right-Arm Fast/Med": "25.1 (102)",
+            "⚡ Right-Arm Fast/Med_raw": 25.1,
+            "🌀 Left-Arm Unorthodox": "13 (100)",
+            "🌀 Left-Arm Unorthodox_raw": "13",
+            "🌀 Slow Left-Arm Orth": "17.5 (57)",
+            "🌀 Slow Left-Arm Orth_raw": 17.5,
+            "🌀 Off Spin": "21.5 (81)",
+            "🌀 Off Spin_raw": 21.5,
+            "🌀 Leg Spin": "8 (47)",
+            "🌀 Leg Spin_raw": "8"
+          },
+          {
+            "Player": "NT Ellis",
+            "Role": "Bowler",
+            "⚡ Left-Arm Fast/Med": "3 (50)",
+            "⚡ Left-Arm Fast/Med_raw": "3",
+            "⚡ Right-Arm Fast/Med": "10.5 (126)",
+            "⚡ Right-Arm Fast/Med_raw": 10.5,
+            "🌀 Left-Arm Unorthodox": "4 (40)",
+            "🌀 Left-Arm Unorthodox_raw": "4",
+            "🌀 Slow Left-Arm Orth": "11.5 (62)",
+            "🌀 Slow Left-Arm Orth_raw": 11.5,
+            "🌀 Off Spin": "13 (100)",
+            "🌀 Off Spin_raw": "13",
+            "🌀 Leg Spin": "-"
+          },
+          {
+            "Player": "TM Head",
+            "Role": "Batter",
+            "⚡ Left-Arm Fast/Med": "67.5 (112)",
+            "⚡ Left-Arm Fast/Med_raw": 67.5,
+            "⚡ Right-Arm Fast/Med": "38.9 (111)",
+            "⚡ Right-Arm Fast/Med_raw": 38.9,
+            "🌀 Left-Arm Unorthodox": "43.0 (101)",
+            "🌀 Left-Arm Unorthodox_raw": 43.0,
+            "🌀 Slow Left-Arm Orth": "52.3 (95)",
+            "🌀 Slow Left-Arm Orth_raw": 52.3,
+            "🌀 Off Spin": "41.9 (81)",
+            "🌀 Off Spin_raw": 41.9,
+            "🌀 Leg Spin": "37.8 (96)",
+            "🌀 Leg Spin_raw": 37.8
+          }
+        ],
+        "India": [
+          {
+            "Player": "Arshdeep Singh",
+            "Role": "Bowler",
+            "🌀 Leg Spin": "2 (100)",
+            "🌀 Leg Spin_raw": "2",
+            "🌀 Slow Left-Arm Orth": "8 (100)",
+            "🌀 Slow Left-Arm Orth_raw": "8",
+            "⚡ Right-Arm Fast/Med": "12.0 (120)",
+            "⚡ Right-Arm Fast/Med_raw": 12.0,
+            "⚡ Left-Arm Fast/Med": "9.5 (105)",
+            "⚡ Left-Arm Fast/Med_raw": 9.5,
+            "🌀 Off Spin": "3.0 (60)",
+            "🌀 Off Spin_raw": 3.0
+          },
+          {
+            "Player": "Harshit Rana",
+            "Role": "Bowler",
+            "🌀 Leg Spin": "17 (212)",
+            "🌀 Leg Spin_raw": "17",
+            "🌀 Slow Left-Arm Orth": "9.0 (60)",
+            "🌀 Slow Left-Arm Orth_raw": 9.0,
+            "⚡ Right-Arm Fast/Med": "27.0 (119)",
+            "⚡ Right-Arm Fast/Med_raw": 27.0,
+            "⚡ Left-Arm Fast/Med": "5 (125)",
+            "⚡ Left-Arm Fast/Med_raw": "5",
+            "🌀 Off Spin": "11 (122)",
+            "🌀 Off Spin_raw": "11"
+          },
+          {
+            "Player": "KL Rahul",
+            "Role": "Batter",
+            "🌀 Leg Spin": "38.4 (90)",
+            "🌀 Leg Spin_raw": 38.4,
+            "🌀 Slow Left-Arm Orth": "60.7 (95)",
+            "🌀 Slow Left-Arm Orth_raw": 60.7,
+            "⚡ Right-Arm Fast/Med": "56.9 (88)",
+            "⚡ Right-Arm Fast/Med_raw": 56.9,
+            "⚡ Left-Arm Fast/Med": "39.9 (82)",
+            "⚡ Left-Arm Fast/Med_raw": 39.9,
+            "🌀 Off Spin": "107.8 (89)",
+            "🌀 Off Spin_raw": 107.8
+          },
+          {
+            "Player": "Kuldeep Yadav",
+            "Role": "Bowler",
+            "🌀 Leg Spin": "6.3 (41)",
+            "🌀 Leg Spin_raw": 6.3,
+            "🌀 Slow Left-Arm Orth": "5.0 (43)",
+            "🌀 Slow Left-Arm Orth_raw": 5.0,
+            "⚡ Right-Arm Fast/Med": "10.8 (46)",
+            "⚡ Right-Arm Fast/Med_raw": 10.8,
+            "⚡ Left-Arm Fast/Med": "32 (69)",
+            "⚡ Left-Arm Fast/Med_raw": "32",
+            "🌀 Off Spin": "33.0 (46)",
+            "🌀 Off Spin_raw": 33.0
+          },
+          {
+            "Player": "Mohammed Siraj",
+            "Role": "Bowler",
+            "🌀 Leg Spin": "5 (33)",
+            "🌀 Leg Spin_raw": "5",
+            "🌀 Slow Left-Arm Orth": "11 (50)",
+            "🌀 Slow Left-Arm Orth_raw": "11",
+            "⚡ Right-Arm Fast/Med": "8.2 (63)",
+            "⚡ Right-Arm Fast/Med_raw": 8.2,
+            "⚡ Left-Arm Fast/Med": "1.0 (7)",
+            "⚡ Left-Arm Fast/Med_raw": 1.0,
+            "🌀 Off Spin": "3.0 (19)",
+            "🌀 Off Spin_raw": 3.0
+          },
+          {
+            "Player": "Nithish Kumar Reddy",
+            "Role": "Bowling All-Rounder",
+            "🌀 Leg Spin": "3.0 (60)",
+            "🌀 Leg Spin_raw": 3.0,
+            "🌀 Slow Left-Arm Orth": "28 (96)",
+            "🌀 Slow Left-Arm Orth_raw": "28",
+            "⚡ Right-Arm Fast/Med": "24.0 (109)",
+            "⚡ Right-Arm Fast/Med_raw": 24.0,
+            "⚡ Left-Arm Fast/Med": "-",
+            "🌀 Off Spin": "17 (85)",
+            "🌀 Off Spin_raw": "17"
+          },
+          {
+            "Player": "RA Jadeja",
+            "Role": "Bowling All-Rounder",
+            "🌀 Leg Spin": "24.6 (67)",
+            "🌀 Leg Spin_raw": 24.6,
+            "🌀 Slow Left-Arm Orth": "55.4 (90)",
+            "🌀 Slow Left-Arm Orth_raw": 55.4,
+            "⚡ Right-Arm Fast/Med": "38.0 (90)",
+            "⚡ Right-Arm Fast/Med_raw": 38.0,
+            "⚡ Left-Arm Fast/Med": "23.1 (91)",
+            "⚡ Left-Arm Fast/Med_raw": 23.1,
+            "🌀 Off Spin": "46.0 (61)",
+            "🌀 Off Spin_raw": 46.0
+          },
+          {
+            "Player": "RG Sharma",
+            "Role": "Batter",
+            "🌀 Leg Spin": "71.0 (104)",
+            "🌀 Leg Spin_raw": 71.0,
+            "🌀 Slow Left-Arm Orth": "69.3 (89)",
+            "🌀 Slow Left-Arm Orth_raw": 69.3,
+            "⚡ Right-Arm Fast/Med": "45.3 (89)",
+            "⚡ Right-Arm Fast/Med_raw": 45.3,
+            "⚡ Left-Arm Fast/Med": "45.2 (85)",
+            "⚡ Left-Arm Fast/Med_raw": 45.2,
+            "🌀 Off Spin": "62.3 (95)",
+            "🌀 Off Spin_raw": 62.3
+          },
+          {
+            "Player": "SS Iyer",
+            "Role": "Batter",
+            "🌀 Leg Spin": "46.7 (91)",
+            "🌀 Leg Spin_raw": 46.7,
+            "🌀 Slow Left-Arm Orth": "87.3 (91)",
+            "🌀 Slow Left-Arm Orth_raw": 87.3,
+            "⚡ Right-Arm Fast/Med": "36.0 (94)",
+            "⚡ Right-Arm Fast/Med_raw": 36.0,
+            "⚡ Left-Arm Fast/Med": "40.3 (99)",
+            "⚡ Left-Arm Fast/Med_raw": 40.3,
+            "🌀 Off Spin": "82.0 (105)",
+            "🌀 Off Spin_raw": 82.0
+          },
+          {
+            "Player": "Shubman Gill",
+            "Role": "Batter",
+            "🌀 Leg Spin": "46.0 (95)",
+            "🌀 Leg Spin_raw": 46.0,
+            "🌀 Slow Left-Arm Orth": "54.3 (85)",
+            "🌀 Slow Left-Arm Orth_raw": 54.3,
+            "⚡ Right-Arm Fast/Med": "53.8 (95)",
+            "⚡ Right-Arm Fast/Med_raw": 53.8,
+            "⚡ Left-Arm Fast/Med": "41.9 (100)",
+            "⚡ Left-Arm Fast/Med_raw": 41.9,
+            "🌀 Off Spin": "137.5 (99)",
+            "🌀 Off Spin_raw": 137.5
+          },
+          {
+            "Player": "V Kohli",
+            "Role": "Batter",
+            "🌀 Leg Spin": "58.0 (96)",
+            "🌀 Leg Spin_raw": 58.0,
+            "🌀 Slow Left-Arm Orth": "73.0 (87)",
+            "🌀 Slow Left-Arm Orth_raw": 73.0,
+            "⚡ Right-Arm Fast/Med": "57.5 (91)",
+            "⚡ Right-Arm Fast/Med_raw": 57.5,
+            "⚡ Left-Arm Fast/Med": "50.8 (96)",
+            "⚡ Left-Arm Fast/Med_raw": 50.8,
+            "🌀 Off Spin": "77.7 (90)",
+            "🌀 Off Spin_raw": 77.7
+          }
+        ]
+      },
+      "narrative": "TACTICAL WEAKNESS (Australia): A Zampa (Bowler) vs ⚡ Left-Arm Fast/Med, AT Carey (Batter) vs 🌀 Left-Arm Unorthodox represent key target areas for opposition bowlers. TACTICAL WEAKNESS (India): Arshdeep Singh (Bowler) vs 🌀 Off Spin, Harshit Rana (Bowler) vs 🌀 Slow Left-Arm Orth represent key target areas for opposition bowlers."
+    },
+    "matchups": {
+      "section_description": "Batter vs specific bowler head-to-head records. Shows runs scored, balls faced, dismissals, average, and strike rate. Bunny alerts flag batters dismissed 3+ times at avg <20 by a specific bowler.",
+      "data": {
+        "Australia": {
+          "A Zampa": [
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med)",
+              "Runs": 2,
+              "Balls": 15,
+              "Outs": 1,
+              "Avg": 2.0,
+              "SR": 13.3,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "RA Jadeja (🌀 Slow Left-Arm Orth)",
+              "Runs": 4,
+              "Balls": 10,
+              "Outs": 1,
+              "Avg": 4.0,
+              "SR": 40.0,
+              "RawName": "RA Jadeja",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            }
+          ],
+          "AT Carey": [
+            {
+              "Bowler": "Arshdeep Singh ( Left-Arm Fast/Med)",
+              "Runs": 4,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 4,
+              "SR": 57.1,
+              "RawName": "Arshdeep Singh",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 0,
+              "Balls": 2,
+              "Outs": 1,
+              "Avg": 0.0,
+              "SR": 0.0,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Kuldeep Yadav (🌀 Left-Arm Unorthodox) (🐰 Bunny)",
+              "Runs": 90,
+              "Balls": 92,
+              "Outs": 5,
+              "Avg": 18.0,
+              "SR": 97.8,
+              "RawName": "Kuldeep Yadav",
+              "RawStyle": "🌀 Left-Arm Unorthodox"
+            },
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med)",
+              "Runs": 0,
+              "Balls": 3,
+              "Outs": 0,
+              "Avg": 0,
+              "SR": 0.0,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "RA Jadeja (🌀 Slow Left-Arm Orth) (🐰 Bunny)",
+              "Runs": 36,
+              "Balls": 48,
+              "Outs": 3,
+              "Avg": 12.0,
+              "SR": 75.0,
+              "RawName": "RA Jadeja",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            }
+          ],
+          "C Connolly": [
+            {
+              "Bowler": "Arshdeep Singh ( Left-Arm Fast/Med)",
+              "Runs": 5,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 5,
+              "SR": 100.0,
+              "RawName": "Arshdeep Singh",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 16,
+              "Balls": 24,
+              "Outs": 1,
+              "Avg": 16.0,
+              "SR": 66.7,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Kuldeep Yadav (🌀 Left-Arm Unorthodox)",
+              "Runs": 3,
+              "Balls": 8,
+              "Outs": 0,
+              "Avg": 3,
+              "SR": 37.5,
+              "RawName": "Kuldeep Yadav",
+              "RawStyle": "🌀 Left-Arm Unorthodox"
+            },
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med)",
+              "Runs": 17,
+              "Balls": 11,
+              "Outs": 0,
+              "Avg": 17,
+              "SR": 154.5,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ],
+          "JR Hazlewood": [
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 0,
+              "Balls": 2,
+              "Outs": 1,
+              "Avg": 0.0,
+              "SR": 0.0,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "RA Jadeja (🌀 Slow Left-Arm Orth)",
+              "Runs": 12,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 12,
+              "SR": 171.4,
+              "RawName": "RA Jadeja",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            }
+          ],
+          "MA Starc": [
+            {
+              "Bowler": "Arshdeep Singh ( Left-Arm Fast/Med)",
+              "Runs": 0,
+              "Balls": 3,
+              "Outs": 0,
+              "Avg": 0,
+              "SR": 0.0,
+              "RawName": "Arshdeep Singh",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 1,
+              "Balls": 2,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 50.0,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Kuldeep Yadav (🌀 Left-Arm Unorthodox)",
+              "Runs": 3,
+              "Balls": 12,
+              "Outs": 1,
+              "Avg": 3.0,
+              "SR": 25.0,
+              "RawName": "Kuldeep Yadav",
+              "RawStyle": "🌀 Left-Arm Unorthodox"
+            },
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med) (🐰 Bunny)",
+              "Runs": 19,
+              "Balls": 19,
+              "Outs": 3,
+              "Avg": 6.3,
+              "SR": 100.0,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "RA Jadeja (🌀 Slow Left-Arm Orth)",
+              "Runs": 4,
+              "Balls": 7,
+              "Outs": 1,
+              "Avg": 4.0,
+              "SR": 57.1,
+              "RawName": "RA Jadeja",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            }
+          ],
+          "MJ Owen": [
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 20,
+              "Balls": 9,
+              "Outs": 1,
+              "Avg": 20.0,
+              "SR": 222.2,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med)",
+              "Runs": 0,
+              "Balls": 1,
+              "Outs": 0,
+              "Avg": 0,
+              "SR": 0.0,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ],
+          "MR Marsh": [
+            {
+              "Bowler": "Arshdeep Singh ( Left-Arm Fast/Med)",
+              "Runs": 15,
+              "Balls": 18,
+              "Outs": 1,
+              "Avg": 15.0,
+              "SR": 83.3,
+              "RawName": "Arshdeep Singh",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 23,
+              "Balls": 22,
+              "Outs": 0,
+              "Avg": 23,
+              "SR": 104.5,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Kuldeep Yadav (🌀 Left-Arm Unorthodox)",
+              "Runs": 58,
+              "Balls": 37,
+              "Outs": 1,
+              "Avg": 58.0,
+              "SR": 156.8,
+              "RawName": "Kuldeep Yadav",
+              "RawStyle": "🌀 Left-Arm Unorthodox"
+            },
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med)",
+              "Runs": 65,
+              "Balls": 79,
+              "Outs": 0,
+              "Avg": 65,
+              "SR": 82.3,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Nithish Kumar Reddy ( Right-Arm Fast/Med)",
+              "Runs": 6,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 6,
+              "SR": 120.0,
+              "RawName": "Nithish Kumar Reddy",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "RA Jadeja (🌀 Slow Left-Arm Orth)",
+              "Runs": 61,
+              "Balls": 84,
+              "Outs": 1,
+              "Avg": 61.0,
+              "SR": 72.6,
+              "RawName": "RA Jadeja",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            }
+          ],
+          "MT Renshaw": [
+            {
+              "Bowler": "Arshdeep Singh ( Left-Arm Fast/Med)",
+              "Runs": 14,
+              "Balls": 14,
+              "Outs": 0,
+              "Avg": 14,
+              "SR": 100.0,
+              "RawName": "Arshdeep Singh",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 15,
+              "Balls": 15,
+              "Outs": 0,
+              "Avg": 15,
+              "SR": 100.0,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Kuldeep Yadav (🌀 Left-Arm Unorthodox)",
+              "Runs": 9,
+              "Balls": 10,
+              "Outs": 0,
+              "Avg": 9,
+              "SR": 90.0,
+              "RawName": "Kuldeep Yadav",
+              "RawStyle": "🌀 Left-Arm Unorthodox"
+            },
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med)",
+              "Runs": 3,
+              "Balls": 4,
+              "Outs": 0,
+              "Avg": 3,
+              "SR": 75.0,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Nithish Kumar Reddy ( Right-Arm Fast/Med)",
+              "Runs": 17,
+              "Balls": 15,
+              "Outs": 0,
+              "Avg": 17,
+              "SR": 113.3,
+              "RawName": "Nithish Kumar Reddy",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ],
+          "MW Short": [
+            {
+              "Bowler": "Arshdeep Singh ( Left-Arm Fast/Med)",
+              "Runs": 20,
+              "Balls": 19,
+              "Outs": 0,
+              "Avg": 20,
+              "SR": 105.3,
+              "RawName": "Arshdeep Singh",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 17,
+              "Balls": 19,
+              "Outs": 1,
+              "Avg": 17.0,
+              "SR": 89.5,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Kuldeep Yadav (🌀 Left-Arm Unorthodox)",
+              "Runs": 13,
+              "Balls": 13,
+              "Outs": 0,
+              "Avg": 13,
+              "SR": 100.0,
+              "RawName": "Kuldeep Yadav",
+              "RawStyle": "🌀 Left-Arm Unorthodox"
+            },
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med)",
+              "Runs": 9,
+              "Balls": 16,
+              "Outs": 0,
+              "Avg": 9,
+              "SR": 56.2,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Nithish Kumar Reddy ( Right-Arm Fast/Med)",
+              "Runs": 9,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 9,
+              "SR": 128.6,
+              "RawName": "Nithish Kumar Reddy",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ],
+          "NT Ellis": [
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 3,
+              "Balls": 2,
+              "Outs": 0,
+              "Avg": 3,
+              "SR": 150.0,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Kuldeep Yadav (🌀 Left-Arm Unorthodox)",
+              "Runs": 1,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 14.3,
+              "RawName": "Kuldeep Yadav",
+              "RawStyle": "🌀 Left-Arm Unorthodox"
+            }
+          ],
+          "TM Head": [
+            {
+              "Bowler": "Arshdeep Singh ( Left-Arm Fast/Med)",
+              "Runs": 8,
+              "Balls": 17,
+              "Outs": 1,
+              "Avg": 8.0,
+              "SR": 47.1,
+              "RawName": "Arshdeep Singh",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Harshit Rana ( Right-Arm Fast/Med)",
+              "Runs": 10,
+              "Balls": 15,
+              "Outs": 1,
+              "Avg": 10.0,
+              "SR": 66.7,
+              "RawName": "Harshit Rana",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "Kuldeep Yadav (🌀 Left-Arm Unorthodox)",
+              "Runs": 72,
+              "Balls": 70,
+              "Outs": 0,
+              "Avg": 72,
+              "SR": 102.9,
+              "RawName": "Kuldeep Yadav",
+              "RawStyle": "🌀 Left-Arm Unorthodox"
+            },
+            {
+              "Bowler": "Mohammed Siraj ( Right-Arm Fast/Med) (🐰 Bunny)",
+              "Runs": 111,
+              "Balls": 82,
+              "Outs": 3,
+              "Avg": 37.0,
+              "SR": 135.4,
+              "RawName": "Mohammed Siraj",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "RA Jadeja (🌀 Slow Left-Arm Orth)",
+              "Runs": 26,
+              "Balls": 27,
+              "Outs": 0,
+              "Avg": 26,
+              "SR": 96.3,
+              "RawName": "RA Jadeja",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            }
+          ]
+        },
+        "India": {
+          "Arshdeep Singh": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin)",
+              "Runs": 1,
+              "Balls": 1,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 100.0,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med)",
+              "Runs": 9,
+              "Balls": 8,
+              "Outs": 1,
+              "Avg": 9.0,
+              "SR": 112.5,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            }
+          ],
+          "Harshit Rana": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin)",
+              "Runs": 17,
+              "Balls": 8,
+              "Outs": 0,
+              "Avg": 17,
+              "SR": 212.5,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med)",
+              "Runs": 3,
+              "Balls": 3,
+              "Outs": 0,
+              "Avg": 3,
+              "SR": 100.0,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MJ Owen (Unknown)",
+              "Runs": 1,
+              "Balls": 2,
+              "Outs": 1,
+              "Avg": 1.0,
+              "SR": 50.0,
+              "RawName": "MJ Owen",
+              "RawStyle": "Unknown"
+            }
+          ],
+          "KL Rahul": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin) (🐰 Bunny)",
+              "Runs": 174,
+              "Balls": 184,
+              "Outs": 5,
+              "Avg": 34.8,
+              "SR": 94.6,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "C Connolly (🌀 Slow Left-Arm Orth)",
+              "Runs": 5,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 5,
+              "SR": 71.4,
+              "RawName": "C Connolly",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JR Hazlewood ( Right-Arm Fast/Med)",
+              "Runs": 63,
+              "Balls": 75,
+              "Outs": 0,
+              "Avg": 63,
+              "SR": 84.0,
+              "RawName": "JR Hazlewood",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med) (🐰 Bunny)",
+              "Runs": 114,
+              "Balls": 128,
+              "Outs": 3,
+              "Avg": 38.0,
+              "SR": 89.1,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MJ Owen (Unknown)",
+              "Runs": 1,
+              "Balls": 2,
+              "Outs": 1,
+              "Avg": 1.0,
+              "SR": 50.0,
+              "RawName": "MJ Owen",
+              "RawStyle": "Unknown"
+            },
+            {
+              "Bowler": "MR Marsh ( Right-Arm Fast/Med)",
+              "Runs": 2,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 28.6,
+              "RawName": "MR Marsh",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MW Short (🌀 Off Spin)",
+              "Runs": 25,
+              "Balls": 19,
+              "Outs": 0,
+              "Avg": 25,
+              "SR": 131.6,
+              "RawName": "MW Short",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "NT Ellis ( Right-Arm Fast/Med)",
+              "Runs": 19,
+              "Balls": 20,
+              "Outs": 0,
+              "Avg": 19,
+              "SR": 95.0,
+              "RawName": "NT Ellis",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "TM Head (🌀 Off Spin)",
+              "Runs": 2,
+              "Balls": 8,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 25.0,
+              "RawName": "TM Head",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "Kuldeep Yadav": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin)",
+              "Runs": 7,
+              "Balls": 12,
+              "Outs": 0,
+              "Avg": 7,
+              "SR": 58.3,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "JR Hazlewood ( Right-Arm Fast/Med)",
+              "Runs": 2,
+              "Balls": 13,
+              "Outs": 1,
+              "Avg": 2.0,
+              "SR": 15.4,
+              "RawName": "JR Hazlewood",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med)",
+              "Runs": 18,
+              "Balls": 23,
+              "Outs": 0,
+              "Avg": 18,
+              "SR": 78.3,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "NT Ellis ( Right-Arm Fast/Med)",
+              "Runs": 2,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 28.6,
+              "RawName": "NT Ellis",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ],
+          "Mohammed Siraj": [
+            {
+              "Bowler": "JR Hazlewood ( Right-Arm Fast/Med)",
+              "Runs": 7,
+              "Balls": 4,
+              "Outs": 0,
+              "Avg": 7,
+              "SR": 175.0,
+              "RawName": "JR Hazlewood",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med)",
+              "Runs": 0,
+              "Balls": 3,
+              "Outs": 1,
+              "Avg": 0.0,
+              "SR": 0.0,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            }
+          ],
+          "Nithish Kumar Reddy": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin)",
+              "Runs": 3,
+              "Balls": 5,
+              "Outs": 1,
+              "Avg": 3.0,
+              "SR": 60.0,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "MJ Owen (Unknown)",
+              "Runs": 4,
+              "Balls": 3,
+              "Outs": 0,
+              "Avg": 4,
+              "SR": 133.3,
+              "RawName": "MJ Owen",
+              "RawStyle": "Unknown"
+            }
+          ],
+          "RA Jadeja": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin) (🐰 Bunny)",
+              "Runs": 51,
+              "Balls": 82,
+              "Outs": 3,
+              "Avg": 17.0,
+              "SR": 62.2,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "JR Hazlewood ( Right-Arm Fast/Med)",
+              "Runs": 40,
+              "Balls": 25,
+              "Outs": 1,
+              "Avg": 40.0,
+              "SR": 160.0,
+              "RawName": "JR Hazlewood",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med)",
+              "Runs": 61,
+              "Balls": 64,
+              "Outs": 1,
+              "Avg": 61.0,
+              "SR": 95.3,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MR Marsh ( Right-Arm Fast/Med)",
+              "Runs": 2,
+              "Balls": 2,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 100.0,
+              "RawName": "MR Marsh",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MW Short (🌀 Off Spin)",
+              "Runs": 2,
+              "Balls": 4,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 50.0,
+              "RawName": "MW Short",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "NT Ellis ( Right-Arm Fast/Med)",
+              "Runs": 4,
+              "Balls": 12,
+              "Outs": 1,
+              "Avg": 4.0,
+              "SR": 33.3,
+              "RawName": "NT Ellis",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "TM Head (🌀 Off Spin)",
+              "Runs": 1,
+              "Balls": 2,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 50.0,
+              "RawName": "TM Head",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "RG Sharma": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin) (🐰 Bunny)",
+              "Runs": 176,
+              "Balls": 175,
+              "Outs": 4,
+              "Avg": 44.0,
+              "SR": 100.6,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "C Connolly (🌀 Slow Left-Arm Orth)",
+              "Runs": 22,
+              "Balls": 23,
+              "Outs": 1,
+              "Avg": 22.0,
+              "SR": 95.7,
+              "RawName": "C Connolly",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JR Hazlewood ( Right-Arm Fast/Med)",
+              "Runs": 109,
+              "Balls": 152,
+              "Outs": 2,
+              "Avg": 54.5,
+              "SR": 71.7,
+              "RawName": "JR Hazlewood",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med) (🐰 Bunny)",
+              "Runs": 194,
+              "Balls": 208,
+              "Outs": 4,
+              "Avg": 48.5,
+              "SR": 93.3,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MJ Owen (Unknown)",
+              "Runs": 16,
+              "Balls": 12,
+              "Outs": 0,
+              "Avg": 16,
+              "SR": 133.3,
+              "RawName": "MJ Owen",
+              "RawStyle": "Unknown"
+            },
+            {
+              "Bowler": "MR Marsh ( Right-Arm Fast/Med)",
+              "Runs": 38,
+              "Balls": 43,
+              "Outs": 0,
+              "Avg": 38,
+              "SR": 88.4,
+              "RawName": "MR Marsh",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MW Short (🌀 Off Spin)",
+              "Runs": 29,
+              "Balls": 23,
+              "Outs": 0,
+              "Avg": 29,
+              "SR": 126.1,
+              "RawName": "MW Short",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "NT Ellis ( Right-Arm Fast/Med)",
+              "Runs": 37,
+              "Balls": 36,
+              "Outs": 0,
+              "Avg": 37,
+              "SR": 102.8,
+              "RawName": "NT Ellis",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "TM Head (🌀 Off Spin)",
+              "Runs": 37,
+              "Balls": 27,
+              "Outs": 0,
+              "Avg": 37,
+              "SR": 137.0,
+              "RawName": "TM Head",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "SS Iyer": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin) (🐰 Bunny)",
+              "Runs": 75,
+              "Balls": 99,
+              "Outs": 5,
+              "Avg": 15.0,
+              "SR": 75.8,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "C Connolly (🌀 Slow Left-Arm Orth)",
+              "Runs": 22,
+              "Balls": 29,
+              "Outs": 0,
+              "Avg": 22,
+              "SR": 75.9,
+              "RawName": "C Connolly",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JR Hazlewood ( Right-Arm Fast/Med) (🐰 Bunny)",
+              "Runs": 61,
+              "Balls": 68,
+              "Outs": 3,
+              "Avg": 20.3,
+              "SR": 89.7,
+              "RawName": "JR Hazlewood",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med)",
+              "Runs": 47,
+              "Balls": 50,
+              "Outs": 1,
+              "Avg": 47.0,
+              "SR": 94.0,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MJ Owen (Unknown)",
+              "Runs": 6,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 6,
+              "SR": 120.0,
+              "RawName": "MJ Owen",
+              "RawStyle": "Unknown"
+            },
+            {
+              "Bowler": "MW Short (🌀 Off Spin)",
+              "Runs": 25,
+              "Balls": 18,
+              "Outs": 0,
+              "Avg": 25,
+              "SR": 138.9,
+              "RawName": "MW Short",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "NT Ellis ( Right-Arm Fast/Med)",
+              "Runs": 2,
+              "Balls": 3,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 66.7,
+              "RawName": "NT Ellis",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ],
+          "Shubman Gill": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin)",
+              "Runs": 37,
+              "Balls": 47,
+              "Outs": 2,
+              "Avg": 18.5,
+              "SR": 78.7,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "C Connolly (🌀 Slow Left-Arm Orth)",
+              "Runs": 9,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 9,
+              "SR": 180.0,
+              "RawName": "C Connolly",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JR Hazlewood ( Right-Arm Fast/Med)",
+              "Runs": 49,
+              "Balls": 63,
+              "Outs": 1,
+              "Avg": 49.0,
+              "SR": 77.8,
+              "RawName": "JR Hazlewood",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med) (🐰 Bunny)",
+              "Runs": 46,
+              "Balls": 60,
+              "Outs": 3,
+              "Avg": 15.3,
+              "SR": 76.7,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MW Short (🌀 Off Spin)",
+              "Runs": 16,
+              "Balls": 10,
+              "Outs": 0,
+              "Avg": 16,
+              "SR": 160.0,
+              "RawName": "MW Short",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "NT Ellis ( Right-Arm Fast/Med)",
+              "Runs": 8,
+              "Balls": 10,
+              "Outs": 1,
+              "Avg": 8.0,
+              "SR": 80.0,
+              "RawName": "NT Ellis",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ],
+          "V Kohli": [
+            {
+              "Bowler": "A Zampa (🌀 Leg Spin) (🐰 Bunny)",
+              "Runs": 302,
+              "Balls": 296,
+              "Outs": 6,
+              "Avg": 50.3,
+              "SR": 102.0,
+              "RawName": "A Zampa",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "C Connolly (🌀 Slow Left-Arm Orth)",
+              "Runs": 26,
+              "Balls": 32,
+              "Outs": 0,
+              "Avg": 26,
+              "SR": 81.2,
+              "RawName": "C Connolly",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JR Hazlewood ( Right-Arm Fast/Med) (🐰 Bunny)",
+              "Runs": 67,
+              "Balls": 106,
+              "Outs": 5,
+              "Avg": 13.4,
+              "SR": 63.2,
+              "RawName": "JR Hazlewood",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MA Starc ( Left-Arm Fast/Med)",
+              "Runs": 162,
+              "Balls": 174,
+              "Outs": 2,
+              "Avg": 81.0,
+              "SR": 93.1,
+              "RawName": "MA Starc",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MJ Owen (Unknown)",
+              "Runs": 1,
+              "Balls": 2,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 50.0,
+              "RawName": "MJ Owen",
+              "RawStyle": "Unknown"
+            },
+            {
+              "Bowler": "MR Marsh ( Right-Arm Fast/Med)",
+              "Runs": 67,
+              "Balls": 73,
+              "Outs": 0,
+              "Avg": 67,
+              "SR": 91.8,
+              "RawName": "MR Marsh",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "MW Short (🌀 Off Spin)",
+              "Runs": 7,
+              "Balls": 8,
+              "Outs": 0,
+              "Avg": 7,
+              "SR": 87.5,
+              "RawName": "MW Short",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "NT Ellis ( Right-Arm Fast/Med)",
+              "Runs": 39,
+              "Balls": 38,
+              "Outs": 1,
+              "Avg": 39.0,
+              "SR": 102.6,
+              "RawName": "NT Ellis",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "TM Head (🌀 Off Spin)",
+              "Runs": 24,
+              "Balls": 29,
+              "Outs": 0,
+              "Avg": 24,
+              "SR": 82.8,
+              "RawName": "TM Head",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ]
+        }
+      },
+      "narrative": "KEY BUNNY ALERTS: AT Carey is a bunny of Kuldeep Yadav (🌀 Left-Arm Unorthodox) (🐰 Bunny) (5 dismissals, avg 18.0). AT Carey is a bunny of RA Jadeja (🌀 Slow Left-Arm Orth) (🐰 Bunny) (3 dismissals, avg 12.0). MA Starc is a bunny of Mohammed Siraj ( Right-Arm Fast/Med) (🐰 Bunny) (3 dismissals, avg 6.3). RA Jadeja is a bunny of A Zampa (🌀 Leg Spin) (🐰 Bunny) (3 dismissals, avg 17.0). SS Iyer is a bunny of A Zampa (🌀 Leg Spin) (🐰 Bunny) (5 dismissals, avg 15.0). DOMINATION MATCHUPS: TM Head dominates Kuldeep Yadav (🌀 Left-Arm Unorthodox) (72 runs at SR 102.9, never out)."
+    },
+    "player_stats": {
+      "section_description": "Per-player detailed statistics: batting form (last 10 match scores), career batting average, average vs this specific opponent, venue-specific batting record (innings, runs, avg, highest score), bowling form and economy, venue bowling economy and wickets. This is the most granular player-level data available for prediction.",
+      "data": {
+        "Australia": {
+          "A Zampa": {
+            "player": "A Zampa",
+            "batting": {
+              "innings": 57,
+              "form_scores": [
+                "2*",
+                "0*",
+                "DNB",
+                "3",
+                "11",
+                "7",
+                "DNB",
+                "8",
+                "20*",
+                "13"
+              ],
+              "average": 9.9,
+              "vs_opponent_avg": 6.0,
+              "venue": {
+                "innings": 3,
+                "runs": 12,
+                "average": 12.0,
+                "highest": 8
+              }
+            },
+            "bowling": {
+              "form_display": "0/50 (10), 4/60 (10), 1/31 (4.5), 3/63 (10), 1/58 (10), 2/60 (10), 2/64 (10), 1/47 (8), 0/32 (6), 0/10 (1.5)",
+              "economy": 5.5,
+              "venue_economy": 5.4,
+              "venue_wickets": 19,
+              "venue_matches": 9
+            }
+          },
+          "AT Carey": {
+            "player": "AT Carey",
+            "batting": {
+              "innings": 77,
+              "form_scores": [
+                "24",
+                "9",
+                "50*",
+                "13",
+                "0",
+                "61",
+                "69",
+                "41",
+                "13",
+                "77"
+              ],
+              "average": 35.1,
+              "vs_opponent_avg": 29.3,
+              "venue": {
+                "innings": 5,
+                "runs": 66,
+                "average": 16.5,
+                "highest": 24
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 0.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "C Connolly": {
+            "player": "C Connolly",
+            "batting": {
+              "innings": 5,
+              "form_scores": [
+                "23",
+                "61*",
+                "DNB",
+                "DNB",
+                "0",
+                "3",
+                "7",
+                "DNB"
+              ],
+              "average": 23.5,
+              "vs_opponent_avg": 11.5,
+              "venue": {
+                "innings": 1,
+                "runs": 23,
+                "average": 23.0,
+                "highest": 23
+              }
+            },
+            "bowling": {
+              "form_display": "0/36 (5), 0/11 (3), -, 5/22 (6), 1/37 (8), -, -, 0/31 (4)",
+              "economy": 5.3,
+              "venue_economy": 7.2,
+              "venue_wickets": 0,
+              "venue_matches": 1
+            }
+          },
+          "JR Hazlewood": {
+            "player": "JR Hazlewood",
+            "batting": {
+              "innings": 33,
+              "form_scores": [
+                "0",
+                "DNB",
+                "DNB",
+                "3*",
+                "1*",
+                "2*",
+                "DNB",
+                "0",
+                "DNB",
+                "4*"
+              ],
+              "average": 15.0,
+              "vs_opponent_avg": 2.0,
+              "venue": {
+                "innings": 2,
+                "runs": 4,
+                "average": 4.0,
+                "highest": 4
+              }
+            },
+            "bowling": {
+              "form_display": "1/23 (6), 0/29 (10), 2/20 (7), 1/57 (9.1), 0/36 (8), 0/37 (7), 0/33 (6), 1/40 (8), 0/43 (8), 2/54 (8)",
+              "economy": 4.8,
+              "venue_economy": 5.1,
+              "venue_wickets": 22,
+              "venue_matches": 12
+            }
+          },
+          "MA Starc": {
+            "player": "MA Starc",
+            "batting": {
+              "innings": 68,
+              "form_scores": [
+                "2",
+                "4",
+                "DNB",
+                "1",
+                "2*",
+                "DNB",
+                "3*",
+                "DNB",
+                "0",
+                "DNB"
+              ],
+              "average": 11.8,
+              "vs_opponent_avg": 11.2,
+              "venue": {
+                "innings": 7,
+                "runs": 92,
+                "average": 23.0,
+                "highest": 52
+              }
+            },
+            "bowling": {
+              "form_display": "0/31 (5), 2/62 (10), 1/22 (6), 0/28 (4), 3/33 (10), 0/47 (6), 0/70 (8), 2/63 (8), 3/50 (9.2), 3/55 (10)",
+              "economy": 5.3,
+              "venue_economy": 5.6,
+              "venue_wickets": 16,
+              "venue_matches": 15
+            }
+          },
+          "MJ Owen": {
+            "player": "MJ Owen",
+            "batting": {
+              "innings": 2,
+              "form_scores": [
+                "1",
+                "36",
+                "DNB"
+              ],
+              "average": 18.5,
+              "vs_opponent_avg": 1.0,
+              "venue": {
+                "innings": 1,
+                "runs": 1,
+                "average": 1.0,
+                "highest": 1
+              }
+            },
+            "bowling": {
+              "form_display": "0/2 (1), 0/20 (2), 2/20 (3)",
+              "economy": 7.0,
+              "venue_economy": 2.0,
+              "venue_wickets": 0,
+              "venue_matches": 1
+            }
+          },
+          "MR Marsh": {
+            "player": "MR Marsh",
+            "batting": {
+              "innings": 93,
+              "form_scores": [
+                "41",
+                "11",
+                "46*",
+                "100",
+                "18",
+                "88",
+                "28",
+                "24",
+                "60",
+                "10"
+              ],
+              "average": 37.9,
+              "vs_opponent_avg": 57.7,
+              "venue": {
+                "innings": 6,
+                "runs": 276,
+                "average": 69.0,
+                "highest": 102
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, 1/27 (4), -, -, -",
+              "economy": 5.5,
+              "venue_economy": 5.8,
+              "venue_wickets": 8,
+              "venue_matches": 6
+            }
+          },
+          "MT Renshaw": {
+            "player": "MT Renshaw",
+            "batting": {
+              "innings": 3,
+              "form_scores": [
+                "56",
+                "30",
+                "21*"
+              ],
+              "average": 53.5,
+              "vs_opponent_avg": 56.0,
+              "venue": {
+                "innings": 1,
+                "runs": 56,
+                "average": 56.0,
+                "highest": 56
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -",
+              "economy": 0.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "MW Short": {
+            "player": "MW Short",
+            "batting": {
+              "innings": 15,
+              "form_scores": [
+                "30",
+                "74",
+                "8",
+                "63",
+                "2",
+                "0",
+                "22",
+                "19",
+                "1",
+                "58"
+              ],
+              "average": 24.8,
+              "vs_opponent_avg": 16.0,
+              "venue": {
+                "innings": 2,
+                "runs": 71,
+                "average": 35.5,
+                "highest": 41
+              }
+            },
+            "bowling": {
+              "form_display": "0/29 (4), 0/23 (3), 0/17 (1), 0/7 (1), 0/25 (4), 1/39 (9), -, -, 0/2 (1), 0/6 (2)",
+              "economy": 6.2,
+              "venue_economy": 7.2,
+              "venue_wickets": 0,
+              "venue_matches": 1
+            }
+          },
+          "NT Ellis": {
+            "player": "NT Ellis",
+            "batting": {
+              "innings": 12,
+              "form_scores": [
+                "16",
+                "DNB",
+                "DNB",
+                "3",
+                "14",
+                "10",
+                "DNB",
+                "0",
+                "9*",
+                "18"
+              ],
+              "average": 13.2,
+              "vs_opponent_avg": 13.0,
+              "venue": {
+                "innings": 1,
+                "runs": 16,
+                "average": 16.0,
+                "highest": 16
+              }
+            },
+            "bowling": {
+              "form_display": "0/60 (7.3), 1/29 (5), 0/25 (4), 2/46 (10), 0/54 (10), 2/49 (10), 0/51 (10), 2/23 (9), 1/49 (8), 1/79 (10)",
+              "economy": 5.5,
+              "venue_economy": 8.0,
+              "venue_wickets": 0,
+              "venue_matches": 1
+            }
+          },
+          "TM Head": {
+            "player": "TM Head",
+            "batting": {
+              "innings": 74,
+              "form_scores": [
+                "29",
+                "28",
+                "8",
+                "142",
+                "6",
+                "27",
+                "39",
+                "6",
+                "18",
+                "31"
+              ],
+              "average": 42.7,
+              "vs_opponent_avg": 25.9,
+              "venue": {
+                "innings": 4,
+                "runs": 151,
+                "average": 37.8,
+                "highest": 52
+              }
+            },
+            "bowling": {
+              "form_display": "-, 0/16 (2), -, -, 0/12 (2), 4/57 (9), 0/6 (1), -, -, 4/28 (6.2)",
+              "economy": 5.8,
+              "venue_economy": 6.6,
+              "venue_wickets": 2,
+              "venue_matches": 1
+            }
+          }
+        },
+        "India": {
+          "Arshdeep Singh": {
+            "player": "Arshdeep Singh",
+            "batting": {
+              "innings": 9,
+              "form_scores": [
+                "4",
+                "DNB",
+                "DNB",
+                "0",
+                "13",
+                "DNB",
+                "2",
+                "3*",
+                "0",
+                "7*"
+              ],
+              "average": 7.0,
+              "vs_opponent_avg": 6.5,
+              "venue": {
+                "innings": 0,
+                "runs": 0,
+                "average": 0.0,
+                "highest": 0
+              }
+            },
+            "bowling": {
+              "form_display": "3/63 (10), 1/36 (8), 2/54 (10), 2/64 (10), 2/41 (8.2), 1/31 (5), 2/33 (5), 0/58 (9), 2/47 (8), 4/30 (9)",
+              "economy": 5.4,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "Harshit Rana": {
+            "player": "Harshit Rana",
+            "batting": {
+              "innings": 7,
+              "form_scores": [
+                "52",
+                "2",
+                "29",
+                "DNB",
+                "DNB",
+                "3*",
+                "DNB",
+                "24*",
+                "1",
+                "DNB"
+              ],
+              "average": 24.8,
+              "vs_opponent_avg": 25.0,
+              "venue": {
+                "innings": 0,
+                "runs": 0,
+                "average": 0.0,
+                "highest": 0
+              }
+            },
+            "bowling": {
+              "form_display": "3/84 (10), 1/52 (9.3), 2/65 (10), 0/44 (8), 1/70 (10), 3/65 (10), 4/39 (8.4), 2/59 (8), 0/27 (4), 1/30 (7.4)",
+              "economy": 6.2,
+              "venue_economy": 4.5,
+              "venue_wickets": 4,
+              "venue_matches": 1
+            }
+          },
+          "KL Rahul": {
+            "player": "KL Rahul",
+            "batting": {
+              "innings": 84,
+              "form_scores": [
+                "1",
+                "112*",
+                "29*",
+                "DNB",
+                "66*",
+                "60",
+                "DNB",
+                "11",
+                "38",
+                "34*"
+              ],
+              "average": 51.1,
+              "vs_opponent_avg": 38.3,
+              "venue": {
+                "innings": 2,
+                "runs": 88,
+                "average": 44.0,
+                "highest": 76
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 0.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "Kuldeep Yadav": {
+            "player": "Kuldeep Yadav",
+            "batting": {
+              "innings": 38,
+              "form_scores": [
+                "5*",
+                "DNB",
+                "DNB",
+                "DNB",
+                "DNB",
+                "0*",
+                "DNB",
+                "DNB",
+                "DNB",
+                "1*"
+              ],
+              "average": 9.6,
+              "vs_opponent_avg": 7.0,
+              "venue": {
+                "innings": 1,
+                "runs": 3,
+                "average": 3.0,
+                "highest": 3
+              }
+            },
+            "bowling": {
+              "form_display": "1/48 (6), 1/82 (10), 1/52 (9), 4/41 (10), 1/78 (10), 4/68 (10), 1/50 (10), 2/40 (10), 0/44 (8), 2/56 (9.3)",
+              "economy": 5.1,
+              "venue_economy": 5.2,
+              "venue_wickets": 3,
+              "venue_matches": 2
+            }
+          },
+          "Mohammed Siraj": {
+            "player": "Mohammed Siraj",
+            "batting": {
+              "innings": 19,
+              "form_scores": [
+                "0",
+                "2*",
+                "DNB",
+                "DNB",
+                "0*",
+                "DNB",
+                "DNB",
+                "4",
+                "5*",
+                "9"
+              ],
+              "average": 7.1,
+              "vs_opponent_avg": 9.0,
+              "venue": {
+                "innings": 0,
+                "runs": 0,
+                "average": 0.0,
+                "highest": 0
+              }
+            },
+            "bowling": {
+              "form_display": "1/43 (10), 0/41 (9), 2/40 (8), 1/24 (5), 1/49 (10), 0/21 (4), 1/78 (9), 1/43 (8), 1/36 (8), 1/45 (7)",
+              "economy": 5.0,
+              "venue_economy": 4.8,
+              "venue_wickets": 1,
+              "venue_matches": 1
+            }
+          },
+          "Nithish Kumar Reddy": {
+            "player": "Nithish Kumar Reddy",
+            "batting": {
+              "innings": 4,
+              "form_scores": [
+                "53",
+                "20",
+                "8",
+                "19"
+              ],
+              "average": 33.3,
+              "vs_opponent_avg": 27.0,
+              "venue": {
+                "innings": 0,
+                "runs": 0,
+                "average": 0.0,
+                "highest": 0
+              }
+            },
+            "bowling": {
+              "form_display": "0/53 (8), 0/13 (2), 0/24 (3), 0/16 (2.1)",
+              "economy": 7.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "RA Jadeja": {
+            "player": "RA Jadeja",
+            "batting": {
+              "innings": 137,
+              "form_scores": [
+                "12",
+                "27",
+                "4",
+                "DNB",
+                "24*",
+                "32",
+                "9*",
+                "2*",
+                "16",
+                "DNB"
+              ],
+              "average": 32.4,
+              "vs_opponent_avg": 35.7,
+              "venue": {
+                "innings": 5,
+                "runs": 81,
+                "average": 20.2,
+                "highest": 25
+              }
+            },
+            "bowling": {
+              "form_display": "0/41 (6), 0/44 (8), 0/56 (9), 1/50 (9), 0/41 (7), 0/66 (9), 1/30 (10), 2/40 (8), 1/36 (8), 1/40 (7)",
+              "economy": 4.9,
+              "venue_economy": 5.4,
+              "venue_wickets": 2,
+              "venue_matches": 6
+            }
+          },
+          "RG Sharma": {
+            "player": "RG Sharma",
+            "batting": {
+              "innings": 270,
+              "form_scores": [
+                "11",
+                "24",
+                "26",
+                "75",
+                "14",
+                "57",
+                "121*",
+                "73",
+                "8",
+                "76"
+              ],
+              "average": 48.1,
+              "vs_opponent_avg": 59.4,
+              "venue": {
+                "innings": 6,
+                "runs": 454,
+                "average": 90.8,
+                "highest": 133
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 5.2,
+              "venue_economy": 5.0,
+              "venue_wickets": 0,
+              "venue_matches": 1
+            }
+          },
+          "SS Iyer": {
+            "player": "SS Iyer",
+            "batting": {
+              "innings": 69,
+              "form_scores": [
+                "3",
+                "8",
+                "49",
+                "DNB",
+                "61",
+                "11",
+                "48",
+                "45",
+                "79",
+                "56"
+              ],
+              "average": 46.1,
+              "vs_opponent_avg": 30.1,
+              "venue": {
+                "innings": 2,
+                "runs": 40,
+                "average": 20.0,
+                "highest": 38
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 6.3,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "Shubman Gill": {
+            "player": "Shubman Gill",
+            "batting": {
+              "innings": 61,
+              "form_scores": [
+                "23",
+                "56",
+                "56",
+                "24",
+                "9",
+                "10",
+                "31",
+                "8",
+                "2",
+                "46"
+              ],
+              "average": 55.7,
+              "vs_opponent_avg": 26.7,
+              "venue": {
+                "innings": 1,
+                "runs": 24,
+                "average": 24.0,
+                "highest": 24
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 8.3,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "V Kohli": {
+            "player": "V Kohli",
+            "batting": {
+              "innings": 296,
+              "form_scores": [
+                "124",
+                "23",
+                "93",
+                "65*",
+                "102",
+                "135",
+                "74*",
+                "0",
+                "0",
+                "1"
+              ],
+              "average": 58.5,
+              "vs_opponent_avg": 49.2,
+              "venue": {
+                "innings": 8,
+                "runs": 220,
+                "average": 36.7,
+                "highest": 89
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 6.2,
+              "venue_economy": 7.0,
+              "venue_wickets": 0,
+              "venue_matches": 1
+            }
+          }
+        }
+      },
+      "narrative": "IN-FORM BATTERS: KL Rahul (India), RG Sharma (India), SS Iyer (India) are in elite touch (Avg 45+). VENUE SPECIALISTS: MR Marsh (69.0 Avg), RG Sharma (90.8 Avg) have historically dominated these conditions. UNDER PRESSURE: A Zampa (Australia), JR Hazlewood (Australia), MA Starc (Australia) are searching for form (Avg < 18)."
+    },
+    "bowling_roster": {
+      "home": [
+        {
+          "bowler": "A Zampa",
+          "type": "Leg Spin",
+          "role": "Bowler",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "C Connolly",
+          "type": "Slow Left-Arm Orth",
+          "role": "Batting All-Rounder",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "JR Hazlewood",
+          "type": "Right-Arm Fast/Med",
+          "role": "Bowler",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "MA Starc",
+          "type": "Left-Arm Fast/Med",
+          "role": "Bowler",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "MR Marsh",
+          "type": "Right-Arm Fast/Med",
+          "role": "Batting All-Rounder",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "MW Short",
+          "type": "Off Spin",
+          "role": "Batting All-Rounder",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "NT Ellis",
+          "type": "Right-Arm Fast/Med",
+          "role": "Bowler",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "TM Head",
+          "type": "Off Spin",
+          "role": "Batter",
+          "experience": "INTERMEDIATE"
+        }
+      ],
+      "away": [
+        {
+          "bowler": "Arshdeep Singh",
+          "type": "Left-Arm Fast/Med",
+          "role": "Bowler",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "Harshit Rana",
+          "type": "Right-Arm Fast/Med",
+          "role": "Bowler",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "Kuldeep Yadav",
+          "type": "Left-Arm Unorthodox",
+          "role": "Bowler",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "Mohammed Siraj",
+          "type": "Right-Arm Fast/Med",
+          "role": "Bowler",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "Nithish Kumar Reddy",
+          "type": "Right-Arm Fast/Med",
+          "role": "Bowling All-Rounder",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "RA Jadeja",
+          "type": "Slow Left-Arm Orth",
+          "role": "Bowling All-Rounder",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "RG Sharma",
+          "type": "Off Spin",
+          "role": "Batter",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "SS Iyer",
+          "type": "Leg Spin",
+          "role": "Batter",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "Shubman Gill",
+          "type": "Off Spin",
+          "role": "Batter",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "V Kohli",
+          "type": "Right-Arm Fast/Med",
+          "role": "Batter",
+          "experience": "INTERMEDIATE"
+        }
+      ],
+      "pitch_suitability": {
+        "home_spin_bowlers": 4,
+        "away_spin_bowlers": 5,
+        "home_pace_bowlers": 4,
+        "away_pace_bowlers": 5,
+        "verdict": "AWAY_SPIN_ADVANTAGE",
+        "narrative": "Away team has 5 spinner(s) vs 4. On this spin-friendly surface, the away bowling attack is better suited."
+      }
+    }
+  }
+}

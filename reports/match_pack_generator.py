@@ -226,12 +226,29 @@ class MatchPackGenerator:
             data = transform_h2h_report(raw_matchup, home, away)
             chapter["venue_h2h"] = self.interpreter.interpret_h2h(data, home, away, "At This Venue, 15Y")
 
-        # --- 2.3 Toss Bias (7Y) — with match context for alignment ---
-        print("  └── 2.3 Toss Bias (7Y)...")
+        # --- 2.3 Toss Bias (7Y) ---
+        print("  ├── 2.3 Toss Bias (7Y)...")
         raw_bias = self._silent_call(self.bot.analyze_venue_bias, venue, 7)
         if raw_bias:
             data = transform_venue_bias(raw_bias)
             chapter["toss_bias"] = self.interpreter.interpret_toss_bias(data, match_context=context)
+
+        # --- 2.4 Battlefield Timeline (v3.3: Historical Trends) ---
+        print("  └── 2.4 Battlefield Timeline...")
+        raw_recent = self._silent_call(self.bot.analyze_venue_bias, venue, 3)
+        if raw_recent and raw_bias:
+            recent_data = transform_venue_bias(raw_recent)
+            all_time_data = transform_venue_bias(raw_bias)
+            trend_pct = recent_data.get("bat_first_win_pct", 0) - all_time_data.get("bat_first_win_pct", 0)
+            chapter["battlefield_timeline"] = {
+                "section_description": "Historical scoring and win-percentage trends at this venue.",
+                "data": {
+                    "recent_3y_bat_first_win_pct": recent_data.get("bat_first_win_pct", 0),
+                    "all_time_bat_first_win_pct": all_time_data.get("bat_first_win_pct", 0),
+                    "trend": "INCREASING_BAT_FIRST" if trend_pct > 10 else "INCREASING_CHASE" if trend_pct < -10 else "STABLE"
+                },
+                "narrative": f"Recent 3-year trend shows a {abs(trend_pct)}% {'increase' if trend_pct > 0 else 'decrease'} in Batting First success compared to the long-term average."
+            }
 
         return chapter
 
@@ -388,17 +405,13 @@ class MatchPackGenerator:
         matchup_data_for_roster = chapter.get("matchups", {}).get("data", {})
 
         chapter["bowling_roster"] = self.interpreter.analyze_bowling_roster(
-            home_xi, away_xi, context.get("pitch", "")
+            home_xi, away_xi, context.get("pitch", ""), player_stats=player_stats_data
         )
 
-        # FIX 4: Override the shallow narrative with a data-driven one
-        pitch_cond = context.get("pitch", "")
-        if player_stats_data and pitch_cond:
-            smart_narrative = self._build_smart_pitch_narrative(
-                chapter["bowling_roster"], player_stats_data, home, away, pitch_cond
-            )
-            if smart_narrative:
-                chapter["bowling_roster"]["pitch_suitability"]["narrative"] = smart_narrative
+        # v3.3: Include role-based tactical analysis in narrative
+        tactical_data = chapter.get("tactical_matrix", {}).get("data", {})
+        if tactical_data:
+            chapter["tactical_matrix"]["narrative"] = self._build_role_based_tactical_narrative(tactical_data, home, away)
 
         return chapter
 
@@ -527,49 +540,79 @@ class MatchPackGenerator:
         return " ".join(parts) if parts else "No extreme bunny alerts or domination matchups detected."
 
     def _build_player_stats_narrative(self, player_stats, home, away):
-        """Summarizes key player stats: form standouts, venue specialists, strugglers."""
+        """
+        Summarizes key player stats: form standouts, venue specialists, strugglers.
+        v3.3: Granular split between Batters and Bowlers.
+        """
         if not player_stats:
             return "No player stats available."
 
-        standouts = []
-        venue_specialists = []
+        bat_standouts = []
+        bowl_standouts = []
+        venue_kings = []
         strugglers = []
 
         for team, players in player_stats.items():
-            if not isinstance(players, dict):
-                continue
-            for player_name, stats in players.items():
-                if not isinstance(stats, dict) or "error" in stats:
-                    continue
-                batting = stats.get("batting", {})
-                bowling = stats.get("bowling", {})
+            if not isinstance(players, dict): continue
+            for p_name, stats in players.items():
+                if not isinstance(stats, dict) or "error" in stats: continue
+                
+                bat = stats.get("batting", {})
+                bowl = stats.get("bowling", {})
+                role = PLAYER_ROLES.get(p_name, "All-Rounder")
 
-                # Batting form standout: avg > 40
-                bat_avg = batting.get("average", 0)
-                innings = batting.get("innings", 0)
-                if isinstance(bat_avg, (int, float)) and bat_avg > 40 and innings >= 5:
-                    standouts.append(f"{player_name} ({team}) avg {bat_avg} in {innings} innings.")
+                # 🏏 Batting Analysis
+                bat_avg = bat.get("average", 0)
+                inns = bat.get("innings", 0)
+                if isinstance(bat_avg, (int, float)) and bat_avg > 45 and inns >= 5:
+                    bat_standouts.append(f"{p_name} ({team})")
+                elif isinstance(bat_avg, (int, float)) and 0 < bat_avg < 18 and inns >= 5:
+                    strugglers.append(f"{p_name} ({team})")
 
-                # Venue specialist: venue avg > 35 with 3+ innings
-                venue = batting.get("venue", {})
-                v_avg = venue.get("average", 0)
-                v_inns = venue.get("innings", 0)
-                if isinstance(v_avg, (int, float)) and v_avg > 35 and isinstance(v_inns, int) and v_inns >= 3:
-                    venue_specialists.append(f"{player_name} ({team}) venue avg {v_avg} in {v_inns} innings.")
+                # 🏟️ Venue Kings
+                v_avg = bat.get("venue", {}).get("average", 0)
+                v_inns = bat.get("venue", {}).get("innings", 0)
+                if isinstance(v_avg, (int, float)) and v_avg > 40 and v_inns >= 3:
+                    venue_kings.append(f"{p_name} ({v_avg} Avg)")
 
-                # Struggler: avg < 18 with 5+ innings
-                if isinstance(bat_avg, (int, float)) and 0 < bat_avg < 18 and innings >= 5:
-                    strugglers.append(f"{player_name} ({team}) avg only {bat_avg}.")
+                # 🥎 Bowling Analysis
+                b_wickets = bowl.get("career", {}).get("bowling", {}).get("wickets", 0)
+                b_econ = bowl.get("career", {}).get("bowling", {}).get("economy", 10)
+                if b_wickets > 20 and b_econ < 5.2:
+                    bowl_standouts.append(f"{p_name} ({b_econ} Econ)")
 
         parts = []
-        if standouts:
-            parts.append("IN-FORM BATTERS: " + " ".join(standouts[:4]))
-        if venue_specialists:
-            parts.append("VENUE SPECIALISTS: " + " ".join(venue_specialists[:3]))
-        if strugglers:
-            parts.append("STRUGGLING: " + " ".join(strugglers[:3]))
+        if bat_standouts: parts.append(f"IN-FORM BATTERS: {', '.join(bat_standouts[:3])} are in elite touch (Avg 45+).")
+        if bowl_standouts: parts.append(f"BOWLING THREATS: {', '.join(bowl_standouts[:3])} maintain elite economy rates.")
+        if venue_kings: parts.append(f"VENUE SPECIALISTS: {', '.join(venue_kings[:3])} have historically dominated these conditions.")
+        if strugglers: parts.append(f"UNDER PRESSURE: {', '.join(strugglers[:3])} are searching for form (Avg < 18).")
 
-        return " ".join(parts) if parts else "No extreme standout or struggling players identified."
+        return " ".join(parts) if parts else "No significant player-level trends identified."
+
+    def _build_role_based_tactical_narrative(self, tactical_data, home, away):
+        """
+        Analyzes the tactical matrix from a role-based perspective (v3.3).
+        """
+        narrative_parts = []
+        for team_name in [home, away]:
+            team_rows = tactical_data.get(team_name, [])
+            if not team_rows: continue
+
+            strugglers = []
+            for row in team_rows:
+                player = row.get("Player")
+                role = row.get("Role", "")
+                # Find biggest struggle (lowest _raw value)
+                raw_scores = {k.replace("_raw", ""): v for k, v in row.items() if k.endswith("_raw") and isinstance(v, (int, float))}
+                if raw_scores:
+                    worst_style = min(raw_scores, key=raw_scores.get)
+                    if raw_scores[worst_style] < 22:
+                        strugglers.append(f"{player} ({role}) vs {worst_style}")
+
+            if strugglers:
+                narrative_parts.append(f"TACTICAL WEAKNESS ({team_name}): {', '.join(strugglers[:2])} represent key target areas for opposition bowlers.")
+
+        return " ".join(narrative_parts) if narrative_parts else "Both lineups appear tactically balanced against opposition bowling styles."
 
     def _build_smart_pitch_narrative(self, roster_data, player_stats, home, away, pitch_cond):
         """

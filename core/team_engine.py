@@ -1172,16 +1172,16 @@ class TeamEngine:
 
             if w == team_name: 
                 res = "✅ WIN"
-                form_str.append("W")
+                form_str.append(f"W: against {opp}")
             elif w.lower() == 'tie' or (w.lower() in ['nan','no result','none'] and is_level): 
                 res = "🤝 TIE"
-                form_str.append("T")
+                form_str.append(f"T: against {opp}")
             elif w.lower() in ['nan','no result','none']: 
                 res = "🌧️ NR"
-                form_str.append("NR")
+                form_str.append(f"NR: against {opp}")
             else: 
                 res = "❌ LOSS"
-                form_str.append("L")
+                form_str.append(f"L: against {opp}")
             
             s_my = row['score_inn1'] if bat1 else row['score_inn2']
             s_opp = row['score_inn2'] if bat1 else row['score_inn1']

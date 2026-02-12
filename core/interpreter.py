@@ -12,7 +12,7 @@ Rules:
     - Every context tag has a 'reasoning' field explaining WHY it was assigned
     - Condition weights are derived from pitch/time/toss inputs
 """
-from config.teams import BOWLER_STYLES, PLAYER_ROLES
+from config.teams import BOWLER_STYLES, PLAYER_ROLES, ODI_RANKINGS
 
 
 class MatchInterpreter:
@@ -144,18 +144,44 @@ class MatchInterpreter:
         total = data.get("total", 0)
 
         # Use last 5 for momentum tag
-        last_5 = seq[:5] if len(seq) >= 5 else seq
-        w5 = last_5.count("W")
+        # Enhanced for v3.3: quality-aware weighting (Wins vs Ranked Teams count more)
+        momentum_points = 0
+        w5 = 0
+        seq_last_5 = []
 
-        if w5 >= 4:
+        for item in seq[:5]:
+            code = item.split(":")[0].strip() if ":" in item else item
+            opp = item.split(":")[1].strip() if ":" in item else ""
+            
+            rank = ODI_RANKINGS.get(opp, 15) # Assume rank 15 for associates
+            
+            if code == "W":
+                w5 += 1
+                if rank <= 3: weight = 2.5     # Giant Killer
+                elif rank <= 7: weight = 1.5   # Quality Win
+                elif rank <= 10: weight = 1.0  # Standard Win
+                else: weight = 0.5             # Expected Win (Associates)
+                momentum_points += weight
+                seq_last_5.append(f"Win ({opp})")
+            elif code == "L":
+                if rank <= 3: weight = -0.2    # Resistant Loss (Expected vs Top)
+                elif rank <= 7: weight = -0.8  # Competitive Loss
+                elif rank <= 10: weight = -1.5 # Upset Loss
+                else: weight = -2.5            # Momentum Killer (Lost to Associate)
+                momentum_points += weight
+                seq_last_5.append(f"Loss ({opp})")
+            else:
+                seq_last_5.append(f"{code} ({opp})")
+
+        if momentum_points >= 6.0:
             momentum = "HOT"
-            mom_reasoning = f"Won {w5} of last 5 matches — exceeds the 4-win HOT threshold."
-        elif w5 >= 2:
+            mom_reasoning = f"Momentum score: {momentum_points:.1f} (Won {w5} of 5). Excellent rhythm with quality wins against top-tier opposition."
+        elif momentum_points >= 2.0:
             momentum = "STABLE"
-            mom_reasoning = f"Won {w5} of last 5 — within the 2-3 win STABLE band."
+            mom_reasoning = f"Momentum score: {momentum_points:.1f}. Form is steady; competitive against the current strength of schedule."
         else:
             momentum = "COLD"
-            mom_reasoning = f"Won only {w5} of last 5 — below the 2-win minimum for stability."
+            mom_reasoning = f"Momentum score: {momentum_points:.1f}. Significant momentum loss — struggling to defend rankings or secure quality wins."
 
         # FIX: Trend detection — compare 1st half vs 2nd half win rates
         trend = "FLAT"
@@ -607,31 +633,39 @@ class MatchInterpreter:
             "toss_decision": str(toss) if toss else "",
         }
 
-    # =========================================================================
-    # 8. BOWLING ROSTER ANALYSIS
-    # =========================================================================
-
-    def analyze_bowling_roster(self, home_xi, away_xi, pitch_conditions=""):
+    def analyze_bowling_roster(self, home_xi, away_xi, pitch_conditions="", player_stats=None):
         """
         Builds the bowling roster for both teams and determines pitch suitability.
+        v3.3: Added awareness of bowler experience and career venue metrics.
         """
-        def build_roster(players):
+        def build_roster(players, team_stats=None):
             roster = []
             for p in players:
                 style = BOWLER_STYLES.get(p)
                 if style and style != '🚫 Part-Timer':
                     role_raw = PLAYER_ROLES.get(p, "All-Rounder")
-                    # Determine role label
+                    # Determine experience from player_stats if available
+                    exp_rank = "INTERMEDIATE"
+                    if team_stats and p in team_stats:
+                        stats = team_stats[p]
+                        wickets = stats.get('career', {}).get('bowling', {}).get('wickets', 0)
+                        if wickets > 100: exp_rank = "VETERAN"
+                        elif wickets < 20: exp_rank = "PROSPECT"
+
                     clean_style = style.replace('⚡ ', '').replace('🌀 ', '')
                     roster.append({
                         "bowler": p,
                         "type": clean_style,
                         "role": role_raw,
+                        "experience": exp_rank
                     })
             return roster
 
-        home_roster = build_roster(home_xi)
-        away_roster = build_roster(away_xi)
+        home_stats = player_stats.get("home", {}) if player_stats else {}
+        away_stats = player_stats.get("away", {}) if player_stats else {}
+        
+        home_roster = build_roster(home_xi, home_stats)
+        away_roster = build_roster(away_xi, away_stats)
 
         # Count spin vs pace
         home_spin = sum(1 for b in home_roster if "Spin" in b["type"] or "Orth" in b["type"] or "Unorth" in b["type"])
