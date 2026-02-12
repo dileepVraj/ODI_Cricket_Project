@@ -1,0 +1,2931 @@
+{
+  "meta": {
+    "report_type": "ODI_Match_Pack",
+    "version": "3.2",
+    "generated_at": "2026-02-11 21:48:14",
+    "home_team": "Sri Lanka",
+    "away_team": "England",
+    "venue": "SL_COLOMBO_RPS",
+    "home_xi": [
+      "AM Fernando",
+      "BKG Mendis",
+      "DM de Silva",
+      "DN Wellalage",
+      "J Liyanage",
+      "JDF Vandersay",
+      "K Mishara",
+      "KIC Asalanka",
+      "P Nissanka",
+      "P Rathnayake",
+      "PWH de Silva"
+    ],
+    "away_xi": [
+      "AU Rashid",
+      "BM Duckett",
+      "HC Brook",
+      "J Overton",
+      "JC Buttler",
+      "JE Root",
+      "JG Bethell",
+      "LA Dawson",
+      "Rehan Ahmed",
+      "SM Curran",
+      "WG Jacks"
+    ],
+    "match_context": {
+      "time": "14:30",
+      "toss": "Home Won & Batting",
+      "pitch": "he RPS surface is traditionally slow and low, especially in limited-overs matches."
+    }
+  },
+  "Executive_Summary": {
+    "prediction": "Too close to call — both teams have matching strengths and weaknesses.",
+    "key_factors": [
+      "Fortress venue: Sri Lanka win 63% here (21/35 matches).",
+      "Toss decision aligns with venue bias — tactical advantage gained."
+    ],
+    "risk_alerts": [
+      "Sri Lanka recent form is COLD (4/10 wins)."
+    ],
+    "condition_adjustments": "DEW_FACTOR | TOSS_ALIGNED"
+  },
+  "Chapter_1_Macro_Context": {
+    "chapter_description": "High-level rivalry and momentum analysis. Covers head-to-head records, recent form for both teams, and home/away performance matrices.",
+    "global_h2h_4y": {
+      "section_description": "Head-to-head record between Sri Lanka and England over Last 4 Years. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 4,
+        "home_wins": 2,
+        "away_wins": 2,
+        "no_result": 0,
+        "home_win_pct": 50,
+        "home_won_batting_first": 1,
+        "home_won_chasing": 1,
+        "away_won_batting_first": 1,
+        "away_won_chasing": 1
+      },
+      "context": {
+        "timeline": "Last 4 Years",
+        "dominance": "COMPETITIVE",
+        "dominance_reasoning": "Win rate of 50% falls within the 45-55% competitive band.",
+        "intensity": "TIGHT",
+        "intensity_reasoning": "Gap of 0 points — very tight contest historically."
+      },
+      "narrative": "This rivalry is evenly split over Last 4 Years — both teams have won 2 of 4 decided matches."
+    },
+    "global_h2h_8y": {
+      "section_description": "Head-to-head record between Sri Lanka and England over Last 8 Years. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 13,
+        "home_wins": 4,
+        "away_wins": 7,
+        "no_result": 2,
+        "home_win_pct": 36,
+        "home_won_batting_first": 3,
+        "home_won_chasing": 1,
+        "away_won_batting_first": 2,
+        "away_won_chasing": 5
+      },
+      "context": {
+        "timeline": "Last 8 Years",
+        "dominance": "SLIGHT_EDGE",
+        "dominance_reasoning": "England have a slight edge at 64%, outside the competitive band but below dominance.",
+        "intensity": "ONE_SIDED",
+        "intensity_reasoning": "Gap of 28 points from neutral indicates a one-sided record."
+      },
+      "narrative": "England lead this rivalry with a 64% win rate over Last 8 Years (7 wins from 13 matches). In this matchup, chasing has produced 6 wins vs 5 batting first."
+    },
+    "home_form": {
+      "global": {
+        "section_description": "Recent form analysis for Sri Lanka (Global). Shows momentum direction, current streaks, and whether form is improving or declining.",
+        "data": {
+          "team": "Sri Lanka",
+          "sequence": [
+            "L",
+            "L",
+            "W",
+            "L",
+            "L",
+            "L",
+            "W",
+            "W",
+            "W",
+            "L"
+          ],
+          "wins": 4,
+          "losses": 6,
+          "ties": 0,
+          "no_results": 0,
+          "total": 10,
+          "win_pct": 40
+        },
+        "context": {
+          "filter": "Global",
+          "momentum": "COLD",
+          "momentum_reasoning": "Won only 1 of last 5 — below the 2-win minimum for stability.",
+          "trend": "TRENDING_DOWN",
+          "trend_reasoning": "Recent 5 matches: 1W/4L (20% WR) vs earlier 5 matches: 3W/2L (60% WR). Decline of 40 percentage points.",
+          "streak": "2 consecutive losses",
+          "streak_reasoning": "The last 2 results are all 'L'."
+        },
+        "narrative": "Sri Lanka have won 4 and lost 6 of their last 10 ODIs (Global), a 40% win rate. They are struggling with only 1 win(s) from their last 5. Currently on a streak of 2 consecutive losses."
+      },
+      "vs_opponent": {
+        "section_description": "Recent form analysis for Sri Lanka (vs England). Shows momentum direction, current streaks, and whether form is improving or declining.",
+        "data": {
+          "team": "Sri Lanka",
+          "sequence": [
+            "L",
+            "L",
+            "W",
+            "W",
+            "NR",
+            "L",
+            "L",
+            "W",
+            "W",
+            "L"
+          ],
+          "wins": 4,
+          "losses": 5,
+          "ties": 0,
+          "no_results": 1,
+          "total": 10,
+          "win_pct": 40
+        },
+        "context": {
+          "filter": "vs England",
+          "momentum": "STABLE",
+          "momentum_reasoning": "Won 2 of last 5 — within the 2-3 win STABLE band.",
+          "trend": "FLAT",
+          "trend_reasoning": "Recent 5 matches: 40% WR vs earlier 5: 40% WR. Difference of 0pp — no significant trend.",
+          "streak": "2 consecutive losses",
+          "streak_reasoning": "The last 2 results are all 'L'."
+        },
+        "narrative": "Sri Lanka have won 4 and lost 5 of their last 10 ODIs (vs England), a 40% win rate. Form is steady with 2 wins from their last 5. Currently on a streak of 2 consecutive losses."
+      }
+    },
+    "away_form": {
+      "global": {
+        "section_description": "Recent form analysis for England (Global). Shows momentum direction, current streaks, and whether form is improving or declining.",
+        "data": {
+          "team": "England",
+          "sequence": [
+            "W",
+            "W",
+            "L",
+            "L",
+            "L",
+            "L",
+            "W",
+            "L",
+            "L",
+            "W"
+          ],
+          "wins": 4,
+          "losses": 6,
+          "ties": 0,
+          "no_results": 0,
+          "total": 10,
+          "win_pct": 40
+        },
+        "context": {
+          "filter": "Global",
+          "momentum": "STABLE",
+          "momentum_reasoning": "Won 2 of last 5 — within the 2-3 win STABLE band.",
+          "trend": "FLAT",
+          "trend_reasoning": "Recent 5 matches: 40% WR vs earlier 5: 40% WR. Difference of 0pp — no significant trend.",
+          "streak": "2 consecutive wins",
+          "streak_reasoning": "The last 2 results are all 'W'."
+        },
+        "narrative": "England have won 4 and lost 6 of their last 10 ODIs (Global), a 40% win rate. Form is steady with 2 wins from their last 5. Currently on a streak of 2 consecutive wins."
+      },
+      "vs_opponent": {
+        "section_description": "Recent form analysis for England (vs Sri Lanka). Shows momentum direction, current streaks, and whether form is improving or declining.",
+        "data": {
+          "team": "England",
+          "sequence": [
+            "W",
+            "W",
+            "L",
+            "L",
+            "NR",
+            "W",
+            "W",
+            "L",
+            "L",
+            "W"
+          ],
+          "wins": 5,
+          "losses": 4,
+          "ties": 0,
+          "no_results": 1,
+          "total": 10,
+          "win_pct": 50
+        },
+        "context": {
+          "filter": "vs Sri Lanka",
+          "momentum": "STABLE",
+          "momentum_reasoning": "Won 2 of last 5 — within the 2-3 win STABLE band.",
+          "trend": "FLAT",
+          "trend_reasoning": "Recent 5 matches: 40% WR vs earlier 5: 60% WR. Difference of 20pp — no significant trend.",
+          "streak": "2 consecutive wins",
+          "streak_reasoning": "The last 2 results are all 'W'."
+        },
+        "narrative": "England have won 5 and lost 4 of their last 10 ODIs (vs Sri Lanka), a 50% win rate. Form is steady with 2 wins from their last 5. Currently on a streak of 2 consecutive wins."
+      }
+    },
+    "country_h2h": {
+      "section_description": "Head-to-head record between Sri Lanka and England over In-Country, 8Y. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 8,
+        "home_wins": 2,
+        "away_wins": 5,
+        "no_result": 1,
+        "home_win_pct": 28,
+        "home_won_batting_first": 2,
+        "home_won_chasing": 0,
+        "away_won_batting_first": 2,
+        "away_won_chasing": 3
+      },
+      "context": {
+        "timeline": "In-Country, 8Y",
+        "dominance": "AWAY_DOMINANT",
+        "dominance_reasoning": "England win 72% which exceeds the 65% dominance threshold.",
+        "intensity": "ONE_SIDED",
+        "intensity_reasoning": "Gap of 44 points from neutral indicates a one-sided record."
+      },
+      "narrative": "England lead this rivalry with a 72% win rate over In-Country, 8Y (5 wins from 8 matches). In this matchup, batting first has produced 4 wins vs 3 chasing."
+    },
+    "home_dominance": {
+      "section_description": "Overall home performance matrix for Sri Lanka against all major opponents. Identifies which teams they dominate and struggle against home.",
+      "data": {
+        "team": "Sri Lanka",
+        "overall": {
+          "matches": 27,
+          "wins": 17,
+          "losses": 8,
+          "win_pct": 63
+        },
+        "vs_opponents": [
+          {
+            "opponent": "Australia",
+            "played": 7,
+            "won": 5,
+            "lost": 2,
+            "win_pct": 71,
+            "form": ""
+          },
+          {
+            "opponent": "India",
+            "played": 5,
+            "won": 2,
+            "lost": 2,
+            "win_pct": 40,
+            "form": ""
+          },
+          {
+            "opponent": "Bangladesh",
+            "played": 5,
+            "won": 4,
+            "lost": 1,
+            "win_pct": 80,
+            "form": ""
+          },
+          {
+            "opponent": "England",
+            "played": 3,
+            "won": 1,
+            "lost": 2,
+            "win_pct": 33,
+            "form": ""
+          },
+          {
+            "opponent": "New Zealand",
+            "played": 3,
+            "won": 2,
+            "lost": 0,
+            "win_pct": 67,
+            "form": ""
+          },
+          {
+            "opponent": "West Indies",
+            "played": 3,
+            "won": 2,
+            "lost": 1,
+            "win_pct": 67,
+            "form": ""
+          },
+          {
+            "opponent": "Pakistan",
+            "played": 1,
+            "won": 1,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          }
+        ]
+      },
+      "context": {
+        "strength": "MODERATE",
+        "strength_reasoning": "63% win rate at home (17/27) — positive but not dominant.",
+        "mode": "HOME"
+      },
+      "narrative": "Sri Lanka win 63% of home matches (17/27). Best record vs Bangladesh (80%, 4/5). Worst record vs England (33%, 1/3)."
+    },
+    "away_performance": {
+      "section_description": "Overall away performance matrix for England against all major opponents. Identifies which teams they dominate and struggle against away.",
+      "data": {
+        "team": "England",
+        "overall": {
+          "matches": 33,
+          "wins": 9,
+          "losses": 24,
+          "win_pct": 27
+        },
+        "vs_opponents": [
+          {
+            "opponent": "West Indies",
+            "played": 6,
+            "won": 2,
+            "lost": 4,
+            "win_pct": 33,
+            "form": ""
+          },
+          {
+            "opponent": "Australia",
+            "played": 5,
+            "won": 0,
+            "lost": 5,
+            "win_pct": 0,
+            "form": ""
+          },
+          {
+            "opponent": "South Africa",
+            "played": 5,
+            "won": 1,
+            "lost": 4,
+            "win_pct": 20,
+            "form": ""
+          },
+          {
+            "opponent": "India",
+            "played": 4,
+            "won": 0,
+            "lost": 4,
+            "win_pct": 0,
+            "form": ""
+          },
+          {
+            "opponent": "New Zealand",
+            "played": 4,
+            "won": 0,
+            "lost": 4,
+            "win_pct": 0,
+            "form": ""
+          },
+          {
+            "opponent": "Sri Lanka",
+            "played": 4,
+            "won": 2,
+            "lost": 2,
+            "win_pct": 50,
+            "form": ""
+          },
+          {
+            "opponent": "Bangladesh",
+            "played": 4,
+            "won": 3,
+            "lost": 1,
+            "win_pct": 75,
+            "form": ""
+          },
+          {
+            "opponent": "Pakistan",
+            "played": 1,
+            "won": 1,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          }
+        ]
+      },
+      "context": {
+        "strength": "STRUGGLES_AWAY",
+        "strength_reasoning": "Only 27% win rate away (9/33) — significantly below par.",
+        "mode": "AWAY"
+      },
+      "narrative": "England win 27% of away matches (9/33). Best record vs Bangladesh (75%, 3/4). Worst record vs Australia (0%, 0/5)."
+    }
+  },
+  "Chapter_2_Battlefield": {
+    "chapter_description": "Venue-specific intelligence. Analyses whether the ground is a fortress for the home team, the head-to-head record at this specific venue, and historical toss impact.",
+    "fortress_check": {
+      "section_description": "Evaluates whether this venue is a 'fortress' for Sri Lanka based on their historical win rate here. Includes key score thresholds (lowest defended, highest chased).",
+      "data": {
+        "matches_played": 35,
+        "home_wins": 21,
+        "away_wins": 12,
+        "no_result": 2,
+        "home_win_pct": 63,
+        "batting_first": {
+          "home_avg_score": 250,
+          "home_avg_winning_score": 271,
+          "home_lowest_defended": 203,
+          "home_won_batting_first": 15,
+          "away_avg_score": 253,
+          "away_avg_winning_score": 295,
+          "away_lowest_defended": 213,
+          "away_won_batting_first": 5
+        },
+        "chasing": {
+          "home_highest_chase": 292,
+          "home_avg_successful_chase": 213,
+          "home_won_chasing": 6,
+          "away_highest_chase": 277,
+          "away_avg_successful_chase": 206,
+          "away_won_chasing": 7
+        },
+        "avg_winning_score": 277
+      },
+      "context": {
+        "fortress_status": "FORTRESS_CONFIRMED",
+        "fortress_reasoning": "Sri Lanka win 63% here (21/35) — exceeds 60% fortress threshold.",
+        "batting_first_bias": "STRONG",
+        "defend_threshold": 203,
+        "chase_ceiling": 277
+      },
+      "narrative": "This venue is a confirmed fortress for Sri Lanka (63% win rate, 21/35 matches). Average winning score here is 271. Lowest successfully defended score is 203. Visitors have never chased above 277 here."
+    },
+    "venue_h2h": {
+      "section_description": "Head-to-head record between Sri Lanka and England over At This Venue, 15Y. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 9,
+        "home_wins": 7,
+        "away_wins": 2,
+        "no_result": 0,
+        "home_win_pct": 77,
+        "batting_first": {
+          "home_avg_score": 295,
+          "home_avg_winning_score": 314,
+          "home_lowest_defended": 271,
+          "home_won_batting_first": 4,
+          "away_avg_score": 259,
+          "away_avg_winning_score": 357,
+          "away_lowest_defended": 357,
+          "away_won_batting_first": 1
+        },
+        "chasing": {
+          "home_highest_chase": 267,
+          "home_avg_successful_chase": 228,
+          "home_won_chasing": 3,
+          "away_highest_chase": 223,
+          "away_avg_successful_chase": 223,
+          "away_won_chasing": 1
+        },
+        "avg_winning_score": 322
+      },
+      "context": {
+        "timeline": "At This Venue, 15Y",
+        "dominance": "HOME_DOMINANT",
+        "dominance_reasoning": "Sri Lanka win 77% which exceeds the 65% dominance threshold.",
+        "intensity": "ONE_SIDED",
+        "intensity_reasoning": "Gap of 54 points from neutral indicates a one-sided record."
+      },
+      "narrative": "Sri Lanka lead this rivalry with a 77% win rate over At This Venue, 15Y (7 wins from 9 matches). In this matchup, batting first has produced 5 wins vs 4 chasing."
+    },
+    "toss_bias": {
+      "section_description": "Analyses whether batting first or chasing has historically won more at this venue (Last 7 years). Combined with live toss information to assess alignment.",
+      "data": {
+        "period": "Last 7 years",
+        "matches_analyzed": 31,
+        "bat_first_wins": 18,
+        "bat_first_win_pct": 58,
+        "chase_wins": 11,
+        "chase_win_pct": 35,
+        "avg_1st_innings": 240,
+        "avg_2nd_innings": 206,
+        "score_drop_2nd_innings": 34,
+        "verdict": "BAT FIRST"
+      },
+      "context": {
+        "verdict": "BAT FIRST",
+        "strength": "STRONG",
+        "strength_reasoning": "23pp gap between bat-first (58%) and chase (35%) win rates — strong bias.",
+        "toss_alignment": "TOSS_ALIGNED",
+        "toss_reasoning": "Toss winner chose to bat, which aligns with venue bias (BAT FIRST).",
+        "toss_winner_advantage": true
+      },
+      "narrative": "This venue favours batting first (58% bat-first win rate vs 35% chasing, 31 matches over Last 7 years). Average 1st innings score is 240, dropping to 206 in the 2nd — a 34-run depression suggesting the pitch deteriorates. Toss decision is toss aligned."
+    }
+  },
+  "Chapter_3_Tactical_Engine": {
+    "chapter_description": "Phase-by-phase scoring patterns at this venue and globally. Identifies powerplay, middle-overs, and death-overs tendencies for both teams, plus condition adjustments from pitch/time/toss inputs.",
+    "phase_analysis": {
+      "section_description": "Scoring and wicket-loss patterns across Powerplay (overs 1-10), Middle Overs (11-40), and Death Overs (41-50) for both teams. venue_baseline = all teams at this venue; home_at_venue/away_at_venue = team-specific at venue; global_habits = team's overall patterns across all venues. CAVEAT: IMPORTANT: 2nd innings death-over stats (overs 41-50) have an inherent sampling bias. Many chases conclude before the death overs if the target is low or the batting team collapses early. These averages only reflect matches that DID reach the death phase, which tend to be close/high-scoring games. Interpret with caution.",
+      "data": {
+        "venue_baseline": {
+          "pp_avg_1st": 45.7,
+          "pp_wkts_1st": 1.6,
+          "mid_avg_1st": 134.3,
+          "mid_wkts_1st": 4.1,
+          "dth_avg_1st": 57.7,
+          "dth_wkts_1st": 2.4,
+          "pp_avg_2nd": 52.7,
+          "pp_wkts_2nd": 1.6,
+          "mid_avg_2nd": 109.0,
+          "mid_wkts_2nd": 4.5,
+          "dth_avg_2nd": 27.2,
+          "dth_wkts_2nd": 1.8
+        },
+        "home_at_venue": {
+          "pp_avg_1st": 42.3,
+          "pp_wkts_1st": 2.0,
+          "mid_avg_1st": 126.2,
+          "mid_wkts_1st": 3.8,
+          "dth_avg_1st": 58.1,
+          "dth_wkts_1st": 2.8,
+          "pp_avg_2nd": 61.9,
+          "pp_wkts_2nd": 1.9,
+          "mid_avg_2nd": 126.7,
+          "mid_wkts_2nd": 3.4,
+          "dth_avg_2nd": 34.3,
+          "dth_wkts_2nd": 2.3
+        },
+        "away_at_venue": {
+          "pp_avg_1st": 40.0,
+          "pp_wkts_1st": 1.0,
+          "mid_avg_1st": 187.0,
+          "mid_wkts_1st": 2.0,
+          "dth_avg_1st": 130.0,
+          "dth_wkts_1st": 0.0,
+          "pp_avg_2nd": 46.5,
+          "pp_wkts_2nd": 1.0,
+          "mid_avg_2nd": 126.5,
+          "mid_wkts_2nd": 3.5,
+          "dth_avg_2nd": 64.5,
+          "dth_wkts_2nd": 3.0
+        },
+        "global_habits": {
+          "bat_first": {
+            "home_team_pp_runs": 47.0,
+            "home_team_pp_wkts": 1.4,
+            "home_team_mid_runs": 140.8,
+            "home_team_mid_wkts": 3.8,
+            "home_team_dth_runs": 55.5,
+            "home_team_dth_wkts": 2.9,
+            "away_team_pp_runs": 50.1,
+            "away_team_pp_wkts": 1.3,
+            "away_team_mid_runs": 147.6,
+            "away_team_mid_wkts": 3.9,
+            "away_team_dth_runs": 62.0,
+            "away_team_dth_wkts": 2.7
+          },
+          "chasing": {
+            "home_team_pp_runs": 53.7,
+            "home_team_pp_wkts": 1.5,
+            "home_team_mid_runs": 127.9,
+            "home_team_mid_wkts": 3.8,
+            "home_team_dth_runs": 25.8,
+            "home_team_dth_wkts": 1.4,
+            "away_team_pp_runs": 52.1,
+            "away_team_pp_wkts": 1.4,
+            "away_team_mid_runs": 138.8,
+            "away_team_mid_wkts": 3.7,
+            "away_team_dth_runs": 28.9,
+            "away_team_dth_wkts": 1.3
+          }
+        },
+        "alerts": [
+          "RISK: Sri Lanka collapses chasing"
+        ]
+      },
+      "context": {
+        "alerts": [
+          "RISK: Sri Lanka collapses chasing"
+        ]
+      },
+      "narrative": "This venue rewards death-overs aggression (Death avg 57.7 vs PP avg 45.7 in 1st innings). England score significantly more in death overs globally (62.0 vs 55.5). Note: 2nd innings death-over averages may be understated as many chases end before overs 41-50. RISK: Sri Lanka collapses chasing"
+    },
+    "condition_weights": {
+      "adjustments": [
+        "DEW_FACTOR",
+        "TOSS_ALIGNED"
+      ],
+      "weights": {
+        "chase_boost": 1.1
+      },
+      "pitch_report": "he RPS surface is traditionally slow and low, especially in limited-overs matches.",
+      "match_time": "14:30",
+      "toss_decision": "Home Won & Batting"
+    }
+  },
+  "Chapter_4_Player_Intelligence": {
+    "chapter_description": "Player-level analysis: squad aggregate comparison, tactical matrix (per-player stats), individual matchups, per-player batting/bowling form + venue metrics, and bowling roster composition vs pitch conditions.",
+    "squad_comparison": {
+      "section_description": "Aggregate squad metrics comparing Sri Lanka and England. Shows combined experience (caps), run-scoring depth (total runs, centuries, fifties), and wicket-taking ability (total wickets, 5-wicket hauls).",
+      "data": {
+        "Sri Lanka": {
+          "Caps (Combined)": 541,
+          "Total Runs": 13629,
+          "100s": 18,
+          "50s": 80,
+          "Total Wickets": 277,
+          "5-Wkt Hauls": 7
+        },
+        "England": {
+          "Caps (Combined)": 680,
+          "Total Runs": 18581,
+          "100s": 37,
+          "50s": 100,
+          "Total Wickets": 350,
+          "5-Wkt Hauls": 3
+        }
+      },
+      "narrative": "England have significantly more experience (680 vs 541 combined caps). England have more centurions (37 vs 18 centuries). England have superior bowling depth (350 vs 277 wickets)."
+    },
+    "tactical_matrix": {
+      "section_description": "Per-player batting average vs each bowling type in the opposing squad. Format: 'Avg (StrikeRate)'. Low averages vs a bowling type indicate vulnerability. High averages with high strike rate indicate domination of that bowling type.",
+      "data": {
+        "Sri Lanka": [
+          {
+            "Player": "AM Fernando",
+            "🌀 Leg Spin": "0 (0)",
+            "🌀 Leg Spin_raw": "0",
+            "⚡ Right-Arm Fast/Med": "1.5 (21)",
+            "⚡ Right-Arm Fast/Med_raw": 1.5,
+            "🌀 Off Spin": "0.0 (0)",
+            "🌀 Off Spin_raw": 0.0,
+            "🌀 Slow Left-Arm Orth": "1 (14)",
+            "🌀 Slow Left-Arm Orth_raw": "1",
+            "⚡ Left-Arm Fast/Med": "3 (60)",
+            "⚡ Left-Arm Fast/Med_raw": "3"
+          },
+          {
+            "Player": "BKG Mendis",
+            "🌀 Leg Spin": "27.2 (82)",
+            "🌀 Leg Spin_raw": 27.2,
+            "⚡ Right-Arm Fast/Med": "28.7 (79)",
+            "⚡ Right-Arm Fast/Med_raw": 28.7,
+            "🌀 Off Spin": "90.4 (104)",
+            "🌀 Off Spin_raw": 90.4,
+            "🌀 Slow Left-Arm Orth": "44.7 (78)",
+            "🌀 Slow Left-Arm Orth_raw": 44.7,
+            "⚡ Left-Arm Fast/Med": "63.0 (89)",
+            "⚡ Left-Arm Fast/Med_raw": 63.0
+          },
+          {
+            "Player": "DM de Silva",
+            "🌀 Leg Spin": "39.8 (68)",
+            "🌀 Leg Spin_raw": 39.8,
+            "⚡ Right-Arm Fast/Med": "26.5 (81)",
+            "⚡ Right-Arm Fast/Med_raw": 26.5,
+            "🌀 Off Spin": "25.1 (80)",
+            "🌀 Off Spin_raw": 25.1,
+            "🌀 Slow Left-Arm Orth": "17.9 (63)",
+            "🌀 Slow Left-Arm Orth_raw": 17.9,
+            "⚡ Left-Arm Fast/Med": "19.2 (75)",
+            "⚡ Left-Arm Fast/Med_raw": 19.2
+          },
+          {
+            "Player": "DN Wellalage",
+            "🌀 Leg Spin": "33.0 (84)",
+            "🌀 Leg Spin_raw": 33.0,
+            "⚡ Right-Arm Fast/Med": "17.5 (88)",
+            "⚡ Right-Arm Fast/Med_raw": 17.5,
+            "🌀 Off Spin": "17.0 (66)",
+            "🌀 Off Spin_raw": 17.0,
+            "🌀 Slow Left-Arm Orth": "20.0 (86)",
+            "🌀 Slow Left-Arm Orth_raw": 20.0,
+            "⚡ Left-Arm Fast/Med": "42.0 (77)",
+            "⚡ Left-Arm Fast/Med_raw": 42.0
+          },
+          {
+            "Player": "J Liyanage",
+            "🌀 Leg Spin": "112.0 (89)",
+            "🌀 Leg Spin_raw": 112.0,
+            "⚡ Right-Arm Fast/Med": "32.4 (86)",
+            "⚡ Right-Arm Fast/Med_raw": 32.4,
+            "🌀 Off Spin": "74.5 (73)",
+            "🌀 Off Spin_raw": 74.5,
+            "🌀 Slow Left-Arm Orth": "53.5 (75)",
+            "🌀 Slow Left-Arm Orth_raw": 53.5,
+            "⚡ Left-Arm Fast/Med": "68.0 (96)",
+            "⚡ Left-Arm Fast/Med_raw": 68.0
+          },
+          {
+            "Player": "JDF Vandersay",
+            "🌀 Leg Spin": "43.0 (53)",
+            "🌀 Leg Spin_raw": 43.0,
+            "⚡ Right-Arm Fast/Med": "4.6 (32)",
+            "⚡ Right-Arm Fast/Med_raw": 4.6,
+            "🌀 Off Spin": "8 (44)",
+            "🌀 Off Spin_raw": "8",
+            "🌀 Slow Left-Arm Orth": "12.0 (44)",
+            "🌀 Slow Left-Arm Orth_raw": 12.0,
+            "⚡ Left-Arm Fast/Med": "20.0 (60)",
+            "⚡ Left-Arm Fast/Med_raw": 20.0
+          },
+          {
+            "Player": "K Mishara",
+            "🌀 Leg Spin": "4.0 (88)",
+            "🌀 Leg Spin_raw": 4.0,
+            "⚡ Right-Arm Fast/Med": "31.3 (83)",
+            "⚡ Right-Arm Fast/Med_raw": 31.3,
+            "🌀 Off Spin": "0.0 (0)",
+            "🌀 Off Spin_raw": 0.0,
+            "🌀 Slow Left-Arm Orth": "10 (100)",
+            "🌀 Slow Left-Arm Orth_raw": "10",
+            "⚡ Left-Arm Fast/Med": "36 (81)",
+            "⚡ Left-Arm Fast/Med_raw": "36"
+          },
+          {
+            "Player": "KIC Asalanka",
+            "🌀 Leg Spin": "28.5 (92)",
+            "🌀 Leg Spin_raw": 28.5,
+            "⚡ Right-Arm Fast/Med": "33.0 (89)",
+            "⚡ Right-Arm Fast/Med_raw": 33.0,
+            "🌀 Off Spin": "80.8 (83)",
+            "🌀 Off Spin_raw": 80.8,
+            "🌀 Slow Left-Arm Orth": "133.0 (82)",
+            "🌀 Slow Left-Arm Orth_raw": 133.0,
+            "⚡ Left-Arm Fast/Med": "30.0 (84)",
+            "⚡ Left-Arm Fast/Med_raw": 30.0
+          },
+          {
+            "Player": "P Nissanka",
+            "🌀 Leg Spin": "34.7 (107)",
+            "🌀 Leg Spin_raw": 34.7,
+            "⚡ Right-Arm Fast/Med": "35.2 (81)",
+            "⚡ Right-Arm Fast/Med_raw": 35.2,
+            "🌀 Off Spin": "41.6 (79)",
+            "🌀 Off Spin_raw": 41.6,
+            "🌀 Slow Left-Arm Orth": "54.3 (87)",
+            "🌀 Slow Left-Arm Orth_raw": 54.3,
+            "⚡ Left-Arm Fast/Med": "27.7 (74)",
+            "⚡ Left-Arm Fast/Med_raw": 27.7
+          },
+          {
+            "Player": "P Rathnayake",
+            "🌀 Leg Spin": "77 (120)",
+            "🌀 Leg Spin_raw": "77",
+            "⚡ Right-Arm Fast/Med": "40 (95)",
+            "⚡ Right-Arm Fast/Med_raw": "40",
+            "🌀 Off Spin": "29.0 (85)",
+            "🌀 Off Spin_raw": 29.0,
+            "🌀 Slow Left-Arm Orth": "28.0 (77)",
+            "🌀 Slow Left-Arm Orth_raw": 28.0,
+            "⚡ Left-Arm Fast/Med": "14.0 (70)",
+            "⚡ Left-Arm Fast/Med_raw": 14.0
+          },
+          {
+            "Player": "PWH de Silva",
+            "🌀 Leg Spin": "22.5 (132)",
+            "🌀 Leg Spin_raw": 22.5,
+            "⚡ Right-Arm Fast/Med": "20.4 (99)",
+            "⚡ Right-Arm Fast/Med_raw": 20.4,
+            "🌀 Off Spin": "12.6 (94)",
+            "🌀 Off Spin_raw": 12.6,
+            "🌀 Slow Left-Arm Orth": "21.2 (111)",
+            "🌀 Slow Left-Arm Orth_raw": 21.2,
+            "⚡ Left-Arm Fast/Med": "54.7 (90)",
+            "⚡ Left-Arm Fast/Med_raw": 54.7
+          }
+        ],
+        "England": [
+          {
+            "Player": "AU Rashid",
+            "⚡ Right-Arm Fast/Med": "18.5 (90)",
+            "⚡ Right-Arm Fast/Med_raw": 18.5,
+            "🌀 Leg Spin": "42.0 (76)",
+            "🌀 Leg Spin_raw": 42.0,
+            "🌀 Off Spin": "10.5 (64)",
+            "🌀 Off Spin_raw": 10.5,
+            "🌀 Slow Left-Arm Orth": "31.8 (94)",
+            "🌀 Slow Left-Arm Orth_raw": 31.8
+          },
+          {
+            "Player": "BM Duckett",
+            "⚡ Right-Arm Fast/Med": "47.6 (91)",
+            "⚡ Right-Arm Fast/Med_raw": 47.6,
+            "🌀 Leg Spin": "24.2 (116)",
+            "🌀 Leg Spin_raw": 24.2,
+            "🌀 Off Spin": "59.0 (98)",
+            "🌀 Off Spin_raw": 59.0,
+            "🌀 Slow Left-Arm Orth": "23.0 (100)",
+            "🌀 Slow Left-Arm Orth_raw": 23.0
+          },
+          {
+            "Player": "HC Brook",
+            "⚡ Right-Arm Fast/Med": "46.1 (102)",
+            "⚡ Right-Arm Fast/Med_raw": 46.1,
+            "🌀 Leg Spin": "42.8 (142)",
+            "🌀 Leg Spin_raw": 42.8,
+            "🌀 Off Spin": "41.3 (111)",
+            "🌀 Off Spin_raw": 41.3,
+            "🌀 Slow Left-Arm Orth": "32.0 (78)",
+            "🌀 Slow Left-Arm Orth_raw": 32.0
+          },
+          {
+            "Player": "J Overton",
+            "⚡ Right-Arm Fast/Med": "29.8 (120)",
+            "⚡ Right-Arm Fast/Med_raw": 29.8,
+            "🌀 Leg Spin": "4 (80)",
+            "🌀 Leg Spin_raw": "4",
+            "🌀 Off Spin": "10 (100)",
+            "🌀 Off Spin_raw": "10",
+            "🌀 Slow Left-Arm Orth": "15.7 (79)",
+            "🌀 Slow Left-Arm Orth_raw": 15.7
+          },
+          {
+            "Player": "JC Buttler",
+            "⚡ Right-Arm Fast/Med": "32.7 (112)",
+            "⚡ Right-Arm Fast/Med_raw": 32.7,
+            "🌀 Leg Spin": "38.4 (112)",
+            "🌀 Leg Spin_raw": 38.4,
+            "🌀 Off Spin": "63.4 (112)",
+            "🌀 Off Spin_raw": 63.4,
+            "🌀 Slow Left-Arm Orth": "58.9 (96)",
+            "🌀 Slow Left-Arm Orth_raw": 58.9
+          },
+          {
+            "Player": "JE Root",
+            "⚡ Right-Arm Fast/Med": "43.4 (83)",
+            "⚡ Right-Arm Fast/Med_raw": 43.4,
+            "🌀 Leg Spin": "87.1 (90)",
+            "🌀 Leg Spin_raw": 87.1,
+            "🌀 Off Spin": "108.4 (88)",
+            "🌀 Off Spin_raw": 108.4,
+            "🌀 Slow Left-Arm Orth": "51.7 (86)",
+            "🌀 Slow Left-Arm Orth_raw": 51.7
+          },
+          {
+            "Player": "JG Bethell",
+            "⚡ Right-Arm Fast/Med": "34.1 (93)",
+            "⚡ Right-Arm Fast/Med_raw": 34.1,
+            "🌀 Leg Spin": "77.0 (73)",
+            "🌀 Leg Spin_raw": 77.0,
+            "🌀 Off Spin": "24.2 (95)",
+            "🌀 Off Spin_raw": 24.2,
+            "🌀 Slow Left-Arm Orth": "22.5 (81)",
+            "🌀 Slow Left-Arm Orth_raw": 22.5
+          },
+          {
+            "Player": "LA Dawson",
+            "⚡ Right-Arm Fast/Med": "8.0 (77)",
+            "⚡ Right-Arm Fast/Med_raw": 8.0,
+            "🌀 Leg Spin": "21.0 (70)",
+            "🌀 Leg Spin_raw": 21.0,
+            "🌀 Off Spin": "-",
+            "🌀 Slow Left-Arm Orth": "5 (71)",
+            "🌀 Slow Left-Arm Orth_raw": "5"
+          },
+          {
+            "Player": "Rehan Ahmed",
+            "⚡ Right-Arm Fast/Med": "18.3 (80)",
+            "⚡ Right-Arm Fast/Med_raw": 18.3,
+            "🌀 Leg Spin": "5.5 (45)",
+            "🌀 Leg Spin_raw": 5.5,
+            "🌀 Off Spin": "15.0 (136)",
+            "🌀 Off Spin_raw": 15.0,
+            "🌀 Slow Left-Arm Orth": "14.0 (82)",
+            "🌀 Slow Left-Arm Orth_raw": 14.0
+          },
+          {
+            "Player": "SM Curran",
+            "⚡ Right-Arm Fast/Med": "25.3 (94)",
+            "⚡ Right-Arm Fast/Med_raw": 25.3,
+            "🌀 Leg Spin": "22.0 (52)",
+            "🌀 Leg Spin_raw": 22.0,
+            "🌀 Off Spin": "12.8 (58)",
+            "🌀 Off Spin_raw": 12.8,
+            "🌀 Slow Left-Arm Orth": "38.3 (94)",
+            "🌀 Slow Left-Arm Orth_raw": 38.3
+          },
+          {
+            "Player": "WG Jacks",
+            "⚡ Right-Arm Fast/Med": "28.7 (91)",
+            "⚡ Right-Arm Fast/Med_raw": 28.7,
+            "🌀 Leg Spin": "22.0 (115)",
+            "🌀 Leg Spin_raw": 22.0,
+            "🌀 Off Spin": "24.5 (102)",
+            "🌀 Off Spin_raw": 24.5,
+            "🌀 Slow Left-Arm Orth": "38.0 (97)",
+            "🌀 Slow Left-Arm Orth_raw": 38.0
+          }
+        ]
+      },
+      "narrative": "Sri Lanka batters are vulnerable to ⚡ Fast/Med: AM Fernando (avg 1.5), AM Fernando (avg 3.0), JDF Vandersay (avg 4.6). Sri Lanka batters are vulnerable to 🌀 Orth: AM Fernando (avg 1.0), JDF Vandersay (avg 12.0), K Mishara (avg 10.0). Sri Lanka batters are vulnerable to 🌀 Off Spin: JDF Vandersay (avg 8.0), PWH de Silva (avg 12.6). England batters are vulnerable to 🌀 Off Spin: AU Rashid (avg 10.5), J Overton (avg 10.0), SM Curran (avg 12.8). England batters are vulnerable to 🌀 Leg Spin: J Overton (avg 4.0), Rehan Ahmed (avg 5.5). England batters are vulnerable to 🌀 Orth: LA Dawson (avg 5.0), Rehan Ahmed (avg 14.0)."
+    },
+    "matchups": {
+      "section_description": "Batter vs specific bowler head-to-head records. Shows runs scored, balls faced, dismissals, average, and strike rate. Bunny alerts flag batters dismissed 3+ times at avg <20 by a specific bowler.",
+      "data": {
+        "Sri Lanka": {
+          "AM Fernando": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 0,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 0,
+              "SR": 0.0,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "JE Root (🌀 Off Spin)",
+              "Runs": 0,
+              "Balls": 1,
+              "Outs": 1,
+              "Avg": 0.0,
+              "SR": 0.0,
+              "RawName": "JE Root",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 0,
+              "Balls": 2,
+              "Outs": 0,
+              "Avg": 0,
+              "SR": 0.0,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            }
+          ],
+          "BKG Mendis": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin) (🐰 Bunny)",
+              "Runs": 65,
+              "Balls": 89,
+              "Outs": 4,
+              "Avg": 16.2,
+              "SR": 73.0,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "J Overton ( Right-Arm Fast/Med)",
+              "Runs": 26,
+              "Balls": 18,
+              "Outs": 1,
+              "Avg": 26.0,
+              "SR": 144.4,
+              "RawName": "J Overton",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JG Bethell (🌀 Slow Left-Arm Orth)",
+              "Runs": 17,
+              "Balls": 21,
+              "Outs": 0,
+              "Avg": 17,
+              "SR": 81.0,
+              "RawName": "JG Bethell",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 14,
+              "Balls": 33,
+              "Outs": 1,
+              "Avg": 14.0,
+              "SR": 42.4,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "Rehan Ahmed (🌀 Leg Spin)",
+              "Runs": 34,
+              "Balls": 32,
+              "Outs": 0,
+              "Avg": 34,
+              "SR": 106.2,
+              "RawName": "Rehan Ahmed",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 19,
+              "Balls": 32,
+              "Outs": 0,
+              "Avg": 19,
+              "SR": 59.4,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "WG Jacks (🌀 Off Spin)",
+              "Runs": 7,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 7,
+              "SR": 140.0,
+              "RawName": "WG Jacks",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "DM de Silva": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 53,
+              "Balls": 86,
+              "Outs": 1,
+              "Avg": 53.0,
+              "SR": 61.6,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "JE Root (🌀 Off Spin)",
+              "Runs": 13,
+              "Balls": 10,
+              "Outs": 0,
+              "Avg": 13,
+              "SR": 130.0,
+              "RawName": "JE Root",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "JG Bethell (🌀 Slow Left-Arm Orth)",
+              "Runs": 5,
+              "Balls": 9,
+              "Outs": 0,
+              "Avg": 5,
+              "SR": 55.6,
+              "RawName": "JG Bethell",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 22,
+              "Balls": 33,
+              "Outs": 1,
+              "Avg": 22.0,
+              "SR": 66.7,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "Rehan Ahmed (🌀 Leg Spin)",
+              "Runs": 7,
+              "Balls": 18,
+              "Outs": 0,
+              "Avg": 7,
+              "SR": 38.9,
+              "RawName": "Rehan Ahmed",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 15,
+              "Balls": 16,
+              "Outs": 0,
+              "Avg": 15,
+              "SR": 93.8,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "WG Jacks (🌀 Off Spin)",
+              "Runs": 9,
+              "Balls": 16,
+              "Outs": 1,
+              "Avg": 9.0,
+              "SR": 56.2,
+              "RawName": "WG Jacks",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "DN Wellalage": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 5,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 5,
+              "SR": 100.0,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "J Overton ( Right-Arm Fast/Med)",
+              "Runs": 20,
+              "Balls": 6,
+              "Outs": 0,
+              "Avg": 20,
+              "SR": 333.3,
+              "RawName": "J Overton",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JE Root (🌀 Off Spin)",
+              "Runs": 0,
+              "Balls": 1,
+              "Outs": 1,
+              "Avg": 0.0,
+              "SR": 0.0,
+              "RawName": "JE Root",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "JG Bethell (🌀 Slow Left-Arm Orth)",
+              "Runs": 9,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 9,
+              "SR": 128.6,
+              "RawName": "JG Bethell",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 6,
+              "Balls": 11,
+              "Outs": 1,
+              "Avg": 6.0,
+              "SR": 54.5,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "Rehan Ahmed (🌀 Leg Spin)",
+              "Runs": 7,
+              "Balls": 4,
+              "Outs": 0,
+              "Avg": 7,
+              "SR": 175.0,
+              "RawName": "Rehan Ahmed",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 4,
+              "Balls": 4,
+              "Outs": 0,
+              "Avg": 4,
+              "SR": 100.0,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "WG Jacks (🌀 Off Spin)",
+              "Runs": 16,
+              "Balls": 18,
+              "Outs": 0,
+              "Avg": 16,
+              "SR": 88.9,
+              "RawName": "WG Jacks",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "J Liyanage": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 10,
+              "Balls": 15,
+              "Outs": 1,
+              "Avg": 10.0,
+              "SR": 66.7,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "J Overton ( Right-Arm Fast/Med)",
+              "Runs": 1,
+              "Balls": 12,
+              "Outs": 1,
+              "Avg": 1.0,
+              "SR": 8.3,
+              "RawName": "J Overton",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JG Bethell (🌀 Slow Left-Arm Orth)",
+              "Runs": 15,
+              "Balls": 10,
+              "Outs": 0,
+              "Avg": 15,
+              "SR": 150.0,
+              "RawName": "JG Bethell",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 20,
+              "Balls": 37,
+              "Outs": 1,
+              "Avg": 20.0,
+              "SR": 54.1,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "Rehan Ahmed (🌀 Leg Spin)",
+              "Runs": 18,
+              "Balls": 15,
+              "Outs": 0,
+              "Avg": 18,
+              "SR": 120.0,
+              "RawName": "Rehan Ahmed",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 12,
+              "Balls": 8,
+              "Outs": 0,
+              "Avg": 12,
+              "SR": 150.0,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "WG Jacks (🌀 Off Spin)",
+              "Runs": 4,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 4,
+              "SR": 80.0,
+              "RawName": "WG Jacks",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "JDF Vandersay": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 5,
+              "Balls": 6,
+              "Outs": 0,
+              "Avg": 5,
+              "SR": 83.3,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "JE Root (🌀 Off Spin)",
+              "Runs": 1,
+              "Balls": 1,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 100.0,
+              "RawName": "JE Root",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 3,
+              "Balls": 6,
+              "Outs": 1,
+              "Avg": 3.0,
+              "SR": 50.0,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "Rehan Ahmed (🌀 Leg Spin)",
+              "Runs": 7,
+              "Balls": 6,
+              "Outs": 0,
+              "Avg": 7,
+              "SR": 116.7,
+              "RawName": "Rehan Ahmed",
+              "RawStyle": "🌀 Leg Spin"
+            }
+          ],
+          "K Mishara": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 1,
+              "Balls": 3,
+              "Outs": 1,
+              "Avg": 1.0,
+              "SR": 33.3,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "J Overton ( Right-Arm Fast/Med)",
+              "Runs": 25,
+              "Balls": 27,
+              "Outs": 1,
+              "Avg": 25.0,
+              "SR": 92.6,
+              "RawName": "J Overton",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 10,
+              "Balls": 10,
+              "Outs": 0,
+              "Avg": 10,
+              "SR": 100.0,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "Rehan Ahmed (🌀 Leg Spin)",
+              "Runs": 1,
+              "Balls": 1,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 100.0,
+              "RawName": "Rehan Ahmed",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 17,
+              "Balls": 25,
+              "Outs": 0,
+              "Avg": 17,
+              "SR": 68.0,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "WG Jacks (🌀 Off Spin)",
+              "Runs": 0,
+              "Balls": 1,
+              "Outs": 1,
+              "Avg": 0.0,
+              "SR": 0.0,
+              "RawName": "WG Jacks",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "KIC Asalanka": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 15,
+              "Balls": 29,
+              "Outs": 2,
+              "Avg": 7.5,
+              "SR": 51.7,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "J Overton ( Right-Arm Fast/Med)",
+              "Runs": 16,
+              "Balls": 8,
+              "Outs": 0,
+              "Avg": 16,
+              "SR": 200.0,
+              "RawName": "J Overton",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JE Root (🌀 Off Spin)",
+              "Runs": 2,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 40.0,
+              "RawName": "JE Root",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "JG Bethell (🌀 Slow Left-Arm Orth)",
+              "Runs": 5,
+              "Balls": 3,
+              "Outs": 0,
+              "Avg": 5,
+              "SR": 166.7,
+              "RawName": "JG Bethell",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 10,
+              "Balls": 15,
+              "Outs": 0,
+              "Avg": 10,
+              "SR": 66.7,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "Rehan Ahmed (🌀 Leg Spin)",
+              "Runs": 15,
+              "Balls": 15,
+              "Outs": 1,
+              "Avg": 15.0,
+              "SR": 100.0,
+              "RawName": "Rehan Ahmed",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 3,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 3,
+              "SR": 42.9,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "WG Jacks (🌀 Off Spin)",
+              "Runs": 12,
+              "Balls": 22,
+              "Outs": 0,
+              "Avg": 12,
+              "SR": 54.5,
+              "RawName": "WG Jacks",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "P Nissanka": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 27,
+              "Balls": 26,
+              "Outs": 1,
+              "Avg": 27.0,
+              "SR": 103.8,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "J Overton ( Right-Arm Fast/Med)",
+              "Runs": 26,
+              "Balls": 26,
+              "Outs": 1,
+              "Avg": 26.0,
+              "SR": 100.0,
+              "RawName": "J Overton",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JG Bethell (🌀 Slow Left-Arm Orth)",
+              "Runs": 2,
+              "Balls": 2,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 100.0,
+              "RawName": "JG Bethell",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 23,
+              "Balls": 21,
+              "Outs": 0,
+              "Avg": 23,
+              "SR": 109.5,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 33,
+              "Balls": 32,
+              "Outs": 2,
+              "Avg": 16.5,
+              "SR": 103.1,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "WG Jacks (🌀 Off Spin)",
+              "Runs": 10,
+              "Balls": 6,
+              "Outs": 0,
+              "Avg": 10,
+              "SR": 166.7,
+              "RawName": "WG Jacks",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "P Rathnayake": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 49,
+              "Balls": 41,
+              "Outs": 0,
+              "Avg": 49,
+              "SR": 119.5,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "J Overton ( Right-Arm Fast/Med)",
+              "Runs": 16,
+              "Balls": 15,
+              "Outs": 0,
+              "Avg": 16,
+              "SR": 106.7,
+              "RawName": "J Overton",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JG Bethell (🌀 Slow Left-Arm Orth)",
+              "Runs": 14,
+              "Balls": 14,
+              "Outs": 0,
+              "Avg": 14,
+              "SR": 100.0,
+              "RawName": "JG Bethell",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "LA Dawson (🌀 Slow Left-Arm Orth)",
+              "Runs": 14,
+              "Balls": 22,
+              "Outs": 1,
+              "Avg": 14.0,
+              "SR": 63.6,
+              "RawName": "LA Dawson",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "Rehan Ahmed (🌀 Leg Spin)",
+              "Runs": 28,
+              "Balls": 23,
+              "Outs": 0,
+              "Avg": 28,
+              "SR": 121.7,
+              "RawName": "Rehan Ahmed",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 12,
+              "Balls": 14,
+              "Outs": 1,
+              "Avg": 12.0,
+              "SR": 85.7,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            },
+            {
+              "Bowler": "WG Jacks (🌀 Off Spin)",
+              "Runs": 29,
+              "Balls": 34,
+              "Outs": 1,
+              "Avg": 29.0,
+              "SR": 85.3,
+              "RawName": "WG Jacks",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "PWH de Silva": [
+            {
+              "Bowler": "AU Rashid (🌀 Leg Spin)",
+              "Runs": 32,
+              "Balls": 30,
+              "Outs": 1,
+              "Avg": 32.0,
+              "SR": 106.7,
+              "RawName": "AU Rashid",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "SM Curran ( Left-Arm Fast/Med)",
+              "Runs": 50,
+              "Balls": 47,
+              "Outs": 1,
+              "Avg": 50.0,
+              "SR": 106.4,
+              "RawName": "SM Curran",
+              "RawStyle": "Left-Arm Fast/Med"
+            }
+          ]
+        },
+        "England": {
+          "AU Rashid": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 0,
+              "Balls": 3,
+              "Outs": 0,
+              "Avg": 0,
+              "SR": 0.0,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "DM de Silva (🌀 Off Spin)",
+              "Runs": 2,
+              "Balls": 7,
+              "Outs": 1,
+              "Avg": 2.0,
+              "SR": 28.6,
+              "RawName": "DM de Silva",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "BM Duckett": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 14,
+              "Balls": 22,
+              "Outs": 0,
+              "Avg": 14,
+              "SR": 63.6,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "DM de Silva (🌀 Off Spin)",
+              "Runs": 22,
+              "Balls": 34,
+              "Outs": 1,
+              "Avg": 22.0,
+              "SR": 64.7,
+              "RawName": "DM de Silva",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "DN Wellalage (🌀 Slow Left-Arm Orth)",
+              "Runs": 22,
+              "Balls": 25,
+              "Outs": 0,
+              "Avg": 22,
+              "SR": 88.0,
+              "RawName": "DN Wellalage",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "J Liyanage ( Right-Arm Fast/Med)",
+              "Runs": 4,
+              "Balls": 6,
+              "Outs": 0,
+              "Avg": 4,
+              "SR": 66.7,
+              "RawName": "J Liyanage",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JDF Vandersay (🌀 Leg Spin)",
+              "Runs": 15,
+              "Balls": 14,
+              "Outs": 2,
+              "Avg": 7.5,
+              "SR": 107.1,
+              "RawName": "JDF Vandersay",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "K Mishara (🌀 Off Spin)",
+              "Runs": 8,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 8,
+              "SR": 160.0,
+              "RawName": "K Mishara",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "KIC Asalanka (🌀 Off Spin)",
+              "Runs": 18,
+              "Balls": 20,
+              "Outs": 0,
+              "Avg": 18,
+              "SR": 90.0,
+              "RawName": "KIC Asalanka",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "HC Brook": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 41,
+              "Balls": 29,
+              "Outs": 0,
+              "Avg": 41,
+              "SR": 141.4,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "DM de Silva (🌀 Off Spin)",
+              "Runs": 22,
+              "Balls": 21,
+              "Outs": 0,
+              "Avg": 22,
+              "SR": 104.8,
+              "RawName": "DM de Silva",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "DN Wellalage (🌀 Slow Left-Arm Orth)",
+              "Runs": 33,
+              "Balls": 38,
+              "Outs": 0,
+              "Avg": 33,
+              "SR": 86.8,
+              "RawName": "DN Wellalage",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JDF Vandersay (🌀 Leg Spin)",
+              "Runs": 49,
+              "Balls": 39,
+              "Outs": 1,
+              "Avg": 49.0,
+              "SR": 125.6,
+              "RawName": "JDF Vandersay",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "KIC Asalanka (🌀 Off Spin)",
+              "Runs": 9,
+              "Balls": 17,
+              "Outs": 1,
+              "Avg": 9.0,
+              "SR": 52.9,
+              "RawName": "KIC Asalanka",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "PWH de Silva (🌀 Leg Spin)",
+              "Runs": 30,
+              "Balls": 15,
+              "Outs": 0,
+              "Avg": 30,
+              "SR": 200.0,
+              "RawName": "PWH de Silva",
+              "RawStyle": "🌀 Leg Spin"
+            }
+          ],
+          "J Overton": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 25,
+              "Balls": 11,
+              "Outs": 0,
+              "Avg": 25,
+              "SR": 227.3,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JDF Vandersay (🌀 Leg Spin)",
+              "Runs": 0,
+              "Balls": 1,
+              "Outs": 0,
+              "Avg": 0,
+              "SR": 0.0,
+              "RawName": "JDF Vandersay",
+              "RawStyle": "🌀 Leg Spin"
+            }
+          ],
+          "JC Buttler": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 14,
+              "Balls": 10,
+              "Outs": 0,
+              "Avg": 14,
+              "SR": 140.0,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "DN Wellalage (🌀 Slow Left-Arm Orth)",
+              "Runs": 6,
+              "Balls": 9,
+              "Outs": 0,
+              "Avg": 6,
+              "SR": 66.7,
+              "RawName": "DN Wellalage",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JDF Vandersay (🌀 Leg Spin)",
+              "Runs": 13,
+              "Balls": 13,
+              "Outs": 0,
+              "Avg": 13,
+              "SR": 100.0,
+              "RawName": "JDF Vandersay",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "KIC Asalanka (🌀 Off Spin)",
+              "Runs": 2,
+              "Balls": 2,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 100.0,
+              "RawName": "KIC Asalanka",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "P Rathnayake ( Right-Arm Fast/Med)",
+              "Runs": 11,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 11,
+              "SR": 220.0,
+              "RawName": "P Rathnayake",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ],
+          "JE Root": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 39,
+              "Balls": 48,
+              "Outs": 1,
+              "Avg": 39.0,
+              "SR": 81.2,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "BKG Mendis (🌀 Leg Spin)",
+              "Runs": 8,
+              "Balls": 7,
+              "Outs": 0,
+              "Avg": 8,
+              "SR": 114.3,
+              "RawName": "BKG Mendis",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "DM de Silva (🌀 Off Spin)",
+              "Runs": 59,
+              "Balls": 81,
+              "Outs": 2,
+              "Avg": 29.5,
+              "SR": 72.8,
+              "RawName": "DM de Silva",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "DN Wellalage (🌀 Slow Left-Arm Orth)",
+              "Runs": 51,
+              "Balls": 72,
+              "Outs": 0,
+              "Avg": 51,
+              "SR": 70.8,
+              "RawName": "DN Wellalage",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JDF Vandersay (🌀 Leg Spin)",
+              "Runs": 63,
+              "Balls": 69,
+              "Outs": 0,
+              "Avg": 63,
+              "SR": 91.3,
+              "RawName": "JDF Vandersay",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "K Mishara (🌀 Off Spin)",
+              "Runs": 1,
+              "Balls": 1,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 100.0,
+              "RawName": "K Mishara",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "KIC Asalanka (🌀 Off Spin)",
+              "Runs": 27,
+              "Balls": 44,
+              "Outs": 0,
+              "Avg": 27,
+              "SR": 61.4,
+              "RawName": "KIC Asalanka",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "PWH de Silva (🌀 Leg Spin)",
+              "Runs": 59,
+              "Balls": 61,
+              "Outs": 0,
+              "Avg": 59,
+              "SR": 96.7,
+              "RawName": "PWH de Silva",
+              "RawStyle": "🌀 Leg Spin"
+            }
+          ],
+          "JG Bethell": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 17,
+              "Balls": 10,
+              "Outs": 0,
+              "Avg": 17,
+              "SR": 170.0,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "DM de Silva (🌀 Off Spin)",
+              "Runs": 13,
+              "Balls": 17,
+              "Outs": 1,
+              "Avg": 13.0,
+              "SR": 76.5,
+              "RawName": "DM de Silva",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "DN Wellalage (🌀 Slow Left-Arm Orth)",
+              "Runs": 6,
+              "Balls": 20,
+              "Outs": 1,
+              "Avg": 6.0,
+              "SR": 30.0,
+              "RawName": "DN Wellalage",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "JDF Vandersay (🌀 Leg Spin)",
+              "Runs": 16,
+              "Balls": 31,
+              "Outs": 1,
+              "Avg": 16.0,
+              "SR": 51.6,
+              "RawName": "JDF Vandersay",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "KIC Asalanka (🌀 Off Spin)",
+              "Runs": 19,
+              "Balls": 22,
+              "Outs": 0,
+              "Avg": 19,
+              "SR": 86.4,
+              "RawName": "KIC Asalanka",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "PWH de Silva (🌀 Leg Spin)",
+              "Runs": 15,
+              "Balls": 20,
+              "Outs": 0,
+              "Avg": 15,
+              "SR": 75.0,
+              "RawName": "PWH de Silva",
+              "RawStyle": "🌀 Leg Spin"
+            }
+          ],
+          "Rehan Ahmed": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 28,
+              "Balls": 26,
+              "Outs": 0,
+              "Avg": 28,
+              "SR": 107.7,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "DM de Silva (🌀 Off Spin)",
+              "Runs": 13,
+              "Balls": 8,
+              "Outs": 1,
+              "Avg": 13.0,
+              "SR": 162.5,
+              "RawName": "DM de Silva",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "DN Wellalage (🌀 Slow Left-Arm Orth)",
+              "Runs": 14,
+              "Balls": 13,
+              "Outs": 0,
+              "Avg": 14,
+              "SR": 107.7,
+              "RawName": "DN Wellalage",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "J Liyanage ( Right-Arm Fast/Med)",
+              "Runs": 3,
+              "Balls": 12,
+              "Outs": 0,
+              "Avg": 3,
+              "SR": 25.0,
+              "RawName": "J Liyanage",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JDF Vandersay (🌀 Leg Spin)",
+              "Runs": 2,
+              "Balls": 10,
+              "Outs": 1,
+              "Avg": 2.0,
+              "SR": 20.0,
+              "RawName": "JDF Vandersay",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "PWH de Silva (🌀 Leg Spin)",
+              "Runs": 0,
+              "Balls": 3,
+              "Outs": 1,
+              "Avg": 0.0,
+              "SR": 0.0,
+              "RawName": "PWH de Silva",
+              "RawStyle": "🌀 Leg Spin"
+            }
+          ],
+          "SM Curran": [
+            {
+              "Bowler": "DM de Silva (🌀 Off Spin)",
+              "Runs": 0,
+              "Balls": 1,
+              "Outs": 1,
+              "Avg": 0.0,
+              "SR": 0.0,
+              "RawName": "DM de Silva",
+              "RawStyle": "🌀 Off Spin"
+            },
+            {
+              "Bowler": "DN Wellalage (🌀 Slow Left-Arm Orth)",
+              "Runs": 3,
+              "Balls": 4,
+              "Outs": 1,
+              "Avg": 3.0,
+              "SR": 75.0,
+              "RawName": "DN Wellalage",
+              "RawStyle": "🌀 Slow Left-Arm Orth"
+            },
+            {
+              "Bowler": "KIC Asalanka (🌀 Off Spin)",
+              "Runs": 2,
+              "Balls": 5,
+              "Outs": 0,
+              "Avg": 2,
+              "SR": 40.0,
+              "RawName": "KIC Asalanka",
+              "RawStyle": "🌀 Off Spin"
+            }
+          ],
+          "WG Jacks": [
+            {
+              "Bowler": "AM Fernando ( Right-Arm Fast/Med)",
+              "Runs": 0,
+              "Balls": 1,
+              "Outs": 0,
+              "Avg": 0,
+              "SR": 0.0,
+              "RawName": "AM Fernando",
+              "RawStyle": "Right-Arm Fast/Med"
+            },
+            {
+              "Bowler": "JDF Vandersay (🌀 Leg Spin)",
+              "Runs": 1,
+              "Balls": 4,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 25.0,
+              "RawName": "JDF Vandersay",
+              "RawStyle": "🌀 Leg Spin"
+            },
+            {
+              "Bowler": "P Rathnayake ( Right-Arm Fast/Med)",
+              "Runs": 1,
+              "Balls": 1,
+              "Outs": 0,
+              "Avg": 1,
+              "SR": 100.0,
+              "RawName": "P Rathnayake",
+              "RawStyle": "Right-Arm Fast/Med"
+            }
+          ]
+        }
+      },
+      "narrative": "KEY BUNNY ALERTS: BKG Mendis is a bunny of AU Rashid (🌀 Leg Spin) (🐰 Bunny) (4 dismissals, avg 16.2)."
+    },
+    "player_stats": {
+      "section_description": "Per-player detailed statistics: batting form (last 10 match scores), career batting average, average vs this specific opponent, venue-specific batting record (innings, runs, avg, highest score), bowling form and economy, venue bowling economy and wickets. This is the most granular player-level data available for prediction.",
+      "data": {
+        "Sri Lanka": {
+          "AM Fernando": {
+            "player": "AM Fernando",
+            "batting": {
+              "innings": 10,
+              "form_scores": [
+                "0*",
+                "0",
+                "DNB",
+                "DNB",
+                "0*",
+                "DNB",
+                "DNB",
+                "DNB",
+                "3*",
+                "1"
+              ],
+              "average": 1.8,
+              "vs_opponent_avg": 0.5,
+              "venue": {
+                "innings": 5,
+                "runs": 4,
+                "average": 1.3,
+                "highest": 3
+              }
+            },
+            "bowling": {
+              "form_display": "0/77 (9), 1/31 (7), 1/64 (8), 0/66 (8.2), 1/42 (10), 2/67 (9), 3/50 (10), 3/33 (7), 4/35 (9), 1/38 (5)",
+              "economy": 6.0,
+              "venue_economy": 5.9,
+              "venue_wickets": 14,
+              "venue_matches": 10
+            }
+          },
+          "BKG Mendis": {
+            "player": "BKG Mendis",
+            "batting": {
+              "innings": 136,
+              "form_scores": [
+                "20",
+                "26",
+                "93*",
+                "34",
+                "20",
+                "0",
+                "5",
+                "38",
+                "124",
+                "56"
+              ],
+              "average": 34.8,
+              "vs_opponent_avg": 41.4,
+              "venue": {
+                "innings": 26,
+                "runs": 1125,
+                "average": 51.1,
+                "highest": 101
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 8.4,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "DM de Silva": {
+            "player": "DM de Silva",
+            "batting": {
+              "innings": 76,
+              "form_scores": [
+                "9",
+                "40",
+                "10",
+                "19",
+                "34",
+                "DNB",
+                "30",
+                "7",
+                "25",
+                "11"
+              ],
+              "average": 26.0,
+              "vs_opponent_avg": 30.4,
+              "venue": {
+                "innings": 18,
+                "runs": 402,
+                "average": 23.6,
+                "highest": 60
+              }
+            },
+            "bowling": {
+              "form_display": "1/45 (5), 2/37 (7), 1/22 (8), 0/22 (2), 0/20 (3), 0/10 (1), 0/13 (4), 0/13 (3), 0/36 (4), 0/39 (4)",
+              "economy": 5.2,
+              "venue_economy": 4.7,
+              "venue_wickets": 14,
+              "venue_matches": 17
+            }
+          },
+          "DN Wellalage": {
+            "player": "DN Wellalage",
+            "batting": {
+              "innings": 25,
+              "form_scores": [
+                "22",
+                "20",
+                "25*",
+                "6",
+                "1",
+                "DNB",
+                "30",
+                "18",
+                "DNB",
+                "DNB"
+              ],
+              "average": 18.5,
+              "vs_opponent_avg": 45.0,
+              "venue": {
+                "innings": 14,
+                "runs": 282,
+                "average": 28.2,
+                "highest": 67
+              }
+            },
+            "bowling": {
+              "form_display": "0/49 (10), 0/50 (10), 2/41 (10), 2/33 (8), 0/32 (8), 4/35 (7.2), 2/33 (7), 1/46 (8), 0/36 (6), 0/20 (7)",
+              "economy": 5.1,
+              "venue_economy": 4.6,
+              "venue_wickets": 27,
+              "venue_matches": 16
+            }
+          },
+          "J Liyanage": {
+            "player": "J Liyanage",
+            "batting": {
+              "innings": 28,
+              "form_scores": [
+                "22",
+                "12",
+                "46",
+                "4",
+                "54",
+                "28",
+                "19*",
+                "70*",
+                "12",
+                "78"
+              ],
+              "average": 42.7,
+              "vs_opponent_avg": 29.0,
+              "venue": {
+                "innings": 12,
+                "runs": 389,
+                "average": 35.4,
+                "highest": 95
+              }
+            },
+            "bowling": {
+              "form_display": "0/7 (3), -, -, 0/22 (5), 0/13 (4), 0/48 (8), 1/36 (7), 0/19 (3), -, -",
+              "economy": 5.2,
+              "venue_economy": 4.4,
+              "venue_wickets": 1,
+              "venue_matches": 3
+            }
+          },
+          "JDF Vandersay": {
+            "player": "JDF Vandersay",
+            "batting": {
+              "innings": 18,
+              "form_scores": [
+                "14",
+                "2*",
+                "DNB",
+                "4",
+                "DNB",
+                "DNB",
+                "DNB",
+                "DNB",
+                "DNB",
+                "1"
+              ],
+              "average": 11.0,
+              "vs_opponent_avg": 2.0,
+              "venue": {
+                "innings": 7,
+                "runs": 43,
+                "average": 21.5,
+                "highest": 19
+              }
+            },
+            "bowling": {
+              "form_display": "1/76 (10), 2/45 (10), 2/39 (10), 3/42 (10), 0/18 (5), 3/46 (10), 1/40 (6), 1/45 (8.3), 2/34 (5), 6/33 (10)",
+              "economy": 5.3,
+              "venue_economy": 5.0,
+              "venue_wickets": 20,
+              "venue_matches": 9
+            }
+          },
+          "K Mishara": {
+            "player": "K Mishara",
+            "batting": {
+              "innings": 6,
+              "form_scores": [
+                "22",
+                "5",
+                "27",
+                "29",
+                "27",
+                "38"
+              ],
+              "average": 24.7,
+              "vs_opponent_avg": 16.0,
+              "venue": {
+                "innings": 3,
+                "runs": 54,
+                "average": 18.0,
+                "highest": 27
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, 0/9 (1), -, -, -",
+              "economy": 9.0,
+              "venue_economy": 9.0,
+              "venue_wickets": 0,
+              "venue_matches": 1
+            }
+          },
+          "KIC Asalanka": {
+            "player": "KIC Asalanka",
+            "batting": {
+              "innings": 66,
+              "form_scores": [
+                "13",
+                "45",
+                "17",
+                "6",
+                "32",
+                "71",
+                "6",
+                "58",
+                "6",
+                "106"
+              ],
+              "average": 39.6,
+              "vs_opponent_avg": 16.2,
+              "venue": {
+                "innings": 25,
+                "runs": 1083,
+                "average": 45.1,
+                "highest": 127
+              }
+            },
+            "bowling": {
+              "form_display": "0/20 (3), 0/27 (8), 1/33 (7), 0/33 (6), 0/18 (2), 0/17 (4), 0/28 (4), -, 1/24 (3), 0/29 (5)",
+              "economy": 5.0,
+              "venue_economy": 4.2,
+              "venue_wickets": 14,
+              "venue_matches": 16
+            }
+          },
+          "P Nissanka": {
+            "player": "P Nissanka",
+            "batting": {
+              "innings": 66,
+              "form_scores": [
+                "50",
+                "26",
+                "21",
+                "24",
+                "24*",
+                "29",
+                "122",
+                "76",
+                "35",
+                "5"
+              ],
+              "average": 35.4,
+              "vs_opponent_avg": 12.6,
+              "venue": {
+                "innings": 17,
+                "runs": 442,
+                "average": 26.0,
+                "highest": 137
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 0.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "P Rathnayake": {
+            "player": "P Rathnayake",
+            "batting": {
+              "innings": 4,
+              "form_scores": [
+                "121",
+                "29",
+                "12",
+                "32"
+              ],
+              "average": 48.5,
+              "vs_opponent_avg": 20.5,
+              "venue": {
+                "innings": 3,
+                "runs": 162,
+                "average": 54.0,
+                "highest": 121
+              }
+            },
+            "bowling": {
+              "form_display": "-, 0/12 (1), -, -",
+              "economy": 12.0,
+              "venue_economy": 12.0,
+              "venue_wickets": 0,
+              "venue_matches": 1
+            }
+          },
+          "PWH de Silva": {
+            "player": "PWH de Silva",
+            "batting": {
+              "innings": 53,
+              "form_scores": [
+                "9",
+                "37*",
+                "59",
+                "18*",
+                "13",
+                "22",
+                "DNB",
+                "7",
+                "15",
+                "1"
+              ],
+              "average": 22.8,
+              "vs_opponent_avg": 33.3,
+              "venue": {
+                "innings": 14,
+                "runs": 167,
+                "average": 13.9,
+                "highest": 24
+              }
+            },
+            "bowling": {
+              "form_display": "1/76 (10), 0/35 (10), 3/54 (10), 2/35 (8.4), 3/60 (9.5), 4/10 (7.5), 3/23 (7), 1/47 (6), 0/22 (2), 2/39 (8)",
+              "economy": 5.2,
+              "venue_economy": 5.2,
+              "venue_wickets": 32,
+              "venue_matches": 16
+            }
+          }
+        },
+        "England": {
+          "AU Rashid": {
+            "player": "AU Rashid",
+            "batting": {
+              "innings": 81,
+              "form_scores": [
+                "DNB",
+                "DNB",
+                "0*",
+                "1*",
+                "9",
+                "4",
+                "DNB",
+                "2*",
+                "9",
+                "DNB"
+              ],
+              "average": 17.1,
+              "vs_opponent_avg": 21.0,
+              "venue": {
+                "innings": 2,
+                "runs": 4,
+                "average": 4.0,
+                "highest": 4
+              }
+            },
+            "bowling": {
+              "form_display": "2/61 (10), 2/34 (10), 3/44 (10), 1/32 (6), 1/48 (8), 1/69 (8.4), 3/13 (3.5), 2/33 (10), 3/26 (3.5), 3/40 (8)",
+              "economy": 5.6,
+              "venue_economy": 4.8,
+              "venue_wickets": 8,
+              "venue_matches": 4
+            }
+          },
+          "BM Duckett": {
+            "player": "BM Duckett",
+            "batting": {
+              "innings": 33,
+              "form_scores": [
+                "7",
+                "39",
+                "62",
+                "8",
+                "1",
+                "2",
+                "31",
+                "14",
+                "5",
+                "58"
+              ],
+              "average": 40.8,
+              "vs_opponent_avg": 7.0,
+              "venue": {
+                "innings": 3,
+                "runs": 108,
+                "average": 36.0,
+                "highest": 62
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 0.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "HC Brook": {
+            "player": "HC Brook",
+            "batting": {
+              "innings": 36,
+              "form_scores": [
+                "136*",
+                "42",
+                "6",
+                "6",
+                "34",
+                "135",
+                "3",
+                "33",
+                "12*",
+                "26*"
+              ],
+              "average": 39.5,
+              "vs_opponent_avg": 136.0,
+              "venue": {
+                "innings": 3,
+                "runs": 184,
+                "average": 92.0,
+                "highest": 136
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 0.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "J Overton": {
+            "player": "J Overton",
+            "batting": {
+              "innings": 9,
+              "form_scores": [
+                "DNB",
+                "DNB",
+                "34",
+                "68",
+                "42",
+                "46",
+                "DNB",
+                "1",
+                "11",
+                "6"
+              ],
+              "average": 26.7,
+              "vs_opponent_avg": null,
+              "venue": {
+                "innings": 1,
+                "runs": 34,
+                "average": 34.0,
+                "highest": 34
+              }
+            },
+            "bowling": {
+              "form_display": "2/48 (4), 2/21 (5), 0/66 (9), 2/32 (10), 1/36 (5), 0/30 (6), 0/8 (2), 3/22 (5.2), 0/34 (5), 2/27 (5)",
+              "economy": 5.7,
+              "venue_economy": 7.5,
+              "venue_wickets": 4,
+              "venue_matches": 3
+            }
+          },
+          "JC Buttler": {
+            "player": "JC Buttler",
+            "batting": {
+              "innings": 168,
+              "form_scores": [
+                "DNB",
+                "33*",
+                "19",
+                "38",
+                "9",
+                "4",
+                "62*",
+                "61",
+                "15",
+                "41*"
+              ],
+              "average": 39.7,
+              "vs_opponent_avg": 30.6,
+              "venue": {
+                "innings": 3,
+                "runs": 52,
+                "average": 26.0,
+                "highest": 33
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 0.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "JE Root": {
+            "player": "JE Root",
+            "batting": {
+              "innings": 174,
+              "form_scores": [
+                "111*",
+                "75",
+                "61",
+                "2",
+                "25",
+                "2",
+                "100",
+                "61",
+                "14",
+                "44"
+              ],
+              "average": 49.2,
+              "vs_opponent_avg": 69.4,
+              "venue": {
+                "innings": 4,
+                "runs": 257,
+                "average": 85.7,
+                "highest": 111
+              }
+            },
+            "bowling": {
+              "form_display": "-, 2/13 (2.3), -, -, -, -, -, -, -, -",
+              "economy": 5.9,
+              "venue_economy": 5.2,
+              "venue_wickets": 2,
+              "venue_matches": 1
+            }
+          },
+          "JG Bethell": {
+            "player": "JG Bethell",
+            "batting": {
+              "innings": 19,
+              "form_scores": [
+                "65",
+                "6",
+                "15",
+                "11",
+                "18",
+                "2",
+                "110",
+                "58",
+                "1",
+                "DNB"
+              ],
+              "average": 33.5,
+              "vs_opponent_avg": 65.0,
+              "venue": {
+                "innings": 3,
+                "runs": 86,
+                "average": 28.7,
+                "highest": 65
+              }
+            },
+            "bowling": {
+              "form_display": "0/28 (5), 0/20 (3), 0/19 (3), -, -, -, -, 1/61 (5), -, 0/14 (2)",
+              "economy": 7.5,
+              "venue_economy": 6.1,
+              "venue_wickets": 0,
+              "venue_matches": 3
+            }
+          },
+          "LA Dawson": {
+            "player": "LA Dawson",
+            "batting": {
+              "innings": 6,
+              "form_scores": [
+                "DNB",
+                "DNB",
+                "2",
+                "18",
+                "20",
+                "11",
+                "4",
+                "DNB",
+                "10"
+              ],
+              "average": 10.8,
+              "vs_opponent_avg": 4.0,
+              "venue": {
+                "innings": 1,
+                "runs": 2,
+                "average": 2.0,
+                "highest": 2
+              }
+            },
+            "bowling": {
+              "form_display": "2/48 (10), 1/40 (10), 1/31 (10), 1/75 (10), 0/48 (10), 1/65 (10), 1/26 (6), -, 2/70 (8)",
+              "economy": 5.5,
+              "venue_economy": 4.0,
+              "venue_wickets": 4,
+              "venue_matches": 3
+            }
+          },
+          "Rehan Ahmed": {
+            "player": "Rehan Ahmed",
+            "batting": {
+              "innings": 7,
+              "form_scores": [
+                "24",
+                "13",
+                "27",
+                "15",
+                "DNB",
+                "12",
+                "DNB",
+                "6",
+                "2"
+              ],
+              "average": 14.1,
+              "vs_opponent_avg": 24.0,
+              "venue": {
+                "innings": 3,
+                "runs": 64,
+                "average": 21.3,
+                "highest": 27
+              }
+            },
+            "bowling": {
+              "form_display": "0/31 (4), 1/26 (5), 1/61 (10), 1/37 (7), 2/40 (10), 2/40 (10), -, 4/54 (10), 1/62 (10)",
+              "economy": 5.3,
+              "venue_economy": 6.2,
+              "venue_wickets": 2,
+              "venue_matches": 3
+            }
+          },
+          "SM Curran": {
+            "player": "SM Curran",
+            "batting": {
+              "innings": 30,
+              "form_scores": [
+                "DNB",
+                "DNB",
+                "5",
+                "17",
+                "17",
+                "6",
+                "40",
+                "52",
+                "37",
+                "12"
+              ],
+              "average": 23.4,
+              "vs_opponent_avg": null,
+              "venue": {
+                "innings": 2,
+                "runs": 7,
+                "average": 3.5,
+                "highest": 5
+              }
+            },
+            "bowling": {
+              "form_display": "1/44 (5.4), 0/16 (4), 1/40 (8), 2/46 (8.4), 0/26 (3), 0/24 (4), 0/23 (3), 0/17 (3), 0/13 (2), 0/22 (4)",
+              "economy": 6.1,
+              "venue_economy": 6.2,
+              "venue_wickets": 2,
+              "venue_matches": 4
+            }
+          },
+          "WG Jacks": {
+            "player": "WG Jacks",
+            "batting": {
+              "innings": 21,
+              "form_scores": [
+                "DNB",
+                "8*",
+                "19*",
+                "39",
+                "7",
+                "DNB",
+                "49",
+                "39",
+                "5",
+                "12"
+              ],
+              "average": 33.1,
+              "vs_opponent_avg": null,
+              "venue": {
+                "innings": 1,
+                "runs": 8,
+                "average": 8.0,
+                "highest": 8
+              }
+            },
+            "bowling": {
+              "form_display": "2/43 (8), 1/47 (10), -, 0/51 (5), -, 0/39 (6), 1/42 (4), -, -, 0/16 (2)",
+              "economy": 6.2,
+              "venue_economy": 5.0,
+              "venue_wickets": 3,
+              "venue_matches": 2
+            }
+          }
+        }
+      },
+      "narrative": "IN-FORM BATTERS: J Liyanage (Sri Lanka) avg 42.7 in 28 innings. BM Duckett (England) avg 40.8 in 33 innings. JE Root (England) avg 49.2 in 174 innings. VENUE SPECIALISTS: BKG Mendis (Sri Lanka) venue avg 51.1 in 26 innings. J Liyanage (Sri Lanka) venue avg 35.4 in 12 innings. KIC Asalanka (Sri Lanka) venue avg 45.1 in 25 innings. STRUGGLING: AM Fernando (Sri Lanka) avg only 1.8. JDF Vandersay (Sri Lanka) avg only 11.0. AU Rashid (England) avg only 17.1."
+    },
+    "bowling_roster": {
+      "home": [
+        {
+          "bowler": "AM Fernando",
+          "type": "Right-Arm Fast/Med",
+          "role": "All-Rounder"
+        },
+        {
+          "bowler": "BKG Mendis",
+          "type": "Leg Spin",
+          "role": "Batter"
+        },
+        {
+          "bowler": "DM de Silva",
+          "type": "Off Spin",
+          "role": "All-Rounder"
+        },
+        {
+          "bowler": "DN Wellalage",
+          "type": "Slow Left-Arm Orth",
+          "role": "All-Rounder"
+        },
+        {
+          "bowler": "J Liyanage",
+          "type": "Right-Arm Fast/Med",
+          "role": "All-Rounder"
+        },
+        {
+          "bowler": "JDF Vandersay",
+          "type": "Leg Spin",
+          "role": "All-Rounder"
+        },
+        {
+          "bowler": "K Mishara",
+          "type": "Off Spin",
+          "role": "Batter"
+        },
+        {
+          "bowler": "KIC Asalanka",
+          "type": "Off Spin",
+          "role": "All-Rounder"
+        },
+        {
+          "bowler": "P Rathnayake",
+          "type": "Right-Arm Fast/Med",
+          "role": "All-Rounder"
+        },
+        {
+          "bowler": "PWH de Silva",
+          "type": "Leg Spin",
+          "role": "All-Rounder"
+        }
+      ],
+      "away": [
+        {
+          "bowler": "AU Rashid",
+          "type": "Leg Spin",
+          "role": "Bowler"
+        },
+        {
+          "bowler": "J Overton",
+          "type": "Right-Arm Fast/Med",
+          "role": "Bowler"
+        },
+        {
+          "bowler": "JE Root",
+          "type": "Off Spin",
+          "role": "Batter"
+        },
+        {
+          "bowler": "JG Bethell",
+          "type": "Slow Left-Arm Orth",
+          "role": "Batting All-Rounder"
+        },
+        {
+          "bowler": "LA Dawson",
+          "type": "Slow Left-Arm Orth",
+          "role": "Bowling All-Rounder"
+        },
+        {
+          "bowler": "Rehan Ahmed",
+          "type": "Leg Spin",
+          "role": "Bowler"
+        },
+        {
+          "bowler": "SM Curran",
+          "type": "Left-Arm Fast/Med",
+          "role": "Bowling All-Rounder"
+        },
+        {
+          "bowler": "WG Jacks",
+          "type": "Off Spin",
+          "role": "Batting All-Rounder"
+        }
+      ],
+      "pitch_suitability": {
+        "home_spin_bowlers": 7,
+        "away_spin_bowlers": 6,
+        "home_pace_bowlers": 3,
+        "away_pace_bowlers": 2,
+        "verdict": "BALANCED",
+        "narrative": "Balanced conditions — Home has 7S/3P, Away has 6S/2P."
+      }
+    }
+  }
+}

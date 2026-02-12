@@ -116,7 +116,6 @@ class CricketAnalyzer:
         # 🤖 INITIALIZE SUB-ENGINES
         # =========================================================================
         self.team_engine = TeamEngine(self.match_df)
-        self.team_engine = TeamEngine(self.match_df)
         self.player_engine = PlayerEngine(self.raw_df, self.player_df, self.meta_df, self.squads_df)
         self.predictor_engine = PredictorEngine(self.raw_df, self.player_df)
 

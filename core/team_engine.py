@@ -564,7 +564,6 @@ class TeamEngine:
         if df.empty: print(f"❌ No matches found."); return
         
         df = self._apply_smart_filters(df)
-        df = self._apply_smart_filters(df)
         return self._build_and_display_report(df, home_team, vis_label, f"FORTRESS REPORT ({vs_txt})", is_venue_mode=True)
 
     # 🔗 BRIDGE FUNCTION (Connects Interface Button to Fortress Logic)
@@ -622,9 +621,8 @@ class TeamEngine:
             phase_df['start_date'] = pd.to_datetime(phase_df['start_date'])
 
         # 3. Filter by Venue (BEFORE Date Filter to debug availability)
-        # Check standard alias OR fuzzy match location
-        valid_aliases = [k for k, v in VENUE_MAP.items() if v == stadium_id]
-        valid_aliases.append(stadium_id)
+        from venues import get_venue_aliases
+        valid_aliases = get_venue_aliases(stadium_id)
         search_terms = [x.lower() for x in valid_aliases]
         
         venue_stats = phase_df[phase_df['venue'].str.lower().isin(search_terms)].copy()
@@ -821,14 +819,18 @@ class TeamEngine:
             "dth_avg_2nd": safe_get(venue_stats, 2, 'dth_runs'), "dth_wkts_2nd": safe_get(venue_stats, 2, 'dth_wkts'),
         }
 
-        # 2. Home/Away Context at Venue
+        # 2. Home/Away Context at Venue (ALL 12 phase fields)
         home_context = {}
         if home_team and home_team != 'All':
             h_venue = venue_stats[venue_stats['team'] == home_team]
             if not h_venue.empty:
                 home_context = {
-                   "pp_avg_1st": safe_get(h_venue, 1, 'pp_runs'), "dth_avg_1st": safe_get(h_venue, 1, 'dth_runs'),
-                   "pp_avg_2nd": safe_get(h_venue, 2, 'pp_runs'), "dth_avg_2nd": safe_get(h_venue, 2, 'dth_runs')
+                   "pp_avg_1st": safe_get(h_venue, 1, 'pp_runs'), "pp_wkts_1st": safe_get(h_venue, 1, 'pp_wkts'),
+                   "mid_avg_1st": safe_get(h_venue, 1, 'mid_runs'), "mid_wkts_1st": safe_get(h_venue, 1, 'mid_wkts'),
+                   "dth_avg_1st": safe_get(h_venue, 1, 'dth_runs'), "dth_wkts_1st": safe_get(h_venue, 1, 'dth_wkts'),
+                   "pp_avg_2nd": safe_get(h_venue, 2, 'pp_runs'), "pp_wkts_2nd": safe_get(h_venue, 2, 'pp_wkts'),
+                   "mid_avg_2nd": safe_get(h_venue, 2, 'mid_runs'), "mid_wkts_2nd": safe_get(h_venue, 2, 'mid_wkts'),
+                   "dth_avg_2nd": safe_get(h_venue, 2, 'dth_runs'), "dth_wkts_2nd": safe_get(h_venue, 2, 'dth_wkts'),
                 }
         
         away_context = {}
@@ -836,11 +838,15 @@ class TeamEngine:
             a_venue = venue_stats[venue_stats['team'] == away_team]
             if not a_venue.empty:
                 away_context = {
-                   "pp_avg_1st": safe_get(a_venue, 1, 'pp_runs'), "dth_avg_1st": safe_get(a_venue, 1, 'dth_runs'),
-                   "pp_avg_2nd": safe_get(a_venue, 2, 'pp_runs'), "dth_avg_2nd": safe_get(a_venue, 2, 'dth_runs')
+                   "pp_avg_1st": safe_get(a_venue, 1, 'pp_runs'), "pp_wkts_1st": safe_get(a_venue, 1, 'pp_wkts'),
+                   "mid_avg_1st": safe_get(a_venue, 1, 'mid_runs'), "mid_wkts_1st": safe_get(a_venue, 1, 'mid_wkts'),
+                   "dth_avg_1st": safe_get(a_venue, 1, 'dth_runs'), "dth_wkts_1st": safe_get(a_venue, 1, 'dth_wkts'),
+                   "pp_avg_2nd": safe_get(a_venue, 2, 'pp_runs'), "pp_wkts_2nd": safe_get(a_venue, 2, 'pp_wkts'),
+                   "mid_avg_2nd": safe_get(a_venue, 2, 'mid_runs'), "mid_wkts_2nd": safe_get(a_venue, 2, 'mid_wkts'),
+                   "dth_avg_2nd": safe_get(a_venue, 2, 'dth_runs'), "dth_wkts_2nd": safe_get(a_venue, 2, 'dth_wkts'),
                 }
 
-        # 3. Global Habits & Alerts
+        # 3. Global Habits & Alerts (ALL phases for both scenarios)
         global_habits = {}
         alerts = []
         
@@ -848,23 +854,31 @@ class TeamEngine:
              h_stats = phase_df[phase_df['team'] == home_team]
              a_stats = phase_df[phase_df['team'] == away_team]
              if not h_stats.empty and not a_stats.empty:
-                 # Bat First Scenario
+                 # Bat First Scenario (1st innings phases)
                  global_habits['bat_first'] = {
-                     'h_pp_runs': safe_get(h_stats, 1, 'pp_runs'), 'a_pp_runs': safe_get(a_stats, 1, 'pp_runs'),
-                     'h_mid_runs': safe_get(h_stats, 1, 'mid_runs'), 'a_mid_runs': safe_get(a_stats, 1, 'mid_runs'),
-                     'h_dth_runs': safe_get(h_stats, 1, 'dth_runs'), 'a_dth_runs': safe_get(a_stats, 1, 'dth_runs')
+                     'home_team_pp_runs': safe_get(h_stats, 1, 'pp_runs'), 'home_team_pp_wkts': safe_get(h_stats, 1, 'pp_wkts'),
+                     'home_team_mid_runs': safe_get(h_stats, 1, 'mid_runs'), 'home_team_mid_wkts': safe_get(h_stats, 1, 'mid_wkts'),
+                     'home_team_dth_runs': safe_get(h_stats, 1, 'dth_runs'), 'home_team_dth_wkts': safe_get(h_stats, 1, 'dth_wkts'),
+                     'away_team_pp_runs': safe_get(a_stats, 1, 'pp_runs'), 'away_team_pp_wkts': safe_get(a_stats, 1, 'pp_wkts'),
+                     'away_team_mid_runs': safe_get(a_stats, 1, 'mid_runs'), 'away_team_mid_wkts': safe_get(a_stats, 1, 'mid_wkts'),
+                     'away_team_dth_runs': safe_get(a_stats, 1, 'dth_runs'), 'away_team_dth_wkts': safe_get(a_stats, 1, 'dth_wkts'),
                  }
-                 # Chase Scenario
+                 # Chase Scenario (2nd innings phases)
                  global_habits['chasing'] = {
-                     'h_mid_wkts': safe_get(h_stats, 2, 'mid_wkts'), 'a_mid_wkts': safe_get(a_stats, 2, 'mid_wkts')
+                     'home_team_pp_runs': safe_get(h_stats, 2, 'pp_runs'), 'home_team_pp_wkts': safe_get(h_stats, 2, 'pp_wkts'),
+                     'home_team_mid_runs': safe_get(h_stats, 2, 'mid_runs'), 'home_team_mid_wkts': safe_get(h_stats, 2, 'mid_wkts'),
+                     'home_team_dth_runs': safe_get(h_stats, 2, 'dth_runs'), 'home_team_dth_wkts': safe_get(h_stats, 2, 'dth_wkts'),
+                     'away_team_pp_runs': safe_get(a_stats, 2, 'pp_runs'), 'away_team_pp_wkts': safe_get(a_stats, 2, 'pp_wkts'),
+                     'away_team_mid_runs': safe_get(a_stats, 2, 'mid_runs'), 'away_team_mid_wkts': safe_get(a_stats, 2, 'mid_wkts'),
+                     'away_team_dth_runs': safe_get(a_stats, 2, 'dth_runs'), 'away_team_dth_wkts': safe_get(a_stats, 2, 'dth_wkts'),
                  }
                  
                  # Recalculate Alerts for Capture
                  venue_pp_1 = safe_get(venue_stats, 1, 'pp_runs')
-                 if global_habits['bat_first']['h_pp_runs'] > venue_pp_1 + 5: 
+                 if global_habits['bat_first']['home_team_pp_runs'] > venue_pp_1 + 5: 
                      alerts.append(f"EDGE: {home_team} (1st Inn) outscores venue avg")
 
-                 if global_habits['chasing']['h_mid_wkts'] > 3.0:
+                 if global_habits['chasing']['home_team_mid_wkts'] > 3.0:
                      alerts.append(f"RISK: {home_team} collapses chasing")
 
         return_packet = {
@@ -873,6 +887,12 @@ class TeamEngine:
             "away_at_venue": away_context,
             "global_habits": global_habits,
             "alerts": alerts,
+            "caveat_2nd_innings_death": (
+                "IMPORTANT: 2nd innings death-over stats (overs 41-50) have an inherent sampling bias. "
+                "Many chases conclude before the death overs if the target is low or the batting team "
+                "collapses early. These averages only reflect matches that DID reach the death phase, "
+                "which tend to be close/high-scoring games. Interpret with caution."
+            ),
             "MATCH_IDS": ",".join(venue_stats['match_id'].unique().astype(str)) if 'match_id' in venue_stats.columns else "" # 🧬 TRUTH BRIDGE FINGERPRINT
         }
         
@@ -908,11 +928,22 @@ class TeamEngine:
         venue_id = stadium_name
         
         # 1. Resolve Venue Name
-        if stadium_name not in self.match_df['venue'].values:
+        from venues import get_venue_aliases
+        valid_aliases = get_venue_aliases(stadium_name)
+        search_terms = [x.lower() for x in valid_aliases]
+        
+        # Check if any alias exists in the match_df
+        available_venues = [v for v in self.match_df['venue'].unique() if v.lower() in search_terms]
+        
+        if available_venues:
+            venue_id = available_venues[0]
+            print(f"🔎 Mapped '{stadium_name}' to -> '{venue_id}'")
+        else:
+            # Fuzzy fallback
             matches = [v for v in self.match_df['venue'].unique() if stadium_name.lower() in str(v).lower()]
             if matches: 
                 venue_id = matches[0]
-                print(f"🔎 Mapped '{stadium_name}' to -> '{venue_id}'")
+                print(f"🔎 Fuzzy Matched '{stadium_name}' to -> '{venue_id}'")
             else: 
                 print("❌ Venue not found."); return
 
@@ -1101,7 +1132,7 @@ class TeamEngine:
         if opp_team != 'All': self._build_and_display_report(self._apply_smart_filters(matches), team_name, opp_team, f"REGION REPORT ({reg})", False)
         else: return self._generate_matrix_report(matches, team_name, f"PERFORMANCE MATRIX: {reg.upper()}")
 
-    def analyze_team_form(self, team_name, opp_team='All', continent='All', limit=5, recorder=None):
+    def analyze_team_form(self, team_name, opp_team='All', continent='All', limit=10, recorder=None):
         """
         Displays recent form as a row of visual cards (Win/Loss/Tie).
         
@@ -1109,7 +1140,7 @@ class TeamEngine:
             team_name (str): Team.
             opp_team (str): Filter by opponent.
             continent (str): Filter by region.
-            limit (int): Number of matches to show (default 5).
+            limit (int): Number of matches to show (default 10).
         """
         title = f"📉 FORM: {team_name}"
         if opp_team != 'All': title += f" vs {opp_team}"

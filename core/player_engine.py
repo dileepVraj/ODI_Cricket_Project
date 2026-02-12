@@ -43,6 +43,11 @@ class PlayerEngine:
             
         self.predictor = PredictorEngine(raw_df, player_df)
 
+    def _get_player_role(self, player_name):
+        """Returns the role of a player from config or default."""
+        from config.teams import PLAYER_ROLES
+        return PLAYER_ROLES.get(player_name, "All-Rounder")
+
     def get_active_squad(self, team_name):
         """
         Retrieves the list of active players for a team from the metadata.
@@ -331,17 +336,21 @@ class PlayerEngine:
                 v_runs_display = f"{v_runs_val} <span style='font-size:10px; color:#666;'>({v_inns_val})</span>" if v_runs_val not in ['-','0'] else v_runs_val
                 bowl_f = str(row.get('Bowl Form', '-'))
 
+                # [UX FIX] Reduce font size for long form strings to prevent wrap
+                bat_font_size = "10px" if len(bat_f) > 30 else "11px"
+                bowl_font_size = "10px" if len(bowl_f) > 30 else "11px"
+
                 rows += f"""
                 <tr style="background:{bg}; border-bottom:1px solid #dee2e6; font-family:'Segoe UI', sans-serif; font-size:12px; height:45px;">
                     <td style="padding:4px 8px; text-align:left; border-right:3px solid {color}; vertical-align:middle;">{p_name}</td>
                     <td style="padding:6px; vertical-align:middle;">{row['Inns']}</td>
-                    <td style="padding:6px; font-size:11px; color:#555; vertical-align:middle;">{bat_f}</td>
+                    <td style="padding:6px; font-size:{bat_font_size}; color:#555; vertical-align:middle; white-space:nowrap;">{bat_f}</td>
                     <td style="padding:6px; font-weight:600; background:#f1f3f5; vertical-align:middle;">{row['Bat Avg']}</td>
                     <td style="padding:6px; vertical-align:middle;">{row['vs Opp']}</td>
                     <td style="padding:6px; background:#fff3cd; font-weight:bold; border-left:2px solid #ffeeba; vertical-align:middle;">{row['Ven Avg']}</td>
                     <td style="padding:6px; background:#fff3cd; vertical-align:middle;">{v_runs_display}</td>
                     <td style="padding:6px; background:#fff3cd; border-right:2px solid #ffeeba; vertical-align:middle;">{row['Ven HS']}</td>
-                    <td style="padding:6px; font-size:11px; color:#0d6efd; text-align:left; vertical-align:middle;">{bowl_f}</td>
+                    <td style="padding:6px; font-size:{bowl_font_size}; color:#0d6efd; text-align:left; vertical-align:middle; white-space:nowrap;">{bowl_f}</td>
                     <td style="padding:6px; vertical-align:middle;">{row['Bowl Econ']}</td>
                     <td style="padding:6px; background:#e8f4f8; font-weight:bold; color:#0c5460; vertical-align:middle;">{row['Ven Econ']}</td>
                     <td style="padding:6px; background:#e8f4f8; font-weight:bold; color:#0c5460; vertical-align:middle;">{row['Ven Wkts']}</td>
@@ -350,7 +359,7 @@ class PlayerEngine:
             # --- 7. LEGEND ---
             legend_html = f"""
             <div style="margin-top:5px; padding:10px 15px; background:#e2e8f0; border-radius:0 0 8px 8px; font-size:10px; color:#475569;">
-                <div style="font-weight:bold; margin-bottom:5px;">LEGEND (Last 5 Inns):</div>
+                <div style="font-weight:bold; margin-bottom:5px;">LEGEND (Last 10 Matches/Inns):</div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <div>
                         <div style="font-weight:bold; margin-bottom:2px;">🏏 Batting (Avg)</div>
@@ -378,7 +387,7 @@ class PlayerEngine:
                 <div style="overflow-x:auto;">
                     <table style="width:100%; min-width:1100px; border-collapse:collapse; text-align:center; color:#333;">
                         <colgroup>
-                            <col style="width:200px;"> <col style="width:50px;">  <col style="width:160px;"> <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:220px;"> <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  
+                            <col style="width:200px;"> <col style="width:50px;">  <col style="width:220px;"> <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  <col style="width:250px;"> <col style="width:50px;">  <col style="width:50px;">  <col style="width:50px;">  
                         </colgroup>
                         <thead>
                             <tr style="background:#343a40; color:white; font-size:11px; text-transform:uppercase; height:40px;">
@@ -656,8 +665,8 @@ class PlayerEngine:
         Internal Helper: Fetches comprehensive stats for a single player.
         
         Generates:
-        - Batting Form (Last 5)
-        - Bowling Form (Last 5)
+        - Batting Form (Last 10)
+        - Bowling Form (Last 10)
         - Venue Stats (Avg, Strike Rate, Wickets)
         - Head-to-Head Stats vs Opponent
 
@@ -711,13 +720,13 @@ class PlayerEngine:
                 'Bowl Form': "-", 'Bowl Econ': "-", 'Ven Econ': "-", 'Ven Wkts': "-", 'Ven Matches': "-"
             }
 
-        last_5_ids = matches_played['match_id'].head(5).tolist()
+        last_10_ids = matches_played['match_id'].head(10).tolist()
 
         # ---------------------------------------------------------
         # 2. BATTING FORM (Smart DNB)
         # ---------------------------------------------------------
         form_bat = []
-        for m_id in last_5_ids:
+        for m_id in last_10_ids:
             m_id = str(m_id)
             # Check if they appeared as a striker
             m_bat = base_df[(base_df['match_id'] == m_id) & (base_df['striker'] == player)]
@@ -772,7 +781,7 @@ class PlayerEngine:
         # 4. BOWLING FORM (Strict Legal Balls)
         # ---------------------------------------------------------
         form_bowl = []
-        for m_id in last_5_ids:
+        for m_id in last_10_ids:
             # Check if they bowled (Using all_activity subset)
             m_bowl = all_activity[(all_activity['match_id'] == m_id) & (all_activity['bowler'] == player)]
             
@@ -953,10 +962,20 @@ class PlayerEngine:
             m_data = self._display_batter_vs_bowlers(p, team_b_name, team_a_players, context_df=squad_context_df)
             if m_data: matchups_b[p] = m_data
 
+        # 5. PER-PLAYER STATS (Batting/Bowling Form + Venue Metrics)
+        player_stats_a = {}
+        for p in team_a_players:
+            player_stats_a[p] = self._get_stats(p, team_b_name, venue_pattern, years, context_df=squad_context_df)
+
+        player_stats_b = {}
+        for p in team_b_players:
+            player_stats_b[p] = self._get_stats(p, team_a_name, venue_pattern, years, context_df=squad_context_df)
+
         return {
             'SquadComparison': {team_a_name: squad_a, team_b_name: squad_b},
             'TacticalMatrix': {team_a_name: matrix_a, team_b_name: matrix_b},
             'Matchups': {team_a_name: matchups_a, team_b_name: matchups_b},
+            'PlayerStats': {team_a_name: player_stats_a, team_b_name: player_stats_b},
             'MATCH_IDS': ",".join(map(str, sorted(squad_context_df['match_id'].unique().tolist())))
         }
     

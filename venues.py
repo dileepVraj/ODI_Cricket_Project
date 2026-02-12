@@ -321,6 +321,10 @@ def get_venue_aliases(venue_identifier):
     # This finds ['Wankhede Stadium', 'Wankhede Stadium, Mumbai']
     aliases = [name for name, m_id in VENUE_MAP.items() if m_id == master_id]
     
+    # 🧬 CRITICAL FIX: Include the Master ID itself in search terms (Added back as per user request)
+    if master_id not in aliases:
+        aliases.append(master_id)
+    
     # 3. Fallback
     if not aliases:
         # If no alias found (maybe a new stadium not in map yet), return the input itself 

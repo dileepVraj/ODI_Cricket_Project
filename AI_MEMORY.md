@@ -36,6 +36,14 @@
 - [x] Implement Localized Regression Guides for all Bridge Suites
 - [x] **[2026-02-10]** Expanded `config/teams.py` with 200+ historical legends to restore career-long tactical visibility (All-Time Parity).
 - [x] **[2026-02-10]** Synchronized project documentation (`TECHNICAL_DOCUMENTATION.md` & `DEV_GUIDE.md`) with 4-layer architecture.
+- [x] **[2026-02-10]** Implemented **Match Pack Generator** (The Combat Manual) with standalone `Interpreter` class for intersectional tactical logic.
+- [x] **[2026-02-10]** Integrated Match Context Inputs (Time, Toss, Pitch) into the Dashboard for real-time condition weighting.
+- [x] **[2026-02-10]** Deployed all tactical expansions and truth bridge updates to GitHub `origin/main`.
+- [x] **[2026-02-11]** Transitioned Team and Player form metrics from "Last 5" to **"Last 10"** baseline. Verified UI stability and documentation sync.
+- [x] **[2026-02-11]** Codebase Deep Dive & Bug Fixes: Removed duplicate `TeamEngine` init in `engine.py` (line 119) and duplicate `_apply_smart_filters` in `team_engine.py` `analyze_home_fortress` (line 567).
+- [x] **[2026-02-11]** Match Pack Generator v3.0: Created 3-file pipeline — `core/transformer.py` (5 transform functions), `core/interpreter.py` (9 interpretation methods + rating rules), `reports/match_pack_generator.py` (orchestrator with `_silent_call` to preserve UI). 6/6 unit tests pass.
+- [x] **[2026-02-11]** Match Pack v3.1 Post-Review: Fixed 4 bugs (dominance key mismatch, 50% narrative, trend logic, incomplete phase data). Added 7 quality improvements (section_description, reasoning, timeline, stripped _match_ids, slim H2H, chapter descriptions). Fixed `team_engine.py` phase return packet (4→12 fields). 24/24 tests pass.
+- [x] **[2026-02-11]** Match Pack v3.2 Post-Review: 5 fixes — (1) Added `caveat_2nd_innings_death` to phase analysis, (2) Renamed `h_`/`a_` keys to `home_team_`/`away_team_` in global_habits, (3) Added section descriptions + auto-narratives for squad_comparison/tactical_matrix/matchups, (4) Smart pitch suitability narrative using venue wickets instead of bowler count, (5) Added player stats section (batting/bowling form + venue metrics) via `_get_stats` in payload + `transform_player_stats`. 46/46 tests pass.
 
 ## 🛑 Recent Decisions & Constraints (Why we did this)
 
@@ -177,3 +185,7 @@ This section details how raw data flows from source to the dashboard.
   - **Fix:** Fixed critical `KeyError: 'bowling_team'` in `engine.py` by implementing self-healing column derivation.
   - **Focus:** Excluded bulky ProStats to maintain a lightweight, focused baseline (200KB vs MBs).
   - **🔥 Performance Optimization:** Implemented "Fast-Look" refactor. Reduced comparison time by ~80% by passing a `context_df` (subset of rows for the 22 players) through the analytical pipeline, eliminating redundant linear scans of the main 200MB dataframe. Verified via regression suite (100% Match).
+- **[2026-02-11] Transition to Last 10 Form Metrics:**
+    - **Engine Update:** Updated `TeamEngine.analyze_team_form` and `PlayerEngine._get_stats` to compute trends over the last 10 matches (~2-3 bilateral series).
+    - **UI Optimization:** Implemented CSS guardrails (nowrap, reduced font-size) in `PlayerEngine.render_pro_table` to prevent doubled string density from cluttering the XI comparison dashboard.
+    - **Sync:** Updated `interface.py` to trigger 10-match lookbacks. Consistent "Last 10" labels applied to legends and documentation.

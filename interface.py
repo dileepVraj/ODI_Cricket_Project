@@ -270,6 +270,19 @@ class TraderCockpit:
         )
         self.btn_compare.style.font_weight = 'bold'
         
+        # 👇 4. MATCH PACK WIDGETS
+        self.context_time = widgets.Text(placeholder='e.g. 14:30 IST', description='🕒 Time:', layout=widgets.Layout(width='32%'))
+        self.context_toss = widgets.Dropdown(options=['TBD', 'Home Won & Batting', 'Home Won & Bowling', 'Away Won & Batting', 'Away Won & Bowling'], description='🪙 Toss:', layout=widgets.Layout(width='32%'))
+        self.context_pitch = widgets.Textarea(placeholder='e.g. Dry, cracks visible, slow...', description='🌱 Pitch:', layout=widgets.Layout(width='95%', height='60px'))
+        
+        self.btn_match_pack = widgets.Button(
+            description='🚀 GENERATE ANALYST REPORT', 
+            button_style='danger', 
+            icon='file-code-o', 
+            layout=widgets.Layout(width='95%', height='50px', margin='10px 0px')
+        )
+        self.btn_match_pack.style.font_weight = 'bold'
+        
         # --- BINDINGS ---
         self.btn_refresh.on_click(self.run_refresh)
 
@@ -290,6 +303,7 @@ class TraderCockpit:
         self.btn_load_away.on_click(self.load_away_xi)
         
         self.btn_compare.on_click(self.run_squad_comparison)
+        self.btn_match_pack.on_click(self.run_match_pack)
         
         # --- ACTION BUTTONS ---
         self.btn_matchup = widgets.Button(description='Analyze Venue Matchup', button_style='primary', icon='map-marker', layout=widgets.Layout(width='48%'))
@@ -365,6 +379,11 @@ class TraderCockpit:
             self.toggle_analysis_btn, self.container_analysis,
             widgets.HTML("<hr style='border-color:#334155'>"),
             self.toggle_squads_btn, self.container_squads,
+            widgets.HTML("<hr style='border-color:#334155'>"),
+            widgets.HTML("<div class='section-header'>🚀 Match Day Analyst (Export Pack)</div>"),
+            widgets.HBox([self.context_time, self.context_toss]),
+            self.context_pitch,
+            self.btn_match_pack,
             widgets.HTML("<hr style='border-color:#334155'>"),
             self.out
         ])
@@ -539,8 +558,8 @@ class TraderCockpit:
     def run_team_form(self, b):
         with self.out:
             clear_output()
-            self.bot.analyze_team_form(self.home_select.value, self.away_select.value, self.continent_select.value, 5)
-            self.bot.analyze_team_form(self.away_select.value, self.home_select.value, self.continent_select.value, 5)
+            self.bot.analyze_team_form(self.home_select.value, self.away_select.value, self.continent_select.value, 10)
+            self.bot.analyze_team_form(self.away_select.value, self.home_select.value, self.continent_select.value, 10)
 
     def run_global(self, b):
         with self.out:
@@ -599,3 +618,55 @@ class TraderCockpit:
             print("\n")
             try: self.bot.predict_score(self.away_select.value, p_b, self.home_select.value, p_a, self.venue_select.value, self.years_slider.value)
             except: pass
+    def run_match_pack(self, b):
+        with self.out:
+            clear_output()
+            # 1. VALIDATION
+            h = self.home_select.value
+            a = self.away_select.value
+            v = self.venue_select.value
+            
+            home_opts = self.home_squad_box.options
+            away_opts = self.away_squad_box.options
+            p_a = [x[1] for x in home_opts] if home_opts else []
+            p_b = [x[1] for x in away_opts] if away_opts else []
+
+            if h == 'All' or a == 'All' or not v:
+                print("❌ Error: Please select both Teams and a Venue.")
+                return
+
+            if len(p_a) < 11 or len(p_b) < 11:
+                print(f"⚠️ Warning: Squads are incomplete (H:{len(p_a)}, A:{len(p_b)}). Proceeding anyway...")
+
+            # 2. EXECUTION
+            print(f"🚀 Initializing Match Pack Engine...")
+            try:
+                import os
+                from reports.match_pack_generator import MatchPackGenerator
+                generator = MatchPackGenerator(self.bot)
+                
+                context = {
+                    "time": self.context_time.value,
+                    "toss": self.context_toss.value,
+                    "pitch": self.context_pitch.value
+                }
+                
+                file_path = generator.generate_pack(h, a, v, p_a, p_b, context)
+                
+                # 3. SHOW SUCCESS MESSAGE
+                print(f"✅ SUCCESS! Analyst Report generated.")
+                print(f"📁 Path: {file_path}")
+                
+                display(HTML(f"""
+                <div style='background:#dcfce7; color:#166534; padding:15px; border-radius:8px; border:1px solid #bbf7d0; margin-top:10px; font-family: sans-serif;'>
+                    <h4 style='margin:0 0 10px 0;'>🛡️ Match Pack Ready</h4>
+                    <b>File:</b> <code>{os.path.basename(file_path)}</code><br>
+                    <p style='font-size:12px'>The context-aware JSON has been saved to the <code>reports/</code> directory for AI analysis.</p>
+                </div>
+                """))
+
+            except Exception as e:
+                print(f"❌ Error Generating Pack: {str(e)}")
+                import traceback
+                traceback.print_exc()
+

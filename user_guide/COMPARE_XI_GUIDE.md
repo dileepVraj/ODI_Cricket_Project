@@ -18,7 +18,7 @@ The **Compare Selected XI's** feature is a sophisticated **4-Layer Analysis Engi
     *   **Role Icons:** 🏏 (Batter), ⚾ (Bowler), or All-Rounder (Both).
     *   **Badges:** Color-coded tags indicating Form and Class (e.g., `RBF-GE` = Recent Batting Form: Great).
 *   **Form (Bat/Bowl):** 
-    *   Displays the last 5 relevant scores or bowling figures.
+    *   Displays the last 10 relevant scores or bowling figures.
     *   *Smart Logic:* It ignores matches where the player was in the squad but did not actually Bat or Bowl, ensuring the "Form" is genuine.
 *   **vs Opp (Head-to-Head):** 
     *   The player's specific Average against the **Availability Opposition Team**.

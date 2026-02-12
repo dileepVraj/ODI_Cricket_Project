@@ -5,14 +5,14 @@ Verification of team form sequences (`W`, `L`, `T`, `NR`) across global and cont
 ## 🏗️ Metrics & Fingerprinting
 
 ### 1. `summary_code`
-A sequence of strings representing the result of the last 5 matches:
+A sequence of strings representing the result of the last 10 matches:
 - `W`: Win
 - `L`: Loss
 - `T`: Tie
 - `NR`: No Result
 
 ### 2. `MATCH_IDS` (Fingerprint)
-A sorted, comma-separated list of the 5 Match IDs used to calculate the form. This is mandatory for v2.5 auto-diagnosis.
+A sorted, comma-separated list of the 10 Match IDs used to calculate the form. This is mandatory for v2.5 auto-diagnosis.
 
 ## 📂 Data Structure
 The `ground_truth.json` covers three distinct form variations:
