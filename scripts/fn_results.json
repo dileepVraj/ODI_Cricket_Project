@@ -51,10 +51,10 @@
       "team_a",
       "years"
     ],
-    "status": "FAIL-500",
-    "dtype": "-",
-    "size": "-",
-    "notes": "Engine error in TeamEngine.analyze_venue_phases: 1"
+    "status": "OK",
+    "dtype": "dict",
+    "size": "8 keys",
+    "notes": "output_type=table"
   },
   {
     "cat": "rivalry",

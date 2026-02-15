@@ -110,6 +110,13 @@ Contains:
     - **frontend/app/page.tsx**: Replaced Phase 2 generic ResultRenderer with FunctionRenderer dispatcher.
     - **frontend/app/globals.css**: Extended with btn-primary, btn-ghost, badges (4-tier), gradient-text, glass-card, animations (fadeIn/slideIn/shimmer/spin), skeleton loader.
     - **FRONTEND_ROADMAP.md**: Phase 3 status → COMPLETE.
+*   **Session 2026-02-16a (Phase 4: API Wiring & Bug Fixes — IN PROGRESS):**
+    - **frontend/components/layout/ContextBar.tsx**: Rewrote ComboboxField using ReactDOM.createPortal — dropdown now renders in document.body, fixing venue search clipping. Added "All" option to Home Team / Away Team dropdowns.
+    - **api/main.py (_map_params)**: CRITICAL FIX — Added param filtering to only include `required_context` keys before mapping. Previously all context values leaked through causing "unexpected keyword argument" errors on every function call.
+    - **api/main.py (_map_params)**: Fixed team_a mapping for `analyze_home_dominance` (needs `home_team`, not `team_name`). Fixed years mapping for `analyze_venue_phases` (needs `years`, not `years_back`). Separated `analyze_squad_types` team_a mapping.
+    - **Function Status**: 11/17 functions now fully operational end-to-end. Remaining 6 need SquadBuilder UI (player_profile, compare_squads, tactical_matrix, matchups, predict_score, generate_pack). venue_phases has internal engine bug (FAIL-500).
+    - **scripts/check_functions.py**: Created diagnostic script to test all 17 manifest functions via API.
+    - **Git**: Committed as `6230817 feat(frontend): Phase 4 — Full-stack API wiring, venue search portal, param mapping fixes`
 *   **Session 2026-02-15b (Documentation Overhaul):**
     - **README.md**: Complete rewrite. Updated from v1 ODI-only description to v3.0 multi-format architecture with proper directory structure, tech stack, roadmap table, and quick start guide.
     - **active_state.md**: Full rewrite. Updated CricketAnalyzer v2.1 → v3.0, added factory pattern details, format registry v2.0, packaging info, pipeline stages. Added 3 new anti-patterns from audit (bare except, IPython in core, ghost files).

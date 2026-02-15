@@ -17,6 +17,8 @@ import ContextBar from "@/components/layout/ContextBar";
 import Sidebar from "@/components/layout/Sidebar";
 import { executeFunction, type ExecuteResponse } from "@/lib/api";
 import FunctionRenderer from "@/components/renderers/FunctionRenderer";
+import SkeletonLoader from "@/components/renderers/SkeletonLoader";
+import SquadBuilder from "@/components/inputs/SquadBuilder";
 import {
   Activity,
   TrendingUp,
@@ -25,6 +27,7 @@ import {
   AlertCircle,
   Loader2,
   ChevronRight,
+  Users,
 } from "lucide-react";
 
 export default function Page() {
@@ -36,7 +39,35 @@ export default function Page() {
 }
 
 function AppShell() {
-  const [activeCategory, setActiveCategory] = useState("dashboard");
+  // Hash-based deep-linking: /#venue_intel syncs to category
+  const [activeCategory, setActiveCategory] = useState(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash.replace("#", "");
+      return hash || "dashboard";
+    }
+    return "dashboard";
+  });
+
+  // Sync hash changes → state
+  useEffect(() => {
+    function onHashChange() {
+      const hash = window.location.hash.replace("#", "");
+      if (hash) setActiveCategory(hash);
+      else setActiveCategory("dashboard");
+    }
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  // Sync state → hash
+  const handleCategorySelect = (cat: string) => {
+    setActiveCategory(cat);
+    if (cat === "dashboard") {
+      window.history.replaceState(null, "", window.location.pathname);
+    } else {
+      window.history.replaceState(null, "", `#${cat}`);
+    }
+  };
 
   return (
     <div
@@ -57,7 +88,7 @@ function AppShell() {
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         <Sidebar
           activeCategory={activeCategory}
-          onCategorySelect={setActiveCategory}
+          onCategorySelect={handleCategorySelect}
         />
         <main
           id="main-content"
@@ -308,6 +339,17 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
   const [result, setResult] = useState<ExecuteResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [homeXI, setHomeXI] = useState<string[]>([]);
+  const [awayXI, setAwayXI] = useState<string[]>([]);
+
+  // Human-readable labels for context field keys
+  const contextLabels: Record<string, string> = {
+    venue: "🏟️ Venue",
+    team_a: "🏏 Home Team",
+    team_b: "🏏 Away Team",
+    years: "📅 Years",
+    region: "🌍 Region",
+  };
 
   // Reset active tab when category changes
   useEffect(() => {
@@ -359,7 +401,16 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
       return field && !field.required;
     });
 
-  async function handleExecute() {
+  // Detect if this function needs squad builder
+  const needsSquadBuilder = activeFn.extra_inputs &&
+    typeof activeFn.extra_inputs === "object" &&
+    (activeFn.extra_inputs as Record<string, unknown>).squad_builder === true;
+
+  // For squad functions, also check if squads are filled
+  const squadReady = !needsSquadBuilder || (homeXI.length > 0 && awayXI.length > 0);
+  const canRun = canExecute && squadReady;
+
+  async function runExecute() {
     if (!activeFn || !activeFormat) return;
 
     setIsLoading(true);
@@ -374,6 +425,12 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         if (val && val !== "" && val !== "All") {
           params[key] = val;
         }
+      }
+
+      // Add squad lists if this function needs them
+      if (needsSquadBuilder) {
+        params.home_xi = homeXI;
+        params.away_xi = awayXI;
       }
 
       const res = await executeFunction(activeFormat, activeFn.key, params);
@@ -489,22 +546,100 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
                   key={key}
                   className={`badge ${isFilled ? "badge-elite" : "badge-caution"}`}
                 >
-                  {key}: {isFilled ? String(val) : "needed"}
+                  {contextLabels[key] || key}: {isFilled ? String(val) : "needed"}
                 </span>
               );
             })}
           </div>
         </div>
 
+        {/* ── Missing Context Alert ──────────────────────────────────── */}
+        {!canExecute && missingContext.length > 0 && (
+          <div
+            className="animate-fade-in"
+            style={{
+              padding: "16px 20px",
+              background: "rgba(245, 158, 11, 0.08)",
+              border: "1px solid rgba(245, 158, 11, 0.25)",
+              borderRadius: "var(--radius-md)",
+              marginBottom: "16px",
+              display: "flex",
+              gap: "12px",
+              alignItems: "flex-start",
+            }}
+          >
+            <AlertCircle
+              size={20}
+              style={{ color: "var(--tier-caution)", flexShrink: 0, marginTop: 2 }}
+            />
+            <div>
+              <p
+                style={{
+                  color: "var(--tier-caution)",
+                  fontSize: "0.9rem",
+                  fontWeight: 600,
+                  marginBottom: "6px",
+                }}
+              >
+                Missing Required Context
+              </p>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", lineHeight: 1.5 }}>
+                Please fill in the following fields in the Context Bar above:{" "}
+                <strong style={{ color: "var(--text-primary)" }}>
+                  {missingContext.map((k) => contextLabels[k] || k).join(", ")}
+                </strong>
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ── Squad Builder (for squad-dependent functions) ───────── */}
+        {needsSquadBuilder && activeFormat && (
+          <SquadBuilder
+            formatKey={activeFormat}
+            teamA={String(contextValues.team_a || "")}
+            teamB={String(contextValues.team_b || "")}
+            homeXI={homeXI}
+            awayXI={awayXI}
+            onHomeXIChange={setHomeXI}
+            onAwayXIChange={setAwayXI}
+          />
+        )}
+
+        {/* Squad not ready alert */}
+        {needsSquadBuilder && canExecute && !squadReady && (
+          <div
+            className="animate-fade-in"
+            style={{
+              padding: "14px 18px",
+              background: "rgba(96, 165, 250, 0.08)",
+              border: "1px solid rgba(96, 165, 250, 0.25)",
+              borderRadius: "var(--radius-md)",
+              marginBottom: "16px",
+              display: "flex",
+              gap: "12px",
+              alignItems: "center",
+            }}
+          >
+            <Users size={18} style={{ color: "var(--accent-blue)", flexShrink: 0 }} />
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem" }}>
+              Select players for <strong style={{ color: "var(--text-primary)" }}>Home XI</strong> and{" "}
+              <strong style={{ color: "var(--text-primary)" }}>Away XI</strong> above, or click{" "}
+              <strong style={{ color: "var(--accent-blue)" }}>Load Squad</strong> to auto-fill.
+            </p>
+          </div>
+        )}
+
         {/* Execute button */}
         <button
           id={`execute-${activeFn.key}`}
           className="btn-primary"
-          onClick={handleExecute}
-          disabled={isLoading || !canExecute}
+          onClick={runExecute}
+          disabled={isLoading || !canRun}
           style={{
             marginBottom: "20px",
-            opacity: isLoading || !canExecute ? 0.6 : 1,
+            opacity: isLoading || !canRun ? 0.5 : 1,
+            cursor: isLoading || !canRun ? "not-allowed" : "pointer",
             display: "flex",
             alignItems: "center",
             gap: "8px",
@@ -515,6 +650,11 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
               <Loader2 size={16} className="animate-spin" style={{ animation: "spin 1s linear infinite" }} />
               Executing...
             </>
+          ) : !canRun ? (
+            <>
+              <AlertCircle size={16} />
+              {!canExecute ? "Fill Required Fields" : "Select Squads"}
+            </>
           ) : (
             <>
               <Zap size={16} />
@@ -523,30 +663,58 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
           )}
         </button>
 
-        {/* Error display */}
+        {/* Error display with Retry */}
         {error && (
           <div
             className="animate-fade-in"
             style={{
-              padding: "12px 16px",
-              background: "rgba(239, 68, 68, 0.1)",
+              padding: "14px 18px",
+              background: "rgba(239, 68, 68, 0.08)",
               border: "1px solid rgba(239, 68, 68, 0.25)",
               borderRadius: "var(--radius-md)",
               marginBottom: "16px",
-              color: "var(--tier-danger)",
-              fontSize: "0.875rem",
-              display: "flex",
-              gap: "8px",
-              alignItems: "flex-start",
             }}
           >
-            <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 2 }} />
-            <span>{error}</span>
+            <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+              <AlertCircle
+                size={18}
+                style={{ color: "var(--tier-danger)", flexShrink: 0, marginTop: 2 }}
+              />
+              <div style={{ flex: 1 }}>
+                <p style={{ color: "var(--tier-danger)", fontSize: "0.9rem", fontWeight: 600, marginBottom: "4px" }}>
+                  Execution Failed
+                </p>
+                <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", lineHeight: 1.5 }}>
+                  {error}
+                </p>
+              </div>
+            </div>
+            <button
+              className="btn-ghost"
+              onClick={runExecute}
+              style={{
+                marginTop: "10px",
+                fontSize: "0.8rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              <Zap size={14} />
+              Retry
+            </button>
+          </div>
+        )}
+
+        {/* ── Loading Skeleton ──────────────────────────────────────── */}
+        {isLoading && (
+          <div className="animate-fade-in">
+            <SkeletonLoader outputType={activeFn.output_type} />
           </div>
         )}
 
         {/* Result display — Phase 3 FunctionRenderer dispatcher */}
-        {result && (
+        {result && !isLoading && (
           <div className="animate-fade-in">
             <FunctionRenderer
               outputType={result.output_type}

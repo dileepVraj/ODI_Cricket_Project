@@ -470,13 +470,13 @@ class TeamEngine:
                 for p in ['pp', 'mid', 'dth', 'total']:
                     col = f'{p}_runs' if p != 'total' else 'total_runs'
                     try:
-                        res[inn][p] = {
+                        res[str(inn)][p] = {
                             'avg': float(summary.loc[inn, (col, 'mean')]),
                             'n': int(summary.loc[inn, (col, 'count')]),
                             'wkts': float(summary.loc[inn, (f'{p}_wkts' if p != 'total' else 'pp_wkts', 'mean')]) if p != 'total' else 0.0
                         }
                     except (KeyError, TypeError, ValueError):
-                        res[inn][p] = {'avg': 0.0, 'n': 0, 'wkts': 0.0}
+                        res[str(inn)][p] = {'avg': 0.0, 'n': 0, 'wkts': 0.0}
             return res
 
         report = {
