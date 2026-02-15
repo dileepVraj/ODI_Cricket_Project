@@ -12,7 +12,8 @@ Rules:
     - Every context tag has a 'reasoning' field explaining WHY it was assigned
     - Condition weights are derived from pitch/time/toss inputs
 """
-from config.teams import BOWLER_STYLES, PLAYER_ROLES, ODI_RANKINGS
+from formats.odi.config.players import BOWLER_STYLES, PLAYER_ROLES
+from formats.odi.config.rankings import ODI_RANKINGS
 
 
 class MatchInterpreter:
@@ -20,6 +21,10 @@ class MatchInterpreter:
     Stateless interpreter that transforms clean data dicts into
     fully-interpreted {data, context, narrative, section_description} sections.
     """
+    def __init__(self, rankings=None, bowler_styles=None, player_roles=None):
+        self.rankings = rankings if rankings is not None else ODI_RANKINGS
+        self.bowler_styles = bowler_styles if bowler_styles is not None else BOWLER_STYLES
+        self.player_roles = player_roles if player_roles is not None else PLAYER_ROLES
 
     # =========================================================================
     # 1. H2H INTERPRETATION
@@ -153,7 +158,7 @@ class MatchInterpreter:
             code = item.split(":")[0].strip() if ":" in item else item
             opp = item.split(":")[1].strip() if ":" in item else ""
             
-            rank = ODI_RANKINGS.get(opp, 15) # Assume rank 15 for associates
+            rank = self.rankings.get(opp, 15) # Assume rank 15 for associates
             
             if code == "W":
                 w5 += 1
@@ -641,9 +646,9 @@ class MatchInterpreter:
         def build_roster(players, team_stats=None):
             roster = []
             for p in players:
-                style = BOWLER_STYLES.get(p)
+                style = self.bowler_styles.get(p)
                 if style and style != '🚫 Part-Timer':
-                    role_raw = PLAYER_ROLES.get(p, "All-Rounder")
+                    role_raw = self.player_roles.get(p, "All-Rounder")
                     # Determine experience from player_stats if available
                     exp_rank = "INTERMEDIATE"
                     if team_stats and p in team_stats:

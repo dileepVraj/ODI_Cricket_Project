@@ -1,7 +1,35 @@
---pycache__/
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Virtual Environments
+.venv/
+venv/
+
+# Environment Secrets
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Data Files (Large — not tracked in Git)
 data/FINAL_ODI_MASTER.csv
 data/RAW_BACKUP_MASTER.csv
 data/json_source/
-old_backups/
 data/FINAL_ODI_MASTER.pkl
+formats/*/data/*.csv
+formats/*/data/*.pkl
+formats/*/data/*.duckdb
+formats/*/data/json_source/
+
+# Backups
+old_backups/
+
+# OS
+.DS_Store
+Thumbs.db

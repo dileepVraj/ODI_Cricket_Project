@@ -1,0 +1,26 @@
+{
+    "timestamp": "2026-02-15 16:44:17",
+    "summary": {
+        "pass": 4,
+        "fail": 0
+    },
+    "failures": [],
+    "details": [
+        {
+            "item": "Scenario_1 > India > vs_All > in_All",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_2 > Australia > vs_India > in_All",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_3 > England > vs_All > in_Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_4 > South Africa > vs_Australia > in_Oceania",
+            "status": "PASS"
+        }
+    ]
+}

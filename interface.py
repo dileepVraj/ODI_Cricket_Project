@@ -614,10 +614,10 @@ class TraderCockpit:
             
             print("\n" + "="*80 + "\n")
             try: self.bot.predict_score(self.home_select.value, p_a, self.away_select.value, p_b, self.venue_select.value, self.years_slider.value)
-            except: pass
+            except (ValueError, KeyError, ZeroDivisionError, AttributeError) as e: print(f"Prediction skipped: {e}")
             print("\n")
             try: self.bot.predict_score(self.away_select.value, p_b, self.home_select.value, p_a, self.venue_select.value, self.years_slider.value)
-            except: pass
+            except (ValueError, KeyError, ZeroDivisionError, AttributeError) as e: print(f"Prediction skipped: {e}")
     def run_match_pack(self, b):
         with self.out:
             clear_output()

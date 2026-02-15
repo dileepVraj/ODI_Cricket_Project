@@ -2,7 +2,8 @@
 """Quick verification script for Match Pack v3.2 fixes."""
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
 
 from core.transformer import (
     transform_h2h_report, transform_h2h_slim, transform_venue_bias,

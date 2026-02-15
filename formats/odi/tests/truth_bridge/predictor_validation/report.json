@@ -1,0 +1,22 @@
+{
+    "timestamp": "2026-02-15 16:44:10",
+    "summary": {
+        "pass": 3,
+        "fail": 0
+    },
+    "failures": [],
+    "details": [
+        {
+            "item": "Scenario_1 > India_vs_Australia > Holkar Cricket Stadium, Indore",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_2 > Australia_vs_India > MA Chidambaram Stadium, Chepauk, Chennai",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_3 > England_vs_New Zealand > Lord's, London",
+            "status": "PASS"
+        }
+    ]
+}

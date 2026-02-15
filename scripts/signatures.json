@@ -1,0 +1,191 @@
+{
+  "TeamEngine.analyze_venue_phases": [
+    {
+      "name": "stadium_id",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "home_team",
+      "default": "None",
+      "annotation": "typing.Optional[str]"
+    },
+    {
+      "name": "away_team",
+      "default": "None",
+      "annotation": "typing.Optional[str]"
+    },
+    {
+      "name": "years",
+      "default": "5",
+      "annotation": "<class 'int'>"
+    },
+    {
+      "name": "recorder",
+      "default": "None",
+      "annotation": "typing.Any"
+    }
+  ],
+  "TeamEngine.analyze_home_dominance": [
+    {
+      "name": "home_team",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "years_back",
+      "default": "10",
+      "annotation": "<class 'int'>"
+    },
+    {
+      "name": "recorder",
+      "default": "None",
+      "annotation": "typing.Optional[typing.Any]"
+    }
+  ],
+  "PlayerEngine.analyze_player_profile": [
+    {
+      "name": "player_name",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "opposition",
+      "default": "None",
+      "annotation": "typing.Optional[str]"
+    },
+    {
+      "name": "venue_id",
+      "default": "None",
+      "annotation": "typing.Optional[str]"
+    },
+    {
+      "name": "active_bowlers",
+      "default": "None",
+      "annotation": "typing.Optional[typing.List[str]]"
+    },
+    {
+      "name": "years",
+      "default": "10",
+      "annotation": "<class 'int'>"
+    }
+  ],
+  "PlayerEngine.compare_squads": [
+    {
+      "name": "team_a_name",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "team_a_players",
+      "default": "REQUIRED",
+      "annotation": "typing.List[str]"
+    },
+    {
+      "name": "team_b_name",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "team_b_players",
+      "default": "REQUIRED",
+      "annotation": "typing.List[str]"
+    },
+    {
+      "name": "venue_id",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "years",
+      "default": "None",
+      "annotation": "<class 'int'>"
+    },
+    {
+      "name": "recorder",
+      "default": "None",
+      "annotation": "typing.Any"
+    }
+  ],
+  "PlayerEngine.analyze_squad_types": [
+    {
+      "name": "team_name",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "players",
+      "default": "REQUIRED",
+      "annotation": "typing.List[str]"
+    },
+    {
+      "name": "opposition_bowlers",
+      "default": "REQUIRED",
+      "annotation": "typing.List[str]"
+    },
+    {
+      "name": "years",
+      "default": "None",
+      "annotation": "<class 'int'>"
+    },
+    {
+      "name": "recorder",
+      "default": "None",
+      "annotation": "typing.Any"
+    },
+    {
+      "name": "context_df",
+      "default": "None",
+      "annotation": "typing.Optional[pandas.core.frame.DataFrame]"
+    }
+  ],
+  "PlayerEngine.get_matchups": [
+    {
+      "name": "batter",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "bowlers",
+      "default": "REQUIRED",
+      "annotation": "typing.List[str]"
+    },
+    {
+      "name": "context_df",
+      "default": "None",
+      "annotation": "typing.Optional[pandas.core.frame.DataFrame]"
+    }
+  ],
+  "PredictorEngine.predict_score": [
+    {
+      "name": "batting_team",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "batting_players",
+      "default": "REQUIRED",
+      "annotation": "typing.List[str]"
+    },
+    {
+      "name": "bowling_team",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "bowling_players",
+      "default": "REQUIRED",
+      "annotation": "typing.List[str]"
+    },
+    {
+      "name": "venue_id",
+      "default": "REQUIRED",
+      "annotation": "<class 'str'>"
+    },
+    {
+      "name": "years",
+      "default": "5",
+      "annotation": "<class 'int'>"
+    }
+  ]
+}

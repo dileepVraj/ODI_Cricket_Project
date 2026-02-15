@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "cricket-algo-trader"
+version = "3.0.0"
+description = "Cricket Algo-Trading Platform — Multi-format analytical engine"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "duckdb>=1.0.0",
+    "tqdm>=4.60.0",
+]
+
+[project.optional-dependencies]
+jupyter = [
+    "ipython>=8.0.0",
+    "ipywidgets>=8.0.0",
+]
+api = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.34.0",
+    "pydantic>=2.0.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[tool.setuptools.packages.find]
+include = [
+    "core*",
+    "config*",
+    "formats*",
+    "api*",
+    "utils*",
+    "scripts*",
+]
+exclude = [
+    "tests*",
+    "docs*",
+    "data_templates*",
+    ".venv*",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "formats/odi/tests"]
+python_files = ["test_*.py", "verify_*.py"]
+python_functions = ["test_*"]

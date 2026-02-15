@@ -1,0 +1,1809 @@
+{
+  "engine.py": {
+    "imports": [
+      "os",
+      "re",
+      "logging",
+      "difflib",
+      "pandas",
+      "numpy",
+      "config.shared.venues.VENUE_MAP",
+      "config.format_registry.FORMATS",
+      "config.format_registry.get_format_engines",
+      "core.data_loader.load_csv_or_pickle",
+      "config.format_registry.get_format_config"
+    ],
+    "classes": {
+      "CricketAnalyzer": {
+        "methods": [
+          "__init__",
+          "_detect_format",
+          "load_data",
+          "reload_database",
+          "_create_match_summary",
+          "_fix_ambiguous_venues",
+          "_smart_standardize_venues",
+          "_clean_string",
+          "analyze_home_fortress",
+          "analyze_venue_matchup",
+          "analyze_venue_phases",
+          "analyze_venue_bias",
+          "analyze_global_h2h",
+          "analyze_country_h2h",
+          "analyze_home_dominance",
+          "analyze_away_performance",
+          "analyze_global_performance",
+          "analyze_continent_performance",
+          "analyze_team_form",
+          "check_recent_form",
+          "get_active_squad",
+          "compare_squads",
+          "analyze_player_profile",
+          "predict_score",
+          "get_last_match_xi"
+        ],
+        "docstring": "The Facade (Manager) \u2014 v3.0 Format-Aware.\n\nManages Data Loading and delegates analysis to specialized Core Engines.\nNow supports dynamic format selection via the Format Registry.",
+        "lineno": 39
+      }
+    },
+    "functions": {}
+  },
+  "interface.py": {
+    "imports": [
+      "ipywidgets",
+      "pandas",
+      "IPython.display.display",
+      "IPython.display.clear_output",
+      "IPython.display.HTML",
+      "os",
+      "reports.match_pack_generator.MatchPackGenerator",
+      "traceback"
+    ],
+    "classes": {
+      "TraderCockpit": {
+        "methods": [
+          "__init__",
+          "apply_theme",
+          "setup_ui",
+          "display",
+          "_toggle",
+          "_toggle_section",
+          "update_home_list",
+          "update_away_list",
+          "_format_squad_list",
+          "add_home_player",
+          "add_away_player",
+          "remove_home_player",
+          "remove_away_player",
+          "clear_home_squad",
+          "clear_away_squad",
+          "load_home_xi",
+          "load_away_xi",
+          "run_refresh",
+          "run_matchup",
+          "run_fortress",
+          "run_country",
+          "run_dominance",
+          "run_away_perf",
+          "run_toss_bias",
+          "run_phases",
+          "run_team_form",
+          "run_global",
+          "run_global_perf",
+          "run_continent",
+          "run_player_analysis",
+          "run_squad_comparison",
+          "run_match_pack"
+        ],
+        "docstring": "\ud83c\udfcf The War Room (Navy Interceptor Edition).\n- Features: Live Theme Switcher, Serial Numbered Squads.\n- UX Fixes: Soft Slate Output, Slimmer Buttons.\n- Logic: 100% Manual Mode preserved (All functions intact).",
+        "lineno": 5
+      }
+    },
+    "functions": {}
+  },
+  "api/main.py": {
+    "imports": [
+      "fastapi.FastAPI",
+      "fastapi.HTTPException",
+      "pydantic.BaseModel",
+      "typing.List",
+      "typing.Optional",
+      "sys",
+      "os",
+      "engine.CricketAnalyzer",
+      "uvicorn"
+    ],
+    "classes": {
+      "PredictionRequest": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 18
+      },
+      "PredictionResponse": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 26
+      }
+    },
+    "functions": {
+      "load_engine": {
+        "docstring": "",
+        "lineno": 42
+      },
+      "health_check": {
+        "docstring": "",
+        "lineno": 61
+      },
+      "predict_score": {
+        "docstring": "",
+        "lineno": 67
+      }
+    }
+  },
+  "api/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "config/format_registry.py": {
+    "imports": [
+      "importlib",
+      "logging"
+    ],
+    "classes": {},
+    "functions": {
+      "get_format_module": {
+        "docstring": "Dynamically imports and returns the format module.",
+        "lineno": 23
+      },
+      "get_available_formats": {
+        "docstring": "Returns list of (label, key) tuples for UI dropdowns.",
+        "lineno": 31
+      },
+      "get_format_config": {
+        "docstring": "Returns the format-specific config dictionary (paths, phases, etc.).",
+        "lineno": 36
+      },
+      "get_format_manifest": {
+        "docstring": "Returns the format's manifest for frontend UI generation.",
+        "lineno": 44
+      },
+      "get_format_engines": {
+        "docstring": "Returns a dict of engine CLASSES for the given format.\nExample: {\"TeamEngine\": <class>, \"PlayerEngine\": <class>, \"PredictorEngine\": <class>}",
+        "lineno": 60
+      }
+    }
+  },
+  "config/settings.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "config/shared/team_colors.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "config/shared/themes.py": {
+    "imports": [
+      "typing.Dict",
+      "config.shared.team_colors.TEAM_COLORS"
+    ],
+    "classes": {},
+    "functions": {
+      "get_theme_css": {
+        "docstring": "Generates the CSS block for the widget interface based on the selected theme.",
+        "lineno": 25
+      }
+    }
+  },
+  "config/shared/venues.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {
+      "get_venue_aliases": {
+        "docstring": "Takes a Venue ID (e.g. 'IND_MUMBAI_WANKHEDE') OR a Raw Name (e.g. 'Wankhede Stadium')\nand returns a LIST of ALL variations found in the Raw Data that match this venue.\n\nThis is the key to aggregation!",
+        "lineno": 247
+      }
+    }
+  },
+  "config/shared/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "core/backtester.py": {
+    "imports": [
+      "pandas",
+      "numpy",
+      "typing.List",
+      "typing.Dict",
+      "typing.Any",
+      "typing.Optional",
+      "datetime.datetime"
+    ],
+    "classes": {
+      "BettingEvaluator": {
+        "methods": [
+          "__init__",
+          "calculate_roi"
+        ],
+        "docstring": "Evaluates engine predictions against actual market outcomes (Simulation).",
+        "lineno": 6
+      },
+      "Backtester": {
+        "methods": [
+          "__init__",
+          "run_simulation"
+        ],
+        "docstring": "\ud83c\udfcf The Chronos Engine.\nAllows re-running historical matches through current logic to verify ROI.",
+        "lineno": 26
+      }
+    },
+    "functions": {}
+  },
+  "core/base_engine.py": {
+    "imports": [
+      "logging"
+    ],
+    "classes": {
+      "BaseEngine": {
+        "methods": [
+          "_safe_int",
+          "_safe_float",
+          "_safe_divide",
+          "_get_avg_with_count",
+          "_format_pct"
+        ],
+        "docstring": "Base class providing shared utilities for all engine types.",
+        "lineno": 13
+      }
+    },
+    "functions": {}
+  },
+  "core/data_access.py": {
+    "imports": [
+      "datetime.datetime",
+      "datetime.timedelta",
+      "duckdb",
+      "pandas",
+      "core.exceptions.DataIntegrityError"
+    ],
+    "classes": {
+      "DataAccess": {
+        "methods": [
+          "__init__",
+          "close",
+          "has_table",
+          "get_player_stats",
+          "get_phase_stats",
+          "get_player_metadata",
+          "get_squads",
+          "get_matches",
+          "get_balls",
+          "get_venue_summary",
+          "get_h2h_summary",
+          "get_player_career_summary",
+          "get_venue_phase_stats",
+          "get_player_vs_style",
+          "get_team_form",
+          "get_all_teams",
+          "get_all_venues",
+          "get_player_stats_batch",
+          "get_db_stats"
+        ],
+        "docstring": "Provides high-level data retrieval methods for cricket engines.\nEach method returns a pandas DataFrame.",
+        "lineno": 13
+      }
+    },
+    "functions": {}
+  },
+  "core/data_loader.py": {
+    "imports": [
+      "os",
+      "pandas",
+      "core.data_access.DataAccess",
+      "core.exceptions.DataIntegrityError"
+    ],
+    "classes": {},
+    "functions": {
+      "load_csv_or_pickle": {
+        "docstring": "Self-healing pickle cache. Loads from pickle if newer than CSV, else rebuilds.",
+        "lineno": 7
+      },
+      "create_data_source": {
+        "docstring": "Factory: Returns DataAccess (DuckDB) if available, otherwise a CSV DataFrame.\nFalls back to CSV if DuckDB is not installed or the db file is missing.",
+        "lineno": 38
+      }
+    }
+  },
+  "core/exceptions.py": {
+    "imports": [],
+    "classes": {
+      "CricketProjectError": {
+        "methods": [],
+        "docstring": "Base exception for all cricket project errors.",
+        "lineno": 6
+      },
+      "DataIntegrityError": {
+        "methods": [],
+        "docstring": "Raised when the database schema or content is corrupted/drifting.",
+        "lineno": 10
+      },
+      "FormatMismatchError": {
+        "methods": [],
+        "docstring": "Raised when the data format doesn't match the expected engine configuration.",
+        "lineno": 14
+      },
+      "DataNotFoundError": {
+        "methods": [],
+        "docstring": "Raised when a required data file or DB table is missing.",
+        "lineno": 18
+      }
+    },
+    "functions": {}
+  },
+  "core/interpreter.py": {
+    "imports": [
+      "formats.odi.config.players.BOWLER_STYLES",
+      "formats.odi.config.players.PLAYER_ROLES",
+      "formats.odi.config.rankings.ODI_RANKINGS"
+    ],
+    "classes": {
+      "MatchInterpreter": {
+        "methods": [
+          "__init__",
+          "interpret_h2h",
+          "interpret_form",
+          "interpret_fortress",
+          "interpret_toss_bias",
+          "interpret_dominance",
+          "rate_batting_form",
+          "rate_batting_venue",
+          "rate_bowling_form",
+          "rate_bowling_venue",
+          "rate_matchup",
+          "interpret_conditions",
+          "analyze_bowling_roster",
+          "generate_executive_summary"
+        ],
+        "docstring": "Stateless interpreter that transforms clean data dicts into\nfully-interpreted {data, context, narrative, section_description} sections.",
+        "lineno": 19
+      }
+    },
+    "functions": {}
+  },
+  "core/player_engine.py": {
+    "imports": [
+      "importlib",
+      "logging",
+      "config.format_registry.FORMATS",
+      "formats.odi.engines.player_engine.PlayerEngine"
+    ],
+    "classes": {
+      "PlayerEngine": {
+        "methods": [
+          "__init__"
+        ],
+        "docstring": "Placeholder \u2014 ODI format module not found.",
+        "lineno": 45
+      }
+    },
+    "functions": {
+      "get_player_engine": {
+        "docstring": "Factory: Dynamically loads the PlayerEngine class for the given format.\nReturns the CLASS (not an instance).",
+        "lineno": 18
+      }
+    }
+  },
+  "core/predictor.py": {
+    "imports": [
+      "importlib",
+      "logging",
+      "config.format_registry.FORMATS",
+      "formats.odi.predictor.PredictorEngine"
+    ],
+    "classes": {
+      "PredictorEngine": {
+        "methods": [
+          "__init__"
+        ],
+        "docstring": "Placeholder \u2014 ODI format module not found.",
+        "lineno": 45
+      }
+    },
+    "functions": {
+      "get_predictor_engine": {
+        "docstring": "Factory: Dynamically loads the PredictorEngine class for the given format.\nReturns the CLASS (not an instance).",
+        "lineno": 18
+      }
+    }
+  },
+  "core/team_engine.py": {
+    "imports": [
+      "importlib",
+      "logging",
+      "config.format_registry.FORMATS",
+      "formats.odi.engines.team_engine.TeamEngine"
+    ],
+    "classes": {
+      "TeamEngine": {
+        "methods": [
+          "__init__"
+        ],
+        "docstring": "Placeholder \u2014 ODI format module not found.",
+        "lineno": 45
+      }
+    },
+    "functions": {
+      "get_team_engine": {
+        "docstring": "Factory: Dynamically loads the TeamEngine class for the given format.\nReturns the CLASS (not an instance).",
+        "lineno": 18
+      }
+    }
+  },
+  "core/transformer.py": {
+    "imports": [
+      "re"
+    ],
+    "classes": {},
+    "functions": {
+      "_parse_avg_string": {
+        "docstring": "Parses engine's \"230 (15)\" format into {avg: 230, count: 15}.\nAlso handles plain numbers like 230 or \"-\".",
+        "lineno": 23
+      },
+      "_parse_pct_string": {
+        "docstring": "Parses engine's \"57% (16)\" format into {pct: 57, count: 16}.\nAlso handles \"57%\" or plain \"57\".",
+        "lineno": 45
+      },
+      "_strip_emojis": {
+        "docstring": "Removes all emoji characters and common decorators from a string.",
+        "lineno": 68
+      },
+      "_safe_int": {
+        "docstring": "Converts a value to int safely, returns 0 for failures.",
+        "lineno": 77
+      },
+      "_safe_float": {
+        "docstring": "Converts a value to float safely, returns 0.0 for failures.",
+        "lineno": 87
+      },
+      "_strip_html": {
+        "docstring": "Removes all HTML tags from a string.",
+        "lineno": 97
+      },
+      "_extract_value": {
+        "docstring": "Safely extracts Value from a [{Metric, Value}] list by index.",
+        "lineno": 104
+      },
+      "transform_h2h_slim": {
+        "docstring": "Converts the [{Metric, Value}] list from _build_and_display_report\ninto a SLIM dict with only win/loss record and key facts.\nUsed for Global H2H and Country H2H (averages are in Fortress/Venue).\n\nArgs:\n    raw_list: The list returned by analyze_global_h2h / analyze_home_fortress / etc.\n    home_team: Home team name.\n    away_team: Away team name.\n\nReturns:\n    dict: Slim structured data dict (no batting averages).",
+        "lineno": 115
+      },
+      "transform_h2h_report": {
+        "docstring": "Converts the 37-item [{Metric, Value}] list from _build_and_display_report\ninto a clean structured dict WITH batting/chasing averages.\nUsed for Fortress and Venue-specific H2H only.\n\nArgs:\n    raw_list: The list returned by analyze_global_h2h / analyze_home_fortress / etc.\n    home_team: Home team name (for labeling).\n    away_team: Away team name (for labeling).\n\nReturns:\n    dict: Clean structured data dict with full batting context.",
+        "lineno": 164
+      },
+      "transform_venue_bias": {
+        "docstring": "Converts the flat dict from analyze_venue_bias into a clean structured dict.\n\nArgs:\n    raw_dict: The dict returned by TeamEngine.analyze_venue_bias.\n\nReturns:\n    dict: Clean structured data dict.",
+        "lineno": 249
+      },
+      "transform_team_form": {
+        "docstring": "Converts the dict from analyze_team_form into a clean SLIM dict.\nOutputs only summary stats and sequence \u2014 no individual match details.\n\nArgs:\n    raw_dict: The dict returned by TeamEngine.analyze_team_form.\n    team_name: Name of the team for labeling.\n\nReturns:\n    dict: Clean structured summary dict.",
+        "lineno": 288
+      },
+      "transform_dominance_matrix": {
+        "docstring": "Converts the matrix report from analyze_home_dominance / analyze_away_performance\ninto aggregated stats.\n\nEngine returns keys: 'Opponent', 'Mat', 'Won', 'Lost', 'Tie/NR', 'Win %', 'Last 5'\n\nArgs:\n    raw_list: The list returned by _generate_matrix_report.\n    team_name: Focus team name.\n\nReturns:\n    dict: Aggregated stats from the matrix.",
+        "lineno": 334
+      },
+      "transform_squad_comparison": {
+        "docstring": "Converts the nested dict from _generate_comparison_payload into the\nChapter 4 schema for the Match Pack.\n\nArgs:\n    comparison_payload: The dict returned by PlayerEngine._generate_comparison_payload.\n\nReturns:\n    dict: Clean structured data for squad comparison, tactical matrix, and matchups.",
+        "lineno": 414
+      },
+      "transform_player_stats": {
+        "docstring": "Converts the flat dict from PlayerEngine._get_stats into structured\nbatting_form and bowling_form objects for the per-player schema.\n\nArgs:\n    stats_dict: The dict returned by _get_stats for a single player.\n\nReturns:\n    dict: Restructured player data.",
+        "lineno": 491
+      }
+    }
+  },
+  "core/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "core/interfaces/player_interface.py": {
+    "imports": [
+      "typing.Dict",
+      "typing.List",
+      "typing.Optional",
+      "typing.Protocol",
+      "typing.Union",
+      "typing.Any",
+      "dataclasses.dataclass",
+      "pandas"
+    ],
+    "classes": {
+      "BattingStats": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 6
+      },
+      "BowlingStats": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 17
+      },
+      "ContextStats": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 26
+      },
+      "PlayerProfile": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 31
+      },
+      "MatchupStats": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 40
+      },
+      "SquadMetrics": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 51
+      },
+      "TacticalMatrixRow": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 61
+      },
+      "SquadComparisonData": {
+        "methods": [],
+        "docstring": "",
+        "lineno": 67
+      },
+      "IPlayerEngine": {
+        "methods": [
+          "get_player_profile",
+          "get_matchups",
+          "get_squad_metrics"
+        ],
+        "docstring": "The Strict Contract for Player Analytics.\nRULES:\n1. STRICT RETURN TYPES: No 'dict' chaos. Use Dataclasses.\n2. NO HTML: Logic only.",
+        "lineno": 81
+      }
+    },
+    "functions": {}
+  },
+  "core/interfaces/team_interface.py": {
+    "imports": [
+      "typing.Dict",
+      "typing.List",
+      "typing.Optional",
+      "typing.Protocol",
+      "typing.Any",
+      "dataclasses.dataclass"
+    ],
+    "classes": {
+      "VenueStats": {
+        "methods": [],
+        "docstring": "Stats for a specific venue.",
+        "lineno": 14
+      },
+      "TeamMatchup": {
+        "methods": [],
+        "docstring": "Head-to-head record between two teams.",
+        "lineno": 25
+      },
+      "FormGuide": {
+        "methods": [],
+        "docstring": "Recent form summary for a team.",
+        "lineno": 37
+      },
+      "ITeamEngine": {
+        "methods": [
+          "analyze_home_fortress",
+          "analyze_venue_bias",
+          "analyze_global_h2h",
+          "analyze_team_form"
+        ],
+        "docstring": "The Strict Contract for Team Analytics.\n\nRules:\n1. Returns Data Classes or Typed Dicts.\n2. NO HTML Generation (Violation of Headless Principle).\n3. NO Direct Database Access (Must use DataAccess Layer).\n\nAny format's TeamEngine MUST implement at minimum these methods.\nAdditional format-specific methods are allowed.",
+        "lineno": 48
+      }
+    },
+    "functions": {}
+  },
+  "docs/notes/Scratpad.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/match_pack.py": {
+    "imports": [
+      "json",
+      "os",
+      "io",
+      "sys",
+      "datetime.datetime",
+      "core.transformer.transform_h2h_report",
+      "core.transformer.transform_h2h_slim",
+      "core.transformer.transform_venue_bias",
+      "core.transformer.transform_team_form",
+      "core.transformer.transform_dominance_matrix",
+      "core.transformer.transform_squad_comparison",
+      "core.transformer.transform_player_stats",
+      "core.interpreter.MatchInterpreter",
+      "formats.odi.config.players.PLAYER_ROLES",
+      "formats.odi.config.players.BOWLER_STYLES",
+      "formats.odi.config.rankings.ODI_RANKINGS"
+    ],
+    "classes": {
+      "MatchPackGenerator": {
+        "methods": [
+          "__init__",
+          "generate_pack",
+          "_build_chapter_1",
+          "_build_chapter_2",
+          "_build_chapter_3",
+          "_build_chapter_4",
+          "_build_squad_narrative",
+          "_build_tactical_narrative",
+          "_build_matchup_narrative",
+          "_build_player_stats_narrative",
+          "_build_role_based_tactical_narrative",
+          "_build_smart_pitch_narrative",
+          "_silent_call",
+          "_build_phase_narrative",
+          "_strip_internal_keys",
+          "_save_report"
+        ],
+        "docstring": "Orchestrates the Match Pack generation pipeline.\n\nUsage:\n    generator = MatchPackGenerator(bot)\n    filepath = generator.generate_pack(\"India\", \"England\", \"IND_MUMBAI_WANKHEDE\",\n                                       india_xi, england_xi, context)",
+        "lineno": 35
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/predictor.py": {
+    "imports": [
+      "pandas",
+      "numpy",
+      "re",
+      "typing.List",
+      "typing.Dict",
+      "typing.Tuple",
+      "typing.Optional",
+      "typing.Any",
+      "typing.Union",
+      "config.shared.venues.get_venue_aliases",
+      "config.settings.VENUE_BASELINE_DEFAULT",
+      "config.settings.STANDARD_BATTING_POTENTIAL",
+      "config.settings.PREDICTION_MARGIN",
+      "config.settings.MIN_BAT_AVG_CAP",
+      "config.settings.MAX_BAT_AVG_CAP",
+      "config.settings.MIN_BOWLS_FILTER",
+      "config.shared.team_colors.TEAM_COLORS"
+    ],
+    "classes": {
+      "PredictorEngine": {
+        "methods": [
+          "__init__",
+          "calculate_smart_projection",
+          "predict_score"
+        ],
+        "docstring": "\ud83d\udd2e The Sniper (v5.0 - Headless & Vectorized).\n- HEADLESS: Returns pure Dicts, no UI.\n- VECTORIZED: Uses groupby aggregation instead of loops.\n- TYPED: Full Type Hints.",
+        "lineno": 17
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/team_engine.py": {
+    "imports": [
+      "formats.odi.engines.team_engine.TeamEngine"
+    ],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/__init__.py": {
+    "imports": [
+      "formats.odi.engines.player_engine.PlayerEngine",
+      "formats.odi.engines.team_engine.TeamEngine",
+      "formats.odi.predictor.PredictorEngine",
+      "formats.odi.config.settings.ODI_FORMAT_CONFIG"
+    ],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/config/players.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/config/rankings.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/config/settings.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/config/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/engines/player_engine.py": {
+    "imports": [
+      "typing.List",
+      "typing.Dict",
+      "typing.Optional",
+      "typing.Any",
+      "typing.Union",
+      "pandas",
+      "numpy",
+      "datetime",
+      "logging",
+      "config.shared.venues.get_venue_aliases",
+      "config.shared.team_colors.TEAM_COLORS",
+      "formats.odi.config.players.BOWLER_STYLES",
+      "formats.odi.config.players.PLAYER_ROLES",
+      "core.predictor.PredictorEngine",
+      "re",
+      "core.interfaces.player_interface.PlayerProfile",
+      "core.interfaces.player_interface.BattingStats",
+      "core.interfaces.player_interface.BowlingStats",
+      "core.interfaces.player_interface.MatchupStats",
+      "core.interfaces.player_interface.ContextStats",
+      "core.interfaces.player_interface.SquadMetrics",
+      "core.interfaces.player_interface.SquadComparisonData",
+      "formats.odi.renderers.player_renderer.PlayerHTMLRenderer",
+      "formats.odi.config.players.PLAYER_ROLES"
+    ],
+    "classes": {
+      "PlayerEngine": {
+        "methods": [
+          "__init__",
+          "_get_player_role",
+          "_compute_reference_date",
+          "_get_reference_date",
+          "get_active_squad",
+          "get_last_match_xi",
+          "get_squad_comparison_data",
+          "compare_squads",
+          "analyze_squad_types",
+          "_calculate_squad_metrics",
+          "_get_stats",
+          "get_matchups",
+          "_generate_comparison_payload",
+          "_get_batting_milestones",
+          "get_player_profile",
+          "analyze_player_profile"
+        ],
+        "docstring": "\u2694\ufe0f The Dugout (v6.0 - Engineering Standards Aligned).\n- HEADLESS: Logic returning pure data.\n- TYPED: Full Type Hint signatures.\n- DECOUPLED: Renderers handle the UI.",
+        "lineno": 19
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/engines/team_engine.py": {
+    "imports": [
+      "typing.List",
+      "typing.Dict",
+      "typing.Optional",
+      "typing.Any",
+      "typing.Union",
+      "pandas",
+      "numpy",
+      "os",
+      "config.shared.venues.VENUE_MAP",
+      "config.shared.team_colors.TEAM_COLORS",
+      "formats.odi.renderers.team_renderer.TeamHTMLRenderer",
+      "core.data_loader.load_csv_or_pickle",
+      "config.shared.venues.get_venue_aliases",
+      "config.shared.venues.get_venue_aliases"
+    ],
+    "classes": {
+      "TeamEngine": {
+        "methods": [
+          "__init__",
+          "_compute_reference_date",
+          "_get_reference_date",
+          "_apply_smart_filters",
+          "_get_avg_with_count",
+          "_get_form_guide",
+          "_calculate_team_stats",
+          "_build_report_data",
+          "_generate_matrix_report",
+          "analyze_home_fortress",
+          "analyze_venue_matchup",
+          "analyze_venue_phases",
+          "analyze_venue_bias",
+          "analyze_global_h2h",
+          "analyze_country_h2h",
+          "analyze_home_dominance",
+          "analyze_away_performance",
+          "analyze_global_performance",
+          "analyze_continent_performance",
+          "analyze_team_form"
+        ],
+        "docstring": "\ud83e\udd81 The War Room (v6.0 - Engineering Standards Aligned).\nHandles Team-Level Analysis: Fortress Checks, H2H, Dominance, and Form.\n- HEADLESS: Logic returning pure data.\n- TYPED: Full Type Hint signatures.",
+        "lineno": 10
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/engines/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/renderers/player_renderer.py": {
+    "imports": [
+      "typing.List",
+      "typing.Dict",
+      "typing.Optional",
+      "typing.Any",
+      "core.interfaces.player_interface.PlayerProfile",
+      "core.interfaces.player_interface.BattingStats",
+      "core.interfaces.player_interface.BowlingStats",
+      "core.interfaces.player_interface.SquadComparisonData",
+      "config.shared.team_colors.TEAM_COLORS",
+      "config.shared.team_colors.TEAM_COLORS",
+      "config.shared.team_colors.TEAM_COLORS"
+    ],
+    "classes": {
+      "PlayerHTMLRenderer": {
+        "methods": [
+          "render_profile_card",
+          "get_role_icon",
+          "render_squad_table",
+          "render_squad_header",
+          "render_section_divider",
+          "render_tactical_matrix",
+          "render_matchup_header",
+          "render_matchup_table",
+          "render_mini_card"
+        ],
+        "docstring": "Handles all HTML generation for Player Analytics.\nInput: Strictly typed Dataclasses from PlayerEngine.\nOutput: HTML Strings (for Display).",
+        "lineno": 4
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/renderers/team_renderer.py": {
+    "imports": [
+      "typing.List",
+      "typing.Dict",
+      "typing.Optional",
+      "pandas",
+      "config.shared.team_colors.TEAM_COLORS"
+    ],
+    "classes": {
+      "TeamHTMLRenderer": {
+        "methods": [
+          "render_dashboard",
+          "render_audit",
+          "render_bias",
+          "render_matrix",
+          "render_form",
+          "render_phase_header",
+          "render_phase_table",
+          "render_phase_analysis",
+          "render_alert",
+          "render_prediction"
+        ],
+        "docstring": "Handles all HTML generation for Team Analytics.\nDecoupled from Engine logic (Headless Architecture).",
+        "lineno": 5
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/scripts/check_bowler_coverage.py": {
+    "imports": [
+      "pandas",
+      "sys",
+      "os",
+      "formats.odi.config.players.BOWLER_STYLES"
+    ],
+    "classes": {},
+    "functions": {
+      "analyze": {
+        "docstring": "",
+        "lineno": 5
+      }
+    }
+  },
+  "formats/odi/scripts/find_missing_players.py": {
+    "imports": [
+      "pandas",
+      "sys",
+      "json",
+      "os",
+      "formats.odi.config.players.BOWLER_STYLES",
+      "formats.odi.config.players.PLAYER_ROLES"
+    ],
+    "classes": {},
+    "functions": {
+      "find_missing": {
+        "docstring": "",
+        "lineno": 10
+      }
+    }
+  },
+  "formats/odi/tests/verify_boundary_fix.py": {
+    "imports": [
+      "pandas",
+      "sys",
+      "os",
+      "engine.CricketAnalyzer"
+    ],
+    "classes": {},
+    "functions": {
+      "verify_fix": {
+        "docstring": "",
+        "lineno": 10
+      }
+    }
+  },
+  "formats/odi/tests/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/base_runner.py": {
+    "imports": [
+      "pandas",
+      "json",
+      "os",
+      "sys",
+      "engine.CricketAnalyzer"
+    ],
+    "classes": {
+      "TruthBridgeBase": {
+        "methods": [
+          "__init__",
+          "_get_ids",
+          "compare",
+          "save_report",
+          "save_seeded_truth"
+        ],
+        "docstring": "Standardized Base Class for all Truth Bridge Runners (Fingerprinting v2.5).\nCentralizes comparison, auto-diagnosis, and reporting logic.",
+        "lineno": 10
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/diagnose_test.py": {
+    "imports": [
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "MockRunner": {
+        "methods": [
+          "__init__"
+        ],
+        "docstring": "",
+        "lineno": 3
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/run_all.py": {
+    "imports": [
+      "sys",
+      "os",
+      "formats.odi.tests.truth_bridge.compare_squads.test_runner.CompareSquadsTruthBridge",
+      "formats.odi.tests.truth_bridge.predictor_validation.test_runner.PredictorValidationRunner",
+      "formats.odi.tests.truth_bridge.player_stats_validation.test_runner.PlayerStatsValidationRunner",
+      "formats.odi.tests.truth_bridge.team_form_validation.test_runner.TeamFormValidationRunner",
+      "traceback"
+    ],
+    "classes": {},
+    "functions": {
+      "run_all_verification": {
+        "docstring": "",
+        "lineno": 12
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/analyze_venue_matchup/test_runner.py": {
+    "imports": [
+      "json",
+      "os",
+      "sys",
+      "pandas",
+      "datetime.datetime",
+      "engine.CricketAnalyzer"
+    ],
+    "classes": {
+      "TruthBridgeRunner": {
+        "methods": [
+          "__init__",
+          "run",
+          "_get_venue_map",
+          "_save_seeded_truth",
+          "_compare",
+          "_save_results"
+        ],
+        "docstring": "",
+        "lineno": 12
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/away_performance/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "AwayPerformanceTruthBridge": {
+        "methods": [
+          "__init__",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/check_fortress/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "FortressTruthBridge": {
+        "methods": [
+          "__init__",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/check_fortress/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/check_host_country_stats/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "CountryH2HTruthBridge": {
+        "methods": [
+          "__init__",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/compare_squads/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "CompareSquadsTruthBridge": {
+        "methods": [
+          "__init__",
+          "_load_legacy_scenarios",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/continent_performance/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "ContinentPerformanceTruthBridge": {
+        "methods": [
+          "__init__",
+          "_load_legacy_scenarios",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/global_h2h/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "GlobalH2HTruthBridge": {
+        "methods": [
+          "__init__",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/global_performance/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "GlobalPerformanceTruthBridge": {
+        "methods": [
+          "__init__",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/home_dominance/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "HomeDominanceTruthBridge": {
+        "methods": [
+          "__init__",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/phase_analysis/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "pandas",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase",
+      "config.shared.venues.VENUE_MAP"
+    ],
+    "classes": {
+      "PhaseAnalysisTruthBridge": {
+        "methods": [
+          "__init__",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 12
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/player_stats_validation/test_runner.py": {
+    "imports": [
+      "sys",
+      "os",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase",
+      "dataclasses.asdict"
+    ],
+    "classes": {
+      "PlayerStatsValidationRunner": {
+        "methods": [
+          "run_tests"
+        ],
+        "docstring": "",
+        "lineno": 8
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/predictor_validation/test_runner.py": {
+    "imports": [
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase",
+      "config.shared.venues.VENUE_MAP",
+      "sys",
+      "os",
+      "os"
+    ],
+    "classes": {
+      "PredictorValidationRunner": {
+        "methods": [
+          "run_tests"
+        ],
+        "docstring": "",
+        "lineno": 5
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/recent_form/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase"
+    ],
+    "classes": {
+      "RecentFormTruthBridge": {
+        "methods": [
+          "__init__",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 17
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 11
+      }
+    }
+  },
+  "formats/odi/tests/truth_bridge/team_form_validation/test_runner.py": {
+    "imports": [
+      "sys",
+      "os",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase",
+      "os"
+    ],
+    "classes": {
+      "TeamFormValidationRunner": {
+        "methods": [
+          "run_tests"
+        ],
+        "docstring": "",
+        "lineno": 7
+      }
+    },
+    "functions": {}
+  },
+  "formats/odi/tests/truth_bridge/toss_bias/test_runner.py": {
+    "imports": [
+      "os",
+      "sys",
+      "json",
+      "pandas",
+      "datetime.datetime",
+      "builtins",
+      "formats.odi.tests.truth_bridge.base_runner.TruthBridgeBase",
+      "config.shared.venues.VENUE_MAP"
+    ],
+    "classes": {
+      "TossBiasTruthBridge": {
+        "methods": [
+          "__init__",
+          "_group_venues_by_country",
+          "run"
+        ],
+        "docstring": "",
+        "lineno": 19
+      }
+    },
+    "functions": {
+      "mock_display": {
+        "docstring": "",
+        "lineno": 12
+      }
+    }
+  },
+  "formats/odi/tools/enrich_match_scores.py": {
+    "imports": [
+      "pandas",
+      "os"
+    ],
+    "classes": {},
+    "functions": {
+      "enrich_scores": {
+        "docstring": "",
+        "lineno": 7
+      }
+    }
+  },
+  "formats/odi/tools/list_india_matches.py": {
+    "imports": [
+      "sys",
+      "os",
+      "io",
+      "engine.CricketAnalyzer",
+      "engine.CricketAnalyzer"
+    ],
+    "classes": {},
+    "functions": {}
+  },
+  "formats/odi/tools/process_player_stats.py": {
+    "imports": [
+      "pandas",
+      "zipfile",
+      "os",
+      "warnings"
+    ],
+    "classes": {},
+    "functions": {
+      "process_ball_by_ball": {
+        "docstring": "",
+        "lineno": 13
+      }
+    }
+  },
+  "formats/odi/utils/ingest_to_db.py": {
+    "imports": [
+      "os",
+      "sys",
+      "pandas",
+      "config.shared.venues.VENUE_MAP",
+      "duckdb",
+      "formats.odi.config.settings.ODI_FORMAT_CONFIG"
+    ],
+    "classes": {},
+    "functions": {
+      "_norm_path": {
+        "docstring": "",
+        "lineno": 11
+      },
+      "run_db_ingestion": {
+        "docstring": "Ingests processed CSVs into a format-specific DuckDB.\nUses config for paths.",
+        "lineno": 14
+      }
+    }
+  },
+  "formats/odi/utils/json_converter.py": {
+    "imports": [
+      "json",
+      "pandas",
+      "glob",
+      "os",
+      "numpy",
+      "formats.odi.config.settings.ODI_FORMAT_CONFIG"
+    ],
+    "classes": {},
+    "functions": {
+      "run_json_conversion": {
+        "docstring": "Parses Cricsheet JSON files into standardized CSVs.\nUses config for paths.",
+        "lineno": 7
+      }
+    }
+  },
+  "formats/odi/utils/refinery_script.py": {
+    "imports": [
+      "pandas",
+      "numpy",
+      "os",
+      "formats.odi.config.settings.ODI_FORMAT_CONFIG"
+    ],
+    "classes": {},
+    "functions": {
+      "rebuild_intelligence_layer": {
+        "docstring": "Refines raw ball-by-ball data into player stats and phase stats.\nUses config for paths and phase boundaries.",
+        "lineno": 7
+      }
+    }
+  },
+  "scripts/context_indexer.py": {
+    "imports": [
+      "os",
+      "ast",
+      "json",
+      "sys"
+    ],
+    "classes": {},
+    "functions": {
+      "get_docstring": {
+        "docstring": "Extracts the docstring from an AST node.",
+        "lineno": 15
+      },
+      "parse_file": {
+        "docstring": "Parses a Python file and extracts structure.",
+        "lineno": 19
+      },
+      "generate_map": {
+        "docstring": "Walks the project directory and generates the map.",
+        "lineno": 72
+      }
+    }
+  },
+  "scripts/context_linter.py": {
+    "imports": [
+      "os",
+      "re",
+      "json",
+      "glob",
+      "sys",
+      "io"
+    ],
+    "classes": {},
+    "functions": {
+      "load_rules": {
+        "docstring": "",
+        "lineno": 15
+      },
+      "check_file": {
+        "docstring": "",
+        "lineno": 22
+      },
+      "check_governance_docs": {
+        "docstring": "Verify that critical governance & context documents exist.\nThese files are the 'source of truth' for AI agent behavior.\nMissing files = broken context pipeline = agent amnesia.",
+        "lineno": 54
+      },
+      "run_linter": {
+        "docstring": "",
+        "lineno": 81
+      }
+    }
+  },
+  "scripts/focus_manager.py": {
+    "imports": [
+      "os",
+      "json",
+      "argparse",
+      "datetime"
+    ],
+    "classes": {},
+    "functions": {
+      "load_focus": {
+        "docstring": "Loads focus state or returns empty default.",
+        "lineno": 10
+      },
+      "save_focus": {
+        "docstring": "Saves focus state to JSON.",
+        "lineno": 20
+      },
+      "start_task": {
+        "docstring": "Resets focus and starts a new task.",
+        "lineno": 27
+      },
+      "add_file": {
+        "docstring": "Adds a file to the active context.",
+        "lineno": 37
+      },
+      "clear_focus": {
+        "docstring": "Clears the active context.",
+        "lineno": 59
+      },
+      "show_status": {
+        "docstring": "Prints current focus status.",
+        "lineno": 67
+      }
+    }
+  },
+  "scripts/memory_manager.py": {
+    "imports": [
+      "os",
+      "re",
+      "json",
+      "collections.defaultdict"
+    ],
+    "classes": {},
+    "functions": {
+      "scan_history": {
+        "docstring": "Scans history files and builds a keyword index.",
+        "lineno": 22
+      },
+      "extract_date": {
+        "docstring": "Extracts date in [YYYY-MM-DD] format.",
+        "lineno": 64
+      }
+    }
+  },
+  "scripts/update_data.py": {
+    "imports": [
+      "os",
+      "sys",
+      "argparse",
+      "config.format_registry.get_format_module",
+      "formats.odi.utils.refinery_script.rebuild_intelligence_layer",
+      "formats.odi.utils.ingest_to_db.run_db_ingestion",
+      "formats.odi.tests.truth_bridge.run_all.run_all_verification",
+      "formats.odi.utils.json_converter.run_json_conversion"
+    ],
+    "classes": {},
+    "functions": {
+      "main": {
+        "docstring": "",
+        "lineno": 21
+      }
+    }
+  },
+  "tests/run_v31_tests.py": {
+    "imports": [
+      "sys",
+      "os",
+      "core.transformer.transform_h2h_report",
+      "core.transformer.transform_h2h_slim",
+      "core.transformer.transform_venue_bias",
+      "core.transformer.transform_team_form",
+      "core.transformer.transform_dominance_matrix",
+      "core.transformer.transform_player_stats",
+      "core.interpreter.MatchInterpreter"
+    ],
+    "classes": {},
+    "functions": {
+      "check": {
+        "docstring": "",
+        "lineno": 17
+      }
+    }
+  },
+  "tests/test_api_integration.py": {
+    "imports": [
+      "fastapi.testclient.TestClient",
+      "api.main.app",
+      "sys",
+      "os"
+    ],
+    "classes": {},
+    "functions": {
+      "run_tests": {
+        "docstring": "",
+        "lineno": 13
+      }
+    }
+  },
+  "tests/test_match_pack.py": {
+    "imports": [
+      "pytest",
+      "sys",
+      "os",
+      "core.transformer.transform_h2h_report",
+      "core.transformer.transform_h2h_slim",
+      "core.transformer.transform_venue_bias",
+      "core.transformer.transform_team_form",
+      "core.transformer.transform_dominance_matrix",
+      "core.transformer.transform_squad_comparison",
+      "core.interpreter.MatchInterpreter"
+    ],
+    "classes": {
+      "TestTransformer": {
+        "methods": [
+          "test_h2h_slim_has_no_averages",
+          "test_h2h_full_has_averages",
+          "test_h2h_no_match_ids",
+          "test_venue_bias_clean",
+          "test_team_form_no_match_details",
+          "test_dominance_matrix_correct_keys",
+          "test_dominance_form_guide",
+          "test_empty_data_handling"
+        ],
+        "docstring": "Tests for transformer module.",
+        "lineno": 117
+      },
+      "TestInterpreter": {
+        "methods": [
+          "setup_method",
+          "test_h2h_at_50_says_evenly_matched",
+          "test_h2h_section_description_present",
+          "test_h2h_context_has_reasoning",
+          "test_form_trend_logic_fixed",
+          "test_form_section_description_present",
+          "test_fortress_section_description",
+          "test_toss_bias_section_description",
+          "test_dominance_section_description",
+          "test_dominance_correct_narrative",
+          "test_conditions_spin_boost",
+          "test_conditions_dew_factor"
+        ],
+        "docstring": "Tests for interpreter module.",
+        "lineno": 191
+      }
+    },
+    "functions": {}
+  },
+  "tests/verify_headless_player.py": {
+    "imports": [
+      "sys",
+      "os",
+      "pandas",
+      "datetime.datetime",
+      "core.player_engine.PlayerEngine",
+      "core.interfaces.player_interface.PlayerProfile",
+      "core.interfaces.player_interface.BattingStats",
+      "core.interfaces.player_interface.ContextStats",
+      "formats.odi.renderers.player_renderer.PlayerHTMLRenderer",
+      "traceback"
+    ],
+    "classes": {},
+    "functions": {
+      "test_headless_api": {
+        "docstring": "",
+        "lineno": 14
+      }
+    }
+  },
+  "tests/__init__.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "tests/runners/conftest.py": {
+    "imports": [],
+    "classes": {},
+    "functions": {}
+  },
+  "utils/test_recorder.py": {
+    "imports": [
+      "json",
+      "os",
+      "pandas",
+      "numpy"
+    ],
+    "classes": {
+      "SnapshotRecorder": {
+        "methods": [
+          "__init__",
+          "_serialize",
+          "save_snapshot"
+        ],
+        "docstring": "",
+        "lineno": 6
+      }
+    },
+    "functions": {}
+  },
+  "__governance__": {
+    "description": "Critical governance & context docs. Agents MUST read docs/ai/GEMINI.md before any coding.",
+    "bootstrap_order": [
+      "docs/ai/AI_MEMORY.md",
+      "docs/ai/GEMINI.md",
+      "docs/context/active_state.md",
+      "docs/guides/ENGINEERING_STANDARDS.md"
+    ],
+    "documents": [
+      {
+        "path": "docs/ai/GEMINI.md",
+        "role": "Agent Protocols & Governance Rules (MUST READ FIRST)",
+        "exists": true
+      },
+      {
+        "path": "docs/ai/AI_MEMORY.md",
+        "role": "Living Memory \u2014 Sprint Status & Session History",
+        "exists": true
+      },
+      {
+        "path": "docs/context/active_state.md",
+        "role": "Current Architecture State & Anti-Patterns",
+        "exists": true
+      },
+      {
+        "path": "docs/context/rules.json",
+        "role": "Automated Linting Rules (enforced by context_linter.py)",
+        "exists": true
+      },
+      {
+        "path": "docs/guides/ENGINEERING_STANDARDS.md",
+        "role": "Coding Constitution & Achievement Tracker",
+        "exists": true
+      },
+      {
+        "path": "docs/guides/DEV_GUIDE.md",
+        "role": "Developer Onboarding & Data Pipeline",
+        "exists": true
+      },
+      {
+        "path": "docs/guides/TECHNICAL_DOCUMENTATION.md",
+        "role": "File-by-File Codebase Reference",
+        "exists": true
+      },
+      {
+        "path": "docs/architecture/applicationArchitecture.md",
+        "role": "System Architecture Diagrams",
+        "exists": true
+      },
+      {
+        "path": "docs/plans/FRONTEND_ROADMAP.md",
+        "role": "Frontend Phase Tracker",
+        "exists": true
+      },
+      {
+        "path": "docs/design/UI_SPEC.md",
+        "role": "V5 Manifest-Driven UI Design Spec",
+        "exists": true
+      },
+      {
+        "path": "docs/handovers/handover.md",
+        "role": "Project Handover Summary",
+        "exists": true
+      }
+    ]
+  }
+}

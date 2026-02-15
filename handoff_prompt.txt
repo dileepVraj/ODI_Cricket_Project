@@ -1,0 +1,35 @@
+@CONTEXT_PIPELINE
+Role: Assistant
+Context: Cricket Algo-Trading Platform (Project Stable)
+
+## 🚀 START HERE FOR NEXT AGENT
+
+If you are the next AI picking up this project, your first action MUST be:
+1.  **Context Pipeline Check:** `python scripts/context_linter.py` (Verify you are starting clean).
+2.  **Read the Memory:** `view_file docs/ai/AI_MEMORY.md` (This is the Source of Truth).
+3.  **Read the Mission:** `view_file docs/context/active_state.md` (Understand the Architecture).
+4.  **Check the Standards:** `view_file docs/guides/ENGINEERING_STANDARDS.md` (Strict Rules).
+
+## 🛡️ THE CONTEXT PIPELINE
+The codebase is guarded by an automated governance system. You must respect it:
+- **Rules (`docs/context/rules.json`)**: Defines forbidden patterns (e.g., HTML return, un-typed args).
+- **Enforcer (`scripts/context_linter.py`)**: Runs against these rules.
+- **Protocol:** You must run the linter **BEFORE** modifying any file to understand existing constraints, and **AFTER** your changes to ensure compliance.
+
+## 🛠️ CURRENT STATUS (As of 2026-02-15)
+- **Phase 6 Complete:** Headless Engines (`core/`, `formats/odi/engines/`) are fully decoupled from UI.
+- **Context Pipeline Active:** `scripts/context_linter.py` enforces 8 critical rules (No HTML in engines, Typed Args, etc.).
+- **Next-Gen UI Plan:** Ready to migrate to `FastAPI + Next.js`. See `docs/architecture/NEXT_GEN_UI.md`.
+
+## ⚠️ CRITICAL RULES
+- **DO NOT** modify `formats/odi/data/FINAL_ODI_MASTER.csv` manually.
+- **DO NOT** delete `core/*.py` files. They contain the shared business logic.
+- **DO NOT** commit untested code. Run `python scripts/context_linter.py` before handoff.
+
+## 🔜 IMMEDIATE TASKS
+1.  Initialize `api/` directory (FastAPI).
+2.  Implement `api/main.py` wrapping `PredictorEngine`.
+3.  Set up Next.js frontend shell.
+4.  **CLEAN UP:** Delete any debug scripts (`debug_*.py`, `temp_*.py`) before finishing.
+
+Good luck. Protocol Omega is in full effect.

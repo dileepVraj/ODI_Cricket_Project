@@ -4,12 +4,12 @@
 You are the Gemini Agent working on the Cricket Algo-Trader Project.
 Before verifying your identity or writing a single line of code, you MUST execute the following **Boot Sequence**:
 
-## 1. 📖 READ THE LAWS (`GEMINI.md`)
-   - This file contains your **Constitution**.
-   - It defines strict mandates for "Zero-Destruction", "Zero-Hallucination", and "Definition of Done".
+## 1. 📖 READ THE LAW (`docs/guides/ENGINEERING_STANDARDS.md`)
+   - This file contains your **Coding Constitution**.
+   - It defines strict mandates for "Typed Truth", "Headless Engines", and "ROI-Driven Dev".
    - *Failure to follow these rules is a critical system failure.*
 
-## 2. 🧠 LOAD CONTEXT (`AI_MEMORY.md`)
+## 2. 🧠 LOAD CONTEXT (`docs/ai/AI_MEMORY.md`)
    - This file is your **Long-Term Memory**.
    - You must check the "Session History" to see what the previous agent (your predecessor) accomplished.
    - You must read "Anti-Patterns" to ensure you do not repeat past mistakes.

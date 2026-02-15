@@ -1,0 +1,370 @@
+{
+    "timestamp": "2026-02-13 18:37:38",
+    "summary": {
+        "pass": 90,
+        "fail": 0
+    },
+    "failures": [],
+    "details": [
+        {
+            "item": "Australia at Melbourne Cricket Ground > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Sydney Cricket Ground > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Adelaide Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Brisbane Cricket Ground, Woolloongabba > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Perth Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at W.A.C.A. Ground > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Bellerive Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Manuka Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Cazaly's Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Great Barrier Reef Arena > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia at Riverway Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh at Sher-e-Bangla National Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh at Zahur Ahmed Chowdhury Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh at Sylhet International Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at Lord's > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at The Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at Edgbaston > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at Old Trafford > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at Headingley > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at Trent Bridge > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at The Rose Bowl > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at Sophia Gardens > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at Bristol > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at County Ground, Taunton > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at County Ground, Chelmsford > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at County Ground, Northampton > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at County Ground, Derby > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "England at Riverside Ground > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Wankhede Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Brabourne Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Narendra Modi Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Eden Gardens > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at M.Chidambaram Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at M. Chinnaswamy Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Arun Jaitley Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Rajiv Gandhi International Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Himachal Pradesh Cricket Association Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Punjab Cricket Association IS Bindra Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Maharashtra Cricket Association Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Green Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Barabati Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Holkar Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Barsapara Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Greenfield International Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at JSCA International Stadium Complex > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Saurashtra Cricket Association Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Vidarbha Cricket Association Stadium, Jamtha > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "India at Shaheed Veer Narayan Singh International Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at Eden Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at Westpac Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at Basin Reserve > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at Seddon Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at Hagley Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at McLean Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at University Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at Bay Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at Saxton Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand at Cobham Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan at National Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan at Gaddafi Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan at Rawalpindi Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan at Multan Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan at Faisalabad > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at Wanderers Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at SuperSport Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at Newlands > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at Kingsmead > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at St George's Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at Boland Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at Mangaung Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at Senwes Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at Buffalo Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa at Diamond Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka at R.Premadasa Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka at Sinhalese Sports Club Ground > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka at Pallekele International Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka at Galle International Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka at Rangiri Dambulla International Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka at Mahinda Rajapaksa International Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at Kensington Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at Queen's Park Oval > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at Providence Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at Sabina Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at Sir Vivian Richards Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at Daren Sammy National Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at National Cricket Stadium > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at Warner Park > vs All",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies at Brain Lara Stadium, Tarouba > vs All",
+            "status": "PASS"
+        }
+    ]
+}

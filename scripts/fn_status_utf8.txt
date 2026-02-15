@@ -1,0 +1,39 @@
+﻿==========================================================================================
+CATEGORY                  FUNCTION                       OUTPUT_TYPE          REQUIRED_CONTEXT
+==========================================================================================
+  venue_intel             venue_bias                     report               ['venue', 'years']
+  venue_intel             venue_matchup                  comparison_table     ['venue', 'team_a', 'team_b', 'years']
+  venue_intel             home_fortress                  comparison_table     ['venue', 'team_a', 'team_b', 'years']
+  venue_intel             venue_phases                   table                ['venue', 'team_a', 'years']
+  rivalry                 global_h2h                     comparison_table     ['team_a', 'team_b', 'years']
+  rivalry                 country_h2h                    comparison_table     ['team_a', 'team_b', 'region', 'years']
+  rivalry                 continent_perf                 matrix_table         ['team_a', 'region', 'years']
+  team_command            home_dominance                 matrix_table         ['team_a', 'years']
+  team_command            away_performance               matrix_table         ['team_a', 'years']
+  team_command            global_performance             matrix_table         ['team_a', 'years']
+  team_command            team_form                      form_table           ['team_a', 'years']
+  player_scout            player_profile                 profile_card         ['team_b']
+  squad_battle            compare_squads                 comparison_table     ['venue', 'team_a', 'team_b']
+  squad_battle            tactical_matrix                table                ['team_a', 'team_b']
+  squad_battle            matchups                       matchup_table        ['team_a', 'team_b']
+  predictor               predict_score                  prediction_card      ['venue', 'team_a', 'team_b', 'years']
+  match_pack              generate_pack                  download_json        ['venue', 'team_a', 'team_b']
+
+Total: 17 functions
+
+==========================================================================================
+FUNCTION                       STATUS     DATA_TYPE       DATA_SIZE    NOTES
+==========================================================================================
+python : Traceback (most recent call last):
+At line:1 char:1
++ python scripts\check_functions.py > scripts\fn_status.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\khaisar jaha\OneDrive\Desktop\Cricket_Project_Stable\scripts\check_functions.py", line 69, in <module>
+    print(f"  {fn_id:<28} {status:<10} {dtype:<15} {size:<12} {notes}")
+  File "C:\Users\khaisar jaha\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u274c' in position 31: character maps to <undefined>

@@ -1,5 +1,16 @@
-ipython==9.7.0
-numpy==2.3.5
+# Core Dependencies
 pandas==2.3.3
-streamlit==1.51.0
+numpy==2.3.5
+duckdb==1.2.1
+
+# Jupyter Interface (Current UI)
+ipython==9.7.0
+ipywidgets>=8.0.0
+
+# Data Processing
 tqdm==4.67.1
+
+# API Layer (Frontend Phase 1+)
+# fastapi>=0.115.0
+# uvicorn>=0.34.0
+# pydantic>=2.0.0

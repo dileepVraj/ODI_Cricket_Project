@@ -1,0 +1,30 @@
+{
+    "timestamp": "2026-02-15 16:44:14",
+    "summary": {
+        "pass": 5,
+        "fail": 0
+    },
+    "failures": [],
+    "details": [
+        {
+            "item": "Scenario_1 > V Kohli",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_2 > RG Sharma > vs_Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_3 > JJ Bumrah > at_IND_MUMBAI_WANKHEDE",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_4 > V Kohli > vs_Pakistan > at_ENG_LONDON_LORDS",
+            "status": "PASS"
+        },
+        {
+            "item": "Scenario_5 > MA Starc",
+            "status": "PASS"
+        }
+    ]
+}

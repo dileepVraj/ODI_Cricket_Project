@@ -1,0 +1,242 @@
+{
+    "timestamp": "2026-02-13 18:39:45",
+    "summary": {
+        "pass": 58,
+        "fail": 0
+    },
+    "failures": [],
+    "details": [
+        {
+            "item": "Australia > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "England > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "England > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "England > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "England > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "England > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "England > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "India > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "India > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "India > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "India > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "India > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "India > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies > Global",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies > Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies > Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies > Europe",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies > Oceania",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies > Americas",
+            "status": "PASS"
+        },
+        {
+            "item": "H2H > India_vs_Pakistan_Global",
+            "status": "PASS"
+        },
+        {
+            "item": "H2H > India_vs_Pakistan_Asia",
+            "status": "PASS"
+        },
+        {
+            "item": "H2H > Australia_vs_England_Global",
+            "status": "PASS"
+        },
+        {
+            "item": "H2H > South Africa_vs_India_Global",
+            "status": "PASS"
+        }
+    ]
+}

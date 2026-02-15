@@ -1,0 +1,298 @@
+{
+    "timestamp": "2026-02-13 18:39:06",
+    "summary": {
+        "pass": 72,
+        "fail": 0
+    },
+    "failures": [],
+    "details": [
+        {
+            "item": "Australia vs rest > Australia vs Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia vs rest > Australia vs England",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia vs rest > Australia vs India",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia vs rest > Australia vs New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia vs rest > Australia vs Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia vs rest > Australia vs South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia vs rest > Australia vs Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "Australia vs rest > Australia vs West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh vs rest > Bangladesh vs Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh vs rest > Bangladesh vs England",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh vs rest > Bangladesh vs India",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh vs rest > Bangladesh vs New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh vs rest > Bangladesh vs Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh vs rest > Bangladesh vs South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh vs rest > Bangladesh vs Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "Bangladesh vs rest > Bangladesh vs West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "England vs rest > England vs Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "England vs rest > England vs Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "England vs rest > England vs India",
+            "status": "PASS"
+        },
+        {
+            "item": "England vs rest > England vs New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "England vs rest > England vs Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "England vs rest > England vs South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "England vs rest > England vs Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "England vs rest > England vs West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "India vs rest > India vs Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "India vs rest > India vs Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "India vs rest > India vs England",
+            "status": "PASS"
+        },
+        {
+            "item": "India vs rest > India vs New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "India vs rest > India vs Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "India vs rest > India vs South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "India vs rest > India vs Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "India vs rest > India vs West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand vs rest > New Zealand vs Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand vs rest > New Zealand vs Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand vs rest > New Zealand vs England",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand vs rest > New Zealand vs India",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand vs rest > New Zealand vs Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand vs rest > New Zealand vs South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand vs rest > New Zealand vs Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "New Zealand vs rest > New Zealand vs West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan vs rest > Pakistan vs Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan vs rest > Pakistan vs Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan vs rest > Pakistan vs England",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan vs rest > Pakistan vs India",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan vs rest > Pakistan vs New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan vs rest > Pakistan vs South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan vs rest > Pakistan vs Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "Pakistan vs rest > Pakistan vs West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa vs rest > South Africa vs Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa vs rest > South Africa vs Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa vs rest > South Africa vs England",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa vs rest > South Africa vs India",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa vs rest > South Africa vs New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa vs rest > South Africa vs Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa vs rest > South Africa vs Sri Lanka",
+            "status": "PASS"
+        },
+        {
+            "item": "South Africa vs rest > South Africa vs West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka vs rest > Sri Lanka vs Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka vs rest > Sri Lanka vs Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka vs rest > Sri Lanka vs England",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka vs rest > Sri Lanka vs India",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka vs rest > Sri Lanka vs New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka vs rest > Sri Lanka vs Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka vs rest > Sri Lanka vs South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "Sri Lanka vs rest > Sri Lanka vs West Indies",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies vs rest > West Indies vs Australia",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies vs rest > West Indies vs Bangladesh",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies vs rest > West Indies vs England",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies vs rest > West Indies vs India",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies vs rest > West Indies vs New Zealand",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies vs rest > West Indies vs Pakistan",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies vs rest > West Indies vs South Africa",
+            "status": "PASS"
+        },
+        {
+            "item": "West Indies vs rest > West Indies vs Sri Lanka",
+            "status": "PASS"
+        }
+    ]
+}
