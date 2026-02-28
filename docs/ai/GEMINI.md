@@ -71,49 +71,8 @@ The `docs/ai/AI_MEMORY.md` file is your brain. If you don't update it, you have 
 
 ---
 
-## 🌐 6. Frontend Development Rules (CRITICAL)
 
-### 📍 Roadmap
-**All frontend work MUST follow the phased roadmap:**
-`docs/plans/FRONTEND_ROADMAP.md`
-
-### 📐 Design Specification
-**The manifest-driven architecture is defined in:**
-`docs/design/UI_SPEC.md` (V5)
-
-### 🛑 Frontend Agent Rules
-
-#### Rule F1: Phase Sequential
-- Phases 0-8 are **sequential dependencies**. NEVER skip phases.
-- Check the STATUS TRACKER in `FRONTEND_ROADMAP.md` before starting.
-- Complete the current phase fully before advancing.
-
-#### Rule F2: Manifest Is Law
-- The UI is 100% driven by `formats/{fmt}/manifest.py`.
-- NEVER hardcode sidebar items, screens, tabs, or navigation in React.
-- If a function isn't in the manifest, it doesn't exist in the UI.
-- If you add a new engine function, add it to the manifest FIRST.
-
-#### Rule F3: No Format-Specific Frontend Code
-- The frontend MUST be format-agnostic.
-- NEVER write `if (format === 'odi')` in React components.
-- All format-specific behavior comes from the manifest.
-- Exception: adding new `output_type` renderers (but these are generic).
-
-#### Rule F4: Don't Touch the Engines
-- Headless engines (`TeamEngine`, `PlayerEngine`, `PredictorEngine`) are STABLE.
-- Do NOT modify engine behavior to fit the UI.
-- The API layer is an ADAPTER — it wraps engines, doesn't change them.
-- Non-JSON-friendly outputs → fix in `api/serializers.py`, not the engine.
-
-#### Rule F5: Update Roadmap Status
-- After completing any frontend work, update the STATUS TRACKER
-  in `docs/plans/FRONTEND_ROADMAP.md` (mark tasks `[x]`).
-- Also update `docs/ai/AI_MEMORY.md` session history.
-
----
-
-## 🚀 7. Onboarding Protocol (New Agent Bootstrap)
+## 🚀 6. Onboarding Protocol (New Agent Bootstrap)
 
 **Every new AI agent session MUST start by reading these files IN ORDER:**
 

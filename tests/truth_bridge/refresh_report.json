@@ -1,0 +1,162 @@
+{
+  "refactor_date": "2026-02-23",
+  "architect_note": "Migration to Universal Core Calculators. Averages now utilize competitive_chase_threshold=200 and corrected smart_filter_service logic.",
+  "metadata_preseed_sanitize": {
+    "ground_truth_files_tagged": 15,
+    "ground_truth_files_total": 15,
+    "errors": []
+  },
+  "seed_refresh": {
+    "runners_total": 15,
+    "runners_ok": 14,
+    "runners_failed": 1,
+    "runner_results": [
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\analyze_venue_matchup\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.36s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\away_performance\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.38s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\check_fortress\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.35s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\check_host_country_stats\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.36s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\compare_squads\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "364124' ... '1244022' '1244022' '1244022']' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.\n  base_df.loc[:, 'match_id'] = base_df['match_id'].astype(str)\nC:\\Cricket_Project_Stable\\formats\\odi\\engines\\player_engine.py:427: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '['1364124' '1364124' '1364124' ... '1244022' '1244022' '1244022']' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.\n  base_df.loc[:, 'match_id'] = base_df['match_id'].astype(str)\nC:\\Cricket_Project_Stable\\formats\\odi\\engines\\player_engine.py:427: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '['1364124' '1364124' '1364124' ... '1244022' '1244022' '1244022']' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.\n  base_df.loc[:, 'match_id'] = base_df['match_id'].astype(str)\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\continent_performance\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.39s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\global_h2h\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.55s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\global_performance\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.53s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\home_dominance\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.38s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\phase_analysis\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.42s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\player_stats_validation\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.38s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\predictor_validation\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.37s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\recent_form\\test_runner.py",
+        "return_code": 1,
+        "status": "failed",
+        "stderr_tail": "e.analyze_team_form(team_a, opp_team=team_b, continent=cont_val)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Cricket_Project_Stable\\formats\\odi\\engines\\team_engine.py\", line 1301, in analyze_team_form\n    team_score_text = team_scores.astype('Int64').astype(str).replace('<NA>', '-')\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: data type 'Int64' not understood\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Cricket_Project_Stable\\formats\\odi\\tests\\truth_bridge\\recent_form\\test_runner.py\", line 107, in <module>\n    runner.run()\n  File \"C:\\Cricket_Project_Stable\\formats\\odi\\tests\\truth_bridge\\recent_form\\test_runner.py\", line 98, in run\n    print(f\"      â�Œ [ERROR] H2H Engine failed for {key}: {e}\")\n                                                    ^^^\nUnboundLocalError: cannot access local variable 'key' where it is not associated with a value\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\team_form_validation\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.34s\n"
+      },
+      {
+        "runner": "formats\\odi\\tests\\truth_bridge\\toss_bias\\test_runner.py",
+        "return_code": 0,
+        "status": "ok",
+        "stderr_tail": "Initializing CricketAnalyzer (v5.0) â€” Format: ODI\n   ðŸ¦† DuckDB Connected â€” Loading from database...\n   Match Data: 2513 matches loaded from DuckDB.\n   Raw Data: Per-query SQL mode active.\n   Player Stats: 18658 rows from DuckDB.\n   Squads Database: 55396 entries from DuckDB.\n   Auto-Fixing Ambiguous Venues...\n   Applying Smart Venue Matching (Exact -> Substring -> Fuzzy)...\n   Engine Ready! 2513 unique matches loaded.\n   âš¡ Initialization complete in 0.38s\n"
+      }
+    ]
+  },
+  "metadata_tagging": {
+    "ground_truth_files_tagged": 15,
+    "ground_truth_files_total": 15,
+    "errors": []
+  },
+  "validation": {
+    "source_csv": "formats\\odi\\data\\FINAL_ODI_MASTER.csv",
+    "loaded_modules": [
+      "core/calculators/performance.py",
+      "core/calculators/phase_engine.py",
+      "core/services/match_filter_service.py"
+    ],
+    "thresholds": {
+      "min_balls_for_completed_innings": 270,
+      "competitive_chase_threshold": 200,
+      "phases": {
+        "powerplay": [
+          0,
+          9
+        ],
+        "middle": [
+          10,
+          39
+        ],
+        "death": [
+          40,
+          49
+        ]
+      }
+    },
+    "ball_level_rows": 1333213,
+    "match_level_rows": 2513,
+    "phase_breakdown_rows": 4972,
+    "sample_team_for_metrics": "Sri Lanka",
+    "sample_team_metrics": {
+      "avg_1st": "248 [258]",
+      "high_1st": 377,
+      "low_1st": 50,
+      "avg_1st_win": "279 [121]",
+      "low_defended": 152,
+      "avg_2nd": "236 [142]",
+      "high_chased": 324,
+      "avg_succ": "210 [89]",
+      "avg_fail": "220 [88]"
+    },
+    "total_drift": {
+      "total_matches": 2513,
+      "included_matches": 2205,
+      "dropped_matches": 308,
+      "dropped_pct": 12.26
+    }
+  },
+  "cleanup": {
+    "deleted_files": [],
+    "failures": []
+  }
+}

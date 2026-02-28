@@ -84,7 +84,7 @@ Before trusting engine results after a code change:
 
 #### `core/player_engine.py` → Factory
 *   `get_player_engine("odi")` loads `formats.odi.engines.player_engine.PlayerEngine`.
-*   Direct `from core.player_engine import PlayerEngine` still works (defaults to ODI).
+*   Direct `PlayerEngine` import from `core` is intentionally removed; use `get_player_engine(format_key)` only.
 
 The ODI implementation (`formats/odi/engines/player_engine.py`):
     *   `analyze_player_profile()`: Master orchestration for the Player Card.

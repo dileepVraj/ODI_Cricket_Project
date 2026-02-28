@@ -1,4 +1,5 @@
-from typing import Dict, List, Optional, Protocol, Union, Any
+from abc import ABC, abstractmethod
+from typing import Any, Dict, List, Optional
 from dataclasses import dataclass
 import pandas as pd
 
@@ -78,7 +79,7 @@ class SquadComparisonData:
     venue_id: str
     years: int
 
-class IPlayerEngine(Protocol):
+class IPlayerEngine(ABC):
     """
     The Strict Contract for Player Analytics.
     RULES:
@@ -86,20 +87,91 @@ class IPlayerEngine(Protocol):
     2. NO HTML: Logic only.
     """
 
-    def get_player_profile(self, player_name: str, opposition: Optional[str] = None, venue_id: Optional[str] = None) -> PlayerProfile:
+    @abstractmethod
+    def get_active_squad(self, team_name: str) -> List[str]:
+        """Returns active squad members for a team."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_last_match_xi(self, team_name: str) -> List[str]:
+        """Returns the XI from the most recent match."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_squad_comparison_data(
+        self,
+        team_a_name: str,
+        team_a_players: List[str],
+        team_b_name: str,
+        team_b_players: List[str],
+        venue_id: str,
+        years: Optional[int] = None,
+    ) -> SquadComparisonData:
+        """Builds structured squad-comparison payload."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def compare_squads(
+        self,
+        team_a_name: str,
+        team_a_players: List[str],
+        team_b_name: str,
+        team_b_players: List[str],
+        venue_id: str,
+        years: Optional[int] = None,
+        recorder: Any = None,
+    ) -> SquadComparisonData:
+        """Compares two squads in a match context."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def analyze_squad_types(
+        self,
+        team_name: str,
+        players: List[str],
+        opposition_bowlers: List[str],
+        years: Optional[int] = None,
+        recorder: Any = None,
+        context_df: Optional[pd.DataFrame] = None,
+    ) -> List[Dict[str, Any]]:
+        """Analyzes batting archetypes against bowler styles."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_player_profile(
+        self,
+        player_name: str,
+        opposition: Optional[str] = None,
+        venue_id: Optional[str] = None,
+        years: int = 10,
+    ) -> Optional[PlayerProfile]:
         """
         Fetches the complete 360-degree profile of a player.
         """
-        ...
+        raise NotImplementedError
 
-    def get_matchups(self, batter: str, bowlers: List[str]) -> List[MatchupStats]:
+    @abstractmethod
+    def get_matchups(
+        self,
+        batter: str,
+        bowlers: List[str],
+        context_df: Optional[pd.DataFrame] = None,
+    ) -> List[Dict[str, Any]]:
         """
         Returns Head-to-Head stats for a batter against a specific list of bowlers.
         """
-        ...
+        raise NotImplementedError
 
-    def get_squad_metrics(self, players: List[str], years: int = 5) -> Dict[str, Any]:
+    @abstractmethod
+    def analyze_player_profile(
+        self,
+        player_name: str,
+        opposition: Optional[str] = None,
+        venue_id: Optional[str] = None,
+        active_bowlers: Optional[List[str]] = None,
+        years: int = 10,
+    ) -> Optional[PlayerProfile]:
         """
-        Aggregated stats for a list of players (Total Runs, Wickets, Caps).
+        Context-aware player profile retrieval.
         """
-        ...
+        raise NotImplementedError

@@ -13,6 +13,9 @@ logger = logging.getLogger("CricketAnalyzer")
 class BaseEngine:
     """Base class providing shared utilities for all engine types."""
 
+    def __init__(self, format_rules=None):
+        self.rules = format_rules or {}
+
     @staticmethod
     def _safe_int(value, default=0):
         """Safely convert a value to int, returning default on failure."""

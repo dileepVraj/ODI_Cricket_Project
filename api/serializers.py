@@ -7,63 +7,74 @@ into JSON-serializable Python dicts/lists.
 This is the ADAPTER layer — it fixes non-JSON-friendly outputs WITHOUT
 modifying the engines themselves (Rule F4: Don't Touch the Engines).
 """
+import json
 import numpy as np
 import pandas as pd
 from dataclasses import asdict, is_dataclass
-from typing import Any
+from typing import Any, Dict, List, Union
+from pydantic import BaseModel
 
+DEFAULT_MAX_RECORD_ROWS = 500
+
+
+def serialize_dataframe_records(
+    data: pd.DataFrame,
+    *,
+    max_rows: int = DEFAULT_MAX_RECORD_ROWS,
+    as_json_string: bool = False,
+) -> Union[List[Dict[str, Any]], str]:
+    """
+    Serialize DataFrame records using a bounded, vectorized path.
+    """
+    if max_rows <= 0:
+        raise ValueError("max_rows must be a positive integer.")
+
+    if data is None or data.empty:
+        return "[]" if as_json_string else []
+
+    bounded = data.head(int(max_rows))
+    payload = bounded.to_json(orient="records", date_format="iso")
+    if as_json_string:
+        return payload
+    return json.loads(payload)
 
 def serialize_engine_output(data: Any) -> Any:
     """
     Recursively serializes engine output to JSON-safe Python types.
-
-    Handles:
-        - pandas DataFrame → list of dicts
-        - pandas Series → dict
-        - numpy int/float → Python int/float
-        - numpy ndarray → list
-        - dataclasses → dict
-        - nested dicts/lists → recursively serialized
-        - NaN/None → None
-
-    Args:
-        data: Any engine output (dict, DataFrame, list, scalar, etc.)
-
-    Returns:
-        JSON-serializable Python object.
+    Handles DataFrames, Series, NumPy types, Dataclasses, and Pydantic models.
     """
-    # None / NaN
+    # None / NaN / Inf check
     if data is None:
         return None
+    
+    # Handle Numeric edge cases
+    if isinstance(data, (float, np.floating)):
+        if np.isnan(data) or np.isinf(data):
+            return None
+        return float(data)
+    
+    if isinstance(data, (int, np.integer)):
+        return int(data)
 
     # pandas DataFrame → list of dicts
     if isinstance(data, pd.DataFrame):
-        # Convert to records, then recursively clean each row
-        records = data.to_dict(orient="records")
-        return [serialize_engine_output(row) for row in records]
+        return serialize_dataframe_records(data, max_rows=DEFAULT_MAX_RECORD_ROWS, as_json_string=False)
 
     # pandas Series → dict
     if isinstance(data, pd.Series):
         return {str(k): serialize_engine_output(v) for k, v in data.to_dict().items()}
 
-    # numpy scalar types → Python native
-    if isinstance(data, (np.integer,)):
-        return int(data)
-    if isinstance(data, (np.floating,)):
-        val = float(data)
-        if np.isnan(val) or np.isinf(val):
-            return None
-        return val
+    # numpy ndarray → list
+    if isinstance(data, np.ndarray):
+        return serialize_engine_output(data.tolist())
+    
+    # numpy bool → bool
     if isinstance(data, np.bool_):
         return bool(data)
-    if isinstance(data, np.ndarray):
-        return [serialize_engine_output(x) for x in data.tolist()]
 
-    # Python float NaN check
-    if isinstance(data, float):
-        if np.isnan(data) or np.isinf(data):
-            return None
-        return data
+    # Pydantic models → dict
+    if isinstance(data, BaseModel):
+        return serialize_engine_output(data.model_dump())
 
     # dataclasses → dict (recursive)
     if is_dataclass(data) and not isinstance(data, type):
@@ -75,14 +86,14 @@ def serialize_engine_output(data: Any) -> Any:
 
     # list/tuple → recursively serialize elements
     if isinstance(data, (list, tuple)):
-        return [serialize_engine_output(item) for item in data]
+        return list(map(serialize_engine_output, data))
 
     # Timestamps
     if isinstance(data, pd.Timestamp):
         return data.isoformat()
 
-    # Native types (str, int, bool) — pass through
-    if isinstance(data, (str, int, bool)):
+    # Native types (str, bool) — pass through
+    if isinstance(data, (str, bool)):
         return data
 
     # Fallback: convert to string

@@ -1,9 +1,5 @@
-/**
- * Sidebar.tsx — Dynamic Sidebar Navigation (Layer 3)
- * 
- * Built 100% from manifest.categories.
- * Groups categories by `group` field: intelligence, players, operations, system.
- * Rule F3: Zero format-specific code.
+﻿/**
+ * Sidebar.tsx - Dynamic Sidebar Navigation (Layer 3)
  */
 "use client";
 
@@ -11,6 +7,7 @@ import { useAppContext } from "@/lib/context";
 import {
     ChevronLeft,
     ChevronRight,
+    ChevronsRight,
     Home,
     Settings,
     LayoutGrid,
@@ -20,7 +17,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-// Map manifest group names → display labels and icons
 const GROUP_META: Record<string, { label: string; icon: React.ReactNode }> = {
     intelligence: { label: "Intelligence", icon: <Crosshair size={12} /> },
     players: { label: "Players", icon: <Users size={12} /> },
@@ -28,7 +24,6 @@ const GROUP_META: Record<string, { label: string; icon: React.ReactNode }> = {
     system: { label: "System", icon: <Settings size={12} /> },
 };
 
-// Map manifest icon strings → lucide components
 const ICON_MAP: Record<string, React.ReactNode> = {
     stadium: "🏟️",
     handshake: "🤝",
@@ -38,7 +33,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
     swords: "⚔️",
     target: "🎯",
     rocket: "🚀",
-    default: "📋",
+    default: "📂",
 };
 
 interface SidebarProps {
@@ -49,32 +44,21 @@ interface SidebarProps {
 export default function Sidebar({ activeCategory, onCategorySelect }: SidebarProps) {
     const { manifest, isLoadingManifest } = useAppContext();
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const toggleSidebar = () => setIsCollapsed((prev) => !prev);
 
-    // ── Loading state ──────────────────────────────────────────────────
     if (isLoadingManifest || !manifest) {
         return (
             <aside
                 id="sidebar"
-                style={{
-                    width: "var(--sidebar-width)",
-                    background: "var(--bg-surface)",
-                    borderRight: "1px solid var(--border-subtle)",
-                    padding: "12px 8px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                    flexShrink: 0,
-                    overflowY: "auto",
-                }}
+                className="[width:var(--sidebar-width)] [background:var(--bg-surface)] [border-right:1px_solid_var(--border-subtle)] [padding:12px_8px] [display:flex] [flex-direction:column] [gap:8px] [flex-shrink:0] [overflow-y:auto]"
             >
                 {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                    <div key={i} className="skeleton" style={{ height: 38, marginBottom: 4 }} />
+                    <div key={i} className="skeleton [height:38px] [margin-bottom:4px]" />
                 ))}
             </aside>
         );
     }
 
-    // ── Group categories by their `group` field ────────────────────────
     const groups: Record<string, typeof manifest.categories> = {};
     for (const cat of manifest.categories) {
         const g = cat.group || "other";
@@ -89,34 +73,30 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
     return (
         <aside
             id="sidebar"
-            className="animate-slide-in"
-            style={{
-                width: sidebarWidth,
-                minWidth: sidebarWidth,
-                background: "var(--bg-surface)",
-                borderRight: "1px solid var(--border-subtle)",
-                display: "flex",
-                flexDirection: "column",
-                flexShrink: 0,
-                transition: "width var(--transition-normal), min-width var(--transition-normal)",
-                overflowY: "auto",
-                overflowX: "hidden",
-            }}
+            className={`animate-slide-in [width:${sidebarWidth}] [min-width:${sidebarWidth}] [background:var(--bg-surface)] [border-right:1px_solid_var(--border-subtle)] [backdrop-filter:blur(12px)] [display:flex] [flex-direction:column] [flex-shrink:0] [transition:width_var(--transition-normal),_min-width_var(--transition-normal)] [overflow-y:auto] [overflow-x:hidden] [box-shadow:1px_0_12px_rgba(0,_0,_0,_0.2)] [z-index:40]`}
         >
-            {/* ── Top section ────────────────────────────────────────────── */}
-            <div style={{ padding: "12px 8px", flex: 1 }}>
-                {/* Dashboard link */}
+            <div className="[padding:12px_8px] [flex:1]">
                 <button
                     id="sidebar-dashboard"
-                    className={`sidebar-item ${activeCategory === "dashboard" ? "active" : ""}`}
+                    className={`sidebar-item ${activeCategory === "dashboard" ? "active" : ""} [width:100%] [border:none] [font-family:inherit]`}
                     onClick={() => onCategorySelect("dashboard")}
-                    style={{ width: "100%", border: "none", fontFamily: "inherit" }}
                 >
                     <Home size={18} />
                     {!isCollapsed && <span>Dashboard</span>}
                 </button>
 
-                {/* ── Category groups ──────────────────────────────────────── */}
+                {isCollapsed && (
+                    <button
+                        id="sidebar-expand-toggle-top"
+                        className="sidebar-item [width:100%] [border:none] [font-family:inherit] [justify-content:center] [margin-top:8px] [margin-bottom:6px] [color:var(--accent-primary)] [background:var(--accent-glow)] [border-color:var(--border-accent)]"
+                        onClick={toggleSidebar}
+                        title="Expand sidebar"
+                        aria-label="Expand sidebar"
+                    >
+                        <ChevronsRight size={16} />
+                    </button>
+                )}
+
                 {Object.entries(groups).map(([groupKey, cats]) => {
                     const meta = GROUP_META[groupKey] || {
                         label: groupKey.charAt(0).toUpperCase() + groupKey.slice(1),
@@ -125,11 +105,7 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
 
                     return (
                         <div key={groupKey}>
-                            {!isCollapsed && (
-                                <div className="sidebar-group-label">
-                                    {meta.label}
-                                </div>
-                            )}
+                            {!isCollapsed && <div className="sidebar-group-label">{meta.label}</div>}
 
                             {cats.map((cat) => {
                                 const fnCount = cat.functions.length;
@@ -139,32 +115,16 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
                                     <button
                                         key={cat.key}
                                         id={`sidebar-${cat.key}`}
-                                        className={`sidebar-item ${activeCategory === cat.key ? "active" : ""
-                                            }`}
+                                        className={`sidebar-item ${activeCategory === cat.key ? "active" : ""} [width:100%] [border:none] [font-family:inherit]`}
                                         onClick={() => onCategorySelect(cat.key)}
                                         title={isCollapsed ? cat.label : cat.description}
-                                        style={{
-                                            width: "100%",
-                                            border: "none",
-                                            fontFamily: "inherit",
-                                        }}
                                     >
-                                        <span
-                                            style={{ fontSize: "1rem", flexShrink: 0, width: 24, textAlign: "center" }}
-                                        >
+                                        <span className="[font-size:1rem] [flex-shrink:0] [width:24px] [text-align:center]">
                                             {iconNode}
                                         </span>
                                         {!isCollapsed && (
                                             <>
-                                                <span
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: "left",
-                                                        overflow: "hidden",
-                                                        textOverflow: "ellipsis",
-                                                        whiteSpace: "nowrap",
-                                                    }}
-                                                >
+                                                <span className="[flex:1] [text-align:left] [overflow:hidden] [text-overflow:ellipsis] [white-space:nowrap]">
                                                     {cat.label}
                                                 </span>
                                                 <span className="fn-count">{fnCount}</span>
@@ -178,26 +138,21 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
                 })}
             </div>
 
-            {/* ── Collapse Toggle ────────────────────────────────────────── */}
-            <div
-                style={{
-                    padding: "8px",
-                    borderTop: "1px solid var(--border-subtle)",
-                }}
-            >
+            <div className="[padding:8px] [border-top:1px_solid_var(--border-subtle)] [position:sticky] [bottom:0px] [background:var(--bg-surface)] [z-index:1]">
                 <button
                     id="sidebar-collapse-toggle"
-                    className="sidebar-item"
-                    onClick={() => setIsCollapsed(!isCollapsed)}
-                    style={{
-                        width: "100%",
-                        border: "none",
-                        fontFamily: "inherit",
-                        justifyContent: isCollapsed ? "center" : "flex-start",
-                    }}
+                    className={`sidebar-item [width:100%] [border:none] [font-family:inherit] ${isCollapsed ? "[justify-content:center]" : "[justify-content:flex-start]"}`}
+                    onClick={toggleSidebar}
+                    title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                 >
                     {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
                     {!isCollapsed && <span>Collapse</span>}
+                    {isCollapsed && (
+                        <span className="[position:absolute] [width:1px] [height:1px] [padding:0px] [margin:-1px] [overflow:hidden] [clip:rect(0,_0,_0,_0)] [border:0px]">
+                            Expand
+                        </span>
+                    )}
                 </button>
             </div>
         </aside>

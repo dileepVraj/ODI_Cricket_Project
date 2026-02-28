@@ -1,21 +1,8 @@
-/**
- * ContextBar.tsx — Global Context Inputs (Layer 2)
- * 
- * Renders context fields FROM the manifest dynamically:
- *   venue  → Combobox (searchable dropdown)
- *   team_a → Dropdown
- *   team_b → Dropdown
- *   years  → Slider
- *   region → Dropdown
- * 
- * Rule F3: No format-specific code.
- * The manifest declares what fields exist — we just render them.
- */
 "use client";
 
 import { useAppContext } from "@/lib/context";
 import { SlidersHorizontal } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
 export default function ContextBar() {
@@ -33,18 +20,10 @@ export default function ContextBar() {
         return (
             <div
                 id="context-bar"
-                style={{
-                    height: "var(--context-bar-height)",
-                    background: "var(--bg-surface)",
-                    borderBottom: "1px solid var(--border-subtle)",
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "0 20px",
-                    gap: "12px",
-                }}
+                className="[height:var(--context-bar-height)] [background:var(--bg-surface)] [border-bottom:1px_solid_var(--border-subtle)] [display:flex] [align-items:center] [padding:0_20px] [gap:12px]"
             >
                 {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="skeleton" style={{ width: 140, height: 36 }} />
+                    <div key={i} className="skeleton [width:140px] [height:36px]" />
                 ))}
             </div>
         );
@@ -55,22 +34,9 @@ export default function ContextBar() {
     return (
         <div
             id="context-bar"
-            className="animate-fade-in"
-            style={{
-                height: "var(--context-bar-height)",
-                background: "var(--bg-surface)",
-                borderBottom: "1px solid var(--border-subtle)",
-                display: "flex",
-                alignItems: "center",
-                padding: "0 20px",
-                gap: "12px",
-                overflowX: "auto",
-            }}
+            className="animate-fade-in [height:var(--context-bar-height)] [background:var(--bg-surface)] [border-bottom:1px_solid_var(--border-subtle)] [display:flex] [align-items:center] [padding:0_20px] [gap:12px] [overflow-x:auto]"
         >
-            <SlidersHorizontal
-                size={16}
-                style={{ color: "var(--text-disabled)", flexShrink: 0 }}
-            />
+            <SlidersHorizontal size={16} className="[color:var(--text-disabled)] [flex-shrink:0]" />
 
             {Object.entries(fields).map(([key, field]) => {
                 if (field.type === "dropdown") {
@@ -81,11 +47,7 @@ export default function ContextBar() {
                             label={field.label}
                             value={String(contextValues[key] || "")}
                             onChange={(val) => setContextValue(key, val)}
-                            options={
-                                key === "team_a" || key === "team_b"
-                                    ? ["All", ...teams]
-                                    : field.options || []
-                            }
+                            options={key === "team_a" || key === "team_b" ? ["All", ...teams] : field.options || []}
                             isLoading={isLoadingContext}
                         />
                     );
@@ -125,10 +87,6 @@ export default function ContextBar() {
     );
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// SUB-COMPONENTS
-// ═══════════════════════════════════════════════════════════════════════
-
 function DropdownField({
     fieldKey,
     label,
@@ -145,26 +103,19 @@ function DropdownField({
     isLoading: boolean;
 }) {
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 140 }}>
+        <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:140px]">
             <label
                 htmlFor={`context-${fieldKey}`}
-                style={{
-                    fontSize: "0.65rem",
-                    fontWeight: 600,
-                    color: "var(--text-disabled)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                }}
+                className="[font-size:0.65rem] [font-weight:600] [color:var(--text-disabled)] [text-transform:uppercase] [letter-spacing:0.05em]"
             >
                 {label}
             </label>
             <select
                 id={`context-${fieldKey}`}
-                className="context-input"
+                className="context-input [cursor:pointer] [appearance:auto]"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 disabled={isLoading}
-                style={{ cursor: "pointer", appearance: "auto" }}
             >
                 <option value="">Select...</option>
                 {options.map((opt) => (
@@ -197,14 +148,8 @@ function ComboboxField({
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+    const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
 
-    // Debug: log options count
-    useEffect(() => {
-        console.log(`[ComboboxField:${fieldKey}] options loaded:`, options.length);
-    }, [options, fieldKey]);
-
-    // Close on outside click — check both container and portal dropdown
     useEffect(() => {
         function handleClick(e: MouseEvent) {
             const target = e.target as Node;
@@ -218,118 +163,57 @@ function ComboboxField({
         return () => document.removeEventListener("mousedown", handleClick);
     }, []);
 
-    // Recalculate dropdown position whenever it opens or search changes
     useEffect(() => {
         if (isOpen && inputRef.current) {
             const rect = inputRef.current.getBoundingClientRect();
-            setDropdownStyle({
-                position: "fixed" as const,
+            setDropdownPos({
                 top: rect.bottom + 4,
                 left: rect.left,
                 width: rect.width,
-                maxHeight: 300,
-                overflowY: "auto" as const,
-                background: "var(--bg-elevated)",
-                border: "1px solid var(--border-strong)",
-                borderRadius: "var(--radius-md)",
-                zIndex: 99999,
-                boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
             });
         }
     }, [isOpen, search]);
 
     const filtered = options.filter(
-        (v) =>
-            v.label.toLowerCase().includes(search.toLowerCase()) ||
-            v.id.toLowerCase().includes(search.toLowerCase())
+        (v) => v.label.toLowerCase().includes(search.toLowerCase()) || v.id.toLowerCase().includes(search.toLowerCase())
     );
 
     const displayValue = options.find((v) => v.id === value)?.label || "";
 
-    // The portal dropdown — rendered directly in document.body
     const dropdownPortal =
         isOpen && filtered.length > 0
             ? ReactDOM.createPortal(
-                <div ref={dropdownRef} style={dropdownStyle}>
-                    <div
-                        style={{
-                            padding: "6px 12px",
-                            fontSize: "0.7rem",
-                            color: "var(--text-disabled)",
-                            borderBottom: "1px solid var(--border-subtle)",
-                            fontWeight: 500,
-                            background: "var(--bg-elevated)",
-                            borderRadius: "var(--radius-md) var(--radius-md) 0 0",
-                        }}
-                    >
-                        {filtered.length} venue{filtered.length !== 1 ? "s" : ""} found
-                    </div>
-                    {filtered.slice(0, 50).map((v) => (
-                        <button
-                            key={v.id}
-                            style={{
-                                display: "block",
-                                width: "100%",
-                                padding: "8px 12px",
-                                textAlign: "left",
-                                background:
-                                    v.id === value
-                                        ? "var(--accent-glow)"
-                                        : "transparent",
-                                color:
-                                    v.id === value
-                                        ? "var(--accent-primary)"
-                                        : "var(--text-secondary)",
-                                border: "none",
-                                cursor: "pointer",
-                                fontSize: "0.825rem",
-                                fontFamily: "inherit",
-                                transition: "background 150ms",
-                            }}
-                            onMouseEnter={(e) => {
-                                (e.target as HTMLElement).style.background =
-                                    "var(--bg-hover)";
-                            }}
-                            onMouseLeave={(e) => {
-                                (e.target as HTMLElement).style.background =
-                                    v.id === value
-                                        ? "var(--accent-glow)"
-                                        : "transparent";
-                            }}
-                            onClick={() => {
-                                onChange(v.id);
-                                setIsOpen(false);
-                                setSearch("");
-                            }}
-                        >
-                            {v.label}
-                        </button>
-                    ))}
-                </div>,
-                document.body
-            )
+                  <div
+                      ref={dropdownRef}
+                      className="[position:fixed] [max-height:300px] [overflow-y:auto] [background:var(--bg-elevated)] [border:1px_solid_var(--border-strong)] [border-radius:var(--radius-md)] [z-index:99999] [box-shadow:0_8px_32px_rgba(0,_0,_0,_0.6)]"
+                      style={{ top: dropdownPos.top, left: dropdownPos.left, width: dropdownPos.width }}
+                  >
+                      <div className="[padding:6px_12px] [font-size:0.7rem] [color:var(--text-disabled)] [border-bottom:1px_solid_var(--border-subtle)] [font-weight:500] [background:var(--bg-elevated)] [border-radius:var(--radius-md)_var(--radius-md)_0_0]">
+                          {filtered.length} venue{filtered.length !== 1 ? "s" : ""} found
+                      </div>
+                      {filtered.slice(0, 50).map((v) => (
+                          <button
+                              key={v.id}
+                              className={`[display:block] [width:100%] [padding:8px_12px] [text-align:left] [border:none] [cursor:pointer] [font-size:0.825rem] [font-family:inherit] [transition:background_150ms] hover:[background:var(--bg-hover)] ${v.id === value ? "[background:var(--accent-glow)] [color:var(--accent-primary)]" : "[background:transparent] [color:var(--text-secondary)]"}`}
+                              onClick={() => {
+                                  onChange(v.id);
+                                  setIsOpen(false);
+                                  setSearch("");
+                              }}
+                          >
+                              {v.label}
+                          </button>
+                      ))}
+                  </div>,
+                  document.body
+              )
             : null;
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "2px",
-                minWidth: 170,
-                position: "relative",
-            }}
-        >
+        <div ref={containerRef} className="[display:flex] [flex-direction:column] [gap:2px] [min-width:170px] [position:relative]">
             <label
                 htmlFor={`context-${fieldKey}`}
-                style={{
-                    fontSize: "0.65rem",
-                    fontWeight: 600,
-                    color: "var(--text-disabled)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                }}
+                className="[font-size:0.65rem] [font-weight:600] [color:var(--text-disabled)] [text-transform:uppercase] [letter-spacing:0.05em]"
             >
                 {label}
             </label>
@@ -372,26 +256,16 @@ function SliderField({
     max: number;
 }) {
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 130 }}>
+        <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:130px]">
             <label
                 htmlFor={`context-${fieldKey}`}
-                style={{
-                    fontSize: "0.65rem",
-                    fontWeight: 600,
-                    color: "var(--text-disabled)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                }}
+                className="[font-size:0.65rem] [font-weight:600] [color:var(--text-disabled)] [text-transform:uppercase] [letter-spacing:0.05em]"
             >
                 {label}:{" "}
-                <span style={{ color: "var(--accent-primary)", fontWeight: 700 }}>
-                    {value}
-                </span>
+                <span className="[color:var(--accent-primary)] [font-weight:700]">{value}</span>
             </label>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ fontSize: "0.7rem", color: "var(--text-disabled)" }}>
-                    {min}
-                </span>
+            <div className="[display:flex] [align-items:center] [gap:8px]">
+                <span className="[font-size:0.7rem] [color:var(--text-disabled)]">{min}</span>
                 <input
                     id={`context-${fieldKey}`}
                     type="range"
@@ -399,15 +273,9 @@ function SliderField({
                     max={max}
                     value={value}
                     onChange={(e) => onChange(Number(e.target.value))}
-                    style={{
-                        flex: 1,
-                        accentColor: "var(--accent-primary)",
-                        cursor: "pointer",
-                    }}
+                    className="[flex:1] [accent-color:var(--accent-primary)] [cursor:pointer]"
                 />
-                <span style={{ fontSize: "0.7rem", color: "var(--text-disabled)" }}>
-                    {max}
-                </span>
+                <span className="[font-size:0.7rem] [color:var(--text-disabled)]">{max}</span>
             </div>
         </div>
     );

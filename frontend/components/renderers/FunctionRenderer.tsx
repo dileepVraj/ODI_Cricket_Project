@@ -9,6 +9,7 @@
  *   - Loading/spinner state
  *   - Missing context alerts
  *   - API error display
+ *   - Enriched data shapes (stats + match_audit from API enrichment)
  *   - Fallback for unknown output types (raw JSON)
  * 
  * Usage:
@@ -25,6 +26,10 @@ import PredictionCard from "./PredictionCard";
 import PlayerProfileCard from "./PlayerProfileCard";
 import MatchupTable from "./MatchupTable";
 import DownloadPanel from "./DownloadPanel";
+import PhaseAnalysisCard from "./PhaseAnalysisCard";
+import VenueMatchupReport from "./VenueMatchupReport";
+import MatchAuditSection from "./MatchAuditSection";
+import EmptyState from "@/components/common/EmptyState";
 import { AlertCircle } from "lucide-react";
 
 interface FunctionRendererProps {
@@ -32,85 +37,175 @@ interface FunctionRendererProps {
     data: unknown;
 }
 
+type VenueMatchupData = Parameters<typeof VenueMatchupReport>[0]["data"];
+
+/**
+ * Detects if the data has been enriched by the API's _enrich_with_match_audit.
+ * Enriched comparison_table data looks like: { stats: [...], match_audit: [...] }
+ * instead of the original raw array.
+ */
+function extractEnrichedData(data: unknown): {
+    mainData: unknown;
+    matchAudit: Record<string, unknown>[] | null;
+} {
+    if (
+        typeof data === "object" &&
+        data !== null &&
+        !Array.isArray(data) &&
+        "stats" in (data as Record<string, unknown>) &&
+        Array.isArray((data as Record<string, unknown>)["stats"])
+    ) {
+        const obj = data as Record<string, unknown>;
+        return {
+            mainData: obj["stats"],
+            matchAudit: Array.isArray(obj["match_audit"])
+                ? (obj["match_audit"] as Record<string, unknown>[])
+                : null,
+        };
+    }
+
+    // Dict with match_audit (e.g., venue_bias after enrichment)
+    if (
+        typeof data === "object" &&
+        data !== null &&
+        !Array.isArray(data) &&
+        "match_audit" in (data as Record<string, unknown>)
+    ) {
+        const obj = data as Record<string, unknown>;
+        const audit = Array.isArray(obj["match_audit"])
+            ? (obj["match_audit"] as Record<string, unknown>[])
+            : null;
+        return { mainData: data, matchAudit: audit };
+    }
+
+    return { mainData: data, matchAudit: null };
+}
+
 export default function FunctionRenderer({ outputType, data }: FunctionRendererProps) {
     // Null / undefined data
     if (data === null || data === undefined) {
         return (
-            <div style={{
-                padding: "24px", textAlign: "center",
-                color: "var(--text-muted)", fontSize: "0.9rem",
-            }}>
-                No data returned from the engine.
-            </div>
+            <EmptyState
+                title="No Analysis Data"
+                message="The engine returned no data for this query. This might be due to insufficient matches or missing context."
+                actionLabel="Try adjusting filters"
+            />
         );
     }
+
+    // Extract enriched data (stats + optional match_audit)
+    const { mainData, matchAudit } = extractEnrichedData(data);
 
     // Route to the correct renderer based on output_type
     switch (outputType) {
         case "report":
             // Report expects a dict
-            if (typeof data === "object" && !Array.isArray(data)) {
-                return <ReportCard data={data as Record<string, unknown>} />;
+            if (typeof mainData === "object" && !Array.isArray(mainData)) {
+                return (
+                    <>
+                        <ReportCard data={mainData as Record<string, unknown>} />
+                        {matchAudit && <MatchAuditSection records={matchAudit} />}
+                    </>
+                );
             }
             // If API returned an array for report type, render as generic table
-            if (Array.isArray(data)) {
-                return <DataTable data={data as Record<string, unknown>[]} />;
+            if (Array.isArray(mainData)) {
+                return (
+                    <>
+                        <DataTable data={mainData as Record<string, unknown>[]} />
+                        {matchAudit && <MatchAuditSection records={matchAudit} />}
+                    </>
+                );
             }
             break;
 
         case "comparison_table":
             // Comparison table expects a list of {Metric, Value} dicts
-            if (Array.isArray(data)) {
-                return <ComparisonTable data={data as Record<string, unknown>[]} />;
+            if (Array.isArray(mainData)) {
+                return (
+                    <>
+                        <ComparisonTable data={mainData as Record<string, unknown>[]} />
+                        {matchAudit && <MatchAuditSection records={matchAudit} />}
+                    </>
+                );
             }
             break;
 
         case "matrix_table":
             // Matrix table expects a list of per-opponent dicts
-            if (Array.isArray(data)) {
-                return <MatrixTable data={data as Record<string, unknown>[]} />;
+            if (Array.isArray(mainData)) {
+                return (
+                    <>
+                        <MatrixTable data={mainData as Record<string, unknown>[]} />
+                        {matchAudit && <MatchAuditSection records={matchAudit} />}
+                    </>
+                );
             }
             break;
 
         case "form_table":
             // Form table expects a list of match records
-            if (Array.isArray(data)) {
-                return <FormTable data={data as Record<string, unknown>[]} />;
+            if (Array.isArray(mainData)) {
+                return <FormTable data={mainData as Record<string, unknown>[]} />;
             }
             break;
 
         case "table":
             // Generic table expects an array of dicts
-            if (Array.isArray(data)) {
-                return <DataTable data={data as Record<string, unknown>[]} />;
+            if (Array.isArray(mainData)) {
+                return (
+                    <>
+                        <DataTable data={mainData as Record<string, unknown>[]} />
+                        {matchAudit && <MatchAuditSection records={matchAudit} />}
+                    </>
+                );
+            }
+            break;
+
+        case "phase_analysis":
+            // Phase analysis expects a nested dict from venue_phases engine
+            if (typeof mainData === "object" && !Array.isArray(mainData)) {
+                return <PhaseAnalysisCard data={mainData as Record<string, unknown>} />;
+            }
+            break;
+
+        case "venue_matchup_report":
+            // Structured Venue Matchup report (V6.0)
+            if (typeof mainData === "object" && !Array.isArray(mainData)) {
+                return (
+                    <>
+                        <VenueMatchupReport data={mainData as VenueMatchupData} />
+                        {matchAudit && <MatchAuditSection records={matchAudit} />}
+                    </>
+                );
             }
             break;
 
         case "prediction_card":
             // Prediction card expects a dict
-            if (typeof data === "object" && !Array.isArray(data)) {
-                return <PredictionCard data={data as Record<string, unknown>} />;
+            if (typeof mainData === "object" && !Array.isArray(mainData)) {
+                return <PredictionCard data={mainData as Record<string, unknown>} />;
             }
             break;
 
         case "profile_card":
             // Profile card expects a dict
-            if (typeof data === "object" && !Array.isArray(data)) {
-                return <PlayerProfileCard data={data as Record<string, unknown>} />;
+            if (typeof mainData === "object" && !Array.isArray(mainData)) {
+                return <PlayerProfileCard data={mainData as Record<string, unknown>} />;
             }
             break;
 
         case "matchup_table":
             // Matchup table expects a list of matchup dicts
-            if (Array.isArray(data)) {
-                return <MatchupTable data={data as Record<string, unknown>[]} />;
+            if (Array.isArray(mainData)) {
+                return <MatchupTable data={mainData as Record<string, unknown>[]} />;
             }
             break;
 
         case "download_json":
             // Download panel expects a dict
-            if (typeof data === "object" && !Array.isArray(data)) {
-                return <DownloadPanel data={data as Record<string, unknown>} />;
+            if (typeof mainData === "object" && !Array.isArray(mainData)) {
+                return <DownloadPanel data={mainData as Record<string, unknown>} />;
             }
             break;
     }
@@ -118,20 +213,22 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
     // ── Fallback: Smart Auto-Detection ──────────────────────────────────
     // If output_type doesn't match or data shape is unexpected,
     // try to render intelligently.
-    if (Array.isArray(data) && data.length > 0 && typeof data[0] === "object") {
+    if (Array.isArray(mainData) && mainData.length > 0 && typeof mainData[0] === "object") {
         return (
             <div>
                 <FallbackBanner outputType={outputType} />
-                <DataTable data={data as Record<string, unknown>[]} />
+                <DataTable data={mainData as Record<string, unknown>[]} />
+                {matchAudit && <MatchAuditSection records={matchAudit} />}
             </div>
         );
     }
 
-    if (typeof data === "object" && !Array.isArray(data)) {
+    if (typeof mainData === "object" && !Array.isArray(mainData)) {
         return (
             <div>
                 <FallbackBanner outputType={outputType} />
-                <ReportCard data={data as Record<string, unknown>} />
+                <ReportCard data={mainData as Record<string, unknown>} />
+                {matchAudit && <MatchAuditSection records={matchAudit} />}
             </div>
         );
     }
@@ -140,12 +237,7 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
     return (
         <div>
             <FallbackBanner outputType={outputType} />
-            <pre style={{
-                background: "var(--bg-elevated)", padding: "16px",
-                borderRadius: "var(--radius-md)", fontSize: "0.8rem",
-                color: "var(--text-secondary)", overflow: "auto",
-                maxHeight: 400, border: "1px solid var(--border-subtle)",
-            }}>
+            <pre className="[background:var(--bg-elevated)] [padding:16px] [border-radius:var(--radius-md)] [font-size:0.8rem] [color:var(--text-secondary)] [overflow:auto] [max-height:400px] [border:1px_solid_var(--border-subtle)]">
                 {JSON.stringify(data, null, 2)}
             </pre>
         </div>
@@ -156,14 +248,7 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
 
 function FallbackBanner({ outputType }: { outputType: string }) {
     return (
-        <div style={{
-            display: "flex", alignItems: "center", gap: "8px",
-            padding: "8px 14px", marginBottom: "12px",
-            background: "rgba(245, 158, 11, 0.08)",
-            border: "1px solid rgba(245, 158, 11, 0.2)",
-            borderRadius: "var(--radius-md)",
-            fontSize: "0.78rem", color: "var(--tier-caution)",
-        }}>
+        <div className="[display:flex] [align-items:center] [gap:8px] [padding:8px_14px] [margin-bottom:12px] [background:rgba(245,_158,_11,_0.08)] [border:1px_solid_rgba(245,_158,_11,_0.2)] [border-radius:var(--radius-md)] [font-size:0.78rem] [color:var(--tier-caution)]">
             <AlertCircle size={14} />
             <span>
                 Rendering as fallback for output type <strong>&quot;{outputType}&quot;</strong>.

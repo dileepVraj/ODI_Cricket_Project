@@ -1,0 +1,25 @@
+Tables: ['balls', 'matches', 'phase_stats', 'player_metadata', 'player_stats', 'squads']
+
+balls: 1333213 rows
+  cols: ['match_id', 'start_date', 'venue', 'batting_team', 'bowling_team', 'innings', 'ball', 'striker', 'non_striker', 'bowler', 'runs_off_bat', 'extras', 'wides', 'noballs', 'wicket_type', 'player_dismissed', 'winner']
+
+matches: 2513 rows
+  cols: ['match_id', 'start_date', 'venue', 'venue_id', 'team_bat_1', 'team_bat_2', 'winner', 'year', 'season', 'score_inn1', 'score_inn2', 'balls_inn1', 'balls_inn2', 'wickets_inn1', 'wickets_inn2', 'toss_winner', 'toss_decision']
+
+phase_stats: 4972 rows
+  cols: ['match_id', 'start_date', 'venue', 'innings', 'team', 'dth_wkts', 'mid_wkts', 'pp_wkts', 'dth_runs', 'mid_runs', 'pp_runs']
+
+player_metadata: 2016 rows
+  cols: ['player', 'team']
+
+player_stats: 18658 rows
+  cols: ['player', 'team', 'opponent', 'innings', 'runs', 'balls', 'dismissals', 'role', 'context', 'runs_off_bat', 'extras']
+
+squads: 55396 rows
+  cols: ['match_id', 'date', 'team', 'player']
+
+Match columns detail: ['match_id', 'start_date', 'venue', 'venue_id', 'team_bat_1', 'team_bat_2', 'winner', 'year', 'season', 'score_inn1', 'score_inn2', 'balls_inn1', 'balls_inn2', 'wickets_inn1', 'wickets_inn2', 'toss_winner', 'toss_decision']
+
+Has score_inn1? True
+Has is_defended? False
+Has is_chased? False

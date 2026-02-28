@@ -1,6 +1,11 @@
 /* ── Google Fonts: Inter (must be before tailwindcss import) ──────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Cascadia Code";
+  src: local("Cascadia Code"), local("CascadiaCode"), local("Cascadia Mono"), local("CascadiaMono");
+  font-display: swap;
+}
 
 /* ═══════════════════════════════════════════════════════════════════════
    CRICKET ALGO-TRADING PLATFORM — Design System v1.0
@@ -11,6 +16,9 @@
 
 /* ── CSS Custom Properties (Design Tokens) ───────────────────────────── */
 :root {
+  --font-text: "Cascadia Code", "Cascadia Mono", Consolas, "Courier New", ui-monospace, monospace;
+  --font-numeric: "Segoe UI", "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+
   /* Background layers (darkest → lightest) */
   --bg-deepest: #050816;
   --bg-base: #0A0E27;
@@ -89,8 +97,7 @@
 }
 
 html {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  font-family: var(--font-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -100,6 +107,21 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.font-numeric,
+[data-numeric="true"],
+[style*="font-variant-numeric"] {
+  font-family: var(--font-numeric) !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────────────── */

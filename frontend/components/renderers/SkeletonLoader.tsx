@@ -1,9 +1,3 @@
-/**
- * components/renderers/SkeletonLoader.tsx — Loading Skeletons
- * 
- * Provides shimmer-effect skeleton loaders that approximate the shape
- * of each renderer type. Used while waiting for API responses.
- */
 "use client";
 
 interface SkeletonLoaderProps {
@@ -31,54 +25,29 @@ export default function SkeletonLoader({ outputType }: SkeletonLoaderProps) {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// SKELETON COMPONENTS
-// ═══════════════════════════════════════════════════════════════════════════
-
-function ShimmerBar({
-    width = "100%",
-    height = "14px",
-    radius = "4px",
-    style = {},
-}: {
-    width?: string;
-    height?: string;
-    radius?: string;
-    style?: React.CSSProperties;
-}) {
+function ShimmerBar({ className = "" }: { className?: string }) {
     return (
         <div
-            style={{
-                width,
-                height,
-                borderRadius: radius,
-                background: "linear-gradient(90deg, var(--bg-active) 25%, var(--border) 50%, var(--bg-active) 75%)",
-                backgroundSize: "200% 100%",
-                animation: "shimmer 1.5s infinite ease-in-out",
-                ...style,
-            }}
+            className={`[background:linear-gradient(90deg,_var(--bg-active)_25%,_var(--border)_50%,_var(--bg-active)_75%)] [background-size:200%_100%] animate-pulse rounded ${className}`}
         />
     );
 }
 
 function ReportSkeleton() {
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {/* Hero badge */}
-            <div style={{ display: "flex", justifyContent: "center", padding: "16px" }}>
-                <ShimmerBar width="200px" height="48px" radius="12px" />
+        <div className="[display:flex] [flex-direction:column] [gap:16px]">
+            <div className="[display:flex] [justify-content:center] [padding:16px]">
+                <ShimmerBar className="[width:200px] [height:48px] [border-radius:12px]" />
             </div>
-            {/* Dual bar */}
-            <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-                <ShimmerBar width="45%" height="32px" radius="8px" />
-                <ShimmerBar width="45%" height="32px" radius="8px" />
+            <div className="[display:flex] [gap:12px] [justify-content:center]">
+                <ShimmerBar className="[width:45%] [height:32px] [border-radius:8px]" />
+                <ShimmerBar className="[width:45%] [height:32px] [border-radius:8px]" />
             </div>
-            {/* Stat grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+            <div className="[display:grid] [grid-template-columns:1fr_1fr_1fr] [gap:12px]">
                 {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} style={{ padding: "16px", background: "var(--bg-active)", borderRadius: "8px" }}>
-                        <ShimmerBar width="60%" height="12px" style={{ marginBottom: "8px" }} />
-                        <ShimmerBar width="40%" height="20px" />
+                    <div key={i} className="[padding:16px] [background:var(--bg-active)] [border-radius:8px]">
+                        <ShimmerBar className="[width:60%] [height:12px] [margin-bottom:8px]" />
+                        <ShimmerBar className="[width:40%] [height:20px]" />
                     </div>
                 ))}
             </div>
@@ -87,41 +56,24 @@ function ReportSkeleton() {
 }
 
 function TableSkeleton() {
+    const colWidths = ["[width:80%]", "[width:60%]", "[width:60%]", "[width:60%]", "[width:60%]"];
+    const rowWidths = ["[width:74%]", "[width:58%]", "[width:46%]", "[width:67%]", "[width:52%]"];
+
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            {/* Header row */}
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr",
-                    gap: "12px",
-                    padding: "12px 16px",
-                    background: "var(--bg-surface)",
-                    borderRadius: "8px 8px 0 0",
-                }}
-            >
-                {Array.from({ length: 5 }).map((_, i) => (
-                    <ShimmerBar key={i} width={i === 0 ? "80%" : "60%"} height="14px" />
+        <div className="[display:flex] [flex-direction:column] [gap:2px]">
+            <div className="[display:grid] [grid-template-columns:2fr_1fr_1fr_1fr_1fr] [gap:12px] [padding:12px_16px] [background:var(--bg-surface)] [border-radius:8px_8px_0_0]">
+                {colWidths.map((w, i) => (
+                    <ShimmerBar key={i} className={`${w} [height:14px]`} />
                 ))}
             </div>
-            {/* Data rows */}
+
             {Array.from({ length: 8 }).map((_, row) => (
                 <div
                     key={row}
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr",
-                        gap: "12px",
-                        padding: "10px 16px",
-                        background: row % 2 === 0 ? "var(--bg-active)" : "transparent",
-                    }}
+                    className={`[display:grid] [grid-template-columns:2fr_1fr_1fr_1fr_1fr] [gap:12px] [padding:10px_16px] ${row % 2 === 0 ? "[background:var(--bg-active)]" : "[background:transparent]"}`}
                 >
-                    {Array.from({ length: 5 }).map((_, col) => (
-                        <ShimmerBar
-                            key={col}
-                            width={col === 0 ? `${70 + Math.random() * 20}%` : `${40 + Math.random() * 30}%`}
-                            height="12px"
-                        />
+                    {rowWidths.map((w, col) => (
+                        <ShimmerBar key={col} className={`${w} [height:12px]`} />
                     ))}
                 </div>
             ))}
@@ -131,29 +83,17 @@ function TableSkeleton() {
 
 function CardSkeleton() {
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {/* Large card */}
-            <div
-                style={{
-                    padding: "24px",
-                    background: "var(--bg-active)",
-                    borderRadius: "12px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "12px",
-                }}
-            >
-                <ShimmerBar width="120px" height="48px" radius="8px" />
-                <ShimmerBar width="200px" height="16px" />
-                <ShimmerBar width="80%" height="24px" radius="12px" />
+        <div className="[display:flex] [flex-direction:column] [gap:16px]">
+            <div className="[padding:24px] [background:var(--bg-active)] [border-radius:12px] [display:flex] [flex-direction:column] [align-items:center] [gap:12px]">
+                <ShimmerBar className="[width:120px] [height:48px] [border-radius:8px]" />
+                <ShimmerBar className="[width:200px] [height:16px]" />
+                <ShimmerBar className="[width:80%] [height:24px] [border-radius:12px]" />
             </div>
-            {/* Breakdown cards */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+            <div className="[display:grid] [grid-template-columns:1fr_1fr_1fr] [gap:12px]">
                 {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} style={{ padding: "16px", background: "var(--bg-active)", borderRadius: "8px" }}>
-                        <ShimmerBar width="50%" height="12px" style={{ marginBottom: "8px" }} />
-                        <ShimmerBar width="70%" height="20px" />
+                    <div key={i} className="[padding:16px] [background:var(--bg-active)] [border-radius:8px]">
+                        <ShimmerBar className="[width:50%] [height:12px] [margin-bottom:8px]" />
+                        <ShimmerBar className="[width:70%] [height:20px]" />
                     </div>
                 ))}
             </div>
@@ -163,22 +103,19 @@ function CardSkeleton() {
 
 function ProfileSkeleton() {
     return (
-        <div style={{ display: "flex", gap: "24px", padding: "16px" }}>
-            {/* Avatar */}
-            <ShimmerBar width="80px" height="80px" radius="50%" />
-            {/* Info */}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
-                <ShimmerBar width="200px" height="20px" />
-                <div style={{ display: "flex", gap: "8px" }}>
-                    <ShimmerBar width="80px" height="16px" radius="12px" />
-                    <ShimmerBar width="100px" height="16px" radius="12px" />
+        <div className="[display:flex] [gap:24px] [padding:16px]">
+            <ShimmerBar className="[width:80px] [height:80px] [border-radius:9999px]" />
+            <div className="[flex:1] [display:flex] [flex-direction:column] [gap:10px]">
+                <ShimmerBar className="[width:200px] [height:20px]" />
+                <div className="[display:flex] [gap:8px]">
+                    <ShimmerBar className="[width:80px] [height:16px] [border-radius:12px]" />
+                    <ShimmerBar className="[width:100px] [height:16px] [border-radius:12px]" />
                 </div>
-                {/* Stats grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px", marginTop: "8px" }}>
+                <div className="[display:grid] [grid-template-columns:1fr_1fr_1fr] [gap:8px] [margin-top:8px]">
                     {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} style={{ padding: "10px", background: "var(--bg-active)", borderRadius: "6px" }}>
-                            <ShimmerBar width="50%" height="10px" style={{ marginBottom: "6px" }} />
-                            <ShimmerBar width="40%" height="16px" />
+                        <div key={i} className="[padding:10px] [background:var(--bg-active)] [border-radius:6px]">
+                            <ShimmerBar className="[width:50%] [height:10px] [margin-bottom:6px]" />
+                            <ShimmerBar className="[width:40%] [height:16px]" />
                         </div>
                     ))}
                 </div>

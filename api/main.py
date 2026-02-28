@@ -15,15 +15,17 @@ Endpoints:
     GET  /api/{format_type}/context/regions   → Region list
     POST /api/{format_type}/execute/{function_key} → Execute any engine function
 """
-import sys
 import os
-import io
+import sys
 import logging
+import io
+from typing import Dict, List, Optional, Protocol, TypedDict, cast
 from contextlib import redirect_stdout
-from typing import Any, Dict, List
-
-from fastapi import FastAPI, HTTPException, Path, Query
+import pandas as pd
+from fastapi import FastAPI, HTTPException, Path, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.routing import APIRouter
 
 # Add project root to path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,15 +34,90 @@ if PROJECT_ROOT not in sys.path:
 
 from config.format_registry import get_format_manifest, get_format_engines
 from api.engine_pool import initialize_pool, get_analyzer, get_active_formats, is_format_loaded
-from api.models import (
-    ExecuteRequest, ExecuteResponse, HealthResponse,
-    ManifestResponse, FormatInfo, ContextTeamsResponse,
-    ContextVenuesResponse, ContextPlayersResponse,
+from api.schemas import (
+    ExecuteRequest, ExecuteResponse, ErrorResponse,
+    ManifestResponse, TeamsResponse, VenuesResponse, PlayersResponse,
+    RegionsResponse, HostCountriesResponse, HealthResponse, FormatMetadata
 )
 from api.serializers import serialize_engine_output
+from core.services import (
+    ParamMapperService, EnrichmentService, PlayerService,
+    SerializationService
+)
+from core.interfaces.team_interface import MatchContext
+
+
+class DataAccessProtocol(Protocol):
+    def get_balls(
+        self,
+        players: Optional[List[str]] = None,
+        match_ids: Optional[List[str]] = None,
+    ) -> pd.DataFrame:
+        ...
+
+
+class AnalyzerProtocol(Protocol):
+    match_df: pd.DataFrame
+    phase_df: pd.DataFrame
+    dal: Optional[DataAccessProtocol]
+    format_rules: Dict[str, object]
+    team_engine: object
+    player_engine: object
+    predictor_engine: object
+
+
+class ManifestFunction(TypedDict, total=False):
+    key: str
+    engine_class: str
+    engine_method: str
+    output_type: str
+    required_context: List[str]
+
+
+class EngineCallParams(TypedDict, total=False):
+    stadium_name: str
+    stadium_id: str
+    venue_id: str
+    home_team: str
+    away_team: str
+    opp_team: str
+    team_name: str
+    batting_team: str
+    bowling_team: str
+    years: int
+    years_back: int
+    limit: int
+    continent: str
+    country_name: str
+    player_name: str
+    name: str
+    batter: str
+    opposition: str
+    team_a_name: str
+    team_b_name: str
+    team_a_players: List[str]
+    team_b_players: List[str]
+    players: List[str]
+    opposition_bowlers: List[str]
+    bowlers: List[str]
+    home_xi: List[str]
+    away_xi: List[str]
+    context_df: pd.DataFrame
+    raw_balls_df: pd.DataFrame
+    match_context: MatchContext
+
+
+class EngineDefaults(TypedDict, total=False):
+    recent_match_ids_limit: int
+    recent_context_fallback_years: int
+    venue_stats_fallback_years: int
 
 # ── Logging ──────────────────────────────────────────────────────────────
-logging.basicConfig(level=logging.INFO, format="%(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
 logger = logging.getLogger("CricketAPI")
 
 # ── FastAPI App ──────────────────────────────────────────────────────────
@@ -68,7 +145,7 @@ app.add_middleware(
 # ── Lifecycle ────────────────────────────────────────────────────────────
 
 @app.on_event("startup")
-def startup_event():
+def startup_event() -> None:
     """Initialize engine pool at API startup."""
     logger.info("=" * 60)
     logger.info("🚀 CRICKET API STARTING — Initializing Engine Pool...")
@@ -79,38 +156,61 @@ def startup_event():
     logger.info("=" * 60)
 
 
+# ── Global Error Handling ────────────────────────────────────────────────
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=ErrorResponse(
+            error="HTTP_ERROR",
+            detail=exc.detail,
+            status_code=exc.status_code
+        ).model_dump()
+    )
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    logger.exception("Unhandled Exception: %s", exc)
+    return JSONResponse(
+        status_code=500,
+        content=ErrorResponse(
+            error="INTERNAL_SERVER_ERROR",
+            detail="An internal error occurred. Check server logs for details.",
+            status_code=500
+        ).model_dump()
+    )
+
+# ── V1 API Router ────────────────────────────────────────────────────────
+v1_router = APIRouter(prefix="/api/v1")
+
 # ═══════════════════════════════════════════════════════════════════════════
 # HEALTH CHECK
 # ═══════════════════════════════════════════════════════════════════════════
 
 @app.get("/health", response_model=HealthResponse, tags=["System"])
-def health_check():
+def health_check() -> HealthResponse:
     """API health check — returns loaded formats and match counts."""
     active = get_active_formats()
-    return HealthResponse(
-        status="active" if active else "no_formats_loaded",
-        formats_loaded=list(active.keys()),
-        total_matches={k: v["matches"] for k, v in active.items()},
-    )
-
+    return {
+        "status": "active" if active else "no_formats_loaded",
+        "formats_loaded": list(active.keys()),
+        "total_matches": {k: v["matches"] for k, v in active.items()},
+    }
 
 # ═══════════════════════════════════════════════════════════════════════════
 # FORMAT DISCOVERY
 # ═══════════════════════════════════════════════════════════════════════════
 
-@app.get("/api/formats", response_model=List[FormatInfo], tags=["Formats"])
-def list_formats():
+@v1_router.get("/formats", response_model=List[FormatMetadata], tags=["Formats"])
+def list_formats() -> List[FormatMetadata]:
     """Returns metadata about all available formats for the Format Selector."""
     from config.format_registry import get_format_metadata
-    return [FormatInfo(**fmt) for fmt in get_format_metadata()]
+    return get_format_metadata()
 
 
-# ═══════════════════════════════════════════════════════════════════════════
-# MANIFEST ENDPOINT
-# ═══════════════════════════════════════════════════════════════════════════
-
-@app.get("/api/{format_type}/manifest", response_model=ManifestResponse, tags=["Manifest"])
-def get_manifest(format_type: str = Path(..., description="Format key (e.g., 'odi')")):
+@v1_router.get("/{format_type}/manifest", response_model=ManifestResponse, tags=["Manifest"])
+def get_manifest(format_type: str = Path(..., description="Format key (e.g., 'odi')")) -> ManifestResponse:
     """
     Returns the format's complete manifest.
     The frontend uses this to build sidebar, screens, tabs, and context bar.
@@ -118,7 +218,7 @@ def get_manifest(format_type: str = Path(..., description="Format key (e.g., 'od
     _validate_format(format_type)
     try:
         manifest = get_format_manifest(format_type)
-        return ManifestResponse(**manifest)
+        return manifest
     except (ValueError, ImportError) as e:
         raise HTTPException(status_code=404, detail=f"No manifest for format '{format_type}': {e}")
 
@@ -127,8 +227,8 @@ def get_manifest(format_type: str = Path(..., description="Format key (e.g., 'od
 # CONTEXT ENDPOINTS (Populate dropdowns/comboboxes)
 # ═══════════════════════════════════════════════════════════════════════════
 
-@app.get("/api/{format_type}/context/teams", response_model=ContextTeamsResponse, tags=["Context"])
-def get_teams(format_type: str = Path(..., description="Format key")):
+@v1_router.get("/{format_type}/context/teams", response_model=TeamsResponse, tags=["Context"])
+def get_teams(format_type: str = Path(..., description="Format key")) -> TeamsResponse:
     """Returns all teams available in this format's dataset."""
     analyzer = _get_analyzer_or_404(format_type)
 
@@ -141,68 +241,106 @@ def get_teams(format_type: str = Path(..., description="Format key")):
         if "team_bat_2" in df.columns:
             teams.update(df["team_bat_2"].dropna().unique())
 
-    return ContextTeamsResponse(
+    return TeamsResponse(
         format_key=format_type,
         teams=sorted(teams),
     )
 
 
-@app.get("/api/{format_type}/context/venues", response_model=ContextVenuesResponse, tags=["Context"])
-def get_venues(format_type: str = Path(..., description="Format key")):
-    """Returns all venues available in this format's dataset."""
+@v1_router.get("/{format_type}/context/venues", response_model=VenuesResponse, tags=["Context"])
+def get_venues(format_type: str = Path(..., description="Format key")) -> VenuesResponse:
+    """Returns all venues available in this format, formatted for UI selectors."""
     analyzer = _get_analyzer_or_404(format_type)
+    from config.shared.venues import VENUE_MAP
 
-    venues = []
+    venues_list = []
     if hasattr(analyzer, "match_df") and not analyzer.match_df.empty:
         df = analyzer.match_df
-        venue_col = "venue_id" if "venue_id" in df.columns else "venue"
-        if venue_col in df.columns:
-            unique_venues = df[venue_col].dropna().unique()
-            for v in sorted(unique_venues):
-                # Convert venue ID to readable label
-                # e.g., "IND_MUMBAI_WANKHEDE" → "Mumbai Wankhede"
-                parts = str(v).split("_")
-                if len(parts) >= 2:
-                    label = " ".join(p.title() for p in parts[1:])
-                    venues.append({"id": str(v), "label": label})
-                else:
-                    venues.append({"id": str(v), "label": str(v)})
+        if "venue" in df.columns:
+            unique_ids = df["venue"].dropna().unique()
+            for vid in unique_ids:
+                label = VENUE_MAP.get(vid, vid.replace("_", " ").title())
+                venues_list.append({"id": str(vid), "label": str(label)})
 
-    return ContextVenuesResponse(
+    return VenuesResponse(
         format_key=format_type,
-        venues=venues,
+        venues=sorted(venues_list, key=lambda x: x["label"]),
     )
 
 
-@app.get("/api/{format_type}/context/players/{team}", response_model=ContextPlayersResponse, tags=["Context"])
+@v1_router.get("/{format_type}/context/players/{team}", response_model=PlayersResponse, tags=["Context"])
 def get_players(
+    team: str = Path(..., description="Team name (or 'All')"),
     format_type: str = Path(..., description="Format key"),
-    team: str = Path(..., description="Team name"),
-):
-    """Returns active squad players for a specific team."""
+) -> PlayersResponse:
+    """Returns unique players from the dataset, optionally filtered by team."""
     analyzer = _get_analyzer_or_404(format_type)
-
+    team_norm = str(team).strip()
     players = []
-    if hasattr(analyzer, "player_engine"):
-        try:
-            players = analyzer.player_engine.get_active_squad(team)
-        except (AttributeError, KeyError):
-            # Fallback: get unique players from metadata
-            if hasattr(analyzer, "meta_df") and not analyzer.meta_df.empty:
-                mask = analyzer.meta_df["team"] == team
-                players = sorted(analyzer.meta_df[mask]["player"].unique().tolist())
 
-    return ContextPlayersResponse(
+    if team_norm.lower() == "all":
+        if hasattr(analyzer, "player_df") and not analyzer.player_df.empty:
+            players = sorted(analyzer.player_df["player"].dropna().astype(str).unique().tolist())
+        else:
+            if hasattr(analyzer, "meta_df") and not analyzer.meta_df.empty:
+                players = sorted(analyzer.meta_df["player"].dropna().astype(str).unique().tolist())
+    else:
+        if hasattr(analyzer, "player_engine"):
+            try:
+                player_engine = analyzer.player_engine
+                last_xi = []
+                active_squad = []
+                team_matches = pd.DataFrame()
+                match_balls = pd.DataFrame()
+
+                if hasattr(player_engine, "get_last_match_xi"):
+                    dal = getattr(analyzer, "dal", None)
+                    if dal is not None:
+                        team_matches = dal.get_matches(team_a=team_norm)
+                        if not team_matches.empty and "match_id" in team_matches.columns:
+                            recent_match_ids = (
+                                team_matches.sort_values("start_date", ascending=False)["match_id"]
+                                .astype(str)
+                                .dropna()
+                                .unique()
+                                .tolist()[:_engine_default_int(analyzer, "recent_match_ids_limit", 1)]
+                            )
+                            if recent_match_ids:
+                                match_balls = dal.get_balls(match_ids=recent_match_ids)
+                    last_xi = player_engine.get_last_match_xi(
+                        team_norm,
+                        team_matches=team_matches,
+                        match_balls_df=match_balls,
+                    ) or []
+                if hasattr(player_engine, "get_active_squad"):
+                    active_squad = player_engine.get_active_squad(team_norm) or []
+
+                if last_xi:
+                    seen = set()
+                    merged = []
+                    for name in [*last_xi, *active_squad]:
+                        key = str(name).strip()
+                        if key and key not in seen:
+                            seen.add(key)
+                            merged.append(key)
+                    players = merged
+                else:
+                    players = active_squad
+            except (AttributeError, KeyError):
+                if hasattr(analyzer, "meta_df") and not analyzer.meta_df.empty:
+                    mask = analyzer.meta_df["team"] == team_norm
+                    players = sorted(analyzer.meta_df[mask]["player"].unique().tolist())
+
+    return PlayersResponse(
         format_key=format_type,
-        team=team,
-        players=players if isinstance(players, list) else list(players),
+        team=team_norm,
+        players=players,
     )
 
 
-@app.get("/api/{format_type}/context/regions", tags=["Context"])
-def get_regions(format_type: str = Path(..., description="Format key")):
+@v1_router.get("/{format_type}/context/regions", response_model=RegionsResponse, tags=["Context"])
+def get_regions(format_type: str = Path(..., description="Format key")) -> RegionsResponse:
     """Returns available regions/continents for filtering."""
-    # Regions are static for now — read from manifest if declared
     try:
         manifest = get_format_manifest(format_type)
         region_field = manifest.get("context_fields", {}).get("region", {})
@@ -210,32 +348,56 @@ def get_regions(format_type: str = Path(..., description="Format key")):
     except (ValueError, ImportError):
         options = ["All", "Asia", "Europe", "Oceania", "Africa", "Americas"]
 
-    return {"format_key": format_type, "regions": options}
+    return RegionsResponse(format_key=format_type, regions=options)
+
+
+@v1_router.get("/{format_type}/context/host_countries", response_model=HostCountriesResponse, tags=["Context"])
+def get_host_countries(format_type: str = Path(..., description="Format key")) -> HostCountriesResponse:
+    """Returns available host countries inferred from venue_id prefixes."""
+    analyzer = _get_analyzer_or_404(format_type)
+    countries = []
+    if hasattr(analyzer, "match_df") and not analyzer.match_df.empty:
+        df = analyzer.match_df
+        if "venue_id" in df.columns:
+            from config.shared.venues import list_host_countries_from_venue_ids
+            venue_ids = df["venue_id"].dropna().astype(str).unique().tolist()
+            countries = list_host_countries_from_venue_ids(venue_ids)
+    return HostCountriesResponse(format_key=format_type, countries=countries)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
 # GENERIC EXECUTE ENDPOINT (THE CORE)
 # ═══════════════════════════════════════════════════════════════════════════
 
-@app.post("/api/{format_type}/execute/{function_key}", response_model=ExecuteResponse, tags=["Execute"])
+@v1_router.post("/{format_type}/execute/{function_key}", response_model=ExecuteResponse, tags=["Execute"])
 def execute_function(
     request: ExecuteRequest,
     format_type: str = Path(..., description="Format key (e.g., 'odi')"),
     function_key: str = Path(..., description="Function key from manifest (e.g., 'venue_bias')"),
-):
+) -> ExecuteResponse:
     """
     Execute any engine function declared in the format's manifest.
-
-    This is the SINGLE generic endpoint that serves ALL 17+ functions
-    for ALL formats. The manifest maps function_key → engine_method.
-
-    Request body:
-        {"params": {"venue": "IND_MUMBAI_WANKHEDE", "years": 5, ...}}
+    Strictly validated by ExecuteRequest schema.
     """
     analyzer = _get_analyzer_or_404(format_type)
-
-    # 1. Look up function in manifest
     fn_def = _find_function_in_manifest(format_type, function_key)
+
+    # 1.5 Preemptive Validation: Check for missing required context
+    required_fields = fn_def.get("required_context", [])
+    provided_params = request.params.model_dump(exclude_none=True)
+    
+    missing = []
+    for field in required_fields:
+        val = provided_params.get(field)
+        # Check for None, empty string, or "needed" (placeholder)
+        if val is None or val == "" or (field == "venue" and val == "needed"):
+            missing.append(field)
+            
+    if missing:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Required selection missing: Please provide {', '.join(missing)} before executing this analysis."
+        )
 
     engine_class_name = fn_def["engine_class"]
     engine_method_name = fn_def["engine_method"]
@@ -252,7 +414,23 @@ def execute_function(
     method = getattr(engine_instance, engine_method_name)
 
     # 4. Map context params to engine method arguments
-    call_params = _map_params(fn_def, request.params)
+    # .model_dump(exclude_none=True) ensures we only pass explicitly provided values.
+    call_params = cast(
+        EngineCallParams,
+        ParamMapperService.map_params(fn_def, request.params.model_dump(exclude_none=True)),
+    )
+    call_params = _inject_team_engine_context(
+        analyzer=analyzer,
+        engine_class_name=engine_class_name,
+        engine_method_name=engine_method_name,
+        call_params=call_params,
+    )
+    call_params = _inject_player_engine_context(
+        analyzer=analyzer,
+        engine_class_name=engine_class_name,
+        engine_method_name=engine_method_name,
+        call_params=call_params,
+    )
 
     # 5. Call engine method (suppress stdout — engines print HTML for the UI)
     try:
@@ -264,14 +442,54 @@ def execute_function(
             status_code=400,
             detail=f"Parameter error calling {engine_class_name}.{engine_method_name}: {e}",
         )
-    except Exception as e:
+    except HTTPException:
+        raise
+    except (AttributeError, KeyError, ValueError, RuntimeError) as e:
         raise HTTPException(
             status_code=500,
             detail=f"Engine error in {engine_class_name}.{engine_method_name}: {e}",
         )
 
-    # 6. Serialize output
-    serialized = serialize_engine_output(result)
+    # 6. Domain Mapping & Serialization
+    # First, try to wrap domain dataclasses in Pydantic schemas for strict validation.
+    schematized = SerializationService.wrap_as_schema(result)
+    serialized = serialize_engine_output(schematized)
+
+    # 6a. Squad comparison schema parity:
+    # Keep Truth-Bridge nested payload contract under `Payload`.
+    if engine_method_name == "compare_squads" and isinstance(serialized, dict):
+        serialized = SerializationService.serialize_compare_squads_payload(serialized)
+
+    # 6b. Player profile venue fallback:
+    # Some datasets do not carry `at_venue` context in player_df, so engine returns
+    # venue_stats=None even when venue_id is provided. Build venue batting stats
+    # from raw ball-by-ball data in adapter layer (Rule F4).
+    if (
+        engine_method_name == "analyze_player_profile"
+        and isinstance(serialized, dict)
+        and call_params.get("venue_id")
+        and not serialized.get("venue_stats")
+    ):
+        fallback_venue_stats = PlayerService.build_player_venue_stats_fallback(
+            analyzer=analyzer,
+            player_name=str(serialized.get("name") or call_params.get("player_name") or ""),
+            venue_id=str(call_params.get("venue_id") or ""),
+            years=int(call_params.get("years") or _engine_default_int(analyzer, "venue_stats_fallback_years", 1)),
+        )
+        if fallback_venue_stats:
+            serialized["venue_stats"] = fallback_venue_stats
+
+    # 6c. Special handling for generate_pack:
+    #     API calls pass persist=False, so engine returns in-memory dict payload.
+    #     Keep a safe fallback for legacy filepath responses without request-time file I/O.
+    if engine_method_name == "generate_pack":
+        if isinstance(serialized, str):
+            serialized = {"filepath": serialized, "status": "generated"}
+        elif isinstance(serialized, dict):
+            serialized.setdefault("status", "generated")
+
+    # 7. Enrich with Match Audit records (extract from MATCH_IDS)
+    serialized = EnrichmentService.enrich_with_match_audit(serialized, analyzer)
 
     return ExecuteResponse(
         function_key=function_key,
@@ -280,15 +498,52 @@ def execute_function(
         metadata={
             "engine_class": engine_class_name,
             "engine_method": engine_method_name,
+            "format": format_type,
         },
     )
+
+# ── Mount V1 Router ──────────────────────────────────────────────────────
+app.include_router(v1_router)
+
+# ── Backward Compatibility Redirects ─────────────────────────────────────
+@app.get("/api/formats", response_model=List[FormatMetadata], tags=["Legacy"], include_in_schema=False)
+def legacy_formats() -> List[FormatMetadata]:
+    return list_formats()
+
+@app.get("/api/{format_type}/manifest", response_model=ManifestResponse, tags=["Legacy"], include_in_schema=False)
+def legacy_manifest(format_type: str) -> ManifestResponse:
+    return get_manifest(format_type)
+
+@app.get("/api/{format_type}/context/teams", response_model=TeamsResponse, tags=["Legacy"], include_in_schema=False)
+def legacy_teams(format_type: str) -> TeamsResponse:
+    return get_teams(format_type)
+
+@app.get("/api/{format_type}/context/venues", response_model=VenuesResponse, tags=["Legacy"], include_in_schema=False)
+def legacy_venues(format_type: str) -> VenuesResponse:
+    return get_venues(format_type)
+
+@app.get("/api/{format_type}/context/players/{team}", response_model=PlayersResponse, tags=["Legacy"], include_in_schema=False)
+def legacy_players(format_type: str, team: str) -> PlayersResponse:
+    return get_players(team=team, format_type=format_type)
+
+@app.get("/api/{format_type}/context/regions", response_model=RegionsResponse, tags=["Legacy"], include_in_schema=False)
+def legacy_regions(format_type: str) -> RegionsResponse:
+    return get_regions(format_type)
+
+@app.get("/api/{format_type}/context/host_countries", response_model=HostCountriesResponse, tags=["Legacy"], include_in_schema=False)
+def legacy_host_countries(format_type: str) -> HostCountriesResponse:
+    return get_host_countries(format_type)
+
+@app.post("/api/{format_type}/execute/{function_key}", response_model=ExecuteResponse, tags=["Legacy"], include_in_schema=False)
+def legacy_execute(request: ExecuteRequest, format_type: str, function_key: str) -> ExecuteResponse:
+    return execute_function(request=request, format_type=format_type, function_key=function_key)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
 # HELPER FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════
 
-def _validate_format(format_type: str):
+def _validate_format(format_type: str) -> None:
     """Raises 404 if format is not loaded."""
     if not is_format_loaded(format_type):
         active = get_active_formats()
@@ -298,13 +553,13 @@ def _validate_format(format_type: str):
         )
 
 
-def _get_analyzer_or_404(format_type: str):
+def _get_analyzer_or_404(format_type: str) -> AnalyzerProtocol:
     """Returns the CricketAnalyzer for the format, or raises 404."""
     _validate_format(format_type)
-    return get_analyzer(format_type)
+    return cast(AnalyzerProtocol, get_analyzer(format_type))
 
 
-def _find_function_in_manifest(format_type: str, function_key: str) -> dict:
+def _find_function_in_manifest(format_type: str, function_key: str) -> ManifestFunction:
     """Finds a function definition in the manifest by key."""
     try:
         manifest = get_format_manifest(format_type)
@@ -312,9 +567,11 @@ def _find_function_in_manifest(format_type: str, function_key: str) -> dict:
         raise HTTPException(status_code=404, detail=f"No manifest for '{format_type}': {e}")
 
     for category in manifest.get("categories", []):
+        if not isinstance(category, dict):
+            continue
         for fn in category.get("functions", []):
-            if fn["key"] == function_key:
-                return fn
+            if isinstance(fn, dict) and fn.get("key") == function_key:
+                return cast(ManifestFunction, fn)
 
     # Not found — provide helpful error
     all_keys = [
@@ -329,7 +586,7 @@ def _find_function_in_manifest(format_type: str, function_key: str) -> dict:
     )
 
 
-def _resolve_engine(analyzer, engine_class_name: str, format_type: str):
+def _resolve_engine(analyzer: AnalyzerProtocol, engine_class_name: str, format_type: str) -> object:
     """Resolves which engine instance to use based on engine_class from manifest."""
     engine_map = {
         "TeamEngine": "team_engine",
@@ -365,147 +622,145 @@ def _resolve_engine(analyzer, engine_class_name: str, format_type: str):
     return engine_instance
 
 
-def _map_params(fn_def: dict, raw_params: dict) -> dict:
-    """
-    Maps request parameters to engine method arguments.
+def _safe_int(value: object, default: int) -> int:
+    try:
+        parsed = int(value)
+        return parsed if parsed > 0 else default
+    except (TypeError, ValueError):
+        return default
 
-    CRITICAL: First filters raw_params to ONLY include keys listed in
-    the function's required_context + optional recognized keys.
-    This prevents "unexpected keyword argument" errors when the frontend
-    sends ALL context values but the engine method only accepts a subset.
 
-    Context field names from the frontend → engine parameter names:
-        venue   → stadium_name / stadium_id / venue_id (depends on method)
-        team_a  → home_team / team_name / batting_team
-        team_b  → opp_team / away_team / bowling_team
-        years   → years_back / years
-        region  → continent / country_name
-    """
-    method_name = fn_def.get("engine_method", "")
-    required = set(fn_def.get("required_context", []))
-    
-    # Also allow optional but recognized context keys like home_xi, away_xi, etc.
-    optional_keys = {"home_xi", "away_xi", "player_name", "batter", "bowlers",
-                     "match_time", "toss_result", "pitch_report", "context"}
-    allowed_keys = required | optional_keys
-    
-    # Filter: only keep params that are in allowed_keys
-    params = {k: v for k, v in raw_params.items() if k in allowed_keys}
+def _engine_defaults(analyzer: AnalyzerProtocol) -> EngineDefaults:
+    raw_rules = analyzer.format_rules if isinstance(analyzer.format_rules, dict) else {}
+    defaults = raw_rules.get("engine_defaults", {})
+    if isinstance(defaults, dict):
+        return cast(EngineDefaults, defaults)
+    return {}
 
-    # ── Venue Mapping ────────────────────────────────────────────────────
-    if "venue" in params:
-        venue_val = params.pop("venue")
-        # Different engine methods use different param names for venue
-        if method_name in ("analyze_venue_phases",):
-            params["stadium_id"] = venue_val
-        elif method_name in ("predict_score",):
-            params["venue_id"] = venue_val
-        elif method_name in ("compare_squads",):
-            params["venue_id"] = venue_val
-        elif method_name in ("generate_pack",):
-            params["venue"] = venue_val
+
+def _engine_default_int(analyzer: AnalyzerProtocol, key: str, minimum: int) -> int:
+    raw_value = _engine_defaults(analyzer).get(key)
+    parsed = _safe_int(raw_value, minimum)
+    return parsed if parsed >= minimum else minimum
+
+
+def _build_recent_player_context(
+    analyzer: AnalyzerProtocol,
+    players: List[str],
+    years: Optional[object],
+) -> pd.DataFrame:
+    dal = analyzer.dal
+    if dal is None:
+        return pd.DataFrame()
+
+    clean_players = sorted({
+        str(player).strip()
+        for player in players
+        if str(player).strip()
+    })
+    if not clean_players:
+        return pd.DataFrame()
+
+    context_df = dal.get_balls(players=clean_players)
+    if context_df is None or context_df.empty:
+        return pd.DataFrame()
+
+    years_back = _safe_int(
+        years,
+        _engine_default_int(analyzer, "recent_context_fallback_years", 1),
+    )
+    if "start_date" in context_df.columns:
+        context_df = context_df.copy()
+        context_df["start_date"] = pd.to_datetime(context_df["start_date"], errors="coerce")
+        max_date = context_df["start_date"].max()
+        if pd.notna(max_date):
+            cutoff_date = pd.Timestamp(max_date).floor("D") - pd.DateOffset(years=years_back)
         else:
-            params["stadium_name"] = venue_val
+            cutoff_date = pd.Timestamp.now().floor("D") - pd.DateOffset(years=years_back)
+        context_df = context_df[context_df["start_date"] >= cutoff_date]
+    return context_df
 
-    # ── Team Mapping ─────────────────────────────────────────────────────
-    if "team_a" in params:
-        team_a = params.pop("team_a")
-        if method_name in ("predict_score",):
-            params["batting_team"] = team_a
-        elif method_name in ("compare_squads",):
-            params["team_a_name"] = team_a
-        elif method_name in ("analyze_squad_types",):
-            params["team_name"] = team_a
-        elif method_name in ("generate_pack",):
-            params["home"] = team_a
-        elif method_name in ("analyze_away_performance",
-                              "analyze_global_performance", "analyze_team_form",
-                              "analyze_continent_performance"):
-            params["team_name"] = team_a
-        elif method_name in ("analyze_home_dominance", "analyze_venue_phases"):
-            params["home_team"] = team_a
-        else:
-            params["home_team"] = team_a
 
-    if "team_b" in params:
-        team_b = params.pop("team_b")
-        if method_name in ("predict_score",):
-            params["bowling_team"] = team_b
-        elif method_name in ("compare_squads", "analyze_squad_types"):
-            params["team_b_name"] = team_b
-        elif method_name in ("generate_pack",):
-            params["away"] = team_b
-        elif method_name in ("analyze_player_profile",):
-            params["opposition"] = team_b
-        else:
-            params["opp_team"] = team_b
+def _inject_team_engine_context(
+    analyzer: AnalyzerProtocol,
+    engine_class_name: str,
+    engine_method_name: str,
+    call_params: EngineCallParams,
+) -> EngineCallParams:
+    if engine_class_name != "TeamEngine":
+        return call_params
 
-    # ── Years Mapping ────────────────────────────────────────────────────
-    if "years" in params:
-        years_val = params.pop("years")
-        if method_name in ("predict_score", "analyze_player_profile",
-                            "compare_squads", "analyze_squad_types",
-                            "analyze_venue_phases"):
-            params["years"] = int(years_val)
-        elif method_name == "analyze_team_form":
-            params["limit"] = int(years_val)
-        else:
-            params["years_back"] = int(years_val)
+    params = cast(EngineCallParams, dict(call_params))
+    _ = engine_method_name
+    match_df = getattr(analyzer, "match_df", pd.DataFrame())
+    phase_df = getattr(analyzer, "phase_df", pd.DataFrame())
+    raw_rules = analyzer.format_rules if isinstance(analyzer.format_rules, dict) else {}
+    tactical = raw_rules.get("tactical_thresholds", {})
+    context: MatchContext = {}
+    if isinstance(match_df, pd.DataFrame):
+        context["match_df"] = match_df
+        if "start_date" in match_df.columns and not match_df.empty:
+            dates = pd.to_datetime(match_df["start_date"], errors="coerce")
+            max_date = dates.max()
+            if pd.notna(max_date):
+                context["reference_date"] = pd.Timestamp(max_date).floor("D")
+    if isinstance(phase_df, pd.DataFrame):
+        context["phase_df"] = phase_df
+    if isinstance(tactical, dict):
+        normalized: Dict[str, int] = {}
+        for key, value in tactical.items():
+            try:
+                normalized[str(key)] = int(value)
+            except (TypeError, ValueError):
+                continue
+        context["tactical_thresholds"] = normalized
+    params["match_context"] = context
+    return params
 
-    # ── Region Mapping ───────────────────────────────────────────────────
-    if "region" in params:
-        region_val = params.pop("region")
-        if method_name == "analyze_country_h2h":
-            params["country_name"] = region_val
-        else:
-            params["continent"] = region_val
 
-    # ── Squad Lists (for squad-dependent functions) ──────────────────────
-    # These come from the SquadBuilder UI component
-    if "home_xi" in params:
-        home_xi = params.pop("home_xi")
-        if method_name in ("predict_score",):
-            params["batting_players"] = home_xi
-        elif method_name in ("compare_squads",):
-            params["team_a_players"] = home_xi
-        elif method_name in ("generate_pack",):
-            params["home_xi"] = home_xi
-        elif method_name in ("analyze_squad_types",):
-            params["players"] = home_xi
+def _inject_player_engine_context(
+    analyzer: AnalyzerProtocol,
+    engine_class_name: str,
+    engine_method_name: str,
+    call_params: EngineCallParams,
+) -> EngineCallParams:
+    if engine_class_name != "PlayerEngine":
+        return call_params
 
-    if "away_xi" in params:
-        away_xi = params.pop("away_xi")
-        if method_name in ("predict_score",):
-            params["bowling_players"] = away_xi
-        elif method_name in ("compare_squads",):
-            params["team_b_players"] = away_xi
-        elif method_name in ("generate_pack",):
-            params["away_xi"] = away_xi
-        elif method_name in ("analyze_squad_types",):
-            params["opposition_bowlers"] = away_xi
+    params = cast(EngineCallParams, dict(call_params))
+    method = engine_method_name
 
-    # ── Matchup-specific params ──────────────────────────────────────────
-    if method_name == "get_matchups":
-        if "batter" not in params and "player_name" in params:
-            params["batter"] = params.pop("player_name")
-        if "bowlers" not in params and "away_xi" in params:
-            params["bowlers"] = params.pop("away_xi")
+    if method in {"compare_squads", "get_squad_comparison_data"}:
+        players = list(params.get("team_a_players") or []) + list(params.get("team_b_players") or [])
+        params["context_df"] = _build_recent_player_context(analyzer, players, params.get("years"))
+        return params
 
-    # ── Match Pack context ───────────────────────────────────────────────
-    if method_name == "generate_pack":
-        context = {}
-        for key in ("match_time", "toss_result", "pitch_report"):
-            if key in params:
-                context[key.replace("match_", "")] = params.pop(key)
-        if context:
-            params["context"] = context
+    if method in {"analyze_squad_types"}:
+        players = list(params.get("players") or []) + list(params.get("opposition_bowlers") or [])
+        params["context_df"] = _build_recent_player_context(analyzer, players, params.get("years"))
+        return params
+
+    if method in {"get_matchups"}:
+        players = []
+        batter = params.get("batter")
+        if batter:
+            players.append(str(batter))
+        players.extend([str(p) for p in (params.get("bowlers") or [])])
+        players.extend([str(p) for p in (params.get("home_xi") or [])])
+        players.extend([str(p) for p in (params.get("away_xi") or [])])
+        params["context_df"] = _build_recent_player_context(analyzer, players, params.get("years"))
+        return params
+
+    if method in {"analyze_player_profile", "get_player_profile"}:
+        player_name = str(params.get("player_name") or params.get("name") or "").strip()
+        raw_balls_df = _build_recent_player_context(analyzer, [player_name], params.get("years"))
+        params["raw_balls_df"] = raw_balls_df
+        return params
 
     return params
 
 
-# ═══════════════════════════════════════════════════════════════════════════
-# RUN STANDALONE
-# ═══════════════════════════════════════════════════════════════════════════
+
 
 if __name__ == "__main__":
     import uvicorn

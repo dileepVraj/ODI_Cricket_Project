@@ -1,0 +1,82 @@
+❌ Found 40 violations:
+
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:2
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:3
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:5
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:7
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:8
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:9
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:10
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:11
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:12
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:13
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:14
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:15
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:16
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:17
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:18
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:20
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:21
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:22
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:23
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:24
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_generate_pack.py:25
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [BARE_EXCEPT_BLOCK] scripts/debug_generate_pack.py:24
+   💥 VIOLATION: Bare `except:` is forbidden. Always catch specific exceptions (KeyError, ValueError, etc.). See docs/ai/GEMINI.md §2.4.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:2
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:3
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:5
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:7
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:8
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:9
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:10
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:11
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:12
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:13
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:14
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:16
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:17
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:18
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:19
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:20
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [LEAVE_NO_TRACE] scripts/debug_matchups.py:21
+   🧹 VIOLATION: Leave No Trace. Temporary debug scripts and log files must be deleted before committing.
+🔴 [BARE_EXCEPT_BLOCK] scripts/debug_matchups.py:20
+   💥 VIOLATION: Bare `except:` is forbidden. Always catch specific exceptions (KeyError, ValueError, etc.). See docs/ai/GEMINI.md §2.4.

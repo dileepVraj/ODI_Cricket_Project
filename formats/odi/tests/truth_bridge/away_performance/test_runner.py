@@ -60,7 +60,7 @@ class AwayPerformanceTruthBridge(TruthBridgeBase):
             try:
                 # analyze_away_performance(self, team_name, years_back=5, recorder=None)
                 engine_data = self.engine.analyze_away_performance(team_name, years_back=years)
-            except Exception as e:
+            except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                 print(f"      ❌ [ERROR] Engine failed for {team_name}: {e}")
                 continue
 

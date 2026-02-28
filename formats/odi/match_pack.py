@@ -17,8 +17,10 @@ import os
 import io
 import sys
 from datetime import datetime
+from typing import Any, Callable, Dict, List, Optional, Union
+import pandas as pd
 
-from core.transformer import (
+from core.match_pack.transformer import (
     transform_h2h_report,
     transform_h2h_slim,
     transform_venue_bias,
@@ -27,7 +29,7 @@ from core.transformer import (
     transform_squad_comparison,
     transform_player_stats,
 )
-from core.interpreter import MatchInterpreter
+from core.match_pack.interpreter import MatchInterpreter
 from formats.odi.config.players import PLAYER_ROLES, BOWLER_STYLES
 from formats.odi.config.rankings import ODI_RANKINGS
 
@@ -42,7 +44,7 @@ class MatchPackGenerator:
                                            india_xi, england_xi, context)
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: Any) -> None:
         """
         Args:
             bot: CricketAnalyzer instance (the Facade).
@@ -52,9 +54,19 @@ class MatchPackGenerator:
             rankings=ODI_RANKINGS,
             bowler_styles=BOWLER_STYLES,
             player_roles=PLAYER_ROLES,
+            format_key="odi",
         )
 
-    def generate_pack(self, home, away, venue, home_xi, away_xi, context):
+    def generate_pack(
+        self,
+        home: str,
+        away: str,
+        venue: str,
+        home_xi: List[str],
+        away_xi: List[str],
+        context: Dict[str, Any],
+        persist: bool = True,
+    ) -> Union[str, Dict[str, Any]]:
         """
         Generates the complete Match Pack JSON report.
 
@@ -67,7 +79,8 @@ class MatchPackGenerator:
             context (dict): Match context with keys: time, toss, pitch.
 
         Returns:
-            str: Filepath to the generated JSON report.
+            If persist=True: filepath to saved JSON report.
+            If persist=False: in-memory JSON report dict.
         """
         print(f"📦 Match Pack Engine: {home} vs {away} at {venue}")
         print("=" * 60)
@@ -119,16 +132,19 @@ class MatchPackGenerator:
         # --- Strip ALL internal _match_ids from final output ---
         match_pack = self._strip_internal_keys(match_pack)
 
-        # --- Write to file ---
-        filepath = self._save_report(match_pack, home, away)
-        print(f"\n✅ Match Pack generated: {filepath}")
-        return filepath
+        if persist:
+            filepath = self._save_report(match_pack, home, away)
+            print(f"\n✅ Match Pack generated: {filepath}")
+            return filepath
+
+        print("\n✅ Match Pack generated in memory (persist=False)")
+        return match_pack
 
     # =========================================================================
     # CHAPTER 1: MACRO CONTEXT (H2H, Form, Dominance)
     # =========================================================================
 
-    def _build_chapter_1(self, home, away, venue):
+    def _build_chapter_1(self, home: str, away: str, venue: str) -> Dict[str, Any]:
         """Builds Chapter 1: Macro Context."""
         chapter = {
             "chapter_description": (
@@ -208,7 +224,13 @@ class MatchPackGenerator:
     # CHAPTER 2: BATTLEFIELD (Fortress, Venue Matchup, Toss Bias)
     # =========================================================================
 
-    def _build_chapter_2(self, home, away, venue, context=None):
+    def _build_chapter_2(
+        self,
+        home: str,
+        away: str,
+        venue: str,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         """Builds Chapter 2: Battlefield."""
         chapter = {
             "chapter_description": (
@@ -261,7 +283,16 @@ class MatchPackGenerator:
     # CHAPTER 3: TACTICAL ENGINE (Phases, Conditions)
     # =========================================================================
 
-    def _build_chapter_3(self, home, away, venue, home_xi, away_xi, context, ch2_data):
+    def _build_chapter_3(
+        self,
+        home: str,
+        away: str,
+        venue: str,
+        home_xi: List[str],
+        away_xi: List[str],
+        context: Dict[str, Any],
+        ch2_data: Dict[str, Any],
+    ) -> Dict[str, Any]:
         """Builds Chapter 3: Tactical Engine."""
         chapter = {
             "chapter_description": (
@@ -325,7 +356,15 @@ class MatchPackGenerator:
     # CHAPTER 4: PLAYER INTELLIGENCE (Squads, Matrix, Matchups, Stats)
     # =========================================================================
 
-    def _build_chapter_4(self, home, away, venue, home_xi, away_xi, context):
+    def _build_chapter_4(
+        self,
+        home: str,
+        away: str,
+        venue: str,
+        home_xi: List[str],
+        away_xi: List[str],
+        context: Dict[str, Any],
+    ) -> Dict[str, Any]:
         """Builds Chapter 4: Player Intelligence."""
         chapter = {
             "chapter_description": (
@@ -337,9 +376,14 @@ class MatchPackGenerator:
 
         # --- 4.1 Squad Comparison (50Y — wide window for player career data) ---
         print("  ├── 4.1 Squad Comparison...")
+        squad_context_df = pd.DataFrame()
+        if hasattr(self.bot, "dal") and self.bot.dal is not None:
+            all_players = list(set(home_xi) | set(away_xi))
+            squad_context_df = self.bot.dal.get_balls(players=all_players)
+
         raw_payload = self._silent_call(
             self.bot.player_engine._generate_comparison_payload,
-            home, home_xi, away, away_xi, venue, 50
+            home, home_xi, away, away_xi, venue, 50, squad_context_df
         )
 
         transformed = {}
@@ -424,7 +468,7 @@ class MatchPackGenerator:
     # NARRATIVE BUILDERS (FIX 3 & FIX 4)
     # =========================================================================
 
-    def _build_squad_narrative(self, squad_data, home, away):
+    def _build_squad_narrative(self, squad_data: Dict[str, Any], home: str, away: str) -> str:
         """Builds a concise narrative from squad comparison data."""
         if not squad_data:
             return "No squad data available."
@@ -463,7 +507,7 @@ class MatchPackGenerator:
 
         return " ".join(parts) if parts else "Squads are broadly comparable on aggregate metrics."
 
-    def _build_tactical_narrative(self, matrix_data, home, away):
+    def _build_tactical_narrative(self, matrix_data: Dict[str, Any], home: str, away: str) -> str:
         """Identifies vulnerability patterns from the tactical matrix."""
         if not matrix_data:
             return "No tactical matrix data available."
@@ -504,7 +548,7 @@ class MatchPackGenerator:
 
         return " ".join(parts) if parts else "No clear tactical vulnerabilities identified from the bowling-type matrix."
 
-    def _build_matchup_narrative(self, matchup_data, home, away):
+    def _build_matchup_narrative(self, matchup_data: Dict[str, Any], home: str, away: str) -> str:
         """Identifies key bunny alerts and domination matchups."""
         if not matchup_data:
             return "No matchup data available."
@@ -544,7 +588,7 @@ class MatchPackGenerator:
 
         return " ".join(parts) if parts else "No extreme bunny alerts or domination matchups detected."
 
-    def _build_player_stats_narrative(self, player_stats, home, away):
+    def _build_player_stats_narrative(self, player_stats: Dict[str, Any], home: str, away: str) -> str:
         """
         Summarizes key player stats: form standouts, venue specialists, strugglers.
         v3.3: Granular split between Batters and Bowlers.
@@ -594,7 +638,7 @@ class MatchPackGenerator:
 
         return " ".join(parts) if parts else "No significant player-level trends identified."
 
-    def _build_role_based_tactical_narrative(self, tactical_data, home, away):
+    def _build_role_based_tactical_narrative(self, tactical_data: Dict[str, Any], home: str, away: str) -> str:
         """
         Analyzes the tactical matrix from a role-based perspective (v3.3).
         """
@@ -619,7 +663,14 @@ class MatchPackGenerator:
 
         return " ".join(narrative_parts) if narrative_parts else "Both lineups appear tactically balanced against opposition bowling styles."
 
-    def _build_smart_pitch_narrative(self, roster_data, player_stats, home, away, pitch_cond):
+    def _build_smart_pitch_narrative(
+        self,
+        roster_data: Dict[str, Any],
+        player_stats: Dict[str, Any],
+        home: str,
+        away: str,
+        pitch_cond: str,
+    ) -> str:
         """
         FIX 4: Builds a data-driven pitch suitability narrative using actual player stats
         instead of just bowler count.
@@ -704,7 +755,7 @@ class MatchPackGenerator:
     # HELPERS
     # =========================================================================
 
-    def _silent_call(self, func, *args, **kwargs):
+    def _silent_call(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
         """
         Calls an engine function while suppressing its stdout/print output.
         The engine methods print HTML/tables for the UI — we only want the return value.
@@ -717,7 +768,7 @@ class MatchPackGenerator:
         sys.stdout = io.StringIO()
         try:
             result = func(*args, **kwargs)
-        except Exception as e:
+        except (AttributeError, KeyError, TypeError, ValueError, RuntimeError) as e:
             sys.stdout = old_stdout
             print(f"  ⚠️ Engine call failed: {func.__name__} — {str(e)}")
             return None
@@ -725,7 +776,7 @@ class MatchPackGenerator:
             sys.stdout = old_stdout
         return result
 
-    def _build_phase_narrative(self, phase_data, home, away):
+    def _build_phase_narrative(self, phase_data: Dict[str, Any], home: str, away: str) -> str:
         """Generates a narrative summary from phase analysis data."""
         baseline = phase_data.get("venue_baseline", {})
         home_venue = phase_data.get("home_at_venue", {})
@@ -776,7 +827,7 @@ class MatchPackGenerator:
 
         return " ".join(parts) if parts else "Phase analysis data available — see detailed breakdown."
 
-    def _strip_internal_keys(self, obj):
+    def _strip_internal_keys(self, obj: Any) -> Any:
         """
         Recursively strips all keys starting with '_' (internal diagnostics)
         from the final JSON output. This removes _match_ids, _squad_match_ids, etc.
@@ -788,7 +839,7 @@ class MatchPackGenerator:
         else:
             return obj
 
-    def _save_report(self, match_pack, home, away):
+    def _save_report(self, match_pack: Dict[str, Any], home: str, away: str) -> str:
         """Saves the match pack JSON to the reports directory."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"MatchPack_{home}_vs_{away}_{timestamp}.json"

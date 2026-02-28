@@ -1,50 +1,49 @@
 """
 core/predictor.py
-Format-agnostic Predictor Engine factory + base class.
-
-Usage:
-    from core.predictor import get_predictor_engine
-    PredictorEngine = get_predictor_engine("odi")
-
-For backward compatibility, a direct import of PredictorEngine still works
-and defaults to the ODI format.
+Strict Predictor Engine strategy loader.
 """
 import importlib
-import logging
+from typing import Type
 
-logger = logging.getLogger("CricketAnalyzer")
+from core.interfaces.predictor_interface import IPredictorEngine
 
 
-def get_predictor_engine(format_type: str = "odi"):
+def get_predictor_engine(format_key: str) -> Type[IPredictorEngine]:
     """
-    Factory: Dynamically loads the PredictorEngine class for the given format.
-    Returns the CLASS (not an instance).
+    Returns the concrete PredictorEngine class for a required format key.
     """
+    if format_key is None or not str(format_key).strip():
+        raise ValueError("format_key is required (must be a registered format key).")
+
     from config.format_registry import FORMATS
-    entry = FORMATS.get(format_type)
+
+    normalized_key = str(format_key).strip().lower()
+    entry = FORMATS.get(normalized_key)
     if not entry:
-        raise KeyError(f"Unknown format: '{format_type}'. Available: {list(FORMATS.keys())}")
+        raise ValueError(
+            f"Unknown format_key '{normalized_key}'. Available: {list(FORMATS.keys())}"
+        )
 
     module_path = f"{entry['module']}.predictor"
     try:
         module = importlib.import_module(module_path)
-        return module.PredictorEngine
-    except (ImportError, AttributeError) as e:
-        raise ImportError(
-            f"PredictorEngine not found for format '{format_type}' at '{module_path}'. Error: {e}"
+    except ImportError as exc:
+        raise NotImplementedError(
+            f"No predictor engine module for format '{normalized_key}' at '{module_path}'."
+        ) from exc
+
+    engine_cls = getattr(module, "PredictorEngine", None)
+    if engine_cls is None:
+        raise NotImplementedError(
+            f"Module '{module_path}' does not define PredictorEngine."
         )
 
+    if not issubclass(engine_cls, IPredictorEngine):
+        raise TypeError(
+            f"{module_path}.PredictorEngine must inherit from core.interfaces.predictor_interface.IPredictorEngine."
+        )
 
-# --- BACKWARD COMPATIBILITY ---
-# Direct `from core.predictor import PredictorEngine` defaults to ODI.
-try:
-    from formats.odi.predictor import PredictorEngine
-except ImportError:
-    logger.warning("ODI PredictorEngine not available. Use get_predictor_engine() factory.")
+    return engine_cls
 
-    class PredictorEngine:
-        """Placeholder — ODI format module not found."""
-        def __init__(self, *args, **kwargs):
-            raise ImportError(
-                "ODI Format not found. Use get_predictor_engine(format_type) to load a specific format."
-            )
+
+__all__ = ["get_predictor_engine"]

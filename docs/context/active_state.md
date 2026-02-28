@@ -83,6 +83,14 @@
 - **Source of Truth Rule:** Colors from `TEAM_COLORS`, Roles from `PLAYER_ROLES`. No hardcoding.
 - **Defensive Data Rule:** Safe division, NaN handling, column existence checks.
 - **Crash Early, Crash Loud:** Specific exceptions only. Zero bare `except: pass`.
+- **Constrained PowerShell Rule:** If `npm` fails because `npm.ps1` is blocked, run frontend commands with `npm.cmd ...` (or `cmd /c npm ...`). This fallback is allowed for any agent in constrained shells.
+
+## Host Country H2H Behavioral Contract
+- Canonical user manual: `docs/application_detailed_user_manual.md`.
+- `country_h2h` defaults `country_name` to home-team country when empty.
+- `team_b` is optional and supports `All` for home-vs-all analysis in host country scope.
+- Host-country filtering uses `venue_id` prefixes plus raw `venue` alias resolution when `venue_id` is null.
+- Output contract is list-shaped for `comparison_table`: data returns `List[Dict]`, no-data returns `[]` (never `{}`).
 
 ## 🧱 Anti-Patterns & Lessons Learned
 
@@ -117,3 +125,17 @@
 ### 8. Ghost Files (Dead Code)
 - **Mistake:** `core/player_engine_CORRUPTED.py` (70KB) and `core/player_engine_TEMP.py` (70KB) in production.
 - **Fix:** Deleted. Git is the version history.
+
+### 9. Missing `__init__.py` in Subpackages (Import Blindness)
+- **Mistake**: Large subdirectories like `core/interfaces` or `formats/odi/renderers` were missing `__init__.py`, causing IDEs/linters to fail importing their contents.
+- **Fix**: Every directory intended to be part of a Python package MUST contain an `__init__.py` file. Added missing files to `core/interfaces/` and `formats/odi/renderers/`.
+
+### 10. React Side-Effect in State Updater (Router Update Error)
+- **Mistake**: Calling `window.history.pushState` (or any Next.js Router action) inside a `useState` functional updater (`setX(prev => { ... side-effect ... })`).
+- **Consequence**: "Cannot update a component (`Router`) while rendering a different component (`AppProvider`)". Functional updaters must be pure.
+- **Fix**: Move side-effects (like URL synchronization) to a `useEffect` that monitors the state changes. This ensures the side-effect runs *after* the render phase is complete.
+### 11. API Parameter Mapping Drift (Unexpected Argument Error)
+- **Mistake**: The generic `execute` endpoint was mapping the global `years` context to `years_back` for all methods by default.
+- **Consequence**: `PlayerEngine.get_matchups` and `MatchPackGenerator.generate_pack` crashed with `TypeError: ... got an unexpected keyword argument 'years_back'`.
+- **Fix**: Updated `ParamMapperService` in `core/services/param_mapper.py` to explicitly exclude `years`/`years_back` for methods that don't accept temporal parameters.
+- **Rule**: When adding a new engine method, verify its signature against the `ParamMapperService` logic to ensure only valid arguments are passed.

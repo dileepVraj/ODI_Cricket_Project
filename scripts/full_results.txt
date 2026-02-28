@@ -1,0 +1,19 @@
+  OK  venue_bias
+  OK  venue_matchup
+  OK  home_fortress
+  OK  venue_phases
+  OK  global_h2h
+  OK  country_h2h
+  OK  continent_perf
+  OK  home_dominance
+  OK  away_performance
+  OK  global_performance
+  OK  team_form
+  OK  compare_squads
+  OK  tactical_matrix
+  OK  matchups
+  OK  predict_score
+  OK  player_profile
+  OK  generate_pack
+
+=== 17/17 PASSED ===

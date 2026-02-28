@@ -1,3038 +1,3042 @@
 {
-    "Australia": {
-        "Global": {
-            "summary_code": [
-                "L",
-                "W",
-                "W",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-10-25",
-                    "Opponent": "India",
-                    "Venue": "Sydney",
-                    "Result": "\u274c LOSS",
-                    "Australia": "236 (1st)",
-                    "Opp Score": "237 (2nd)"
-                },
-                {
-                    "Date": "2025-10-23",
-                    "Opponent": "India",
-                    "Venue": "Adelaide",
-                    "Result": "\u2705 WIN",
-                    "Australia": "265 (2nd)",
-                    "Opp Score": "264 (1st)"
-                },
-                {
-                    "Date": "2025-10-19",
-                    "Opponent": "India",
-                    "Venue": "Optus",
-                    "Result": "\u2705 WIN",
-                    "Australia": "131 (2nd)",
-                    "Opp Score": "136 (1st)"
-                },
-                {
-                    "Date": "2025-08-24",
-                    "Opponent": "South Africa",
-                    "Venue": "Mackay",
-                    "Result": "\u2705 WIN",
-                    "Australia": "431 (1st)",
-                    "Opp Score": "155 (2nd)"
-                },
-                {
-                    "Date": "2025-08-22",
-                    "Opponent": "South Africa",
-                    "Venue": "Mackay",
-                    "Result": "\u274c LOSS",
-                    "Australia": "193 (2nd)",
-                    "Opp Score": "277 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1478902,1478903,1478904,1478905,1478906"
+  "_metadata": {
+    "refactor_date": "2026-02-23",
+    "architect_note": "Migration to Universal Core Calculators. Averages now utilize competitive_chase_threshold=200 and corrected smart_filter_service logic."
+  },
+  "Australia": {
+    "Global": {
+      "summary_code": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-10-25",
+          "Opponent": "India",
+          "Venue": "Sydney",
+          "Result": "\u274c LOSS",
+          "Australia": "236 (1st)",
+          "Opp Score": "237 (2nd)"
         },
-        "Asia": {
-            "summary_code": [
-                "L",
-                "W",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-03-04",
-                    "Opponent": "India",
-                    "Venue": "Dubai",
-                    "Result": "\u274c LOSS",
-                    "Australia": "264 (1st)",
-                    "Opp Score": "267 (2nd)"
-                },
-                {
-                    "Date": "2025-02-22",
-                    "Opponent": "England",
-                    "Venue": "Lahore",
-                    "Result": "\u2705 WIN",
-                    "Australia": "356 (2nd)",
-                    "Opp Score": "351 (1st)"
-                },
-                {
-                    "Date": "2025-02-14",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u274c LOSS",
-                    "Australia": "107 (2nd)",
-                    "Opp Score": "281 (1st)"
-                },
-                {
-                    "Date": "2025-02-12",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u274c LOSS",
-                    "Australia": "165 (2nd)",
-                    "Opp Score": "214 (1st)"
-                },
-                {
-                    "Date": "2023-11-19",
-                    "Opponent": "India",
-                    "Venue": "Ahmedabad",
-                    "Result": "\u2705 WIN",
-                    "Australia": "241 (2nd)",
-                    "Opp Score": "240 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1384439,1459908,1466417,1466426,1469168"
+        {
+          "Date": "2025-10-23",
+          "Opponent": "India",
+          "Venue": "Adelaide",
+          "Result": "\u2705 WIN",
+          "Australia": "265 (2nd)",
+          "Opp Score": "264 (1st)"
         },
-        "Africa": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2023-09-17",
-                    "Opponent": "South Africa",
-                    "Venue": "Johannesburg",
-                    "Result": "\u274c LOSS",
-                    "Australia": "193 (2nd)",
-                    "Opp Score": "315 (1st)"
-                },
-                {
-                    "Date": "2023-09-15",
-                    "Opponent": "South Africa",
-                    "Venue": "Centurion",
-                    "Result": "\u274c LOSS",
-                    "Australia": "252 (2nd)",
-                    "Opp Score": "416 (1st)"
-                },
-                {
-                    "Date": "2023-09-12",
-                    "Opponent": "South Africa",
-                    "Venue": "Potchefstroom",
-                    "Result": "\u274c LOSS",
-                    "Australia": "227 (2nd)",
-                    "Opp Score": "338 (1st)"
-                },
-                {
-                    "Date": "2023-09-09",
-                    "Opponent": "South Africa",
-                    "Venue": "Bloemfontein",
-                    "Result": "\u2705 WIN",
-                    "Australia": "392 (1st)",
-                    "Opp Score": "269 (2nd)"
-                },
-                {
-                    "Date": "2023-09-07",
-                    "Opponent": "South Africa",
-                    "Venue": "Bloemfontein",
-                    "Result": "\u2705 WIN",
-                    "Australia": "225 (2nd)",
-                    "Opp Score": "222 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1373571,1373572,1373573,1373574,1373575"
+        {
+          "Date": "2025-10-19",
+          "Opponent": "India",
+          "Venue": "Optus",
+          "Result": "\u2705 WIN",
+          "Australia": "131 (2nd)",
+          "Opp Score": "136 (1st)"
         },
-        "Europe": {
-            "summary_code": [
-                "W",
-                "L",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2024-09-29",
-                    "Opponent": "England",
-                    "Venue": "Bristol",
-                    "Result": "\u2705 WIN",
-                    "Australia": "165 (2nd)",
-                    "Opp Score": "309 (1st)"
-                },
-                {
-                    "Date": "2024-09-27",
-                    "Opponent": "England",
-                    "Venue": "Lords",
-                    "Result": "\u274c LOSS",
-                    "Australia": "126 (2nd)",
-                    "Opp Score": "312 (1st)"
-                },
-                {
-                    "Date": "2024-09-24",
-                    "Opponent": "England",
-                    "Venue": "Durham",
-                    "Result": "\u274c LOSS",
-                    "Australia": "304 (1st)",
-                    "Opp Score": "254 (2nd)"
-                },
-                {
-                    "Date": "2024-09-21",
-                    "Opponent": "England",
-                    "Venue": "Leeds",
-                    "Result": "\u2705 WIN",
-                    "Australia": "270 (1st)",
-                    "Opp Score": "202 (2nd)"
-                },
-                {
-                    "Date": "2024-09-19",
-                    "Opponent": "England",
-                    "Venue": "Nottingham",
-                    "Result": "\u2705 WIN",
-                    "Australia": "317 (2nd)",
-                    "Opp Score": "315 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1385700,1385701,1385702,1385703,1385704"
+        {
+          "Date": "2025-08-24",
+          "Opponent": "South Africa",
+          "Venue": "Mackay",
+          "Result": "\u2705 WIN",
+          "Australia": "431 (1st)",
+          "Opp Score": "155 (2nd)"
         },
-        "Oceania": {
-            "summary_code": [
-                "L",
-                "W",
-                "W",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-10-25",
-                    "Opponent": "India",
-                    "Venue": "Sydney",
-                    "Result": "\u274c LOSS",
-                    "Australia": "236 (1st)",
-                    "Opp Score": "237 (2nd)"
-                },
-                {
-                    "Date": "2025-10-23",
-                    "Opponent": "India",
-                    "Venue": "Adelaide",
-                    "Result": "\u2705 WIN",
-                    "Australia": "265 (2nd)",
-                    "Opp Score": "264 (1st)"
-                },
-                {
-                    "Date": "2025-10-19",
-                    "Opponent": "India",
-                    "Venue": "Optus",
-                    "Result": "\u2705 WIN",
-                    "Australia": "131 (2nd)",
-                    "Opp Score": "136 (1st)"
-                },
-                {
-                    "Date": "2025-08-24",
-                    "Opponent": "South Africa",
-                    "Venue": "Mackay",
-                    "Result": "\u2705 WIN",
-                    "Australia": "431 (1st)",
-                    "Opp Score": "155 (2nd)"
-                },
-                {
-                    "Date": "2025-08-22",
-                    "Opponent": "South Africa",
-                    "Venue": "Mackay",
-                    "Result": "\u274c LOSS",
-                    "Australia": "193 (2nd)",
-                    "Opp Score": "277 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1478902,1478903,1478904,1478905,1478906"
-        },
-        "Americas": {
-            "summary_code": [
-                "W",
-                "L",
-                "W",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2021-07-26",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u2705 WIN",
-                    "Australia": "153 (2nd)",
-                    "Opp Score": "152 (1st)"
-                },
-                {
-                    "Date": "2021-07-22",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u274c LOSS",
-                    "Australia": "187 (1st)",
-                    "Opp Score": "191 (2nd)"
-                },
-                {
-                    "Date": "2021-07-20",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u2705 WIN",
-                    "Australia": "252 (1st)",
-                    "Opp Score": "123 (2nd)"
-                },
-                {
-                    "Date": "2016-06-26",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u2705 WIN",
-                    "Australia": "270 (1st)",
-                    "Opp Score": "212 (2nd)"
-                },
-                {
-                    "Date": "2016-06-21",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u2705 WIN",
-                    "Australia": "283 (2nd)",
-                    "Opp Score": "282 (1st)"
-                }
-            ],
-            "MATCH_IDS": "932863,932867,1263161,1263162,1263163"
+        {
+          "Date": "2025-08-22",
+          "Opponent": "South Africa",
+          "Venue": "Mackay",
+          "Result": "\u274c LOSS",
+          "Australia": "193 (2nd)",
+          "Opp Score": "277 (1st)"
         }
+      ],
+      "MATCH_IDS": "1478902,1478903,1478904,1478905,1478906"
     },
-    "Bangladesh": {
-        "Global": {
-            "summary_code": [
-                "W",
-                "T",
-                "W",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-10-23",
-                    "Opponent": "West Indies",
-                    "Venue": "Dhaka",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "296 (1st)",
-                    "Opp Score": "117 (2nd)"
-                },
-                {
-                    "Date": "2025-10-21",
-                    "Opponent": "West Indies",
-                    "Venue": "Dhaka",
-                    "Result": "\ud83e\udd1d TIE",
-                    "Bangladesh": "213 (1st)",
-                    "Opp Score": "213 (2nd)"
-                },
-                {
-                    "Date": "2025-10-18",
-                    "Opponent": "West Indies",
-                    "Venue": "Dhaka",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "207 (1st)",
-                    "Opp Score": "133 (2nd)"
-                },
-                {
-                    "Date": "2025-07-08",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Pallekele",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "186 (2nd)",
-                    "Opp Score": "285 (1st)"
-                },
-                {
-                    "Date": "2025-07-05",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "248 (1st)",
-                    "Opp Score": "232 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1485506,1485507,1505122,1505123,1505124"
+    "Asia": {
+      "summary_code": [
+        "L",
+        "W",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-03-04",
+          "Opponent": "India",
+          "Venue": "Dubai",
+          "Result": "\u274c LOSS",
+          "Australia": "264 (1st)",
+          "Opp Score": "267 (2nd)"
         },
-        "Asia": {
-            "summary_code": [
-                "W",
-                "T",
-                "W",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-10-23",
-                    "Opponent": "West Indies",
-                    "Venue": "Dhaka",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "296 (1st)",
-                    "Opp Score": "117 (2nd)"
-                },
-                {
-                    "Date": "2025-10-21",
-                    "Opponent": "West Indies",
-                    "Venue": "Dhaka",
-                    "Result": "\ud83e\udd1d TIE",
-                    "Bangladesh": "213 (1st)",
-                    "Opp Score": "213 (2nd)"
-                },
-                {
-                    "Date": "2025-10-18",
-                    "Opponent": "West Indies",
-                    "Venue": "Dhaka",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "207 (1st)",
-                    "Opp Score": "133 (2nd)"
-                },
-                {
-                    "Date": "2025-07-08",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Pallekele",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "186 (2nd)",
-                    "Opp Score": "285 (1st)"
-                },
-                {
-                    "Date": "2025-07-05",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "248 (1st)",
-                    "Opp Score": "232 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1485506,1485507,1505122,1505123,1505124"
+        {
+          "Date": "2025-02-22",
+          "Opponent": "England",
+          "Venue": "Lahore",
+          "Result": "\u2705 WIN",
+          "Australia": "356 (2nd)",
+          "Opp Score": "351 (1st)"
         },
-        "Africa": {
-            "summary_code": [
-                "W",
-                "L",
-                "L",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2022-08-10",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "256 (1st)",
-                    "Opp Score": "151 (2nd)"
-                },
-                {
-                    "Date": "2022-08-07",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "290 (1st)",
-                    "Opp Score": "291 (2nd)"
-                },
-                {
-                    "Date": "2022-08-05",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "303 (1st)",
-                    "Opp Score": "307 (2nd)"
-                },
-                {
-                    "Date": "2022-03-23",
-                    "Opponent": "South Africa",
-                    "Venue": "Centurion",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "156 (2nd)",
-                    "Opp Score": "154 (1st)"
-                },
-                {
-                    "Date": "2022-03-20",
-                    "Opponent": "South Africa",
-                    "Venue": "Johannesburg",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "194 (1st)",
-                    "Opp Score": "195 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1277098,1277099,1323292,1323293,1323294"
+        {
+          "Date": "2025-02-14",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u274c LOSS",
+          "Australia": "107 (2nd)",
+          "Opp Score": "281 (1st)"
         },
-        "Europe": {
-            "summary_code": [
-                "W",
-                "W",
-                "NR",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2023-05-14",
-                    "Opponent": "Ireland",
-                    "Venue": "Chelmsford",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "274 (1st)",
-                    "Opp Score": "269 (2nd)"
-                },
-                {
-                    "Date": "2023-05-12",
-                    "Opponent": "Ireland",
-                    "Venue": "Chelmsford",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "320 (2nd)",
-                    "Opp Score": "319 (1st)"
-                },
-                {
-                    "Date": "2023-05-09",
-                    "Opponent": "Ireland",
-                    "Venue": "Chelmsford",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "Bangladesh": "246 (1st)",
-                    "Opp Score": "65 (2nd)"
-                },
-                {
-                    "Date": "2019-07-05",
-                    "Opponent": "Pakistan",
-                    "Venue": "Lords",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "221 (2nd)",
-                    "Opp Score": "315 (1st)"
-                },
-                {
-                    "Date": "2019-07-02",
-                    "Opponent": "India",
-                    "Venue": "Birmingham",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "286 (2nd)",
-                    "Opp Score": "314 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1144522,1144525,1364124,1364125,1365552"
+        {
+          "Date": "2025-02-12",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u274c LOSS",
+          "Australia": "165 (2nd)",
+          "Opp Score": "214 (1st)"
         },
-        "Oceania": {
-            "summary_code": [
-                "W",
-                "L",
-                "L",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2023-12-23",
-                    "Opponent": "New Zealand",
-                    "Venue": "Napier",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "99 (2nd)",
-                    "Opp Score": "98 (1st)"
-                },
-                {
-                    "Date": "2023-12-20",
-                    "Opponent": "New Zealand",
-                    "Venue": "Nelson",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "291 (1st)",
-                    "Opp Score": "296 (2nd)"
-                },
-                {
-                    "Date": "2023-12-17",
-                    "Opponent": "New Zealand",
-                    "Venue": "Dunedin",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "200 (2nd)",
-                    "Opp Score": "239 (1st)"
-                },
-                {
-                    "Date": "2021-03-26",
-                    "Opponent": "New Zealand",
-                    "Venue": "Basin",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "154 (2nd)",
-                    "Opp Score": "318 (1st)"
-                },
-                {
-                    "Date": "2021-03-23",
-                    "Opponent": "New Zealand",
-                    "Venue": "Christchurch",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "271 (1st)",
-                    "Opp Score": "275 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1233977,1233978,1388211,1388212,1408102"
-        },
-        "Americas": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2024-12-12",
-                    "Opponent": "West Indies",
-                    "Venue": "Kitts",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "321 (1st)",
-                    "Opp Score": "325 (2nd)"
-                },
-                {
-                    "Date": "2024-12-10",
-                    "Opponent": "West Indies",
-                    "Venue": "Kitts",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "227 (1st)",
-                    "Opp Score": "230 (2nd)"
-                },
-                {
-                    "Date": "2024-12-08",
-                    "Opponent": "West Indies",
-                    "Venue": "Kitts",
-                    "Result": "\u274c LOSS",
-                    "Bangladesh": "294 (1st)",
-                    "Opp Score": "295 (2nd)"
-                },
-                {
-                    "Date": "2022-07-16",
-                    "Opponent": "West Indies",
-                    "Venue": "Guyana",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "179 (2nd)",
-                    "Opp Score": "178 (1st)"
-                },
-                {
-                    "Date": "2022-07-13",
-                    "Opponent": "West Indies",
-                    "Venue": "Guyana",
-                    "Result": "\u2705 WIN",
-                    "Bangladesh": "112 (2nd)",
-                    "Opp Score": "108 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1317153,1317154,1433380,1433381,1433382"
+        {
+          "Date": "2023-11-19",
+          "Opponent": "India",
+          "Venue": "Ahmedabad",
+          "Result": "\u2705 WIN",
+          "Australia": "241 (2nd)",
+          "Opp Score": "240 (1st)"
         }
+      ],
+      "MATCH_IDS": "1384439,1459908,1466417,1466426,1469168"
     },
-    "England": {
-        "Global": {
-            "summary_code": [
-                "W",
-                "W",
-                "L",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2026-01-27",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "England": "357 (1st)",
-                    "Opp Score": "304 (2nd)"
-                },
-                {
-                    "Date": "2026-01-24",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "England": "223 (2nd)",
-                    "Opp Score": "219 (1st)"
-                },
-                {
-                    "Date": "2026-01-22",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u274c LOSS",
-                    "England": "252 (2nd)",
-                    "Opp Score": "271 (1st)"
-                },
-                {
-                    "Date": "2025-11-01",
-                    "Opponent": "New Zealand",
-                    "Venue": "Wellington",
-                    "Result": "\u274c LOSS",
-                    "England": "222 (1st)",
-                    "Opp Score": "226 (2nd)"
-                },
-                {
-                    "Date": "2025-10-29",
-                    "Opponent": "New Zealand",
-                    "Venue": "Hamilton",
-                    "Result": "\u274c LOSS",
-                    "England": "175 (1st)",
-                    "Opp Score": "177 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1491721,1491722,1507716,1507717,1507718"
+    "Africa": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2023-09-17",
+          "Opponent": "South Africa",
+          "Venue": "Johannesburg",
+          "Result": "\u274c LOSS",
+          "Australia": "193 (2nd)",
+          "Opp Score": "315 (1st)"
         },
-        "Asia": {
-            "summary_code": [
-                "W",
-                "W",
-                "L",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2026-01-27",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "England": "357 (1st)",
-                    "Opp Score": "304 (2nd)"
-                },
-                {
-                    "Date": "2026-01-24",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "England": "223 (2nd)",
-                    "Opp Score": "219 (1st)"
-                },
-                {
-                    "Date": "2026-01-22",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rps",
-                    "Result": "\u274c LOSS",
-                    "England": "252 (2nd)",
-                    "Opp Score": "271 (1st)"
-                },
-                {
-                    "Date": "2025-03-01",
-                    "Opponent": "South Africa",
-                    "Venue": "Karachi",
-                    "Result": "\u274c LOSS",
-                    "England": "179 (1st)",
-                    "Opp Score": "181 (2nd)"
-                },
-                {
-                    "Date": "2025-02-22",
-                    "Opponent": "Australia",
-                    "Venue": "Lahore",
-                    "Result": "\u274c LOSS",
-                    "England": "351 (1st)",
-                    "Opp Score": "356 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1466417,1466424,1507716,1507717,1507718"
+        {
+          "Date": "2023-09-15",
+          "Opponent": "South Africa",
+          "Venue": "Centurion",
+          "Result": "\u274c LOSS",
+          "Australia": "252 (2nd)",
+          "Opp Score": "416 (1st)"
         },
-        "Africa": {
-            "summary_code": [
-                "W",
-                "L",
-                "L",
-                "W",
-                "NR"
-            ],
-            "matches": [
-                {
-                    "Date": "2023-02-01",
-                    "Opponent": "South Africa",
-                    "Venue": "Kimberley",
-                    "Result": "\u2705 WIN",
-                    "England": "346 (1st)",
-                    "Opp Score": "287 (2nd)"
-                },
-                {
-                    "Date": "2023-01-29",
-                    "Opponent": "South Africa",
-                    "Venue": "Bloemfontein",
-                    "Result": "\u274c LOSS",
-                    "England": "342 (1st)",
-                    "Opp Score": "347 (2nd)"
-                },
-                {
-                    "Date": "2023-01-27",
-                    "Opponent": "South Africa",
-                    "Venue": "Bloemfontein",
-                    "Result": "\u274c LOSS",
-                    "England": "271 (2nd)",
-                    "Opp Score": "298 (1st)"
-                },
-                {
-                    "Date": "2020-02-09",
-                    "Opponent": "South Africa",
-                    "Venue": "Johannesburg",
-                    "Result": "\u2705 WIN",
-                    "England": "257 (2nd)",
-                    "Opp Score": "256 (1st)"
-                },
-                {
-                    "Date": "2020-02-07",
-                    "Opponent": "South Africa",
-                    "Venue": "Durban",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "England": "0 (2nd)",
-                    "Opp Score": "71 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1185311,1185312,1339595,1339596,1339597"
+        {
+          "Date": "2023-09-12",
+          "Opponent": "South Africa",
+          "Venue": "Potchefstroom",
+          "Result": "\u274c LOSS",
+          "Australia": "227 (2nd)",
+          "Opp Score": "338 (1st)"
         },
-        "Europe": {
-            "summary_code": [
-                "W",
-                "L",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-09-07",
-                    "Opponent": "South Africa",
-                    "Venue": "Southampton",
-                    "Result": "\u2705 WIN",
-                    "England": "414 (1st)",
-                    "Opp Score": "72 (2nd)"
-                },
-                {
-                    "Date": "2025-09-04",
-                    "Opponent": "South Africa",
-                    "Venue": "Lords",
-                    "Result": "\u274c LOSS",
-                    "England": "325 (2nd)",
-                    "Opp Score": "330 (1st)"
-                },
-                {
-                    "Date": "2025-09-02",
-                    "Opponent": "South Africa",
-                    "Venue": "Leeds",
-                    "Result": "\u274c LOSS",
-                    "England": "131 (1st)",
-                    "Opp Score": "137 (2nd)"
-                },
-                {
-                    "Date": "2025-06-03",
-                    "Opponent": "West Indies",
-                    "Venue": "Oval",
-                    "Result": "\u2705 WIN",
-                    "England": "246 (2nd)",
-                    "Opp Score": "251 (1st)"
-                },
-                {
-                    "Date": "2025-06-01",
-                    "Opponent": "West Indies",
-                    "Venue": "Cardiff",
-                    "Result": "\u2705 WIN",
-                    "England": "312 (2nd)",
-                    "Opp Score": "308 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1448344,1448345,1448354,1448355,1448356"
+        {
+          "Date": "2023-09-09",
+          "Opponent": "South Africa",
+          "Venue": "Bloemfontein",
+          "Result": "\u2705 WIN",
+          "Australia": "392 (1st)",
+          "Opp Score": "269 (2nd)"
         },
-        "Oceania": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-11-01",
-                    "Opponent": "New Zealand",
-                    "Venue": "Wellington",
-                    "Result": "\u274c LOSS",
-                    "England": "222 (1st)",
-                    "Opp Score": "226 (2nd)"
-                },
-                {
-                    "Date": "2025-10-29",
-                    "Opponent": "New Zealand",
-                    "Venue": "Hamilton",
-                    "Result": "\u274c LOSS",
-                    "England": "175 (1st)",
-                    "Opp Score": "177 (2nd)"
-                },
-                {
-                    "Date": "2025-10-26",
-                    "Opponent": "New Zealand",
-                    "Venue": "Maunganui",
-                    "Result": "\u274c LOSS",
-                    "England": "223 (1st)",
-                    "Opp Score": "224 (2nd)"
-                },
-                {
-                    "Date": "2022-11-22",
-                    "Opponent": "Australia",
-                    "Venue": "Melbourne",
-                    "Result": "\u274c LOSS",
-                    "England": "142 (2nd)",
-                    "Opp Score": "355 (1st)"
-                },
-                {
-                    "Date": "2022-11-19",
-                    "Opponent": "Australia",
-                    "Venue": "Sydney",
-                    "Result": "\u274c LOSS",
-                    "England": "208 (2nd)",
-                    "Opp Score": "280 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1317490,1317491,1491720,1491721,1491722"
-        },
-        "Americas": {
-            "summary_code": [
-                "L",
-                "W",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2024-11-06",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u274c LOSS",
-                    "England": "263 (1st)",
-                    "Opp Score": "267 (2nd)"
-                },
-                {
-                    "Date": "2024-11-02",
-                    "Opponent": "West Indies",
-                    "Venue": "Antigua",
-                    "Result": "\u2705 WIN",
-                    "England": "329 (2nd)",
-                    "Opp Score": "328 (1st)"
-                },
-                {
-                    "Date": "2024-10-31",
-                    "Opponent": "West Indies",
-                    "Venue": "Antigua",
-                    "Result": "\u274c LOSS",
-                    "England": "209 (1st)",
-                    "Opp Score": "157 (2nd)"
-                },
-                {
-                    "Date": "2023-12-09",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u274c LOSS",
-                    "England": "206 (1st)",
-                    "Opp Score": "191 (2nd)"
-                },
-                {
-                    "Date": "2023-12-06",
-                    "Opponent": "West Indies",
-                    "Venue": "Antigua",
-                    "Result": "\u2705 WIN",
-                    "England": "206 (2nd)",
-                    "Opp Score": "202 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1373577,1373578,1433370,1433371,1433372"
+        {
+          "Date": "2023-09-07",
+          "Opponent": "South Africa",
+          "Venue": "Bloemfontein",
+          "Result": "\u2705 WIN",
+          "Australia": "225 (2nd)",
+          "Opp Score": "222 (1st)"
         }
+      ],
+      "MATCH_IDS": "1373571,1373572,1373573,1373574,1373575"
     },
-    "India": {
-        "Global": {
-            "summary_code": [
-                "L",
-                "L",
-                "W",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2026-01-18",
-                    "Opponent": "New Zealand",
-                    "Venue": "Indore",
-                    "Result": "\u274c LOSS",
-                    "India": "296 (2nd)",
-                    "Opp Score": "337 (1st)"
-                },
-                {
-                    "Date": "2026-01-14",
-                    "Opponent": "New Zealand",
-                    "Venue": "Rajkot",
-                    "Result": "\u274c LOSS",
-                    "India": "284 (1st)",
-                    "Opp Score": "286 (2nd)"
-                },
-                {
-                    "Date": "2026-01-11",
-                    "Opponent": "New Zealand",
-                    "Venue": "Vadodara",
-                    "Result": "\u2705 WIN",
-                    "India": "306 (2nd)",
-                    "Opp Score": "300 (1st)"
-                },
-                {
-                    "Date": "2025-12-06",
-                    "Opponent": "South Africa",
-                    "Venue": "Visakhapatnam",
-                    "Result": "\u2705 WIN",
-                    "India": "271 (2nd)",
-                    "Opp Score": "270 (1st)"
-                },
-                {
-                    "Date": "2025-12-03",
-                    "Opponent": "South Africa",
-                    "Venue": "Raipur",
-                    "Result": "\u274c LOSS",
-                    "India": "358 (1st)",
-                    "Opp Score": "362 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1479574,1479575,1490231,1490232,1490233"
+    "Europe": {
+      "summary_code": [
+        "W",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2024-09-29",
+          "Opponent": "England",
+          "Venue": "Bristol",
+          "Result": "\u2705 WIN",
+          "Australia": "165 (2nd)",
+          "Opp Score": "309 (1st)"
         },
-        "Asia": {
-            "summary_code": [
-                "L",
-                "L",
-                "W",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2026-01-18",
-                    "Opponent": "New Zealand",
-                    "Venue": "Indore",
-                    "Result": "\u274c LOSS",
-                    "India": "296 (2nd)",
-                    "Opp Score": "337 (1st)"
-                },
-                {
-                    "Date": "2026-01-14",
-                    "Opponent": "New Zealand",
-                    "Venue": "Rajkot",
-                    "Result": "\u274c LOSS",
-                    "India": "284 (1st)",
-                    "Opp Score": "286 (2nd)"
-                },
-                {
-                    "Date": "2026-01-11",
-                    "Opponent": "New Zealand",
-                    "Venue": "Vadodara",
-                    "Result": "\u2705 WIN",
-                    "India": "306 (2nd)",
-                    "Opp Score": "300 (1st)"
-                },
-                {
-                    "Date": "2025-12-06",
-                    "Opponent": "South Africa",
-                    "Venue": "Visakhapatnam",
-                    "Result": "\u2705 WIN",
-                    "India": "271 (2nd)",
-                    "Opp Score": "270 (1st)"
-                },
-                {
-                    "Date": "2025-12-03",
-                    "Opponent": "South Africa",
-                    "Venue": "Raipur",
-                    "Result": "\u274c LOSS",
-                    "India": "358 (1st)",
-                    "Opp Score": "362 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1479574,1479575,1490231,1490232,1490233"
+        {
+          "Date": "2024-09-27",
+          "Opponent": "England",
+          "Venue": "Lords",
+          "Result": "\u274c LOSS",
+          "Australia": "126 (2nd)",
+          "Opp Score": "312 (1st)"
         },
-        "Africa": {
-            "summary_code": [
-                "W",
-                "L",
-                "W",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2023-12-21",
-                    "Opponent": "South Africa",
-                    "Venue": "Paarl",
-                    "Result": "\u2705 WIN",
-                    "India": "296 (1st)",
-                    "Opp Score": "218 (2nd)"
-                },
-                {
-                    "Date": "2023-12-19",
-                    "Opponent": "South Africa",
-                    "Venue": "Gqeberha(Port.Elz)",
-                    "Result": "\u274c LOSS",
-                    "India": "211 (1st)",
-                    "Opp Score": "215 (2nd)"
-                },
-                {
-                    "Date": "2023-12-17",
-                    "Opponent": "South Africa",
-                    "Venue": "Johannesburg",
-                    "Result": "\u2705 WIN",
-                    "India": "117 (2nd)",
-                    "Opp Score": "116 (1st)"
-                },
-                {
-                    "Date": "2022-08-22",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "India": "289 (1st)",
-                    "Opp Score": "276 (2nd)"
-                },
-                {
-                    "Date": "2022-08-20",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "India": "167 (2nd)",
-                    "Opp Score": "161 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1325550,1325551,1387600,1387601,1387602"
+        {
+          "Date": "2024-09-24",
+          "Opponent": "England",
+          "Venue": "Durham",
+          "Result": "\u274c LOSS",
+          "Australia": "304 (1st)",
+          "Opp Score": "254 (2nd)"
         },
-        "Europe": {
-            "summary_code": [
-                "W",
-                "L",
-                "W",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2022-07-17",
-                    "Opponent": "England",
-                    "Venue": "Manchester",
-                    "Result": "\u2705 WIN",
-                    "India": "261 (2nd)",
-                    "Opp Score": "259 (1st)"
-                },
-                {
-                    "Date": "2022-07-14",
-                    "Opponent": "England",
-                    "Venue": "Lords",
-                    "Result": "\u274c LOSS",
-                    "India": "146 (2nd)",
-                    "Opp Score": "246 (1st)"
-                },
-                {
-                    "Date": "2022-07-12",
-                    "Opponent": "England",
-                    "Venue": "Oval",
-                    "Result": "\u2705 WIN",
-                    "India": "114 (2nd)",
-                    "Opp Score": "110 (1st)"
-                },
-                {
-                    "Date": "2019-07-09",
-                    "Opponent": "New Zealand",
-                    "Venue": "Manchester",
-                    "Result": "\u274c LOSS",
-                    "India": "221 (2nd)",
-                    "Opp Score": "239 (1st)"
-                },
-                {
-                    "Date": "2019-07-06",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Leeds",
-                    "Result": "\u2705 WIN",
-                    "India": "265 (2nd)",
-                    "Opp Score": "264 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1144526,1144528,1276907,1276908,1276909"
+        {
+          "Date": "2024-09-21",
+          "Opponent": "England",
+          "Venue": "Leeds",
+          "Result": "\u2705 WIN",
+          "Australia": "270 (1st)",
+          "Opp Score": "202 (2nd)"
         },
-        "Oceania": {
-            "summary_code": [
-                "W",
-                "L",
-                "L",
-                "NR",
-                "NR"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-10-25",
-                    "Opponent": "Australia",
-                    "Venue": "Sydney",
-                    "Result": "\u2705 WIN",
-                    "India": "237 (2nd)",
-                    "Opp Score": "236 (1st)"
-                },
-                {
-                    "Date": "2025-10-23",
-                    "Opponent": "Australia",
-                    "Venue": "Adelaide",
-                    "Result": "\u274c LOSS",
-                    "India": "264 (1st)",
-                    "Opp Score": "265 (2nd)"
-                },
-                {
-                    "Date": "2025-10-19",
-                    "Opponent": "Australia",
-                    "Venue": "Optus",
-                    "Result": "\u274c LOSS",
-                    "India": "136 (1st)",
-                    "Opp Score": "131 (2nd)"
-                },
-                {
-                    "Date": "2022-11-30",
-                    "Opponent": "New Zealand",
-                    "Venue": "Christchurch",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "India": "219 (1st)",
-                    "Opp Score": "104 (2nd)"
-                },
-                {
-                    "Date": "2022-11-27",
-                    "Opponent": "New Zealand",
-                    "Venue": "Hamilton",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "India": "89 (1st)",
-                    "Opp Score": "0 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1322279,1322280,1478904,1478905,1478906"
-        },
-        "Americas": {
-            "summary_code": [
-                "W",
-                "L",
-                "W",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2023-08-01",
-                    "Opponent": "West Indies",
-                    "Venue": "Tarouba",
-                    "Result": "\u2705 WIN",
-                    "India": "351 (1st)",
-                    "Opp Score": "151 (2nd)"
-                },
-                {
-                    "Date": "2023-07-29",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u274c LOSS",
-                    "India": "181 (1st)",
-                    "Opp Score": "182 (2nd)"
-                },
-                {
-                    "Date": "2023-07-27",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u2705 WIN",
-                    "India": "118 (2nd)",
-                    "Opp Score": "114 (1st)"
-                },
-                {
-                    "Date": "2022-07-27",
-                    "Opponent": "West Indies",
-                    "Venue": "Trinidad",
-                    "Result": "\u2705 WIN",
-                    "India": "225 (1st)",
-                    "Opp Score": "137 (2nd)"
-                },
-                {
-                    "Date": "2022-07-24",
-                    "Opponent": "West Indies",
-                    "Venue": "Trinidad",
-                    "Result": "\u2705 WIN",
-                    "India": "312 (2nd)",
-                    "Opp Score": "311 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1317901,1317902,1381214,1381215,1381216"
+        {
+          "Date": "2024-09-19",
+          "Opponent": "England",
+          "Venue": "Nottingham",
+          "Result": "\u2705 WIN",
+          "Australia": "317 (2nd)",
+          "Opp Score": "315 (1st)"
         }
+      ],
+      "MATCH_IDS": "1385700,1385701,1385702,1385703,1385704"
     },
-    "New Zealand": {
-        "Global": {
-            "summary_code": [
-                "W",
-                "W",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2026-01-18",
-                    "Opponent": "India",
-                    "Venue": "Indore",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "337 (1st)",
-                    "Opp Score": "296 (2nd)"
-                },
-                {
-                    "Date": "2026-01-14",
-                    "Opponent": "India",
-                    "Venue": "Rajkot",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "286 (2nd)",
-                    "Opp Score": "284 (1st)"
-                },
-                {
-                    "Date": "2026-01-11",
-                    "Opponent": "India",
-                    "Venue": "Vadodara",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "300 (1st)",
-                    "Opp Score": "306 (2nd)"
-                },
-                {
-                    "Date": "2025-11-22",
-                    "Opponent": "West Indies",
-                    "Venue": "Hamilton",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "162 (2nd)",
-                    "Opp Score": "161 (1st)"
-                },
-                {
-                    "Date": "2025-11-19",
-                    "Opponent": "West Indies",
-                    "Venue": "Napier",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "248 (2nd)",
-                    "Opp Score": "247 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1490231,1490232,1490233,1491729,1491730"
+    "Oceania": {
+      "summary_code": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-10-25",
+          "Opponent": "India",
+          "Venue": "Sydney",
+          "Result": "\u274c LOSS",
+          "Australia": "236 (1st)",
+          "Opp Score": "237 (2nd)"
         },
-        "Asia": {
-            "summary_code": [
-                "W",
-                "W",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2026-01-18",
-                    "Opponent": "India",
-                    "Venue": "Indore",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "337 (1st)",
-                    "Opp Score": "296 (2nd)"
-                },
-                {
-                    "Date": "2026-01-14",
-                    "Opponent": "India",
-                    "Venue": "Rajkot",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "286 (2nd)",
-                    "Opp Score": "284 (1st)"
-                },
-                {
-                    "Date": "2026-01-11",
-                    "Opponent": "India",
-                    "Venue": "Vadodara",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "300 (1st)",
-                    "Opp Score": "306 (2nd)"
-                },
-                {
-                    "Date": "2025-03-09",
-                    "Opponent": "India",
-                    "Venue": "Dubai",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "251 (1st)",
-                    "Opp Score": "254 (2nd)"
-                },
-                {
-                    "Date": "2025-03-05",
-                    "Opponent": "South Africa",
-                    "Venue": "Lahore",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "362 (1st)",
-                    "Opp Score": "312 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1466427,1466428,1490231,1490232,1490233"
+        {
+          "Date": "2025-10-23",
+          "Opponent": "India",
+          "Venue": "Adelaide",
+          "Result": "\u2705 WIN",
+          "Australia": "265 (2nd)",
+          "Opp Score": "264 (1st)"
         },
-        "Africa": {
-            "summary_code": [
-                "L",
-                "W",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2015-08-26",
-                    "Opponent": "South Africa",
-                    "Venue": "Durban",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "221 (2nd)",
-                    "Opp Score": "283 (1st)"
-                },
-                {
-                    "Date": "2015-08-23",
-                    "Opponent": "South Africa",
-                    "Venue": "Potchefstroom",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "207 (2nd)",
-                    "Opp Score": "204 (1st)"
-                },
-                {
-                    "Date": "2015-08-19",
-                    "Opponent": "South Africa",
-                    "Venue": "Centurion",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "284 (2nd)",
-                    "Opp Score": "304 (1st)"
-                },
-                {
-                    "Date": "2015-08-07",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "273 (1st)",
-                    "Opp Score": "235 (2nd)"
-                },
-                {
-                    "Date": "2015-08-04",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "236 (2nd)",
-                    "Opp Score": "235 (1st)"
-                }
-            ],
-            "MATCH_IDS": "848843,848845,848847,894289,894291"
+        {
+          "Date": "2025-10-19",
+          "Opponent": "India",
+          "Venue": "Optus",
+          "Result": "\u2705 WIN",
+          "Australia": "131 (2nd)",
+          "Opp Score": "136 (1st)"
         },
-        "Europe": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2023-09-15",
-                    "Opponent": "England",
-                    "Venue": "Lords",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "211 (2nd)",
-                    "Opp Score": "311 (1st)"
-                },
-                {
-                    "Date": "2023-09-13",
-                    "Opponent": "England",
-                    "Venue": "Oval",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "187 (2nd)",
-                    "Opp Score": "368 (1st)"
-                },
-                {
-                    "Date": "2023-09-10",
-                    "Opponent": "England",
-                    "Venue": "Southampton",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "147 (2nd)",
-                    "Opp Score": "226 (1st)"
-                },
-                {
-                    "Date": "2023-09-08",
-                    "Opponent": "England",
-                    "Venue": "Cardiff",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "297 (2nd)",
-                    "Opp Score": "291 (1st)"
-                },
-                {
-                    "Date": "2022-07-15",
-                    "Opponent": "Ireland",
-                    "Venue": "Dublin",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "360 (1st)",
-                    "Opp Score": "359 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1303311,1336052,1336053,1336054,1336055"
+        {
+          "Date": "2025-08-24",
+          "Opponent": "South Africa",
+          "Venue": "Mackay",
+          "Result": "\u2705 WIN",
+          "Australia": "431 (1st)",
+          "Opp Score": "155 (2nd)"
         },
-        "Oceania": {
-            "summary_code": [
-                "W",
-                "W",
-                "W",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-11-22",
-                    "Opponent": "West Indies",
-                    "Venue": "Hamilton",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "162 (2nd)",
-                    "Opp Score": "161 (1st)"
-                },
-                {
-                    "Date": "2025-11-19",
-                    "Opponent": "West Indies",
-                    "Venue": "Napier",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "248 (2nd)",
-                    "Opp Score": "247 (1st)"
-                },
-                {
-                    "Date": "2025-11-16",
-                    "Opponent": "West Indies",
-                    "Venue": "Christchurch",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "269 (1st)",
-                    "Opp Score": "262 (2nd)"
-                },
-                {
-                    "Date": "2025-11-01",
-                    "Opponent": "England",
-                    "Venue": "Wellington",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "226 (2nd)",
-                    "Opp Score": "222 (1st)"
-                },
-                {
-                    "Date": "2025-10-29",
-                    "Opponent": "England",
-                    "Venue": "Hamilton",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "177 (2nd)",
-                    "Opp Score": "175 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1491721,1491722,1491728,1491729,1491730"
-        },
-        "Americas": {
-            "summary_code": [
-                "W",
-                "W",
-                "L",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2022-08-21",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "307 (2nd)",
-                    "Opp Score": "301 (1st)"
-                },
-                {
-                    "Date": "2022-08-19",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u2705 WIN",
-                    "New Zealand": "212 (1st)",
-                    "Opp Score": "161 (2nd)"
-                },
-                {
-                    "Date": "2022-08-17",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "190 (1st)",
-                    "Opp Score": "193 (2nd)"
-                },
-                {
-                    "Date": "2012-07-16",
-                    "Opponent": "West Indies",
-                    "Venue": "Kitts",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "221 (2nd)",
-                    "Opp Score": "241 (1st)"
-                },
-                {
-                    "Date": "2012-07-14",
-                    "Opponent": "West Indies",
-                    "Venue": "Kitts",
-                    "Result": "\u274c LOSS",
-                    "New Zealand": "240 (2nd)",
-                    "Opp Score": "264 (1st)"
-                }
-            ],
-            "MATCH_IDS": "560926,560927,1317911,1317912,1317913"
+        {
+          "Date": "2025-08-22",
+          "Opponent": "South Africa",
+          "Venue": "Mackay",
+          "Result": "\u274c LOSS",
+          "Australia": "193 (2nd)",
+          "Opp Score": "277 (1st)"
         }
+      ],
+      "MATCH_IDS": "1478902,1478903,1478904,1478905,1478906"
     },
-    "Pakistan": {
-        "Global": {
-            "summary_code": [
-                "W",
-                "W",
-                "W",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-11-16",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "215 (2nd)",
-                    "Opp Score": "211 (1st)"
-                },
-                {
-                    "Date": "2025-11-14",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "289 (2nd)",
-                    "Opp Score": "288 (1st)"
-                },
-                {
-                    "Date": "2025-11-11",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "299 (1st)",
-                    "Opp Score": "293 (2nd)"
-                },
-                {
-                    "Date": "2025-11-08",
-                    "Opponent": "South Africa",
-                    "Venue": "Faisalabad",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "144 (2nd)",
-                    "Opp Score": "143 (1st)"
-                },
-                {
-                    "Date": "2025-11-06",
-                    "Opponent": "South Africa",
-                    "Venue": "Faisalabad",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "269 (1st)",
-                    "Opp Score": "270 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1501899,1501900,1502167,1502168,1502169"
+    "Americas": {
+      "summary_code": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2021-07-26",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u2705 WIN",
+          "Australia": "153 (2nd)",
+          "Opp Score": "152 (1st)"
         },
-        "Asia": {
-            "summary_code": [
-                "W",
-                "W",
-                "W",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-11-16",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "215 (2nd)",
-                    "Opp Score": "211 (1st)"
-                },
-                {
-                    "Date": "2025-11-14",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "289 (2nd)",
-                    "Opp Score": "288 (1st)"
-                },
-                {
-                    "Date": "2025-11-11",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "299 (1st)",
-                    "Opp Score": "293 (2nd)"
-                },
-                {
-                    "Date": "2025-11-08",
-                    "Opponent": "South Africa",
-                    "Venue": "Faisalabad",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "144 (2nd)",
-                    "Opp Score": "143 (1st)"
-                },
-                {
-                    "Date": "2025-11-06",
-                    "Opponent": "South Africa",
-                    "Venue": "Faisalabad",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "269 (1st)",
-                    "Opp Score": "270 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1501899,1501900,1502167,1502168,1502169"
+        {
+          "Date": "2021-07-22",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u274c LOSS",
+          "Australia": "187 (1st)",
+          "Opp Score": "191 (2nd)"
         },
-        "Africa": {
-            "summary_code": [
-                "W",
-                "W",
-                "W",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2024-12-22",
-                    "Opponent": "South Africa",
-                    "Venue": "Johannesburg",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "308 (1st)",
-                    "Opp Score": "271 (2nd)"
-                },
-                {
-                    "Date": "2024-12-19",
-                    "Opponent": "South Africa",
-                    "Venue": "Capetown",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "329 (1st)",
-                    "Opp Score": "248 (2nd)"
-                },
-                {
-                    "Date": "2024-12-17",
-                    "Opponent": "South Africa",
-                    "Venue": "Paarl",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "242 (2nd)",
-                    "Opp Score": "239 (1st)"
-                },
-                {
-                    "Date": "2024-11-28",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Bulawayo",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "303 (1st)",
-                    "Opp Score": "204 (2nd)"
-                },
-                {
-                    "Date": "2024-11-26",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Bulawayo",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "148 (2nd)",
-                    "Opp Score": "145 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1432214,1432215,1432216,1444650,1444651"
+        {
+          "Date": "2021-07-20",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u2705 WIN",
+          "Australia": "252 (1st)",
+          "Opp Score": "123 (2nd)"
         },
-        "Europe": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2021-07-13",
-                    "Opponent": "England",
-                    "Venue": "Birmingham",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "331 (1st)",
-                    "Opp Score": "332 (2nd)"
-                },
-                {
-                    "Date": "2021-07-10",
-                    "Opponent": "England",
-                    "Venue": "Lords",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "195 (2nd)",
-                    "Opp Score": "247 (1st)"
-                },
-                {
-                    "Date": "2021-07-08",
-                    "Opponent": "England",
-                    "Venue": "Cardiff",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "141 (1st)",
-                    "Opp Score": "142 (2nd)"
-                },
-                {
-                    "Date": "2019-07-05",
-                    "Opponent": "Bangladesh",
-                    "Venue": "Lords",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "315 (1st)",
-                    "Opp Score": "221 (2nd)"
-                },
-                {
-                    "Date": "2019-06-26",
-                    "Opponent": "New Zealand",
-                    "Venue": "Birmingham",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "241 (2nd)",
-                    "Opp Score": "237 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1144515,1144525,1239537,1239538,1239539"
+        {
+          "Date": "2016-06-26",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u2705 WIN",
+          "Australia": "270 (1st)",
+          "Opp Score": "212 (2nd)"
         },
-        "Oceania": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-04-05",
-                    "Opponent": "New Zealand",
-                    "Venue": "Maunganui",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "221 (2nd)",
-                    "Opp Score": "264 (1st)"
-                },
-                {
-                    "Date": "2025-04-02",
-                    "Opponent": "New Zealand",
-                    "Venue": "Hamilton",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "208 (2nd)",
-                    "Opp Score": "292 (1st)"
-                },
-                {
-                    "Date": "2025-03-29",
-                    "Opponent": "New Zealand",
-                    "Venue": "Napier",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "271 (2nd)",
-                    "Opp Score": "344 (1st)"
-                },
-                {
-                    "Date": "2024-11-10",
-                    "Opponent": "Australia",
-                    "Venue": "Optus",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "143 (2nd)",
-                    "Opp Score": "140 (1st)"
-                },
-                {
-                    "Date": "2024-11-08",
-                    "Opponent": "Australia",
-                    "Venue": "Adelaide",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "169 (2nd)",
-                    "Opp Score": "163 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1426550,1426551,1443554,1443555,1443556"
-        },
-        "Americas": {
-            "summary_code": [
-                "L",
-                "L",
-                "W",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-08-12",
-                    "Opponent": "West Indies",
-                    "Venue": "Tarouba",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "92 (2nd)",
-                    "Opp Score": "294 (1st)"
-                },
-                {
-                    "Date": "2025-08-10",
-                    "Opponent": "West Indies",
-                    "Venue": "Tarouba",
-                    "Result": "\u274c LOSS",
-                    "Pakistan": "171 (1st)",
-                    "Opp Score": "184 (2nd)"
-                },
-                {
-                    "Date": "2025-08-08",
-                    "Opponent": "West Indies",
-                    "Venue": "Tarouba",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "284 (2nd)",
-                    "Opp Score": "280 (1st)"
-                },
-                {
-                    "Date": "2017-04-11",
-                    "Opponent": "West Indies",
-                    "Venue": "Guyana",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "236 (2nd)",
-                    "Opp Score": "233 (1st)"
-                },
-                {
-                    "Date": "2017-04-09",
-                    "Opponent": "West Indies",
-                    "Venue": "Guyana",
-                    "Result": "\u2705 WIN",
-                    "Pakistan": "282 (1st)",
-                    "Opp Score": "208 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1077950,1077951,1472528,1472529,1472530"
+        {
+          "Date": "2016-06-21",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u2705 WIN",
+          "Australia": "283 (2nd)",
+          "Opp Score": "282 (1st)"
         }
-    },
-    "South Africa": {
-        "Global": {
-            "summary_code": [
-                "L",
-                "W",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-12-06",
-                    "Opponent": "India",
-                    "Venue": "Visakhapatnam",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "270 (1st)",
-                    "Opp Score": "271 (2nd)"
-                },
-                {
-                    "Date": "2025-12-03",
-                    "Opponent": "India",
-                    "Venue": "Raipur",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "362 (2nd)",
-                    "Opp Score": "358 (1st)"
-                },
-                {
-                    "Date": "2025-11-30",
-                    "Opponent": "India",
-                    "Venue": "Ranchi",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "332 (2nd)",
-                    "Opp Score": "349 (1st)"
-                },
-                {
-                    "Date": "2025-11-08",
-                    "Opponent": "Pakistan",
-                    "Venue": "Faisalabad",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "143 (1st)",
-                    "Opp Score": "144 (2nd)"
-                },
-                {
-                    "Date": "2025-11-06",
-                    "Opponent": "Pakistan",
-                    "Venue": "Faisalabad",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "270 (2nd)",
-                    "Opp Score": "269 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1479573,1479574,1479575,1501899,1501900"
-        },
-        "Asia": {
-            "summary_code": [
-                "L",
-                "W",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-12-06",
-                    "Opponent": "India",
-                    "Venue": "Visakhapatnam",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "270 (1st)",
-                    "Opp Score": "271 (2nd)"
-                },
-                {
-                    "Date": "2025-12-03",
-                    "Opponent": "India",
-                    "Venue": "Raipur",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "362 (2nd)",
-                    "Opp Score": "358 (1st)"
-                },
-                {
-                    "Date": "2025-11-30",
-                    "Opponent": "India",
-                    "Venue": "Ranchi",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "332 (2nd)",
-                    "Opp Score": "349 (1st)"
-                },
-                {
-                    "Date": "2025-11-08",
-                    "Opponent": "Pakistan",
-                    "Venue": "Faisalabad",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "143 (1st)",
-                    "Opp Score": "144 (2nd)"
-                },
-                {
-                    "Date": "2025-11-06",
-                    "Opponent": "Pakistan",
-                    "Venue": "Faisalabad",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "270 (2nd)",
-                    "Opp Score": "269 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1479573,1479574,1479575,1501899,1501900"
-        },
-        "Africa": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2024-12-22",
-                    "Opponent": "Pakistan",
-                    "Venue": "Johannesburg",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "271 (2nd)",
-                    "Opp Score": "308 (1st)"
-                },
-                {
-                    "Date": "2024-12-19",
-                    "Opponent": "Pakistan",
-                    "Venue": "Capetown",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "248 (2nd)",
-                    "Opp Score": "329 (1st)"
-                },
-                {
-                    "Date": "2024-12-17",
-                    "Opponent": "Pakistan",
-                    "Venue": "Paarl",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "239 (1st)",
-                    "Opp Score": "242 (2nd)"
-                },
-                {
-                    "Date": "2023-12-21",
-                    "Opponent": "India",
-                    "Venue": "Paarl",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "218 (2nd)",
-                    "Opp Score": "296 (1st)"
-                },
-                {
-                    "Date": "2023-12-19",
-                    "Opponent": "India",
-                    "Venue": "Gqeberha(Port.Elz)",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "215 (2nd)",
-                    "Opp Score": "211 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1387601,1387602,1432214,1432215,1432216"
-        },
-        "Europe": {
-            "summary_code": [
-                "L",
-                "W",
-                "W",
-                "NR",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-09-07",
-                    "Opponent": "England",
-                    "Venue": "Southampton",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "72 (2nd)",
-                    "Opp Score": "414 (1st)"
-                },
-                {
-                    "Date": "2025-09-04",
-                    "Opponent": "England",
-                    "Venue": "Lords",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "330 (1st)",
-                    "Opp Score": "325 (2nd)"
-                },
-                {
-                    "Date": "2025-09-02",
-                    "Opponent": "England",
-                    "Venue": "Leeds",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "137 (2nd)",
-                    "Opp Score": "131 (1st)"
-                },
-                {
-                    "Date": "2022-07-24",
-                    "Opponent": "England",
-                    "Venue": "Leeds",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "South Africa": "159 (1st)",
-                    "Opp Score": "0 (2nd)"
-                },
-                {
-                    "Date": "2022-07-22",
-                    "Opponent": "England",
-                    "Venue": "Manchester",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "83 (2nd)",
-                    "Opp Score": "201 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1276911,1276912,1448354,1448355,1448356"
-        },
-        "Oceania": {
-            "summary_code": [
-                "L",
-                "W",
-                "W",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-08-24",
-                    "Opponent": "Australia",
-                    "Venue": "Mackay",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "155 (2nd)",
-                    "Opp Score": "431 (1st)"
-                },
-                {
-                    "Date": "2025-08-22",
-                    "Opponent": "Australia",
-                    "Venue": "Mackay",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "277 (1st)",
-                    "Opp Score": "193 (2nd)"
-                },
-                {
-                    "Date": "2025-08-19",
-                    "Opponent": "Australia",
-                    "Venue": "Cairns",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "296 (1st)",
-                    "Opp Score": "198 (2nd)"
-                },
-                {
-                    "Date": "2018-11-11",
-                    "Opponent": "Australia",
-                    "Venue": "Hobart",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "320 (1st)",
-                    "Opp Score": "280 (2nd)"
-                },
-                {
-                    "Date": "2018-11-09",
-                    "Opponent": "Australia",
-                    "Venue": "Adelaide",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "224 (2nd)",
-                    "Opp Score": "231 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1144987,1144988,1478901,1478902,1478903"
-        },
-        "Americas": {
-            "summary_code": [
-                "L",
-                "NR",
-                "W",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2016-06-24",
-                    "Opponent": "West Indies",
-                    "Venue": "Barbados",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "185 (2nd)",
-                    "Opp Score": "285 (1st)"
-                },
-                {
-                    "Date": "2016-06-19",
-                    "Opponent": "Australia",
-                    "Venue": "Barbados",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "South Africa": "8 (1st)",
-                    "Opp Score": "0 (2nd)"
-                },
-                {
-                    "Date": "2016-06-15",
-                    "Opponent": "West Indies",
-                    "Venue": "Kitts",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "343 (1st)",
-                    "Opp Score": "204 (2nd)"
-                },
-                {
-                    "Date": "2016-06-11",
-                    "Opponent": "Australia",
-                    "Venue": "Kitts",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "252 (2nd)",
-                    "Opp Score": "288 (1st)"
-                },
-                {
-                    "Date": "2016-06-07",
-                    "Opponent": "Australia",
-                    "Venue": "Guyana",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "189 (1st)",
-                    "Opp Score": "142 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "932853,932855,932859,932861,932865"
-        }
-    },
-    "Sri Lanka": {
-        "Global": {
-            "summary_code": [
-                "L",
-                "L",
-                "W",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2026-01-27",
-                    "Opponent": "England",
-                    "Venue": "Rps",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "304 (2nd)",
-                    "Opp Score": "357 (1st)"
-                },
-                {
-                    "Date": "2026-01-24",
-                    "Opponent": "England",
-                    "Venue": "Rps",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "219 (1st)",
-                    "Opp Score": "223 (2nd)"
-                },
-                {
-                    "Date": "2026-01-22",
-                    "Opponent": "England",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "271 (1st)",
-                    "Opp Score": "252 (2nd)"
-                },
-                {
-                    "Date": "2025-11-16",
-                    "Opponent": "Pakistan",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "211 (1st)",
-                    "Opp Score": "215 (2nd)"
-                },
-                {
-                    "Date": "2025-11-14",
-                    "Opponent": "Pakistan",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "288 (1st)",
-                    "Opp Score": "289 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1502168,1502169,1507716,1507717,1507718"
-        },
-        "Asia": {
-            "summary_code": [
-                "L",
-                "L",
-                "W",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2026-01-27",
-                    "Opponent": "England",
-                    "Venue": "Rps",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "304 (2nd)",
-                    "Opp Score": "357 (1st)"
-                },
-                {
-                    "Date": "2026-01-24",
-                    "Opponent": "England",
-                    "Venue": "Rps",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "219 (1st)",
-                    "Opp Score": "223 (2nd)"
-                },
-                {
-                    "Date": "2026-01-22",
-                    "Opponent": "England",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "271 (1st)",
-                    "Opp Score": "252 (2nd)"
-                },
-                {
-                    "Date": "2025-11-16",
-                    "Opponent": "Pakistan",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "211 (1st)",
-                    "Opp Score": "215 (2nd)"
-                },
-                {
-                    "Date": "2025-11-14",
-                    "Opponent": "Pakistan",
-                    "Venue": "Rawalpindi",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "288 (1st)",
-                    "Opp Score": "289 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1502168,1502169,1507716,1507717,1507718"
-        },
-        "Africa": {
-            "summary_code": [
-                "W",
-                "W",
-                "W",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-08-31",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "278 (2nd)",
-                    "Opp Score": "277 (1st)"
-                },
-                {
-                    "Date": "2025-08-29",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "298 (1st)",
-                    "Opp Score": "291 (2nd)"
-                },
-                {
-                    "Date": "2023-07-09",
-                    "Opponent": "Netherlands",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "233 (1st)",
-                    "Opp Score": "105 (2nd)"
-                },
-                {
-                    "Date": "2023-07-07",
-                    "Opponent": "West Indies",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "244 (2nd)",
-                    "Opp Score": "243 (1st)"
-                },
-                {
-                    "Date": "2023-07-02",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Bulawayo",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "169 (2nd)",
-                    "Opp Score": "165 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1377770,1377778,1377779,1492821,1492822"
-        },
-        "Europe": {
-            "summary_code": [
-                "NR",
-                "L",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2021-07-04",
-                    "Opponent": "England",
-                    "Venue": "Bristol",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "Sri Lanka": "166 (1st)",
-                    "Opp Score": "0 (2nd)"
-                },
-                {
-                    "Date": "2021-07-01",
-                    "Opponent": "England",
-                    "Venue": "Oval",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "241 (1st)",
-                    "Opp Score": "244 (2nd)"
-                },
-                {
-                    "Date": "2021-06-29",
-                    "Opponent": "England",
-                    "Venue": "Durham",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "185 (1st)",
-                    "Opp Score": "189 (2nd)"
-                },
-                {
-                    "Date": "2019-07-06",
-                    "Opponent": "India",
-                    "Venue": "Leeds",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "264 (1st)",
-                    "Opp Score": "265 (2nd)"
-                },
-                {
-                    "Date": "2019-07-01",
-                    "Opponent": "West Indies",
-                    "Venue": "Durham",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "338 (1st)",
-                    "Opp Score": "315 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1144521,1144526,1239534,1239535,1239536"
-        },
-        "Oceania": {
-            "summary_code": [
-                "W",
-                "L",
-                "L",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-01-11",
-                    "Opponent": "New Zealand",
-                    "Venue": "Auckland",
-                    "Result": "\u2705 WIN",
-                    "Sri Lanka": "290 (1st)",
-                    "Opp Score": "150 (2nd)"
-                },
-                {
-                    "Date": "2025-01-08",
-                    "Opponent": "New Zealand",
-                    "Venue": "Hamilton",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "142 (2nd)",
-                    "Opp Score": "255 (1st)"
-                },
-                {
-                    "Date": "2025-01-05",
-                    "Opponent": "New Zealand",
-                    "Venue": "Basin",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "178 (1st)",
-                    "Opp Score": "180 (2nd)"
-                },
-                {
-                    "Date": "2023-03-31",
-                    "Opponent": "New Zealand",
-                    "Venue": "Hamilton",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "157 (1st)",
-                    "Opp Score": "159 (2nd)"
-                },
-                {
-                    "Date": "2023-03-25",
-                    "Opponent": "New Zealand",
-                    "Venue": "Auckland",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "76 (2nd)",
-                    "Opp Score": "274 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1322359,1322361,1443546,1443547,1443548"
-        },
-        "Americas": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2021-03-14",
-                    "Opponent": "West Indies",
-                    "Venue": "Antigua",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "274 (1st)",
-                    "Opp Score": "276 (2nd)"
-                },
-                {
-                    "Date": "2021-03-12",
-                    "Opponent": "West Indies",
-                    "Venue": "Antigua",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "273 (1st)",
-                    "Opp Score": "274 (2nd)"
-                },
-                {
-                    "Date": "2021-03-10",
-                    "Opponent": "West Indies",
-                    "Venue": "Antigua",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "232 (1st)",
-                    "Opp Score": "236 (2nd)"
-                },
-                {
-                    "Date": "2013-07-11",
-                    "Opponent": "India",
-                    "Venue": "Trinidad",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "201 (1st)",
-                    "Opp Score": "203 (2nd)"
-                },
-                {
-                    "Date": "2013-07-09",
-                    "Opponent": "India",
-                    "Venue": "Trinidad",
-                    "Result": "\u274c LOSS",
-                    "Sri Lanka": "96 (2nd)",
-                    "Opp Score": "119 (1st)"
-                }
-            ],
-            "MATCH_IDS": "597928,597929,1252069,1252070,1252071"
-        }
-    },
-    "West Indies": {
-        "Global": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "L",
-                "T"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-11-22",
-                    "Opponent": "New Zealand",
-                    "Venue": "Hamilton",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "161 (1st)",
-                    "Opp Score": "162 (2nd)"
-                },
-                {
-                    "Date": "2025-11-19",
-                    "Opponent": "New Zealand",
-                    "Venue": "Napier",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "247 (1st)",
-                    "Opp Score": "248 (2nd)"
-                },
-                {
-                    "Date": "2025-11-16",
-                    "Opponent": "New Zealand",
-                    "Venue": "Christchurch",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "262 (2nd)",
-                    "Opp Score": "269 (1st)"
-                },
-                {
-                    "Date": "2025-10-23",
-                    "Opponent": "Bangladesh",
-                    "Venue": "Dhaka",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "117 (2nd)",
-                    "Opp Score": "296 (1st)"
-                },
-                {
-                    "Date": "2025-10-21",
-                    "Opponent": "Bangladesh",
-                    "Venue": "Dhaka",
-                    "Result": "\ud83e\udd1d TIE",
-                    "West Indies": "213 (2nd)",
-                    "Opp Score": "213 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1491728,1491729,1491730,1505123,1505124"
-        },
-        "Asia": {
-            "summary_code": [
-                "L",
-                "T",
-                "L",
-                "W",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-10-23",
-                    "Opponent": "Bangladesh",
-                    "Venue": "Dhaka",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "117 (2nd)",
-                    "Opp Score": "296 (1st)"
-                },
-                {
-                    "Date": "2025-10-21",
-                    "Opponent": "Bangladesh",
-                    "Venue": "Dhaka",
-                    "Result": "\ud83e\udd1d TIE",
-                    "West Indies": "213 (2nd)",
-                    "Opp Score": "213 (1st)"
-                },
-                {
-                    "Date": "2025-10-18",
-                    "Opponent": "Bangladesh",
-                    "Venue": "Dhaka",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "133 (2nd)",
-                    "Opp Score": "207 (1st)"
-                },
-                {
-                    "Date": "2024-10-26",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Pallekele",
-                    "Result": "\u2705 WIN",
-                    "West Indies": "196 (2nd)",
-                    "Opp Score": "156 (1st)"
-                },
-                {
-                    "Date": "2024-10-23",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Pallekele",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "189 (1st)",
-                    "Opp Score": "190 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1451818,1451819,1505122,1505123,1505124"
-        },
-        "Africa": {
-            "summary_code": [
-                "L",
-                "W",
-                "L",
-                "T",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2023-07-07",
-                    "Opponent": "Sri Lanka",
-                    "Venue": "Harare",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "243 (1st)",
-                    "Opp Score": "244 (2nd)"
-                },
-                {
-                    "Date": "2023-07-05",
-                    "Opponent": "Oman",
-                    "Venue": "Harare",
-                    "Result": "\u2705 WIN",
-                    "West Indies": "222 (2nd)",
-                    "Opp Score": "221 (1st)"
-                },
-                {
-                    "Date": "2023-07-01",
-                    "Opponent": "Scotland",
-                    "Venue": "Harare",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "181 (1st)",
-                    "Opp Score": "185 (2nd)"
-                },
-                {
-                    "Date": "2023-06-26",
-                    "Opponent": "Netherlands",
-                    "Venue": "Harare",
-                    "Result": "\ud83e\udd1d TIE",
-                    "West Indies": "374 (1st)",
-                    "Opp Score": "374 (2nd)"
-                },
-                {
-                    "Date": "2023-06-24",
-                    "Opponent": "Zimbabwe",
-                    "Venue": "Harare",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "233 (2nd)",
-                    "Opp Score": "268 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1377758,1377763,1377769,1377775,1377778"
-        },
-        "Europe": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "W",
-                "NR"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-06-03",
-                    "Opponent": "England",
-                    "Venue": "Oval",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "251 (1st)",
-                    "Opp Score": "246 (2nd)"
-                },
-                {
-                    "Date": "2025-06-01",
-                    "Opponent": "England",
-                    "Venue": "Cardiff",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "308 (1st)",
-                    "Opp Score": "312 (2nd)"
-                },
-                {
-                    "Date": "2025-05-29",
-                    "Opponent": "England",
-                    "Venue": "Birmingham",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "162 (2nd)",
-                    "Opp Score": "400 (1st)"
-                },
-                {
-                    "Date": "2025-05-25",
-                    "Opponent": "Ireland",
-                    "Venue": "Dublin",
-                    "Result": "\u2705 WIN",
-                    "West Indies": "385 (1st)",
-                    "Opp Score": "165 (2nd)"
-                },
-                {
-                    "Date": "2025-05-23",
-                    "Opponent": "Ireland",
-                    "Venue": "Dublin",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "West Indies": "352 (1st)",
-                    "Opp Score": "0 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1448343,1448344,1448345,1472512,1472513"
-        },
-        "Oceania": {
-            "summary_code": [
-                "L",
-                "L",
-                "L",
-                "L",
-                "L"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-11-22",
-                    "Opponent": "New Zealand",
-                    "Venue": "Hamilton",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "161 (1st)",
-                    "Opp Score": "162 (2nd)"
-                },
-                {
-                    "Date": "2025-11-19",
-                    "Opponent": "New Zealand",
-                    "Venue": "Napier",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "247 (1st)",
-                    "Opp Score": "248 (2nd)"
-                },
-                {
-                    "Date": "2025-11-16",
-                    "Opponent": "New Zealand",
-                    "Venue": "Christchurch",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "262 (2nd)",
-                    "Opp Score": "269 (1st)"
-                },
-                {
-                    "Date": "2024-02-06",
-                    "Opponent": "Australia",
-                    "Venue": "Canberra",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "86 (1st)",
-                    "Opp Score": "87 (2nd)"
-                },
-                {
-                    "Date": "2024-02-04",
-                    "Opponent": "Australia",
-                    "Venue": "Sydney",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "175 (2nd)",
-                    "Opp Score": "258 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1375848,1375849,1491728,1491729,1491730"
-        },
-        "Americas": {
-            "summary_code": [
-                "W",
-                "W",
-                "L",
-                "W",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-08-12",
-                    "Opponent": "Pakistan",
-                    "Venue": "Tarouba",
-                    "Result": "\u2705 WIN",
-                    "West Indies": "294 (1st)",
-                    "Opp Score": "92 (2nd)"
-                },
-                {
-                    "Date": "2025-08-10",
-                    "Opponent": "Pakistan",
-                    "Venue": "Tarouba",
-                    "Result": "\u2705 WIN",
-                    "West Indies": "184 (2nd)",
-                    "Opp Score": "171 (1st)"
-                },
-                {
-                    "Date": "2025-08-08",
-                    "Opponent": "Pakistan",
-                    "Venue": "Tarouba",
-                    "Result": "\u274c LOSS",
-                    "West Indies": "280 (1st)",
-                    "Opp Score": "284 (2nd)"
-                },
-                {
-                    "Date": "2024-12-12",
-                    "Opponent": "Bangladesh",
-                    "Venue": "Kitts",
-                    "Result": "\u2705 WIN",
-                    "West Indies": "325 (2nd)",
-                    "Opp Score": "321 (1st)"
-                },
-                {
-                    "Date": "2024-12-10",
-                    "Opponent": "Bangladesh",
-                    "Venue": "Kitts",
-                    "Result": "\u2705 WIN",
-                    "West Indies": "230 (2nd)",
-                    "Opp Score": "227 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1433381,1433382,1472528,1472529,1472530"
-        }
-    },
-    "H2H_Form": {
-        "India_vs_Pakistan_Global": {
-            "summary_code": [
-                "W",
-                "W",
-                "W",
-                "NR",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-02-23",
-                    "Opponent": "Pakistan",
-                    "Venue": "Dubai",
-                    "Result": "\u2705 WIN",
-                    "India": "244 (2nd)",
-                    "Opp Score": "241 (1st)"
-                },
-                {
-                    "Date": "2023-10-14",
-                    "Opponent": "Pakistan",
-                    "Venue": "Ahmedabad",
-                    "Result": "\u2705 WIN",
-                    "India": "192 (2nd)",
-                    "Opp Score": "191 (1st)"
-                },
-                {
-                    "Date": "2023-09-10",
-                    "Opponent": "Pakistan",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "India": "356 (1st)",
-                    "Opp Score": "128 (2nd)"
-                },
-                {
-                    "Date": "2023-09-02",
-                    "Opponent": "Pakistan",
-                    "Venue": "Pallekele",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "India": "266 (1st)",
-                    "Opp Score": "0 (2nd)"
-                },
-                {
-                    "Date": "2019-06-16",
-                    "Opponent": "Pakistan",
-                    "Venue": "Manchester",
-                    "Result": "\u2705 WIN",
-                    "India": "336 (1st)",
-                    "Opp Score": "212 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1144504,1384403,1388394,1388406,1466418"
-        },
-        "India_vs_Pakistan_Asia": {
-            "summary_code": [
-                "W",
-                "W",
-                "W",
-                "NR",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-02-23",
-                    "Opponent": "Pakistan",
-                    "Venue": "Dubai",
-                    "Result": "\u2705 WIN",
-                    "India": "244 (2nd)",
-                    "Opp Score": "241 (1st)"
-                },
-                {
-                    "Date": "2023-10-14",
-                    "Opponent": "Pakistan",
-                    "Venue": "Ahmedabad",
-                    "Result": "\u2705 WIN",
-                    "India": "192 (2nd)",
-                    "Opp Score": "191 (1st)"
-                },
-                {
-                    "Date": "2023-09-10",
-                    "Opponent": "Pakistan",
-                    "Venue": "Rps",
-                    "Result": "\u2705 WIN",
-                    "India": "356 (1st)",
-                    "Opp Score": "128 (2nd)"
-                },
-                {
-                    "Date": "2023-09-02",
-                    "Opponent": "Pakistan",
-                    "Venue": "Pallekele",
-                    "Result": "\ud83c\udf27\ufe0f NR",
-                    "India": "266 (1st)",
-                    "Opp Score": "0 (2nd)"
-                },
-                {
-                    "Date": "2018-09-23",
-                    "Opponent": "Pakistan",
-                    "Venue": "Dubai",
-                    "Result": "\u2705 WIN",
-                    "India": "238 (2nd)",
-                    "Opp Score": "237 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1153251,1384403,1388394,1388406,1466418"
-        },
-        "Australia_vs_England_Global": {
-            "summary_code": [
-                "W",
-                "W",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-02-22",
-                    "Opponent": "England",
-                    "Venue": "Lahore",
-                    "Result": "\u2705 WIN",
-                    "Australia": "356 (2nd)",
-                    "Opp Score": "351 (1st)"
-                },
-                {
-                    "Date": "2024-09-29",
-                    "Opponent": "England",
-                    "Venue": "Bristol",
-                    "Result": "\u2705 WIN",
-                    "Australia": "165 (2nd)",
-                    "Opp Score": "309 (1st)"
-                },
-                {
-                    "Date": "2024-09-27",
-                    "Opponent": "England",
-                    "Venue": "Lords",
-                    "Result": "\u274c LOSS",
-                    "Australia": "126 (2nd)",
-                    "Opp Score": "312 (1st)"
-                },
-                {
-                    "Date": "2024-09-24",
-                    "Opponent": "England",
-                    "Venue": "Durham",
-                    "Result": "\u274c LOSS",
-                    "Australia": "304 (1st)",
-                    "Opp Score": "254 (2nd)"
-                },
-                {
-                    "Date": "2024-09-21",
-                    "Opponent": "England",
-                    "Venue": "Leeds",
-                    "Result": "\u2705 WIN",
-                    "Australia": "270 (1st)",
-                    "Opp Score": "202 (2nd)"
-                }
-            ],
-            "MATCH_IDS": "1385701,1385702,1385703,1385704,1466417"
-        },
-        "South Africa_vs_India_Global": {
-            "summary_code": [
-                "L",
-                "W",
-                "L",
-                "L",
-                "W"
-            ],
-            "matches": [
-                {
-                    "Date": "2025-12-06",
-                    "Opponent": "India",
-                    "Venue": "Visakhapatnam",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "270 (1st)",
-                    "Opp Score": "271 (2nd)"
-                },
-                {
-                    "Date": "2025-12-03",
-                    "Opponent": "India",
-                    "Venue": "Raipur",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "362 (2nd)",
-                    "Opp Score": "358 (1st)"
-                },
-                {
-                    "Date": "2025-11-30",
-                    "Opponent": "India",
-                    "Venue": "Ranchi",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "332 (2nd)",
-                    "Opp Score": "349 (1st)"
-                },
-                {
-                    "Date": "2023-12-21",
-                    "Opponent": "India",
-                    "Venue": "Paarl",
-                    "Result": "\u274c LOSS",
-                    "South Africa": "218 (2nd)",
-                    "Opp Score": "296 (1st)"
-                },
-                {
-                    "Date": "2023-12-19",
-                    "Opponent": "India",
-                    "Venue": "Gqeberha(Port.Elz)",
-                    "Result": "\u2705 WIN",
-                    "South Africa": "215 (2nd)",
-                    "Opp Score": "211 (1st)"
-                }
-            ],
-            "MATCH_IDS": "1387601,1387602,1479573,1479574,1479575"
-        }
+      ],
+      "MATCH_IDS": "932863,932867,1263161,1263162,1263163"
     }
+  },
+  "Bangladesh": {
+    "Global": {
+      "summary_code": [
+        "W",
+        "T",
+        "W",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-10-23",
+          "Opponent": "West Indies",
+          "Venue": "Dhaka",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "296 (1st)",
+          "Opp Score": "117 (2nd)"
+        },
+        {
+          "Date": "2025-10-21",
+          "Opponent": "West Indies",
+          "Venue": "Dhaka",
+          "Result": "\ud83e\udd1d TIE",
+          "Bangladesh": "213 (1st)",
+          "Opp Score": "213 (2nd)"
+        },
+        {
+          "Date": "2025-10-18",
+          "Opponent": "West Indies",
+          "Venue": "Dhaka",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "207 (1st)",
+          "Opp Score": "133 (2nd)"
+        },
+        {
+          "Date": "2025-07-08",
+          "Opponent": "Sri Lanka",
+          "Venue": "Pallekele",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "186 (2nd)",
+          "Opp Score": "285 (1st)"
+        },
+        {
+          "Date": "2025-07-05",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "248 (1st)",
+          "Opp Score": "232 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1485506,1485507,1505122,1505123,1505124"
+    },
+    "Asia": {
+      "summary_code": [
+        "W",
+        "T",
+        "W",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-10-23",
+          "Opponent": "West Indies",
+          "Venue": "Dhaka",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "296 (1st)",
+          "Opp Score": "117 (2nd)"
+        },
+        {
+          "Date": "2025-10-21",
+          "Opponent": "West Indies",
+          "Venue": "Dhaka",
+          "Result": "\ud83e\udd1d TIE",
+          "Bangladesh": "213 (1st)",
+          "Opp Score": "213 (2nd)"
+        },
+        {
+          "Date": "2025-10-18",
+          "Opponent": "West Indies",
+          "Venue": "Dhaka",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "207 (1st)",
+          "Opp Score": "133 (2nd)"
+        },
+        {
+          "Date": "2025-07-08",
+          "Opponent": "Sri Lanka",
+          "Venue": "Pallekele",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "186 (2nd)",
+          "Opp Score": "285 (1st)"
+        },
+        {
+          "Date": "2025-07-05",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "248 (1st)",
+          "Opp Score": "232 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1485506,1485507,1505122,1505123,1505124"
+    },
+    "Africa": {
+      "summary_code": [
+        "W",
+        "L",
+        "L",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2022-08-10",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "256 (1st)",
+          "Opp Score": "151 (2nd)"
+        },
+        {
+          "Date": "2022-08-07",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "290 (1st)",
+          "Opp Score": "291 (2nd)"
+        },
+        {
+          "Date": "2022-08-05",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "303 (1st)",
+          "Opp Score": "307 (2nd)"
+        },
+        {
+          "Date": "2022-03-23",
+          "Opponent": "South Africa",
+          "Venue": "Centurion",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "156 (2nd)",
+          "Opp Score": "154 (1st)"
+        },
+        {
+          "Date": "2022-03-20",
+          "Opponent": "South Africa",
+          "Venue": "Johannesburg",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "194 (1st)",
+          "Opp Score": "195 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1277098,1277099,1323292,1323293,1323294"
+    },
+    "Europe": {
+      "summary_code": [
+        "W",
+        "W",
+        "NR",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2023-05-14",
+          "Opponent": "Ireland",
+          "Venue": "Chelmsford",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "274 (1st)",
+          "Opp Score": "269 (2nd)"
+        },
+        {
+          "Date": "2023-05-12",
+          "Opponent": "Ireland",
+          "Venue": "Chelmsford",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "320 (2nd)",
+          "Opp Score": "319 (1st)"
+        },
+        {
+          "Date": "2023-05-09",
+          "Opponent": "Ireland",
+          "Venue": "Chelmsford",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "Bangladesh": "246 (1st)",
+          "Opp Score": "65 (2nd)"
+        },
+        {
+          "Date": "2019-07-05",
+          "Opponent": "Pakistan",
+          "Venue": "Lords",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "221 (2nd)",
+          "Opp Score": "315 (1st)"
+        },
+        {
+          "Date": "2019-07-02",
+          "Opponent": "India",
+          "Venue": "Birmingham",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "286 (2nd)",
+          "Opp Score": "314 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1144522,1144525,1364124,1364125,1365552"
+    },
+    "Oceania": {
+      "summary_code": [
+        "W",
+        "L",
+        "L",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2023-12-23",
+          "Opponent": "New Zealand",
+          "Venue": "Napier",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "99 (2nd)",
+          "Opp Score": "98 (1st)"
+        },
+        {
+          "Date": "2023-12-20",
+          "Opponent": "New Zealand",
+          "Venue": "Nelson",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "291 (1st)",
+          "Opp Score": "296 (2nd)"
+        },
+        {
+          "Date": "2023-12-17",
+          "Opponent": "New Zealand",
+          "Venue": "Dunedin",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "200 (2nd)",
+          "Opp Score": "239 (1st)"
+        },
+        {
+          "Date": "2021-03-26",
+          "Opponent": "New Zealand",
+          "Venue": "Basin",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "154 (2nd)",
+          "Opp Score": "318 (1st)"
+        },
+        {
+          "Date": "2021-03-23",
+          "Opponent": "New Zealand",
+          "Venue": "Christchurch",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "271 (1st)",
+          "Opp Score": "275 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1233977,1233978,1388211,1388212,1408102"
+    },
+    "Americas": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2024-12-12",
+          "Opponent": "West Indies",
+          "Venue": "Kitts",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "321 (1st)",
+          "Opp Score": "325 (2nd)"
+        },
+        {
+          "Date": "2024-12-10",
+          "Opponent": "West Indies",
+          "Venue": "Kitts",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "227 (1st)",
+          "Opp Score": "230 (2nd)"
+        },
+        {
+          "Date": "2024-12-08",
+          "Opponent": "West Indies",
+          "Venue": "Kitts",
+          "Result": "\u274c LOSS",
+          "Bangladesh": "294 (1st)",
+          "Opp Score": "295 (2nd)"
+        },
+        {
+          "Date": "2022-07-16",
+          "Opponent": "West Indies",
+          "Venue": "Guyana",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "179 (2nd)",
+          "Opp Score": "178 (1st)"
+        },
+        {
+          "Date": "2022-07-13",
+          "Opponent": "West Indies",
+          "Venue": "Guyana",
+          "Result": "\u2705 WIN",
+          "Bangladesh": "112 (2nd)",
+          "Opp Score": "108 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1317153,1317154,1433380,1433381,1433382"
+    }
+  },
+  "England": {
+    "Global": {
+      "summary_code": [
+        "W",
+        "W",
+        "L",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2026-01-27",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "England": "357 (1st)",
+          "Opp Score": "304 (2nd)"
+        },
+        {
+          "Date": "2026-01-24",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "England": "223 (2nd)",
+          "Opp Score": "219 (1st)"
+        },
+        {
+          "Date": "2026-01-22",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u274c LOSS",
+          "England": "252 (2nd)",
+          "Opp Score": "271 (1st)"
+        },
+        {
+          "Date": "2025-11-01",
+          "Opponent": "New Zealand",
+          "Venue": "Wellington",
+          "Result": "\u274c LOSS",
+          "England": "222 (1st)",
+          "Opp Score": "226 (2nd)"
+        },
+        {
+          "Date": "2025-10-29",
+          "Opponent": "New Zealand",
+          "Venue": "Hamilton",
+          "Result": "\u274c LOSS",
+          "England": "175 (1st)",
+          "Opp Score": "177 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1491721,1491722,1507716,1507717,1507718"
+    },
+    "Asia": {
+      "summary_code": [
+        "W",
+        "W",
+        "L",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2026-01-27",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "England": "357 (1st)",
+          "Opp Score": "304 (2nd)"
+        },
+        {
+          "Date": "2026-01-24",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "England": "223 (2nd)",
+          "Opp Score": "219 (1st)"
+        },
+        {
+          "Date": "2026-01-22",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rps",
+          "Result": "\u274c LOSS",
+          "England": "252 (2nd)",
+          "Opp Score": "271 (1st)"
+        },
+        {
+          "Date": "2025-03-01",
+          "Opponent": "South Africa",
+          "Venue": "Karachi",
+          "Result": "\u274c LOSS",
+          "England": "179 (1st)",
+          "Opp Score": "181 (2nd)"
+        },
+        {
+          "Date": "2025-02-22",
+          "Opponent": "Australia",
+          "Venue": "Lahore",
+          "Result": "\u274c LOSS",
+          "England": "351 (1st)",
+          "Opp Score": "356 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1466417,1466424,1507716,1507717,1507718"
+    },
+    "Africa": {
+      "summary_code": [
+        "W",
+        "L",
+        "L",
+        "W",
+        "NR"
+      ],
+      "matches": [
+        {
+          "Date": "2023-02-01",
+          "Opponent": "South Africa",
+          "Venue": "Kimberley",
+          "Result": "\u2705 WIN",
+          "England": "346 (1st)",
+          "Opp Score": "287 (2nd)"
+        },
+        {
+          "Date": "2023-01-29",
+          "Opponent": "South Africa",
+          "Venue": "Bloemfontein",
+          "Result": "\u274c LOSS",
+          "England": "342 (1st)",
+          "Opp Score": "347 (2nd)"
+        },
+        {
+          "Date": "2023-01-27",
+          "Opponent": "South Africa",
+          "Venue": "Bloemfontein",
+          "Result": "\u274c LOSS",
+          "England": "271 (2nd)",
+          "Opp Score": "298 (1st)"
+        },
+        {
+          "Date": "2020-02-09",
+          "Opponent": "South Africa",
+          "Venue": "Johannesburg",
+          "Result": "\u2705 WIN",
+          "England": "257 (2nd)",
+          "Opp Score": "256 (1st)"
+        },
+        {
+          "Date": "2020-02-07",
+          "Opponent": "South Africa",
+          "Venue": "Durban",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "England": "0 (2nd)",
+          "Opp Score": "71 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1185311,1185312,1339595,1339596,1339597"
+    },
+    "Europe": {
+      "summary_code": [
+        "W",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-09-07",
+          "Opponent": "South Africa",
+          "Venue": "Southampton",
+          "Result": "\u2705 WIN",
+          "England": "414 (1st)",
+          "Opp Score": "72 (2nd)"
+        },
+        {
+          "Date": "2025-09-04",
+          "Opponent": "South Africa",
+          "Venue": "Lords",
+          "Result": "\u274c LOSS",
+          "England": "325 (2nd)",
+          "Opp Score": "330 (1st)"
+        },
+        {
+          "Date": "2025-09-02",
+          "Opponent": "South Africa",
+          "Venue": "Leeds",
+          "Result": "\u274c LOSS",
+          "England": "131 (1st)",
+          "Opp Score": "137 (2nd)"
+        },
+        {
+          "Date": "2025-06-03",
+          "Opponent": "West Indies",
+          "Venue": "Oval",
+          "Result": "\u2705 WIN",
+          "England": "246 (2nd)",
+          "Opp Score": "251 (1st)"
+        },
+        {
+          "Date": "2025-06-01",
+          "Opponent": "West Indies",
+          "Venue": "Cardiff",
+          "Result": "\u2705 WIN",
+          "England": "312 (2nd)",
+          "Opp Score": "308 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1448344,1448345,1448354,1448355,1448356"
+    },
+    "Oceania": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-11-01",
+          "Opponent": "New Zealand",
+          "Venue": "Wellington",
+          "Result": "\u274c LOSS",
+          "England": "222 (1st)",
+          "Opp Score": "226 (2nd)"
+        },
+        {
+          "Date": "2025-10-29",
+          "Opponent": "New Zealand",
+          "Venue": "Hamilton",
+          "Result": "\u274c LOSS",
+          "England": "175 (1st)",
+          "Opp Score": "177 (2nd)"
+        },
+        {
+          "Date": "2025-10-26",
+          "Opponent": "New Zealand",
+          "Venue": "Maunganui",
+          "Result": "\u274c LOSS",
+          "England": "223 (1st)",
+          "Opp Score": "224 (2nd)"
+        },
+        {
+          "Date": "2022-11-22",
+          "Opponent": "Australia",
+          "Venue": "Melbourne",
+          "Result": "\u274c LOSS",
+          "England": "142 (2nd)",
+          "Opp Score": "355 (1st)"
+        },
+        {
+          "Date": "2022-11-19",
+          "Opponent": "Australia",
+          "Venue": "Sydney",
+          "Result": "\u274c LOSS",
+          "England": "208 (2nd)",
+          "Opp Score": "280 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1317490,1317491,1491720,1491721,1491722"
+    },
+    "Americas": {
+      "summary_code": [
+        "L",
+        "W",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2024-11-06",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u274c LOSS",
+          "England": "263 (1st)",
+          "Opp Score": "267 (2nd)"
+        },
+        {
+          "Date": "2024-11-02",
+          "Opponent": "West Indies",
+          "Venue": "Antigua",
+          "Result": "\u2705 WIN",
+          "England": "329 (2nd)",
+          "Opp Score": "328 (1st)"
+        },
+        {
+          "Date": "2024-10-31",
+          "Opponent": "West Indies",
+          "Venue": "Antigua",
+          "Result": "\u274c LOSS",
+          "England": "209 (1st)",
+          "Opp Score": "157 (2nd)"
+        },
+        {
+          "Date": "2023-12-09",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u274c LOSS",
+          "England": "206 (1st)",
+          "Opp Score": "191 (2nd)"
+        },
+        {
+          "Date": "2023-12-06",
+          "Opponent": "West Indies",
+          "Venue": "Antigua",
+          "Result": "\u2705 WIN",
+          "England": "206 (2nd)",
+          "Opp Score": "202 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1373577,1373578,1433370,1433371,1433372"
+    }
+  },
+  "India": {
+    "Global": {
+      "summary_code": [
+        "L",
+        "L",
+        "W",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2026-01-18",
+          "Opponent": "New Zealand",
+          "Venue": "Indore",
+          "Result": "\u274c LOSS",
+          "India": "296 (2nd)",
+          "Opp Score": "337 (1st)"
+        },
+        {
+          "Date": "2026-01-14",
+          "Opponent": "New Zealand",
+          "Venue": "Rajkot",
+          "Result": "\u274c LOSS",
+          "India": "284 (1st)",
+          "Opp Score": "286 (2nd)"
+        },
+        {
+          "Date": "2026-01-11",
+          "Opponent": "New Zealand",
+          "Venue": "Vadodara",
+          "Result": "\u2705 WIN",
+          "India": "306 (2nd)",
+          "Opp Score": "300 (1st)"
+        },
+        {
+          "Date": "2025-12-06",
+          "Opponent": "South Africa",
+          "Venue": "Visakhapatnam",
+          "Result": "\u2705 WIN",
+          "India": "271 (2nd)",
+          "Opp Score": "270 (1st)"
+        },
+        {
+          "Date": "2025-12-03",
+          "Opponent": "South Africa",
+          "Venue": "Raipur",
+          "Result": "\u274c LOSS",
+          "India": "358 (1st)",
+          "Opp Score": "362 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1479574,1479575,1490231,1490232,1490233"
+    },
+    "Asia": {
+      "summary_code": [
+        "L",
+        "L",
+        "W",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2026-01-18",
+          "Opponent": "New Zealand",
+          "Venue": "Indore",
+          "Result": "\u274c LOSS",
+          "India": "296 (2nd)",
+          "Opp Score": "337 (1st)"
+        },
+        {
+          "Date": "2026-01-14",
+          "Opponent": "New Zealand",
+          "Venue": "Rajkot",
+          "Result": "\u274c LOSS",
+          "India": "284 (1st)",
+          "Opp Score": "286 (2nd)"
+        },
+        {
+          "Date": "2026-01-11",
+          "Opponent": "New Zealand",
+          "Venue": "Vadodara",
+          "Result": "\u2705 WIN",
+          "India": "306 (2nd)",
+          "Opp Score": "300 (1st)"
+        },
+        {
+          "Date": "2025-12-06",
+          "Opponent": "South Africa",
+          "Venue": "Visakhapatnam",
+          "Result": "\u2705 WIN",
+          "India": "271 (2nd)",
+          "Opp Score": "270 (1st)"
+        },
+        {
+          "Date": "2025-12-03",
+          "Opponent": "South Africa",
+          "Venue": "Raipur",
+          "Result": "\u274c LOSS",
+          "India": "358 (1st)",
+          "Opp Score": "362 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1479574,1479575,1490231,1490232,1490233"
+    },
+    "Africa": {
+      "summary_code": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2023-12-21",
+          "Opponent": "South Africa",
+          "Venue": "Paarl",
+          "Result": "\u2705 WIN",
+          "India": "296 (1st)",
+          "Opp Score": "218 (2nd)"
+        },
+        {
+          "Date": "2023-12-19",
+          "Opponent": "South Africa",
+          "Venue": "Gqeberha(Port.Elz)",
+          "Result": "\u274c LOSS",
+          "India": "211 (1st)",
+          "Opp Score": "215 (2nd)"
+        },
+        {
+          "Date": "2023-12-17",
+          "Opponent": "South Africa",
+          "Venue": "Johannesburg",
+          "Result": "\u2705 WIN",
+          "India": "117 (2nd)",
+          "Opp Score": "116 (1st)"
+        },
+        {
+          "Date": "2022-08-22",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "India": "289 (1st)",
+          "Opp Score": "276 (2nd)"
+        },
+        {
+          "Date": "2022-08-20",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "India": "167 (2nd)",
+          "Opp Score": "161 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1325550,1325551,1387600,1387601,1387602"
+    },
+    "Europe": {
+      "summary_code": [
+        "W",
+        "L",
+        "W",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2022-07-17",
+          "Opponent": "England",
+          "Venue": "Manchester",
+          "Result": "\u2705 WIN",
+          "India": "261 (2nd)",
+          "Opp Score": "259 (1st)"
+        },
+        {
+          "Date": "2022-07-14",
+          "Opponent": "England",
+          "Venue": "Lords",
+          "Result": "\u274c LOSS",
+          "India": "146 (2nd)",
+          "Opp Score": "246 (1st)"
+        },
+        {
+          "Date": "2022-07-12",
+          "Opponent": "England",
+          "Venue": "Oval",
+          "Result": "\u2705 WIN",
+          "India": "114 (2nd)",
+          "Opp Score": "110 (1st)"
+        },
+        {
+          "Date": "2019-07-09",
+          "Opponent": "New Zealand",
+          "Venue": "Manchester",
+          "Result": "\u274c LOSS",
+          "India": "221 (2nd)",
+          "Opp Score": "239 (1st)"
+        },
+        {
+          "Date": "2019-07-06",
+          "Opponent": "Sri Lanka",
+          "Venue": "Leeds",
+          "Result": "\u2705 WIN",
+          "India": "265 (2nd)",
+          "Opp Score": "264 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1144526,1144528,1276907,1276908,1276909"
+    },
+    "Oceania": {
+      "summary_code": [
+        "W",
+        "L",
+        "L",
+        "NR",
+        "NR"
+      ],
+      "matches": [
+        {
+          "Date": "2025-10-25",
+          "Opponent": "Australia",
+          "Venue": "Sydney",
+          "Result": "\u2705 WIN",
+          "India": "237 (2nd)",
+          "Opp Score": "236 (1st)"
+        },
+        {
+          "Date": "2025-10-23",
+          "Opponent": "Australia",
+          "Venue": "Adelaide",
+          "Result": "\u274c LOSS",
+          "India": "264 (1st)",
+          "Opp Score": "265 (2nd)"
+        },
+        {
+          "Date": "2025-10-19",
+          "Opponent": "Australia",
+          "Venue": "Optus",
+          "Result": "\u274c LOSS",
+          "India": "136 (1st)",
+          "Opp Score": "131 (2nd)"
+        },
+        {
+          "Date": "2022-11-30",
+          "Opponent": "New Zealand",
+          "Venue": "Christchurch",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "India": "219 (1st)",
+          "Opp Score": "104 (2nd)"
+        },
+        {
+          "Date": "2022-11-27",
+          "Opponent": "New Zealand",
+          "Venue": "Hamilton",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "India": "89 (1st)",
+          "Opp Score": "0 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1322279,1322280,1478904,1478905,1478906"
+    },
+    "Americas": {
+      "summary_code": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2023-08-01",
+          "Opponent": "West Indies",
+          "Venue": "Tarouba",
+          "Result": "\u2705 WIN",
+          "India": "351 (1st)",
+          "Opp Score": "151 (2nd)"
+        },
+        {
+          "Date": "2023-07-29",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u274c LOSS",
+          "India": "181 (1st)",
+          "Opp Score": "182 (2nd)"
+        },
+        {
+          "Date": "2023-07-27",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u2705 WIN",
+          "India": "118 (2nd)",
+          "Opp Score": "114 (1st)"
+        },
+        {
+          "Date": "2022-07-27",
+          "Opponent": "West Indies",
+          "Venue": "Trinidad",
+          "Result": "\u2705 WIN",
+          "India": "225 (1st)",
+          "Opp Score": "137 (2nd)"
+        },
+        {
+          "Date": "2022-07-24",
+          "Opponent": "West Indies",
+          "Venue": "Trinidad",
+          "Result": "\u2705 WIN",
+          "India": "312 (2nd)",
+          "Opp Score": "311 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1317901,1317902,1381214,1381215,1381216"
+    }
+  },
+  "New Zealand": {
+    "Global": {
+      "summary_code": [
+        "W",
+        "W",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2026-01-18",
+          "Opponent": "India",
+          "Venue": "Indore",
+          "Result": "\u2705 WIN",
+          "New Zealand": "337 (1st)",
+          "Opp Score": "296 (2nd)"
+        },
+        {
+          "Date": "2026-01-14",
+          "Opponent": "India",
+          "Venue": "Rajkot",
+          "Result": "\u2705 WIN",
+          "New Zealand": "286 (2nd)",
+          "Opp Score": "284 (1st)"
+        },
+        {
+          "Date": "2026-01-11",
+          "Opponent": "India",
+          "Venue": "Vadodara",
+          "Result": "\u274c LOSS",
+          "New Zealand": "300 (1st)",
+          "Opp Score": "306 (2nd)"
+        },
+        {
+          "Date": "2025-11-22",
+          "Opponent": "West Indies",
+          "Venue": "Hamilton",
+          "Result": "\u2705 WIN",
+          "New Zealand": "162 (2nd)",
+          "Opp Score": "161 (1st)"
+        },
+        {
+          "Date": "2025-11-19",
+          "Opponent": "West Indies",
+          "Venue": "Napier",
+          "Result": "\u2705 WIN",
+          "New Zealand": "248 (2nd)",
+          "Opp Score": "247 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1490231,1490232,1490233,1491729,1491730"
+    },
+    "Asia": {
+      "summary_code": [
+        "W",
+        "W",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2026-01-18",
+          "Opponent": "India",
+          "Venue": "Indore",
+          "Result": "\u2705 WIN",
+          "New Zealand": "337 (1st)",
+          "Opp Score": "296 (2nd)"
+        },
+        {
+          "Date": "2026-01-14",
+          "Opponent": "India",
+          "Venue": "Rajkot",
+          "Result": "\u2705 WIN",
+          "New Zealand": "286 (2nd)",
+          "Opp Score": "284 (1st)"
+        },
+        {
+          "Date": "2026-01-11",
+          "Opponent": "India",
+          "Venue": "Vadodara",
+          "Result": "\u274c LOSS",
+          "New Zealand": "300 (1st)",
+          "Opp Score": "306 (2nd)"
+        },
+        {
+          "Date": "2025-03-09",
+          "Opponent": "India",
+          "Venue": "Dubai",
+          "Result": "\u274c LOSS",
+          "New Zealand": "251 (1st)",
+          "Opp Score": "254 (2nd)"
+        },
+        {
+          "Date": "2025-03-05",
+          "Opponent": "South Africa",
+          "Venue": "Lahore",
+          "Result": "\u2705 WIN",
+          "New Zealand": "362 (1st)",
+          "Opp Score": "312 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1466427,1466428,1490231,1490232,1490233"
+    },
+    "Africa": {
+      "summary_code": [
+        "L",
+        "W",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2015-08-26",
+          "Opponent": "South Africa",
+          "Venue": "Durban",
+          "Result": "\u274c LOSS",
+          "New Zealand": "221 (2nd)",
+          "Opp Score": "283 (1st)"
+        },
+        {
+          "Date": "2015-08-23",
+          "Opponent": "South Africa",
+          "Venue": "Potchefstroom",
+          "Result": "\u2705 WIN",
+          "New Zealand": "207 (2nd)",
+          "Opp Score": "204 (1st)"
+        },
+        {
+          "Date": "2015-08-19",
+          "Opponent": "South Africa",
+          "Venue": "Centurion",
+          "Result": "\u274c LOSS",
+          "New Zealand": "284 (2nd)",
+          "Opp Score": "304 (1st)"
+        },
+        {
+          "Date": "2015-08-07",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "New Zealand": "273 (1st)",
+          "Opp Score": "235 (2nd)"
+        },
+        {
+          "Date": "2015-08-04",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "New Zealand": "236 (2nd)",
+          "Opp Score": "235 (1st)"
+        }
+      ],
+      "MATCH_IDS": "848843,848845,848847,894289,894291"
+    },
+    "Europe": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2023-09-15",
+          "Opponent": "England",
+          "Venue": "Lords",
+          "Result": "\u274c LOSS",
+          "New Zealand": "211 (2nd)",
+          "Opp Score": "311 (1st)"
+        },
+        {
+          "Date": "2023-09-13",
+          "Opponent": "England",
+          "Venue": "Oval",
+          "Result": "\u274c LOSS",
+          "New Zealand": "187 (2nd)",
+          "Opp Score": "368 (1st)"
+        },
+        {
+          "Date": "2023-09-10",
+          "Opponent": "England",
+          "Venue": "Southampton",
+          "Result": "\u274c LOSS",
+          "New Zealand": "147 (2nd)",
+          "Opp Score": "226 (1st)"
+        },
+        {
+          "Date": "2023-09-08",
+          "Opponent": "England",
+          "Venue": "Cardiff",
+          "Result": "\u2705 WIN",
+          "New Zealand": "297 (2nd)",
+          "Opp Score": "291 (1st)"
+        },
+        {
+          "Date": "2022-07-15",
+          "Opponent": "Ireland",
+          "Venue": "Dublin",
+          "Result": "\u2705 WIN",
+          "New Zealand": "360 (1st)",
+          "Opp Score": "359 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1303311,1336052,1336053,1336054,1336055"
+    },
+    "Oceania": {
+      "summary_code": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-11-22",
+          "Opponent": "West Indies",
+          "Venue": "Hamilton",
+          "Result": "\u2705 WIN",
+          "New Zealand": "162 (2nd)",
+          "Opp Score": "161 (1st)"
+        },
+        {
+          "Date": "2025-11-19",
+          "Opponent": "West Indies",
+          "Venue": "Napier",
+          "Result": "\u2705 WIN",
+          "New Zealand": "248 (2nd)",
+          "Opp Score": "247 (1st)"
+        },
+        {
+          "Date": "2025-11-16",
+          "Opponent": "West Indies",
+          "Venue": "Christchurch",
+          "Result": "\u2705 WIN",
+          "New Zealand": "269 (1st)",
+          "Opp Score": "262 (2nd)"
+        },
+        {
+          "Date": "2025-11-01",
+          "Opponent": "England",
+          "Venue": "Wellington",
+          "Result": "\u2705 WIN",
+          "New Zealand": "226 (2nd)",
+          "Opp Score": "222 (1st)"
+        },
+        {
+          "Date": "2025-10-29",
+          "Opponent": "England",
+          "Venue": "Hamilton",
+          "Result": "\u2705 WIN",
+          "New Zealand": "177 (2nd)",
+          "Opp Score": "175 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1491721,1491722,1491728,1491729,1491730"
+    },
+    "Americas": {
+      "summary_code": [
+        "W",
+        "W",
+        "L",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2022-08-21",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u2705 WIN",
+          "New Zealand": "307 (2nd)",
+          "Opp Score": "301 (1st)"
+        },
+        {
+          "Date": "2022-08-19",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u2705 WIN",
+          "New Zealand": "212 (1st)",
+          "Opp Score": "161 (2nd)"
+        },
+        {
+          "Date": "2022-08-17",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u274c LOSS",
+          "New Zealand": "190 (1st)",
+          "Opp Score": "193 (2nd)"
+        },
+        {
+          "Date": "2012-07-16",
+          "Opponent": "West Indies",
+          "Venue": "Kitts",
+          "Result": "\u274c LOSS",
+          "New Zealand": "221 (2nd)",
+          "Opp Score": "241 (1st)"
+        },
+        {
+          "Date": "2012-07-14",
+          "Opponent": "West Indies",
+          "Venue": "Kitts",
+          "Result": "\u274c LOSS",
+          "New Zealand": "240 (2nd)",
+          "Opp Score": "264 (1st)"
+        }
+      ],
+      "MATCH_IDS": "560926,560927,1317911,1317912,1317913"
+    }
+  },
+  "Pakistan": {
+    "Global": {
+      "summary_code": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-11-16",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rawalpindi",
+          "Result": "\u2705 WIN",
+          "Pakistan": "215 (2nd)",
+          "Opp Score": "211 (1st)"
+        },
+        {
+          "Date": "2025-11-14",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rawalpindi",
+          "Result": "\u2705 WIN",
+          "Pakistan": "289 (2nd)",
+          "Opp Score": "288 (1st)"
+        },
+        {
+          "Date": "2025-11-11",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rawalpindi",
+          "Result": "\u2705 WIN",
+          "Pakistan": "299 (1st)",
+          "Opp Score": "293 (2nd)"
+        },
+        {
+          "Date": "2025-11-08",
+          "Opponent": "South Africa",
+          "Venue": "Faisalabad",
+          "Result": "\u2705 WIN",
+          "Pakistan": "144 (2nd)",
+          "Opp Score": "143 (1st)"
+        },
+        {
+          "Date": "2025-11-06",
+          "Opponent": "South Africa",
+          "Venue": "Faisalabad",
+          "Result": "\u274c LOSS",
+          "Pakistan": "269 (1st)",
+          "Opp Score": "270 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1501899,1501900,1502167,1502168,1502169"
+    },
+    "Asia": {
+      "summary_code": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-11-16",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rawalpindi",
+          "Result": "\u2705 WIN",
+          "Pakistan": "215 (2nd)",
+          "Opp Score": "211 (1st)"
+        },
+        {
+          "Date": "2025-11-14",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rawalpindi",
+          "Result": "\u2705 WIN",
+          "Pakistan": "289 (2nd)",
+          "Opp Score": "288 (1st)"
+        },
+        {
+          "Date": "2025-11-11",
+          "Opponent": "Sri Lanka",
+          "Venue": "Rawalpindi",
+          "Result": "\u2705 WIN",
+          "Pakistan": "299 (1st)",
+          "Opp Score": "293 (2nd)"
+        },
+        {
+          "Date": "2025-11-08",
+          "Opponent": "South Africa",
+          "Venue": "Faisalabad",
+          "Result": "\u2705 WIN",
+          "Pakistan": "144 (2nd)",
+          "Opp Score": "143 (1st)"
+        },
+        {
+          "Date": "2025-11-06",
+          "Opponent": "South Africa",
+          "Venue": "Faisalabad",
+          "Result": "\u274c LOSS",
+          "Pakistan": "269 (1st)",
+          "Opp Score": "270 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1501899,1501900,1502167,1502168,1502169"
+    },
+    "Africa": {
+      "summary_code": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2024-12-22",
+          "Opponent": "South Africa",
+          "Venue": "Johannesburg",
+          "Result": "\u2705 WIN",
+          "Pakistan": "308 (1st)",
+          "Opp Score": "271 (2nd)"
+        },
+        {
+          "Date": "2024-12-19",
+          "Opponent": "South Africa",
+          "Venue": "Capetown",
+          "Result": "\u2705 WIN",
+          "Pakistan": "329 (1st)",
+          "Opp Score": "248 (2nd)"
+        },
+        {
+          "Date": "2024-12-17",
+          "Opponent": "South Africa",
+          "Venue": "Paarl",
+          "Result": "\u2705 WIN",
+          "Pakistan": "242 (2nd)",
+          "Opp Score": "239 (1st)"
+        },
+        {
+          "Date": "2024-11-28",
+          "Opponent": "Zimbabwe",
+          "Venue": "Bulawayo",
+          "Result": "\u2705 WIN",
+          "Pakistan": "303 (1st)",
+          "Opp Score": "204 (2nd)"
+        },
+        {
+          "Date": "2024-11-26",
+          "Opponent": "Zimbabwe",
+          "Venue": "Bulawayo",
+          "Result": "\u2705 WIN",
+          "Pakistan": "148 (2nd)",
+          "Opp Score": "145 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1432214,1432215,1432216,1444650,1444651"
+    },
+    "Europe": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2021-07-13",
+          "Opponent": "England",
+          "Venue": "Birmingham",
+          "Result": "\u274c LOSS",
+          "Pakistan": "331 (1st)",
+          "Opp Score": "332 (2nd)"
+        },
+        {
+          "Date": "2021-07-10",
+          "Opponent": "England",
+          "Venue": "Lords",
+          "Result": "\u274c LOSS",
+          "Pakistan": "195 (2nd)",
+          "Opp Score": "247 (1st)"
+        },
+        {
+          "Date": "2021-07-08",
+          "Opponent": "England",
+          "Venue": "Cardiff",
+          "Result": "\u274c LOSS",
+          "Pakistan": "141 (1st)",
+          "Opp Score": "142 (2nd)"
+        },
+        {
+          "Date": "2019-07-05",
+          "Opponent": "Bangladesh",
+          "Venue": "Lords",
+          "Result": "\u2705 WIN",
+          "Pakistan": "315 (1st)",
+          "Opp Score": "221 (2nd)"
+        },
+        {
+          "Date": "2019-06-26",
+          "Opponent": "New Zealand",
+          "Venue": "Birmingham",
+          "Result": "\u2705 WIN",
+          "Pakistan": "241 (2nd)",
+          "Opp Score": "237 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1144515,1144525,1239537,1239538,1239539"
+    },
+    "Oceania": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-04-05",
+          "Opponent": "New Zealand",
+          "Venue": "Maunganui",
+          "Result": "\u274c LOSS",
+          "Pakistan": "221 (2nd)",
+          "Opp Score": "264 (1st)"
+        },
+        {
+          "Date": "2025-04-02",
+          "Opponent": "New Zealand",
+          "Venue": "Hamilton",
+          "Result": "\u274c LOSS",
+          "Pakistan": "208 (2nd)",
+          "Opp Score": "292 (1st)"
+        },
+        {
+          "Date": "2025-03-29",
+          "Opponent": "New Zealand",
+          "Venue": "Napier",
+          "Result": "\u274c LOSS",
+          "Pakistan": "271 (2nd)",
+          "Opp Score": "344 (1st)"
+        },
+        {
+          "Date": "2024-11-10",
+          "Opponent": "Australia",
+          "Venue": "Optus",
+          "Result": "\u2705 WIN",
+          "Pakistan": "143 (2nd)",
+          "Opp Score": "140 (1st)"
+        },
+        {
+          "Date": "2024-11-08",
+          "Opponent": "Australia",
+          "Venue": "Adelaide",
+          "Result": "\u2705 WIN",
+          "Pakistan": "169 (2nd)",
+          "Opp Score": "163 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1426550,1426551,1443554,1443555,1443556"
+    },
+    "Americas": {
+      "summary_code": [
+        "L",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-08-12",
+          "Opponent": "West Indies",
+          "Venue": "Tarouba",
+          "Result": "\u274c LOSS",
+          "Pakistan": "92 (2nd)",
+          "Opp Score": "294 (1st)"
+        },
+        {
+          "Date": "2025-08-10",
+          "Opponent": "West Indies",
+          "Venue": "Tarouba",
+          "Result": "\u274c LOSS",
+          "Pakistan": "171 (1st)",
+          "Opp Score": "184 (2nd)"
+        },
+        {
+          "Date": "2025-08-08",
+          "Opponent": "West Indies",
+          "Venue": "Tarouba",
+          "Result": "\u2705 WIN",
+          "Pakistan": "284 (2nd)",
+          "Opp Score": "280 (1st)"
+        },
+        {
+          "Date": "2017-04-11",
+          "Opponent": "West Indies",
+          "Venue": "Guyana",
+          "Result": "\u2705 WIN",
+          "Pakistan": "236 (2nd)",
+          "Opp Score": "233 (1st)"
+        },
+        {
+          "Date": "2017-04-09",
+          "Opponent": "West Indies",
+          "Venue": "Guyana",
+          "Result": "\u2705 WIN",
+          "Pakistan": "282 (1st)",
+          "Opp Score": "208 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1077950,1077951,1472528,1472529,1472530"
+    }
+  },
+  "South Africa": {
+    "Global": {
+      "summary_code": [
+        "L",
+        "W",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-12-06",
+          "Opponent": "India",
+          "Venue": "Visakhapatnam",
+          "Result": "\u274c LOSS",
+          "South Africa": "270 (1st)",
+          "Opp Score": "271 (2nd)"
+        },
+        {
+          "Date": "2025-12-03",
+          "Opponent": "India",
+          "Venue": "Raipur",
+          "Result": "\u2705 WIN",
+          "South Africa": "362 (2nd)",
+          "Opp Score": "358 (1st)"
+        },
+        {
+          "Date": "2025-11-30",
+          "Opponent": "India",
+          "Venue": "Ranchi",
+          "Result": "\u274c LOSS",
+          "South Africa": "332 (2nd)",
+          "Opp Score": "349 (1st)"
+        },
+        {
+          "Date": "2025-11-08",
+          "Opponent": "Pakistan",
+          "Venue": "Faisalabad",
+          "Result": "\u274c LOSS",
+          "South Africa": "143 (1st)",
+          "Opp Score": "144 (2nd)"
+        },
+        {
+          "Date": "2025-11-06",
+          "Opponent": "Pakistan",
+          "Venue": "Faisalabad",
+          "Result": "\u2705 WIN",
+          "South Africa": "270 (2nd)",
+          "Opp Score": "269 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1479573,1479574,1479575,1501899,1501900"
+    },
+    "Asia": {
+      "summary_code": [
+        "L",
+        "W",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-12-06",
+          "Opponent": "India",
+          "Venue": "Visakhapatnam",
+          "Result": "\u274c LOSS",
+          "South Africa": "270 (1st)",
+          "Opp Score": "271 (2nd)"
+        },
+        {
+          "Date": "2025-12-03",
+          "Opponent": "India",
+          "Venue": "Raipur",
+          "Result": "\u2705 WIN",
+          "South Africa": "362 (2nd)",
+          "Opp Score": "358 (1st)"
+        },
+        {
+          "Date": "2025-11-30",
+          "Opponent": "India",
+          "Venue": "Ranchi",
+          "Result": "\u274c LOSS",
+          "South Africa": "332 (2nd)",
+          "Opp Score": "349 (1st)"
+        },
+        {
+          "Date": "2025-11-08",
+          "Opponent": "Pakistan",
+          "Venue": "Faisalabad",
+          "Result": "\u274c LOSS",
+          "South Africa": "143 (1st)",
+          "Opp Score": "144 (2nd)"
+        },
+        {
+          "Date": "2025-11-06",
+          "Opponent": "Pakistan",
+          "Venue": "Faisalabad",
+          "Result": "\u2705 WIN",
+          "South Africa": "270 (2nd)",
+          "Opp Score": "269 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1479573,1479574,1479575,1501899,1501900"
+    },
+    "Africa": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2024-12-22",
+          "Opponent": "Pakistan",
+          "Venue": "Johannesburg",
+          "Result": "\u274c LOSS",
+          "South Africa": "271 (2nd)",
+          "Opp Score": "308 (1st)"
+        },
+        {
+          "Date": "2024-12-19",
+          "Opponent": "Pakistan",
+          "Venue": "Capetown",
+          "Result": "\u274c LOSS",
+          "South Africa": "248 (2nd)",
+          "Opp Score": "329 (1st)"
+        },
+        {
+          "Date": "2024-12-17",
+          "Opponent": "Pakistan",
+          "Venue": "Paarl",
+          "Result": "\u274c LOSS",
+          "South Africa": "239 (1st)",
+          "Opp Score": "242 (2nd)"
+        },
+        {
+          "Date": "2023-12-21",
+          "Opponent": "India",
+          "Venue": "Paarl",
+          "Result": "\u274c LOSS",
+          "South Africa": "218 (2nd)",
+          "Opp Score": "296 (1st)"
+        },
+        {
+          "Date": "2023-12-19",
+          "Opponent": "India",
+          "Venue": "Gqeberha(Port.Elz)",
+          "Result": "\u2705 WIN",
+          "South Africa": "215 (2nd)",
+          "Opp Score": "211 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1387601,1387602,1432214,1432215,1432216"
+    },
+    "Europe": {
+      "summary_code": [
+        "L",
+        "W",
+        "W",
+        "NR",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-09-07",
+          "Opponent": "England",
+          "Venue": "Southampton",
+          "Result": "\u274c LOSS",
+          "South Africa": "72 (2nd)",
+          "Opp Score": "414 (1st)"
+        },
+        {
+          "Date": "2025-09-04",
+          "Opponent": "England",
+          "Venue": "Lords",
+          "Result": "\u2705 WIN",
+          "South Africa": "330 (1st)",
+          "Opp Score": "325 (2nd)"
+        },
+        {
+          "Date": "2025-09-02",
+          "Opponent": "England",
+          "Venue": "Leeds",
+          "Result": "\u2705 WIN",
+          "South Africa": "137 (2nd)",
+          "Opp Score": "131 (1st)"
+        },
+        {
+          "Date": "2022-07-24",
+          "Opponent": "England",
+          "Venue": "Leeds",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "South Africa": "159 (1st)",
+          "Opp Score": "0 (2nd)"
+        },
+        {
+          "Date": "2022-07-22",
+          "Opponent": "England",
+          "Venue": "Manchester",
+          "Result": "\u274c LOSS",
+          "South Africa": "83 (2nd)",
+          "Opp Score": "201 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1276911,1276912,1448354,1448355,1448356"
+    },
+    "Oceania": {
+      "summary_code": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-08-24",
+          "Opponent": "Australia",
+          "Venue": "Mackay",
+          "Result": "\u274c LOSS",
+          "South Africa": "155 (2nd)",
+          "Opp Score": "431 (1st)"
+        },
+        {
+          "Date": "2025-08-22",
+          "Opponent": "Australia",
+          "Venue": "Mackay",
+          "Result": "\u2705 WIN",
+          "South Africa": "277 (1st)",
+          "Opp Score": "193 (2nd)"
+        },
+        {
+          "Date": "2025-08-19",
+          "Opponent": "Australia",
+          "Venue": "Cairns",
+          "Result": "\u2705 WIN",
+          "South Africa": "296 (1st)",
+          "Opp Score": "198 (2nd)"
+        },
+        {
+          "Date": "2018-11-11",
+          "Opponent": "Australia",
+          "Venue": "Hobart",
+          "Result": "\u2705 WIN",
+          "South Africa": "320 (1st)",
+          "Opp Score": "280 (2nd)"
+        },
+        {
+          "Date": "2018-11-09",
+          "Opponent": "Australia",
+          "Venue": "Adelaide",
+          "Result": "\u274c LOSS",
+          "South Africa": "224 (2nd)",
+          "Opp Score": "231 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1144987,1144988,1478901,1478902,1478903"
+    },
+    "Americas": {
+      "summary_code": [
+        "L",
+        "NR",
+        "W",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2016-06-24",
+          "Opponent": "West Indies",
+          "Venue": "Barbados",
+          "Result": "\u274c LOSS",
+          "South Africa": "185 (2nd)",
+          "Opp Score": "285 (1st)"
+        },
+        {
+          "Date": "2016-06-19",
+          "Opponent": "Australia",
+          "Venue": "Barbados",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "South Africa": "8 (1st)",
+          "Opp Score": "0 (2nd)"
+        },
+        {
+          "Date": "2016-06-15",
+          "Opponent": "West Indies",
+          "Venue": "Kitts",
+          "Result": "\u2705 WIN",
+          "South Africa": "343 (1st)",
+          "Opp Score": "204 (2nd)"
+        },
+        {
+          "Date": "2016-06-11",
+          "Opponent": "Australia",
+          "Venue": "Kitts",
+          "Result": "\u274c LOSS",
+          "South Africa": "252 (2nd)",
+          "Opp Score": "288 (1st)"
+        },
+        {
+          "Date": "2016-06-07",
+          "Opponent": "Australia",
+          "Venue": "Guyana",
+          "Result": "\u2705 WIN",
+          "South Africa": "189 (1st)",
+          "Opp Score": "142 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "932853,932855,932859,932861,932865"
+    }
+  },
+  "Sri Lanka": {
+    "Global": {
+      "summary_code": [
+        "L",
+        "L",
+        "W",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2026-01-27",
+          "Opponent": "England",
+          "Venue": "Rps",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "304 (2nd)",
+          "Opp Score": "357 (1st)"
+        },
+        {
+          "Date": "2026-01-24",
+          "Opponent": "England",
+          "Venue": "Rps",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "219 (1st)",
+          "Opp Score": "223 (2nd)"
+        },
+        {
+          "Date": "2026-01-22",
+          "Opponent": "England",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "271 (1st)",
+          "Opp Score": "252 (2nd)"
+        },
+        {
+          "Date": "2025-11-16",
+          "Opponent": "Pakistan",
+          "Venue": "Rawalpindi",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "211 (1st)",
+          "Opp Score": "215 (2nd)"
+        },
+        {
+          "Date": "2025-11-14",
+          "Opponent": "Pakistan",
+          "Venue": "Rawalpindi",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "288 (1st)",
+          "Opp Score": "289 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1502168,1502169,1507716,1507717,1507718"
+    },
+    "Asia": {
+      "summary_code": [
+        "L",
+        "L",
+        "W",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2026-01-27",
+          "Opponent": "England",
+          "Venue": "Rps",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "304 (2nd)",
+          "Opp Score": "357 (1st)"
+        },
+        {
+          "Date": "2026-01-24",
+          "Opponent": "England",
+          "Venue": "Rps",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "219 (1st)",
+          "Opp Score": "223 (2nd)"
+        },
+        {
+          "Date": "2026-01-22",
+          "Opponent": "England",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "271 (1st)",
+          "Opp Score": "252 (2nd)"
+        },
+        {
+          "Date": "2025-11-16",
+          "Opponent": "Pakistan",
+          "Venue": "Rawalpindi",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "211 (1st)",
+          "Opp Score": "215 (2nd)"
+        },
+        {
+          "Date": "2025-11-14",
+          "Opponent": "Pakistan",
+          "Venue": "Rawalpindi",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "288 (1st)",
+          "Opp Score": "289 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1502168,1502169,1507716,1507717,1507718"
+    },
+    "Africa": {
+      "summary_code": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-08-31",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "278 (2nd)",
+          "Opp Score": "277 (1st)"
+        },
+        {
+          "Date": "2025-08-29",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "298 (1st)",
+          "Opp Score": "291 (2nd)"
+        },
+        {
+          "Date": "2023-07-09",
+          "Opponent": "Netherlands",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "233 (1st)",
+          "Opp Score": "105 (2nd)"
+        },
+        {
+          "Date": "2023-07-07",
+          "Opponent": "West Indies",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "244 (2nd)",
+          "Opp Score": "243 (1st)"
+        },
+        {
+          "Date": "2023-07-02",
+          "Opponent": "Zimbabwe",
+          "Venue": "Bulawayo",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "169 (2nd)",
+          "Opp Score": "165 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1377770,1377778,1377779,1492821,1492822"
+    },
+    "Europe": {
+      "summary_code": [
+        "NR",
+        "L",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2021-07-04",
+          "Opponent": "England",
+          "Venue": "Bristol",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "Sri Lanka": "166 (1st)",
+          "Opp Score": "0 (2nd)"
+        },
+        {
+          "Date": "2021-07-01",
+          "Opponent": "England",
+          "Venue": "Oval",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "241 (1st)",
+          "Opp Score": "244 (2nd)"
+        },
+        {
+          "Date": "2021-06-29",
+          "Opponent": "England",
+          "Venue": "Durham",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "185 (1st)",
+          "Opp Score": "189 (2nd)"
+        },
+        {
+          "Date": "2019-07-06",
+          "Opponent": "India",
+          "Venue": "Leeds",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "264 (1st)",
+          "Opp Score": "265 (2nd)"
+        },
+        {
+          "Date": "2019-07-01",
+          "Opponent": "West Indies",
+          "Venue": "Durham",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "338 (1st)",
+          "Opp Score": "315 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1144521,1144526,1239534,1239535,1239536"
+    },
+    "Oceania": {
+      "summary_code": [
+        "W",
+        "L",
+        "L",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-01-11",
+          "Opponent": "New Zealand",
+          "Venue": "Auckland",
+          "Result": "\u2705 WIN",
+          "Sri Lanka": "290 (1st)",
+          "Opp Score": "150 (2nd)"
+        },
+        {
+          "Date": "2025-01-08",
+          "Opponent": "New Zealand",
+          "Venue": "Hamilton",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "142 (2nd)",
+          "Opp Score": "255 (1st)"
+        },
+        {
+          "Date": "2025-01-05",
+          "Opponent": "New Zealand",
+          "Venue": "Basin",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "178 (1st)",
+          "Opp Score": "180 (2nd)"
+        },
+        {
+          "Date": "2023-03-31",
+          "Opponent": "New Zealand",
+          "Venue": "Hamilton",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "157 (1st)",
+          "Opp Score": "159 (2nd)"
+        },
+        {
+          "Date": "2023-03-25",
+          "Opponent": "New Zealand",
+          "Venue": "Auckland",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "76 (2nd)",
+          "Opp Score": "274 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1322359,1322361,1443546,1443547,1443548"
+    },
+    "Americas": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2021-03-14",
+          "Opponent": "West Indies",
+          "Venue": "Antigua",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "274 (1st)",
+          "Opp Score": "276 (2nd)"
+        },
+        {
+          "Date": "2021-03-12",
+          "Opponent": "West Indies",
+          "Venue": "Antigua",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "273 (1st)",
+          "Opp Score": "274 (2nd)"
+        },
+        {
+          "Date": "2021-03-10",
+          "Opponent": "West Indies",
+          "Venue": "Antigua",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "232 (1st)",
+          "Opp Score": "236 (2nd)"
+        },
+        {
+          "Date": "2013-07-11",
+          "Opponent": "India",
+          "Venue": "Trinidad",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "201 (1st)",
+          "Opp Score": "203 (2nd)"
+        },
+        {
+          "Date": "2013-07-09",
+          "Opponent": "India",
+          "Venue": "Trinidad",
+          "Result": "\u274c LOSS",
+          "Sri Lanka": "96 (2nd)",
+          "Opp Score": "119 (1st)"
+        }
+      ],
+      "MATCH_IDS": "597928,597929,1252069,1252070,1252071"
+    }
+  },
+  "West Indies": {
+    "Global": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "T"
+      ],
+      "matches": [
+        {
+          "Date": "2025-11-22",
+          "Opponent": "New Zealand",
+          "Venue": "Hamilton",
+          "Result": "\u274c LOSS",
+          "West Indies": "161 (1st)",
+          "Opp Score": "162 (2nd)"
+        },
+        {
+          "Date": "2025-11-19",
+          "Opponent": "New Zealand",
+          "Venue": "Napier",
+          "Result": "\u274c LOSS",
+          "West Indies": "247 (1st)",
+          "Opp Score": "248 (2nd)"
+        },
+        {
+          "Date": "2025-11-16",
+          "Opponent": "New Zealand",
+          "Venue": "Christchurch",
+          "Result": "\u274c LOSS",
+          "West Indies": "262 (2nd)",
+          "Opp Score": "269 (1st)"
+        },
+        {
+          "Date": "2025-10-23",
+          "Opponent": "Bangladesh",
+          "Venue": "Dhaka",
+          "Result": "\u274c LOSS",
+          "West Indies": "117 (2nd)",
+          "Opp Score": "296 (1st)"
+        },
+        {
+          "Date": "2025-10-21",
+          "Opponent": "Bangladesh",
+          "Venue": "Dhaka",
+          "Result": "\ud83e\udd1d TIE",
+          "West Indies": "213 (2nd)",
+          "Opp Score": "213 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1491728,1491729,1491730,1505123,1505124"
+    },
+    "Asia": {
+      "summary_code": [
+        "L",
+        "T",
+        "L",
+        "W",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-10-23",
+          "Opponent": "Bangladesh",
+          "Venue": "Dhaka",
+          "Result": "\u274c LOSS",
+          "West Indies": "117 (2nd)",
+          "Opp Score": "296 (1st)"
+        },
+        {
+          "Date": "2025-10-21",
+          "Opponent": "Bangladesh",
+          "Venue": "Dhaka",
+          "Result": "\ud83e\udd1d TIE",
+          "West Indies": "213 (2nd)",
+          "Opp Score": "213 (1st)"
+        },
+        {
+          "Date": "2025-10-18",
+          "Opponent": "Bangladesh",
+          "Venue": "Dhaka",
+          "Result": "\u274c LOSS",
+          "West Indies": "133 (2nd)",
+          "Opp Score": "207 (1st)"
+        },
+        {
+          "Date": "2024-10-26",
+          "Opponent": "Sri Lanka",
+          "Venue": "Pallekele",
+          "Result": "\u2705 WIN",
+          "West Indies": "196 (2nd)",
+          "Opp Score": "156 (1st)"
+        },
+        {
+          "Date": "2024-10-23",
+          "Opponent": "Sri Lanka",
+          "Venue": "Pallekele",
+          "Result": "\u274c LOSS",
+          "West Indies": "189 (1st)",
+          "Opp Score": "190 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1451818,1451819,1505122,1505123,1505124"
+    },
+    "Africa": {
+      "summary_code": [
+        "L",
+        "W",
+        "L",
+        "T",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2023-07-07",
+          "Opponent": "Sri Lanka",
+          "Venue": "Harare",
+          "Result": "\u274c LOSS",
+          "West Indies": "243 (1st)",
+          "Opp Score": "244 (2nd)"
+        },
+        {
+          "Date": "2023-07-05",
+          "Opponent": "Oman",
+          "Venue": "Harare",
+          "Result": "\u2705 WIN",
+          "West Indies": "222 (2nd)",
+          "Opp Score": "221 (1st)"
+        },
+        {
+          "Date": "2023-07-01",
+          "Opponent": "Scotland",
+          "Venue": "Harare",
+          "Result": "\u274c LOSS",
+          "West Indies": "181 (1st)",
+          "Opp Score": "185 (2nd)"
+        },
+        {
+          "Date": "2023-06-26",
+          "Opponent": "Netherlands",
+          "Venue": "Harare",
+          "Result": "\ud83e\udd1d TIE",
+          "West Indies": "374 (1st)",
+          "Opp Score": "374 (2nd)"
+        },
+        {
+          "Date": "2023-06-24",
+          "Opponent": "Zimbabwe",
+          "Venue": "Harare",
+          "Result": "\u274c LOSS",
+          "West Indies": "233 (2nd)",
+          "Opp Score": "268 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1377758,1377763,1377769,1377775,1377778"
+    },
+    "Europe": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "NR"
+      ],
+      "matches": [
+        {
+          "Date": "2025-06-03",
+          "Opponent": "England",
+          "Venue": "Oval",
+          "Result": "\u274c LOSS",
+          "West Indies": "251 (1st)",
+          "Opp Score": "246 (2nd)"
+        },
+        {
+          "Date": "2025-06-01",
+          "Opponent": "England",
+          "Venue": "Cardiff",
+          "Result": "\u274c LOSS",
+          "West Indies": "308 (1st)",
+          "Opp Score": "312 (2nd)"
+        },
+        {
+          "Date": "2025-05-29",
+          "Opponent": "England",
+          "Venue": "Birmingham",
+          "Result": "\u274c LOSS",
+          "West Indies": "162 (2nd)",
+          "Opp Score": "400 (1st)"
+        },
+        {
+          "Date": "2025-05-25",
+          "Opponent": "Ireland",
+          "Venue": "Dublin",
+          "Result": "\u2705 WIN",
+          "West Indies": "385 (1st)",
+          "Opp Score": "165 (2nd)"
+        },
+        {
+          "Date": "2025-05-23",
+          "Opponent": "Ireland",
+          "Venue": "Dublin",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "West Indies": "352 (1st)",
+          "Opp Score": "0 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1448343,1448344,1448345,1472512,1472513"
+    },
+    "Oceania": {
+      "summary_code": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "L"
+      ],
+      "matches": [
+        {
+          "Date": "2025-11-22",
+          "Opponent": "New Zealand",
+          "Venue": "Hamilton",
+          "Result": "\u274c LOSS",
+          "West Indies": "161 (1st)",
+          "Opp Score": "162 (2nd)"
+        },
+        {
+          "Date": "2025-11-19",
+          "Opponent": "New Zealand",
+          "Venue": "Napier",
+          "Result": "\u274c LOSS",
+          "West Indies": "247 (1st)",
+          "Opp Score": "248 (2nd)"
+        },
+        {
+          "Date": "2025-11-16",
+          "Opponent": "New Zealand",
+          "Venue": "Christchurch",
+          "Result": "\u274c LOSS",
+          "West Indies": "262 (2nd)",
+          "Opp Score": "269 (1st)"
+        },
+        {
+          "Date": "2024-02-06",
+          "Opponent": "Australia",
+          "Venue": "Canberra",
+          "Result": "\u274c LOSS",
+          "West Indies": "86 (1st)",
+          "Opp Score": "87 (2nd)"
+        },
+        {
+          "Date": "2024-02-04",
+          "Opponent": "Australia",
+          "Venue": "Sydney",
+          "Result": "\u274c LOSS",
+          "West Indies": "175 (2nd)",
+          "Opp Score": "258 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1375848,1375849,1491728,1491729,1491730"
+    },
+    "Americas": {
+      "summary_code": [
+        "W",
+        "W",
+        "L",
+        "W",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-08-12",
+          "Opponent": "Pakistan",
+          "Venue": "Tarouba",
+          "Result": "\u2705 WIN",
+          "West Indies": "294 (1st)",
+          "Opp Score": "92 (2nd)"
+        },
+        {
+          "Date": "2025-08-10",
+          "Opponent": "Pakistan",
+          "Venue": "Tarouba",
+          "Result": "\u2705 WIN",
+          "West Indies": "184 (2nd)",
+          "Opp Score": "171 (1st)"
+        },
+        {
+          "Date": "2025-08-08",
+          "Opponent": "Pakistan",
+          "Venue": "Tarouba",
+          "Result": "\u274c LOSS",
+          "West Indies": "280 (1st)",
+          "Opp Score": "284 (2nd)"
+        },
+        {
+          "Date": "2024-12-12",
+          "Opponent": "Bangladesh",
+          "Venue": "Kitts",
+          "Result": "\u2705 WIN",
+          "West Indies": "325 (2nd)",
+          "Opp Score": "321 (1st)"
+        },
+        {
+          "Date": "2024-12-10",
+          "Opponent": "Bangladesh",
+          "Venue": "Kitts",
+          "Result": "\u2705 WIN",
+          "West Indies": "230 (2nd)",
+          "Opp Score": "227 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1433381,1433382,1472528,1472529,1472530"
+    }
+  },
+  "H2H_Form": {
+    "India_vs_Pakistan_Global": {
+      "summary_code": [
+        "W",
+        "W",
+        "W",
+        "NR",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-02-23",
+          "Opponent": "Pakistan",
+          "Venue": "Dubai",
+          "Result": "\u2705 WIN",
+          "India": "244 (2nd)",
+          "Opp Score": "241 (1st)"
+        },
+        {
+          "Date": "2023-10-14",
+          "Opponent": "Pakistan",
+          "Venue": "Ahmedabad",
+          "Result": "\u2705 WIN",
+          "India": "192 (2nd)",
+          "Opp Score": "191 (1st)"
+        },
+        {
+          "Date": "2023-09-10",
+          "Opponent": "Pakistan",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "India": "356 (1st)",
+          "Opp Score": "128 (2nd)"
+        },
+        {
+          "Date": "2023-09-02",
+          "Opponent": "Pakistan",
+          "Venue": "Pallekele",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "India": "266 (1st)",
+          "Opp Score": "0 (2nd)"
+        },
+        {
+          "Date": "2019-06-16",
+          "Opponent": "Pakistan",
+          "Venue": "Manchester",
+          "Result": "\u2705 WIN",
+          "India": "336 (1st)",
+          "Opp Score": "212 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1144504,1384403,1388394,1388406,1466418"
+    },
+    "India_vs_Pakistan_Asia": {
+      "summary_code": [
+        "W",
+        "W",
+        "W",
+        "NR",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-02-23",
+          "Opponent": "Pakistan",
+          "Venue": "Dubai",
+          "Result": "\u2705 WIN",
+          "India": "244 (2nd)",
+          "Opp Score": "241 (1st)"
+        },
+        {
+          "Date": "2023-10-14",
+          "Opponent": "Pakistan",
+          "Venue": "Ahmedabad",
+          "Result": "\u2705 WIN",
+          "India": "192 (2nd)",
+          "Opp Score": "191 (1st)"
+        },
+        {
+          "Date": "2023-09-10",
+          "Opponent": "Pakistan",
+          "Venue": "Rps",
+          "Result": "\u2705 WIN",
+          "India": "356 (1st)",
+          "Opp Score": "128 (2nd)"
+        },
+        {
+          "Date": "2023-09-02",
+          "Opponent": "Pakistan",
+          "Venue": "Pallekele",
+          "Result": "\ud83c\udf27\ufe0f NR",
+          "India": "266 (1st)",
+          "Opp Score": "0 (2nd)"
+        },
+        {
+          "Date": "2018-09-23",
+          "Opponent": "Pakistan",
+          "Venue": "Dubai",
+          "Result": "\u2705 WIN",
+          "India": "238 (2nd)",
+          "Opp Score": "237 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1153251,1384403,1388394,1388406,1466418"
+    },
+    "Australia_vs_England_Global": {
+      "summary_code": [
+        "W",
+        "W",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-02-22",
+          "Opponent": "England",
+          "Venue": "Lahore",
+          "Result": "\u2705 WIN",
+          "Australia": "356 (2nd)",
+          "Opp Score": "351 (1st)"
+        },
+        {
+          "Date": "2024-09-29",
+          "Opponent": "England",
+          "Venue": "Bristol",
+          "Result": "\u2705 WIN",
+          "Australia": "165 (2nd)",
+          "Opp Score": "309 (1st)"
+        },
+        {
+          "Date": "2024-09-27",
+          "Opponent": "England",
+          "Venue": "Lords",
+          "Result": "\u274c LOSS",
+          "Australia": "126 (2nd)",
+          "Opp Score": "312 (1st)"
+        },
+        {
+          "Date": "2024-09-24",
+          "Opponent": "England",
+          "Venue": "Durham",
+          "Result": "\u274c LOSS",
+          "Australia": "304 (1st)",
+          "Opp Score": "254 (2nd)"
+        },
+        {
+          "Date": "2024-09-21",
+          "Opponent": "England",
+          "Venue": "Leeds",
+          "Result": "\u2705 WIN",
+          "Australia": "270 (1st)",
+          "Opp Score": "202 (2nd)"
+        }
+      ],
+      "MATCH_IDS": "1385701,1385702,1385703,1385704,1466417"
+    },
+    "South Africa_vs_India_Global": {
+      "summary_code": [
+        "L",
+        "W",
+        "L",
+        "L",
+        "W"
+      ],
+      "matches": [
+        {
+          "Date": "2025-12-06",
+          "Opponent": "India",
+          "Venue": "Visakhapatnam",
+          "Result": "\u274c LOSS",
+          "South Africa": "270 (1st)",
+          "Opp Score": "271 (2nd)"
+        },
+        {
+          "Date": "2025-12-03",
+          "Opponent": "India",
+          "Venue": "Raipur",
+          "Result": "\u2705 WIN",
+          "South Africa": "362 (2nd)",
+          "Opp Score": "358 (1st)"
+        },
+        {
+          "Date": "2025-11-30",
+          "Opponent": "India",
+          "Venue": "Ranchi",
+          "Result": "\u274c LOSS",
+          "South Africa": "332 (2nd)",
+          "Opp Score": "349 (1st)"
+        },
+        {
+          "Date": "2023-12-21",
+          "Opponent": "India",
+          "Venue": "Paarl",
+          "Result": "\u274c LOSS",
+          "South Africa": "218 (2nd)",
+          "Opp Score": "296 (1st)"
+        },
+        {
+          "Date": "2023-12-19",
+          "Opponent": "India",
+          "Venue": "Gqeberha(Port.Elz)",
+          "Result": "\u2705 WIN",
+          "South Africa": "215 (2nd)",
+          "Opp Score": "211 (1st)"
+        }
+      ],
+      "MATCH_IDS": "1387601,1387602,1479573,1479574,1479575"
+    }
+  }
 }

@@ -1,122 +1,96 @@
-# 🤝 Project Handover Summary
-**Last Updated:** 2026-02-15 (Post-Audit)
-
-This document provides a concise overview of the project state for any new developer or AI agent.
-
----
-
-## 📋 Project State: AUDIT COMPLETE → FRONTEND READY
-
-### What's Built & Working
-| Component | Status | Version |
-|-----------|--------|---------|
-| **CricketAnalyzer Facade** | ✅ Production | v3.0 (Format-Aware) |
-| **TeamEngine** (ODI) | ✅ Production | v6.1 (Headless, Typed) |
-| **PlayerEngine** (ODI) | ✅ Production | v5.5 (Headless, Typed) |
-| **PredictorEngine** (ODI) | ✅ Production | v4.0 (Headless, Typed) |
-| **Match Pack Generator** | ✅ Production | 4-chapter JSON output |
-| **Data Pipeline** | ✅ Production | JSON → CSV → DuckDB → Verify |
-| **Truth Bridge** | ✅ Production | 12 regression suites, auto-diagnosis |
-| **Format Registry** | ✅ Production | v2.0 (5 formats registered, ODI implemented) |
-| **Jupyter Interface** | ✅ Production | TraderCockpit UI |
-
-### What's Next
-| Phase | Priority | Description |
-|-------|----------|-------------|
-| **Phase 0** | 🔴 NOW | Validate ODI manifest, build API scaffolding |
-| **Phase 1** | HIGH | FastAPI endpoints wrapping headless engines |
-| **Phase 2** | HIGH | Next.js frontend shell + layout |
-| **Phase 3-8** | MEDIUM | Dashboard components, charts, polish |
+# 🔄 HANDOVER PROMPT — Phase 6 (Polish & Animations)
+**Date:** 2026-02-18
+**Previous Agent:** Antigravity (Google DeepMind)
+**Status:** ✅ Frontend Functionally Complete & Polished
 
 ---
 
-## 🏗️ Architecture Overview (v3.0)
+## 📋 WHAT WAS DONE
 
+### Mission
+Transform the functional Phase 4 application into a **Premium User Experience**.
+- Implement **Context Persistence** (URL syncing).
+- Add **Micro-Animations** (`CountUp`, transitions).
+- Polish **Visuals** (Glassmorphism, Shadows, Empty States).
+- Enable **Match Audit** transparency (See source data).
+
+### Results: 4 Key Features Delivered
+
+| # | Feature | Impact | Files Changed |
+|---|---------|--------|---------------|
+| 1 | **Context Persistence** | URL updates (`?venue=IND_MUMBAI`) & auto-loads context on refresh. | `frontend/lib/context.tsx` |
+| 2 | **Micro-Animations** | Stats "tick up" dynamically; pages slide in. | `components/animations/CountUp.tsx`, `ReportCard.tsx` |
+| 3 | **Visual Polish** | Sidebar uses Glassmorphism; active tabs glow. | `components/layout/Sidebar.tsx`, `app/globals.css` |
+| 4 | **Match Audit** | Every report has a collapsible "Match Audit" table below it. | `components/renderers/MatchAuditSection.tsx`, `FunctionRenderer.tsx`, `PhaseAnalysisCard.tsx` |
+| 5 | **Empty States** | No more blank screens; "Ghost" icon explains missing data. | `components/common/EmptyState.tsx`, `FunctionRenderer.tsx` |
+| 6 | **Cross-Navigation** | Clickable "Opponent" rows; QuickLinks chips in Profile. | `components/renderers/MatrixTable.tsx`, `components/navigation/QuickLinks.tsx` |
+
+### Architecture Updates
+- **`FunctionRenderer.tsx`**: Now automatically detects Enriched Data (`stats` + `match_audit`) and renders the Audit Section below the primary view.
+- **`PhaseAnalysisCard.tsx`**: Refactored to reuse `MatchAuditSection` (DRY principle).
+- **`MatchAuditSection.tsx`**: New reusable component for displaying raw match records.
+
+### Build Status
+- ✅ `next build` passes.
+- ✅ Python API (`api/main.py`) passes checks.
+- ✅ Linting mostly clean (some IDE cache warnings about imports may persist).
+
+---
+
+## 🎯 WHAT NEEDS TO BE DONE NEXT
+
+### Priority: Phase 7 (Multi-Format Support)
+
+The frontend is now **Format-Agnostic** in theory, but we need to:
+1.  **Enable T20 / IPL Formats**:
+    - Build `formats/t20/manifest.py` (copy of ODI with tweaks).
+    - Ensure `FormatSelector` switches API endpoints correctly (`/api/t20/...`).
+2.  **Verify New Formats**:
+    - Check if T20 data loads correctly in the existing renderers.
+
+### Minor Cleanup (Optional)
+- **Search Bar**: The global search bar in the header is currently a placeholder. Wire it up to `player_profile` lookup?
+- **Mobile Optimization**: Sidebar collapses, but verify touch targets on mobile.
+
+---
+
+## 🏗️ KEY ARCHITECTURE TO UNDERSTAND
+
+### 1. The "Enriched" Data Flow
 ```
-CricketAnalyzer (Facade)
-    ├── Detects format from path OR accepts format_type="odi"
-    ├── Loads data via core.data_loader (DRY, with pickle cache)
-    ├── Loads engines via config.format_registry.get_format_engines()
-    │       ├── TeamEngine (from formats/odi/engines/team_engine.py)
-    │       ├── PlayerEngine (from formats/odi/engines/player_engine.py)
-    │       └── PredictorEngine (from formats/odi/predictor.py)
-    └── Delegates all analysis to engines (passthrough methods)
+API (execute_function) 
+  → Gets Engine Result (Dict/List)
+  → Calls _enrich_with_match_audit()
+  → Returns { "stats": [OriginalData], "match_audit": [Record1, Record2] }
 ```
+**Frontend (`FunctionRenderer.tsx`)**:
+- Detects the `{ stats, match_audit }` shape.
+- Passes `stats` to the specific renderer (`ReportCard`, `MatrixTable`, etc.).
+- Appends `<MatchAuditSection records={match_audit} />` at the bottom.
 
-**Key Design Decisions:**
-1. `core/` is format-agnostic — contains factories, not implementations
-2. `formats/{fmt}/` contains all format-specific code
-3. `config/format_registry.py` is the central hub for format management
-4. Engines are headless — return pure data dicts, no HTML/UI
-5. All logging via `logging` module, zero `print()` statements
+### 2. The "Context-URL" Loop
+```
+User selects Dropdown 
+  → setContextValue() 
+  → Updates React State 
+  → Updates URL (?key=value)
+  → URL change triggers re-fetch (if needed)
+```
+**Why**: Allows users to share specific analysis states via link.
+
+### Critical Files
+| File | Role |
+|------|------|
+| `frontend/components/renderers/FunctionRenderer.tsx` | **The Brain**. Decides what to render and how to handle errors/empty states. |
+| `frontend/components/renderers/MatchAuditSection.tsx` | **Truth**. Displays the raw matches behind any stat. |
+| `frontend/components/common/EmptyState.tsx` | **UX**. Handles "No Data" scenarios gracefully. |
+| `frontend/lib/context.tsx` | **State**. Manages sync between React and URL. |
 
 ---
 
-## ✅ Completed Sprints
+## 📂 CONTEXT FILES TO READ FIRST
+1. `docs/ai/AI_MEMORY.md` — Session history & project status.
+2. `docs/plans/FRONTEND_ROADMAP.md` — Phase 6 complete; Phase 7 pending.
+3. `GEMINI.md` — Formatting & Engineering Standards.
 
-### Codebase Audit & Surgery (2026-02-15)
-- Deleted ghost files (140KB dead code)
-- Replaced 5 backward-compat shims with factory pattern
-- Fixed 7 bare `except: pass` blocks
-- Removed IPython from core (API-safe)
-- Rewrote facade to be format-aware
-- Added `pyproject.toml`, `.env.example`, updated `.gitignore`
-- **Score: 5/10 → 7.5/10**
-
-### Truth Bridge (Phases 1-2)
-All core functions migrated with Matrix Fingerprinting v2.5:
-
-| Suite | Status | Innovation |
-| :--- | :--- | :--- |
-| Venue Matchups | ✅ 100% PASS | Auto-Diagnostic v2.1 |
-| Fortress Check | ✅ 100% PASS | Structural Loyalty v1.0 |
-| Host Country Stats | ✅ 100% PASS | Key-Discovery Mode v1.0 |
-| Global H2H | ✅ 100% PASS | Key-Discovery Mode v1.1 |
-| Home Dominance | ✅ 100% PASS | Matrix Fingerprinting v2.5 |
-| Away Performance | ✅ 100% PASS | Matrix Fingerprinting v2.5 |
-| Toss Bias | ✅ 100% PASS | Standard migration |
-| Recent Form | ✅ 100% PASS | 9 teams × 6 continents |
-| Phase Analysis | ✅ 100% PASS | ~500 permutations |
-| Compare Squads | ✅ 100% PASS | Tactical parity |
-| Player Stats | ✅ 100% PASS | Micro-stats validation |
-| Predictor | ✅ 100% PASS | 3 scenarios verified |
-
-### Headless Refactor (Phase 6)
-- TeamEngine, PlayerEngine, PredictorEngine — all headless
-- Separated renderers (`TeamHTMLRenderer`, `PlayerHTMLRenderer`)
-- Zero IPython/UI dependencies in engines
-
-### Automated Pipeline (Phase 8)
-- `scripts/update_data.py` — 4-stage orchestrator
-- JSON → CSV → DuckDB → Truth Bridge verification
-- Auto-fail on regression
-
----
-
-## 📍 Key Files for New Agents
-
-| File | When to Read |
-|------|-------------|
-| `docs/ai/AI_MEMORY.md` | **FIRST** — Landing page with current sprint, session logs |
-| `docs/ai/GEMINI.md` | **FIRST** — Agent protocols and coding rules |
-| `docs/context/active_state.md` | Architecture state, anti-patterns, data pipeline |
-| `docs/guides/ENGINEERING_STANDARDS.md` | Coding constitution (type hints, vectorization, error handling) |
-| `docs/plans/FRONTEND_ROADMAP.md` | If doing frontend work |
-| `docs/design/UI_SPEC.md` | If doing frontend work |
-| `docs/reports/CODEBASE_AUDIT_2026_02_15.md` | Full audit report with issue tracker |
-
-## 🚀 How to Run
-
-```bash
-# Dashboard
-jupyter notebook dashboard.ipynb
-
-# Tests (Truth Bridge)
-python formats/odi/tests/truth_bridge/run_all.py
-
-# Data Update Pipeline
-python scripts/update_data.py
-
-# Seed new ground truth
-$env:SEED_MODE="1"; python formats/odi/tests/truth_bridge/run_all.py
-```
+**Good Luck! 🚀**

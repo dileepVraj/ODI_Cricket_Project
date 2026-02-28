@@ -5,11 +5,11 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from core.transformer import (
+from core.match_pack.transformer import (
     transform_h2h_report, transform_h2h_slim, transform_venue_bias,
     transform_team_form, transform_dominance_matrix, transform_player_stats,
 )
-from core.interpreter import MatchInterpreter
+from core.match_pack.interpreter import MatchInterpreter
 
 passed = 0
 failed = 0
@@ -59,10 +59,10 @@ form_raw = {
 }
 
 dominance_raw = [
-    {"Opponent": "OVERALL", "Mat": 50, "Won": 34, "Lost": 14, "Tie/NR": 2, "Win %": "71%", "Last 5": "W W L W W"},
-    {"Opponent": "India", "Mat": 10, "Won": 7, "Lost": 3, "Tie/NR": 0, "Win %": "70%", "Last 5": "W W W L W"},
-    {"Opponent": "Australia", "Mat": 8, "Won": 6, "Lost": 2, "Tie/NR": 0, "Win %": "75%", "Last 5": "W W W W L"},
-    {"Opponent": "England", "Mat": 12, "Won": 8, "Lost": 4, "Tie/NR": 0, "Win %": "67%", "Last 5": "L W W W W"},
+    {"Opponent": "OVERALL", "Mat": 50, "Won": 34, "Lost": 14, "Tie/NR": 2, "Win %": "71%", "form_guide": "W W L W W"},
+    {"Opponent": "India", "Mat": 10, "Won": 7, "Lost": 3, "Tie/NR": 0, "Win %": "70%", "form_guide": "W W W L W"},
+    {"Opponent": "Australia", "Mat": 8, "Won": 6, "Lost": 2, "Tie/NR": 0, "Win %": "75%", "form_guide": "W W W W L"},
+    {"Opponent": "England", "Mat": 12, "Won": 8, "Lost": 4, "Tie/NR": 0, "Win %": "67%", "form_guide": "L W W W W"},
 ]
 
 # v3.2 FIX 5: Mock player stats
@@ -89,7 +89,7 @@ player_stats_empty = {
     "Bowl Form": "-", "Bowl Econ": "-", "Ven Econ": "-", "Ven Wkts": "-", "Ven Matches": "-",
 }
 
-interp = MatchInterpreter()
+interp = MatchInterpreter(format_key="odi")
 
 # ---- TRANSFORMER TESTS ----
 print("\n=== TRANSFORMER TESTS ===")

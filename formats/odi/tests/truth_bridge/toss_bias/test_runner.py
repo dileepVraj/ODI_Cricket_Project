@@ -95,7 +95,7 @@ class TossBiasTruthBridge(TruthBridgeBase):
                     
                     country_results[venue_code] = engine_data
                     
-                except Exception as e:
+                except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                     print(f"      ❌ [ERROR] Engine failed for {venue_code}: {e}")
                     continue
 

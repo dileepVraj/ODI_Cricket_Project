@@ -10,7 +10,7 @@ import os
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core.transformer import (
+from core.match_pack.transformer import (
     transform_h2h_report,
     transform_h2h_slim,
     transform_venue_bias,
@@ -18,7 +18,7 @@ from core.transformer import (
     transform_dominance_matrix,
     transform_squad_comparison,
 )
-from core.interpreter import MatchInterpreter
+from core.match_pack.interpreter import MatchInterpreter
 
 
 # =============================================================================
@@ -103,10 +103,10 @@ MOCK_FORM = {
 
 # Mock for dominance matrix — uses ACTUAL engine keys (Mat, Won, Lost)
 MOCK_DOMINANCE = [
-    {"Opponent": "⚡ OVERALL", "Mat": 50, "Won": 34, "Lost": 14, "Tie/NR": 2, "Win %": "71%", "Last 5": "W W L W W"},
-    {"Opponent": "India", "Mat": 10, "Won": 7, "Lost": 3, "Tie/NR": 0, "Win %": "70%", "Last 5": "W W W L W"},
-    {"Opponent": "Australia", "Mat": 8, "Won": 6, "Lost": 2, "Tie/NR": 0, "Win %": "75%", "Last 5": "W W W W L"},
-    {"Opponent": "England", "Mat": 12, "Won": 8, "Lost": 4, "Tie/NR": 0, "Win %": "67%", "Last 5": "L W W W W"},
+    {"Opponent": "⚡ OVERALL", "Mat": 50, "Won": 34, "Lost": 14, "Tie/NR": 2, "Win %": "71%", "form_guide": "W W L W W"},
+    {"Opponent": "India", "Mat": 10, "Won": 7, "Lost": 3, "Tie/NR": 0, "Win %": "70%", "form_guide": "W W W L W"},
+    {"Opponent": "Australia", "Mat": 8, "Won": 6, "Lost": 2, "Tie/NR": 0, "Win %": "75%", "form_guide": "W W W W L"},
+    {"Opponent": "England", "Mat": 12, "Won": 8, "Lost": 4, "Tie/NR": 0, "Win %": "67%", "form_guide": "L W W W W"},
 ]
 
 
@@ -192,7 +192,7 @@ class TestInterpreter:
     """Tests for interpreter module."""
 
     def setup_method(self):
-        self.interp = MatchInterpreter()
+        self.interp = MatchInterpreter(format_key="odi")
 
     def test_h2h_at_50_says_evenly_matched(self):
         """At exactly 50%, narrative should say 'evenly split', NOT 'X leads'."""

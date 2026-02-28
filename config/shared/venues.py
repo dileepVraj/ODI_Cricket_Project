@@ -1,5 +1,8 @@
 """Shared venue map and helpers."""
 
+import re
+from typing import Iterable, List, Optional
+
 VENUE_MAP = {'Wankhede Stadium': 'IND_MUMBAI_WANKHEDE',
  'Wankhede Stadium, Mumbai': 'IND_MUMBAI_WANKHEDE',
  'Brabourne Stadium': 'IND_MUMBAI_BRABOURNE',
@@ -182,6 +185,7 @@ VENUE_MAP = {'Wankhede Stadium': 'IND_MUMBAI_WANKHEDE',
  'R. Premadasa Stadium': 'SL_COLOMBO_RPS',
  'R.Premadasa Stadium, Khettarama': 'SL_COLOMBO_RPS',
  'R Premadasa Stadium, Colombo': 'SL_COLOMBO_RPS',
+ 'R Premadasa Stadium': 'SL_COLOMBO_RPS',
  'Sinhalese Sports Club Ground': 'SL_COLOMBO_SSC',
  'Pallekele International Cricket Stadium': 'SL_PALLEKELE',
  'Galle International Stadium': 'SL_GALLE',
@@ -272,3 +276,133 @@ def get_venue_aliases(venue_identifier):
         
     return aliases
 
+
+# Country lookup helpers (prefix-driven, format-agnostic where possible)
+COUNTRY_CODE_TO_NAME = {
+    "AFG": "Afghanistan",
+    "AUS": "Australia",
+    "BAN": "Bangladesh",
+    "CAN": "Canada",
+    "ENG": "England",
+    "IND": "India",
+    "IRE": "Ireland",
+    "KEN": "Kenya",
+    "NAM": "Namibia",
+    "NED": "Netherlands",
+    "NEP": "Nepal",
+    "NZ": "New Zealand",
+    "OMA": "Oman",
+    "PAK": "Pakistan",
+    "PNG": "Papua New Guinea",
+    "SCO": "Scotland",
+    "SL": "Sri Lanka",
+    "SA": "South Africa",
+    "UAE": "UAE",
+    "USA": "United States of America",
+    "WI": "West Indies",
+    "ZIM": "Zimbabwe",
+}
+
+COUNTRY_NAME_ALIASES = {
+    "united arab emirates": "UAE",
+    "uae": "UAE",
+    "south africa": "South Africa",
+    "west indies": "West Indies",
+    "usa": "United States of America",
+    "united states": "United States of America",
+    "united states of america": "United States of America",
+}
+
+
+def get_country_from_venue_id(venue_id: str) -> Optional[str]:
+    """Returns the host country name inferred from venue_id prefix (e.g., IND_* -> India)."""
+    if venue_id is None:
+        return None
+    token = str(venue_id).strip()
+    if not token:
+        return None
+    prefix = token.split("_", 1)[0].upper()
+    return COUNTRY_CODE_TO_NAME.get(prefix)
+
+
+def list_host_countries_from_venue_ids(venue_ids: Iterable[str]) -> List[str]:
+    """Builds sorted unique host-country list from iterable of venue IDs."""
+    countries = {
+        country
+        for vid in venue_ids
+        for country in [get_country_from_venue_id(str(vid))]
+        if country
+    }
+    return sorted(countries)
+
+
+def get_country_prefixes(country_name: str) -> List[str]:
+    """
+    Resolves a country name into one or more venue_id prefixes.
+    Example: 'India' -> ['IND'], 'UAE' -> ['UAE'].
+    """
+    if country_name is None:
+        return []
+    raw = str(country_name).strip()
+    if not raw:
+        return []
+
+    normalized = raw.lower()
+    canonical = COUNTRY_NAME_ALIASES.get(normalized, raw)
+    if canonical in COUNTRY_CODE_TO_NAME:
+        return [canonical]
+
+    return sorted(
+        code for code, name in COUNTRY_CODE_TO_NAME.items()
+        if name.lower() == str(canonical).lower()
+    )
+
+
+def _normalize_venue_token(value: str) -> str:
+    """Lowercase + alnum-only normalization for robust venue matching."""
+    return "".join(ch for ch in str(value).lower() if ch.isalnum())
+
+
+def resolve_venue_id(venue_identifier: str) -> Optional[str]:
+    """
+    Resolves raw venue text or venue_id into a canonical venue_id from VENUE_MAP.
+    Handles punctuation/comma/parenthesis variants and NULL-safe matching.
+    """
+    if venue_identifier is None:
+        return None
+
+    raw = str(venue_identifier).strip()
+    if not raw:
+        return None
+
+    # Already canonical id (or id-like) path.
+    if raw in VENUE_MAP.values():
+        return raw
+
+    # Direct exact map hit.
+    direct = VENUE_MAP.get(raw)
+    if direct:
+        return direct
+
+    raw_lower = raw.lower().strip()
+    raw_base = re.sub(r"\([^)]*\)", "", raw_lower).strip()
+    raw_head = raw_base.split(",")[0].strip()
+    raw_norms = {
+        _normalize_venue_token(raw_lower),
+        _normalize_venue_token(raw_base),
+        _normalize_venue_token(raw_head),
+    }
+
+    for name, venue_id in VENUE_MAP.items():
+        name_lower = str(name).lower().strip()
+        name_base = re.sub(r"\([^)]*\)", "", name_lower).strip()
+        name_head = name_base.split(",")[0].strip()
+        name_norms = {
+            _normalize_venue_token(name_lower),
+            _normalize_venue_token(name_base),
+            _normalize_venue_token(name_head),
+        }
+        if raw_norms & name_norms:
+            return venue_id
+
+    return None

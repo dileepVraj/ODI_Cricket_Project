@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Move Next.js dev indicator away from the left sidebar area.
+  devIndicators: {
+    position: "bottom-right",
+  },
+
   // Proxy API requests to FastAPI backend during development
   async rewrites() {
     return [

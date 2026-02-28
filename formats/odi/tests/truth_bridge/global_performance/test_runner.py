@@ -50,7 +50,7 @@ class GlobalPerformanceTruthBridge(TruthBridgeBase):
                 # analyze_global_performance(self, team_name, years_back=5)
                 # We enforce 10 years to match other benchmarks
                 engine_data = self.engine.analyze_global_performance(team_name, years_back=years)
-            except Exception as e:
+            except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                 print(f"      ❌ [ERROR] Engine failed for {team_name}: {e}")
                 continue
 

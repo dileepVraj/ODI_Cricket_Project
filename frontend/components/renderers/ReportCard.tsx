@@ -1,31 +1,33 @@
-/**
- * ReportCard.tsx — Key-Value Stat Cards (Venue Bias)
- * 
- * Used by: venue_bias (output_type: "report")
- * 
- * Data shape: Dict with keys like venue_id, total_matches, bat1_wins,
- *   chase_wins, bat1_win_pct, chase_win_pct, bias_verdict, avg_1st_inn, avg_2nd_inn
- * 
- * Features:
- *   - Hero verdict badge (BAT FIRST / BOWL FIRST / NEUTRAL)
- *   - Stat grid with large numbers
- *   - Win% bar visualization
- *   - Hides internal fields (MATCH_IDS, raw_matches)
- */
 "use client";
 
 import { Shield, Target, TrendingUp } from "lucide-react";
+import CountUp from "@/components/animations/CountUp";
 
 interface ReportCardProps {
     data: Record<string, unknown>;
 }
 
-const HIDDEN_KEYS = new Set(["MATCH_IDS", "raw_matches", "match_ids"]);
+const HIDDEN_KEYS = new Set([
+    "MATCH_IDS",
+    "raw_matches",
+    "match_ids",
+    "match_audit",
+    "percent_breakdown",
+    "verdict_tone",
+    "highlight_flags",
+    "derived_badges",
+]);
+
+function formatLabel(key: string): string {
+    return key
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 export default function ReportCard({ data }: ReportCardProps) {
     if (!data || typeof data !== "object") {
         return (
-            <div style={{ padding: "20px", textAlign: "center", color: "var(--text-muted)" }}>
+            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
                 No report data available.
             </div>
         );
@@ -33,120 +35,86 @@ export default function ReportCard({ data }: ReportCardProps) {
 
     const verdict = String(data["bias_verdict"] ?? data["verdict"] ?? "");
     const venueId = String(data["venue_id"] ?? data["venue"] ?? "Unknown");
-    const bat1Pct = Number(data["bat1_win_pct"] ?? data["bat1_pct"] ?? 0);
-    const chasePct = Number(data["chase_win_pct"] ?? data["chase_pct"] ?? 0);
+    const breakdown = (data["percent_breakdown"] as Record<string, unknown> | undefined) ?? {};
+    const bat1Pct = Number(breakdown["bat_first"] ?? data["bat1_win_pct"] ?? data["bat1_pct"] ?? 0);
+    const chasePct = Number(breakdown["chase"] ?? data["chase_win_pct"] ?? data["chase_pct"] ?? 0);
+    const tieNrPct = Number(breakdown["tie_nr"] ?? 0);
+    const verdictTone = String(data["verdict_tone"] ?? "muted");
 
-    // Get display entries (excluding hidden + already displayed fields)
-    const heroKeys = new Set(["bias_verdict", "verdict", "venue_id", "venue", "bat1_win_pct", "bat1_pct", "chase_win_pct", "chase_pct"]);
-    const statEntries = Object.entries(data).filter(
-        ([key]) => !HIDDEN_KEYS.has(key) && !heroKeys.has(key)
-    );
+    const heroKeys = new Set([
+        "bias_verdict",
+        "verdict",
+        "verdict_tone",
+        "percent_breakdown",
+        "venue_id",
+        "venue",
+        "bat1_win_pct",
+        "bat1_pct",
+        "chase_win_pct",
+        "chase_pct",
+    ]);
+    const statEntries = Object.entries(data).filter(([key]) => !HIDDEN_KEYS.has(key) && !heroKeys.has(key));
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            {/* ── Hero Section: Verdict + Venue ──────────────────────────────── */}
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    gap: "16px",
-                }}
-            >
+        <div className="[display:flex] [flex-direction:column] [gap:24px]">
+            <div className="[display:flex] [align-items:center] [justify-content:space-between] [flex-wrap:wrap] [gap:16px]">
                 <div>
-                    <div style={{
-                        fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.06em",
-                        color: "var(--text-disabled)", fontWeight: 600, marginBottom: "4px",
-                    }}>
+                    <div className="[font-size:0.72rem] [letter-spacing:0.06em] [color:var(--text-disabled)] [font-weight:600] [margin-bottom:4px] [text-transform:uppercase]">
                         Venue
                     </div>
-                    <div style={{
-                        fontSize: "1.15rem", fontWeight: 700, color: "var(--text-primary)",
-                    }}>
-                        {venueId}
-                    </div>
+                    <div className="[font-size:1.2rem] [font-weight:700] [color:var(--text-primary)]">{venueId}</div>
                 </div>
-                <VerdictBadge verdict={verdict} />
+                <VerdictBadge verdict={verdict} tone={verdictTone} />
             </div>
 
-            {/* ── Win% Bar ──────────────────────────────────────────────────── */}
-            <div
-                style={{
-                    background: "var(--bg-elevated)",
-                    borderRadius: "var(--radius-lg)",
-                    padding: "16px 20px",
-                    border: "1px solid var(--border-subtle)",
-                }}
-            >
-                <div style={{
-                    display: "flex", justifyContent: "space-between", marginBottom: "8px",
-                    fontSize: "0.78rem", fontWeight: 600,
-                }}>
-                    <span style={{ color: "var(--accent-primary)" }}>
-                        <Shield size={14} style={{ verticalAlign: "middle", marginRight: 4 }} />
-                        Bat First: {bat1Pct}%
+            <div className="[background:var(--bg-elevated)] [border-radius:var(--radius-lg)] [padding:18px_22px] [border:1px_solid_var(--border-subtle)] [box-shadow:0_10px_26px_rgba(2,_8,_23,_0.26)]">
+                <div className="[display:flex] [justify-content:space-between] [margin-bottom:10px] [font-size:0.8rem] [font-weight:600]">
+                    <span className="[color:var(--accent-primary)]">
+                        <Shield size={14} className="[vertical-align:middle] [margin-right:4px]" />
+                        Bat First: <span className="font-numeric">{bat1Pct}%</span>
                     </span>
-                    <span style={{ color: "var(--accent-secondary)" }}>
-                        Chase: {chasePct}%
-                        <Target size={14} style={{ verticalAlign: "middle", marginLeft: 4 }} />
+                    <span className="[color:var(--text-secondary)]">
+                        Tie/NR: <span className="font-numeric">{tieNrPct}%</span>
+                    </span>
+                    <span className="[color:var(--accent-secondary)]">
+                        Chase: <span className="font-numeric">{chasePct}%</span>
+                        <Target size={14} className="[vertical-align:middle] [margin-left:4px]" />
                     </span>
                 </div>
-                {/* Visual bar */}
-                <div style={{
-                    display: "flex", height: 12, borderRadius: 6, overflow: "hidden",
-                    background: "var(--bg-active)",
-                }}>
-                    <div style={{
-                        width: `${bat1Pct}%`,
-                        background: "linear-gradient(90deg, var(--accent-primary), #60A5FA)",
-                        borderRadius: "6px 0 0 6px",
-                        transition: "width 0.5s ease-out",
-                    }} />
-                    <div style={{
-                        width: `${chasePct}%`,
-                        background: "linear-gradient(90deg, #A78BFA, var(--accent-secondary))",
-                        borderRadius: "0 6px 6px 0",
-                        transition: "width 0.5s ease-out",
-                    }} />
+
+                <div className="[display:flex] [height:12px] [border-radius:6px] [overflow:hidden] [background:var(--bg-active)]">
+                    <div
+                        className="[background:linear-gradient(90deg,_var(--accent-primary),_#60A5FA)] [transition:width_0.5s_ease-out]"
+                        style={{ width: `${bat1Pct}%` }}
+                    />
+                    <div
+                        className="[background:var(--text-disabled)] [opacity:0.45] [transition:width_0.5s_ease-out]"
+                        style={{ width: `${tieNrPct}%` }}
+                    />
+                    <div
+                        className="[background:linear-gradient(90deg,_#A78BFA,_var(--accent-secondary))] [transition:width_0.5s_ease-out]"
+                        style={{ width: `${chasePct}%` }}
+                    />
                 </div>
             </div>
 
-            {/* ── Stat Cards Grid ───────────────────────────────────────────── */}
-            <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-                gap: "10px",
-            }}>
+            <div className="[display:grid] [grid-template-columns:repeat(auto-fill,_minmax(190px,_1fr))] [gap:12px]">
                 {statEntries.map(([key, val]) => (
                     <div
                         key={key}
-                        style={{
-                            padding: "14px 16px",
-                            background: "var(--bg-elevated)",
-                            borderRadius: "var(--radius-md)",
-                            border: "1px solid var(--border-subtle)",
-                            transition: "border-color var(--transition-fast)",
-                        }}
-                        onMouseEnter={(e) => {
-                            (e.currentTarget).style.borderColor = "var(--border-strong)";
-                        }}
-                        onMouseLeave={(e) => {
-                            (e.currentTarget).style.borderColor = "var(--border-subtle)";
-                        }}
+                        className="[padding:16px_18px] [background:var(--bg-elevated)] [border-radius:var(--radius-md)] [border:1px_solid_var(--border-subtle)] [transition:border-color_var(--transition-fast),_transform_var(--transition-fast)] [box-shadow:0_8px_20px_rgba(2,_8,_23,_0.18)] hover:[border-color:var(--border-strong)] hover:[transform:translateY(-1px)]"
                     >
-                        <div style={{
-                            fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.05em",
-                            color: "var(--text-disabled)", fontWeight: 600, marginBottom: "4px",
-                        }}>
-                            {key.replace(/_/g, " ")}
+                        <div className="[font-size:0.72rem] [letter-spacing:0.02em] [color:var(--text-disabled)] [font-weight:600] [margin-bottom:6px]">
+                            {formatLabel(key)}
                         </div>
-                        <div style={{
-                            fontSize: "1.15rem", fontWeight: 700,
-                            color: "var(--text-primary)",
-                            fontVariantNumeric: "tabular-nums",
-                        }}>
-                            {val === null || val === undefined ? "—" : String(val)}
+                        <div className="[font-size:1.2rem] [font-weight:800] [color:var(--text-primary)] [font-family:var(--font-numeric)] [font-variant-numeric:tabular-nums]">
+                            {typeof val === "number" ? (
+                                <CountUp end={val} decimals={Number.isInteger(val) ? 0 : 2} duration={1.2} />
+                            ) : val === null || val === undefined ? (
+                                "-"
+                            ) : (
+                                String(val)
+                            )}
                         </div>
                     </div>
                 ))}
@@ -155,43 +123,28 @@ export default function ReportCard({ data }: ReportCardProps) {
     );
 }
 
-// ── Verdict Badge Sub-Component ─────────────────────────────────────────
+function VerdictBadge({ verdict, tone }: { verdict: string; tone: string }) {
+    if (tone === "primary") {
+        return (
+            <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:rgba(59,_130,_246,_0.14)] [border:1px_solid_rgba(59,_130,_246,_0.3)] [color:var(--accent-primary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
+                <Shield size={16} />
+                {verdict || "UNKNOWN"}
+            </div>
+        );
+    }
 
-function VerdictBadge({ verdict }: { verdict: string }) {
-    const v = verdict.toUpperCase();
-    let bg: string, color: string, icon: React.ReactNode;
-
-    if (v.includes("BAT")) {
-        bg = "rgba(59, 130, 246, 0.15)";
-        color = "var(--accent-primary)";
-        icon = <Shield size={16} />;
-    } else if (v.includes("BOWL") || v.includes("CHASE")) {
-        bg = "rgba(139, 92, 246, 0.15)";
-        color = "var(--accent-secondary)";
-        icon = <Target size={16} />;
-    } else {
-        bg = "rgba(148, 163, 184, 0.10)";
-        color = "var(--text-secondary)";
-        icon = <TrendingUp size={16} />;
+    if (tone === "secondary") {
+        return (
+            <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:rgba(139,_92,_246,_0.14)] [border:1px_solid_rgba(139,_92,_246,_0.3)] [color:var(--accent-secondary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
+                <Target size={16} />
+                {verdict || "UNKNOWN"}
+            </div>
+        );
     }
 
     return (
-        <div
-            style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "8px 16px",
-                borderRadius: "var(--radius-lg)",
-                background: bg,
-                border: `1px solid ${color}30`,
-                color,
-                fontWeight: 700,
-                fontSize: "0.85rem",
-                letterSpacing: "0.04em",
-            }}
-        >
-            {icon}
+        <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:rgba(148,_163,_184,_0.1)] [border:1px_solid_rgba(148,_163,_184,_0.3)] [color:var(--text-secondary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
+            <TrendingUp size={16} />
             {verdict || "UNKNOWN"}
         </div>
     );

@@ -1,0 +1,6 @@
+OK  compare_squads (has_data=True)
+OK  tactical_matrix (has_data=True)
+OK  matchups (has_data=True)
+OK  predict_score (has_data=True)
+OK  player_profile (has_data=True)
+OK  generate_pack (has_data=True)

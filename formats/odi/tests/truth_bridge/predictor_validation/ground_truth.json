@@ -1,36 +1,40 @@
 {
-    "PredictorValidation": {
-        "Details": {},
-        "Stats": {},
-        "Scenario_1 > India_vs_Australia > Holkar Cricket Stadium, Indore": {
-            "Venue_Avg": 373,
-            "Bat_Factor": 0.53,
-            "Bowl_Factor": 0.92,
-            "Prediction_Lower": 47,
-            "Prediction_Upper": 77,
-            "Risk_Labels": [
-                "\ud83d\udcc9 High Collapse Risk (-120)"
-            ]
-        },
-        "Scenario_2 > Australia_vs_India > MA Chidambaram Stadium, Chepauk, Chennai": {
-            "Venue_Avg": 245,
-            "Bat_Factor": 0.43,
-            "Bowl_Factor": 0.81,
-            "Prediction_Lower": -49,
-            "Prediction_Upper": -19,
-            "Risk_Labels": [
-                "\ud83d\udcc9 High Collapse Risk (-120)"
-            ]
-        },
-        "Scenario_3 > England_vs_New Zealand > Lord's, London": {
-            "Venue_Avg": 289,
-            "Bat_Factor": 0.44,
-            "Bowl_Factor": 0.89,
-            "Prediction_Lower": -23,
-            "Prediction_Upper": 6,
-            "Risk_Labels": [
-                "\ud83d\udcc9 High Collapse Risk (-120)"
-            ]
-        }
+  "_metadata": {
+    "refactor_date": "2026-02-23",
+    "architect_note": "Migration to Universal Core Calculators. Averages now utilize competitive_chase_threshold=200 and corrected smart_filter_service logic."
+  },
+  "PredictorValidation": {
+    "Details": {},
+    "Stats": {},
+    "Scenario_1 > India_vs_Australia > Holkar Cricket Stadium, Indore": {
+      "Venue_Avg": 373,
+      "Bat_Factor": 0.53,
+      "Bowl_Factor": 0.92,
+      "Prediction_Lower": 47,
+      "Prediction_Upper": 77,
+      "Risk_Labels": [
+        "\ud83d\udcc9 High Collapse Risk (-120)"
+      ]
+    },
+    "Scenario_2 > Australia_vs_India > MA Chidambaram Stadium, Chepauk, Chennai": {
+      "Venue_Avg": 245,
+      "Bat_Factor": 0.43,
+      "Bowl_Factor": 0.81,
+      "Prediction_Lower": -49,
+      "Prediction_Upper": -19,
+      "Risk_Labels": [
+        "\ud83d\udcc9 High Collapse Risk (-120)"
+      ]
+    },
+    "Scenario_3 > England_vs_New Zealand > Lord's, London": {
+      "Venue_Avg": 289,
+      "Bat_Factor": 0.44,
+      "Bowl_Factor": 0.89,
+      "Prediction_Lower": -23,
+      "Prediction_Upper": 6,
+      "Risk_Labels": [
+        "\ud83d\udcc9 High Collapse Risk (-120)"
+      ]
     }
+  }
 }

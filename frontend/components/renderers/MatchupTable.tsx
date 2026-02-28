@@ -1,15 +1,7 @@
 /**
- * MatchupTable.tsx — Batter vs Bowler Grid
- * 
+ * MatchupTable.tsx - Batter vs Bowler Grid
+ *
  * Used by: matchups (output_type: "matchup_table")
- * 
- * Data shape: List of matchup records with batter, bowler, balls, runs, dismissals, etc.
- * 
- * Features:
- *   - Batter vs Bowler matchup rows
- *   - "Bunny Alert" highlighting (high dismissal rate)
- *   - Color-coded threat level
- *   - SR calculation displayed
  */
 "use client";
 
@@ -19,52 +11,52 @@ interface MatchupTableProps {
     data: Record<string, unknown>[];
 }
 
-const HIDDEN_COLS = new Set(["MATCH_IDS", "match_ids"]);
+type ToneToken = "elite" | "strong" | "caution" | "danger" | "muted" | "default";
+
+interface MatchupRow extends Record<string, unknown> {
+    highlight_flags?: Record<string, boolean>;
+    cell_tones?: Record<string, ToneToken>;
+}
+
+const HIDDEN_COLS = new Set([
+    "MATCH_IDS",
+    "match_ids",
+    "highlight_flags",
+    "cell_tones",
+    "derived_badges",
+    "DismissalTone",
+]);
 
 export default function MatchupTable({ data }: MatchupTableProps) {
     if (!data || data.length === 0) {
         return (
-            <div style={{ padding: "20px", textAlign: "center", color: "var(--text-muted)" }}>
+            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
                 No matchup data available.
             </div>
         );
     }
 
-    const columns = Object.keys(data[0]).filter((c) => !HIDDEN_COLS.has(c));
+    const rows = data as MatchupRow[];
+    const columns = Object.keys(rows[0]).filter((c) => !HIDDEN_COLS.has(c));
+    const hasBunnyAlert = rows.some(rowHasBunnyAlert);
 
     return (
         <div>
-            {/* Header */}
-            <div style={{
-                display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px",
-            }}>
-                <Crosshair size={16} style={{ color: "var(--accent-primary)" }} />
-                <span style={{
-                    fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)",
-                    textTransform: "uppercase", letterSpacing: "0.04em",
-                }}>
-                    Player Matchups ({data.length} records)
+            <div className="[display:flex] [align-items:center] [gap:8px] [margin-bottom:12px]">
+                <Crosshair size={16} className="[color:var(--accent-primary)]" />
+                <span className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)] [text-transform:uppercase] [letter-spacing:0.04em]">
+                    Player Matchups ({rows.length} records)
                 </span>
             </div>
 
-            <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.825rem" }}>
+            <div className="[overflow-x:auto]">
+                <table className="[width:100%] [border-collapse:collapse] [font-size:0.825rem]">
                     <thead>
                         <tr>
                             {columns.map((col) => (
                                 <th
                                     key={col}
-                                    style={{
-                                        textAlign: isTextCol(col) ? "left" : "right",
-                                        padding: "10px 12px",
-                                        borderBottom: "2px solid var(--border-default)",
-                                        color: "var(--text-muted)",
-                                        fontWeight: 600,
-                                        textTransform: "uppercase",
-                                        fontSize: "0.7rem",
-                                        letterSpacing: "0.05em",
-                                        whiteSpace: "nowrap",
-                                    }}
+                                    className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [color:var(--text-muted)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] ${isTextCol(col) ? "[text-align:left]" : "[text-align:right]"}`}
                                 >
                                     {col}
                                 </th>
@@ -72,23 +64,19 @@ export default function MatchupTable({ data }: MatchupTableProps) {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((row, i) => {
-                            const isBunny = isBunnyAlert(row);
+                        {rows.map((row, i) => {
+                            const isBunny = rowHasBunnyAlert(row);
                             return (
                                 <tr
                                     key={i}
-                                    style={{
-                                        borderBottom: "1px solid var(--border-subtle)",
-                                        background: isBunny ? "rgba(239, 68, 68, 0.06)" : "transparent",
-                                        transition: "background var(--transition-fast)",
-                                    }}
+                                    className={`[border-bottom:1px_solid_var(--border-subtle)] [transition:background_var(--transition-fast)] ${isBunny ? "[background:rgba(239,_68,_68,_0.06)]" : "[background:transparent]"}`}
                                     onMouseEnter={(e) => {
-                                        (e.currentTarget).style.background = isBunny
+                                        e.currentTarget.style.background = isBunny
                                             ? "rgba(239, 68, 68, 0.10)"
                                             : "var(--bg-hover)";
                                     }}
                                     onMouseLeave={(e) => {
-                                        (e.currentTarget).style.background = isBunny
+                                        e.currentTarget.style.background = isBunny
                                             ? "rgba(239, 68, 68, 0.06)"
                                             : "transparent";
                                     }}
@@ -98,19 +86,12 @@ export default function MatchupTable({ data }: MatchupTableProps) {
                                         return (
                                             <td
                                                 key={col}
-                                                style={{
-                                                    padding: "10px 12px",
-                                                    textAlign: isTextCol(col) ? "left" : "right",
-                                                    whiteSpace: "nowrap",
-                                                    fontVariantNumeric: !isTextCol(col) ? "tabular-nums" : undefined,
-                                                    fontWeight: isTextCol(col) ? 600 : 400,
-                                                    color: getDismissalColor(col, val),
-                                                }}
+                                                className={`[padding:10px_12px] [white-space:nowrap] ${isTextCol(col) ? "[text-align:left] [font-weight:600]" : "[text-align:right] [font-weight:400] [font-variant-numeric:tabular-nums]"} ${resolveCellColor(row, col, val)}`}
                                             >
-                                                <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                                                    {val === null || val === undefined ? "—" : String(val)}
-                                                    {col.toLowerCase().includes("dismissal") && isBunny && i === 0 && (
-                                                        <AlertTriangle size={12} style={{ color: "var(--tier-danger)" }} />
+                                                <span className="[display:inline-flex] [align-items:center] [gap:4px]">
+                                                    {val === null || val === undefined ? "-" : String(val)}
+                                                    {(col.toLowerCase().includes("outs") || col.toLowerCase().includes("dismissal")) && isBunny && (
+                                                        <AlertTriangle size={12} className="[color:var(--tier-danger)]" />
                                                     )}
                                                 </span>
                                             </td>
@@ -123,12 +104,8 @@ export default function MatchupTable({ data }: MatchupTableProps) {
                 </table>
             </div>
 
-            {/* Bunny Alert Legend */}
-            {data.some(isBunnyAlert) && (
-                <div style={{
-                    display: "flex", alignItems: "center", gap: "6px", marginTop: "10px",
-                    fontSize: "0.75rem", color: "var(--tier-danger)",
-                }}>
+            {hasBunnyAlert && (
+                <div className="[display:flex] [align-items:center] [gap:6px] [margin-top:10px] [font-size:0.75rem] [color:var(--tier-danger)]">
                     <AlertTriangle size={12} />
                     <span>Bunny Alert: High dismissal rate detected</span>
                 </div>
@@ -137,28 +114,28 @@ export default function MatchupTable({ data }: MatchupTableProps) {
     );
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────
-
 function isTextCol(col: string): boolean {
     const lc = col.toLowerCase();
     return lc.includes("batter") || lc.includes("bowler") || lc.includes("player") ||
         lc.includes("name") || lc.includes("type");
 }
 
-function isBunnyAlert(row: Record<string, unknown>): boolean {
-    const dismissals = Number(row["Dismissals"] ?? row["dismissals"] ?? row["Outs"] ?? 0);
-    const balls = Number(row["Balls"] ?? row["balls"] ?? 0);
-    // If dismissed 3+ times, or once per 15 balls or fewer
-    return dismissals >= 3 || (dismissals >= 2 && balls > 0 && balls / dismissals <= 15);
+function rowHasBunnyAlert(row: MatchupRow): boolean {
+    const explicit = row.highlight_flags?.bunny_alert;
+    if (typeof explicit === "boolean") return explicit;
+
+    const legacy = row["IsBunny"] ?? row["is_bunny"];
+    if (typeof legacy === "boolean") return legacy;
+    return false;
 }
 
-function getDismissalColor(col: string, val: unknown): string {
-    const lc = col.toLowerCase();
-    if (lc.includes("dismissal") || lc.includes("outs")) {
-        const n = Number(val);
-        if (n >= 3) return "var(--tier-danger)";
-        if (n >= 2) return "var(--tier-caution)";
-    }
-    if (val === null || val === undefined) return "var(--text-disabled)";
-    return "var(--text-primary)";
+function resolveCellColor(row: MatchupRow, col: string, val: unknown): string {
+    const tone = row.cell_tones?.[col] ?? row.cell_tones?.Outs;
+    if (tone === "elite") return "[color:var(--tier-elite)]";
+    if (tone === "strong") return "[color:var(--tier-strong)]";
+    if (tone === "caution") return "[color:var(--tier-caution)]";
+    if (tone === "danger") return "[color:var(--tier-danger)]";
+    if (tone === "muted") return "[color:var(--text-disabled)]";
+    if (val === null || val === undefined) return "[color:var(--text-disabled)]";
+    return "[color:var(--text-primary)]";
 }

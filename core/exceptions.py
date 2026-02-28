@@ -18,3 +18,8 @@ class FormatMismatchError(CricketProjectError):
 class DataNotFoundError(CricketProjectError):
     """Raised when a required data file or DB table is missing."""
     pass
+
+
+class ConfigurationError(CricketProjectError):
+    """Raised when required runtime configuration is missing or invalid."""
+    pass

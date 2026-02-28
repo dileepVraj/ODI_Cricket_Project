@@ -1,0 +1,4 @@
+﻿version: 1
+display_name: DuckDB Lint Ops
+short_description: Read-only DuckDB querying and pandas DOD anti-pattern linting.
+default_prompt: Run a read-only DuckDB query and then run DOD lint checks in this repository.

@@ -18,6 +18,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import { executeFunction, type ExecuteResponse } from "@/lib/api";
 import FunctionRenderer from "@/components/renderers/FunctionRenderer";
 import SkeletonLoader from "@/components/renderers/SkeletonLoader";
+import ExtraInputRenderer from "@/components/inputs/ExtraInputRenderer";
 import SquadBuilder from "@/components/inputs/SquadBuilder";
 import {
   Activity,
@@ -29,6 +30,159 @@ import {
   ChevronRight,
   Users,
 } from "lucide-react";
+
+type ExtraInputFieldConfig = {
+  type: string;
+  label: string;
+  required?: boolean;
+  source?: string;
+};
+
+type SquadBuilderConfig = {
+  enabled: boolean;
+  maxPlayers: number;
+};
+
+const CONTEXT_BADGE_CLASS_BY_COMPLETION: Record<"complete" | "incomplete", string> = {
+  complete: "badge-elite",
+  incomplete: "badge-caution",
+};
+
+function resolveContextBadgeClass(isContextComplete: boolean): string {
+  return CONTEXT_BADGE_CLASS_BY_COMPLETION[isContextComplete ? "complete" : "incomplete"];
+}
+
+function parsePositiveInteger(value: unknown): number | null {
+  if (typeof value === "number" && Number.isInteger(value) && value > 0) return value;
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    const parsed = Number(trimmed);
+    if (Number.isInteger(parsed) && parsed > 0) return parsed;
+  }
+  return null;
+}
+
+function resolveSquadBuilderConfig(extraInputs: unknown): SquadBuilderConfig {
+  const defaultConfig: SquadBuilderConfig = { enabled: false, maxPlayers: 11 };
+  if (!extraInputs || typeof extraInputs !== "object") return defaultConfig;
+
+  const inputs = extraInputs as Record<string, unknown>;
+  const rawSquadBuilder = inputs.squad_builder;
+  if (rawSquadBuilder === undefined || rawSquadBuilder === null || rawSquadBuilder === false) {
+    return defaultConfig;
+  }
+
+  const fallbackMaxPlayers =
+    parsePositiveInteger(inputs.squad_max_players) ??
+    parsePositiveInteger(inputs.max_players) ??
+    parsePositiveInteger(inputs.max_xi) ??
+    defaultConfig.maxPlayers;
+
+  if (rawSquadBuilder === true) {
+    return { enabled: true, maxPlayers: fallbackMaxPlayers };
+  }
+
+  if (typeof rawSquadBuilder === "object") {
+    const cfg = rawSquadBuilder as Record<string, unknown>;
+    const enabled = typeof cfg.enabled === "boolean" ? cfg.enabled : true;
+    const maxPlayers =
+      parsePositiveInteger(cfg.max_players) ??
+      parsePositiveInteger(cfg.squad_max_players) ??
+      parsePositiveInteger(cfg.max_xi) ??
+      fallbackMaxPlayers;
+    return { enabled, maxPlayers };
+  }
+
+  return { enabled: Boolean(rawSquadBuilder), maxPlayers: fallbackMaxPlayers };
+}
+
+function isExtraInputFieldConfig(value: unknown): value is ExtraInputFieldConfig {
+  if (!value || typeof value !== "object") return false;
+  const obj = value as Record<string, unknown>;
+  return typeof obj.type === "string" && typeof obj.label === "string";
+}
+
+function getExtraInputFields(extraInputs: unknown): Record<string, ExtraInputFieldConfig> {
+  if (!extraInputs || typeof extraInputs !== "object") return {};
+  const fields: Record<string, ExtraInputFieldConfig> = {};
+
+  for (const [key, raw] of Object.entries(extraInputs as Record<string, unknown>)) {
+    if (key === "squad_builder") continue;
+    if (isExtraInputFieldConfig(raw)) {
+      fields[key] = raw;
+    }
+  }
+
+  return fields;
+}
+
+function getMissingContext(
+  requiredContext: string[],
+  contextValues: Record<string, string | number>
+): string[] {
+  return requiredContext.filter((key) => {
+    const val = contextValues[key];
+    return !val || val === "" || val === "All";
+  });
+}
+
+function buildExecuteParams(args: {
+  requiredContext: string[];
+  contextValues: Record<string, string | number>;
+  needsSquadBuilder: boolean;
+  homeXI: string[];
+  awayXI: string[];
+  extraInputValues: Record<string, string>;
+}): Record<string, unknown> {
+  const {
+    requiredContext,
+    contextValues,
+    needsSquadBuilder,
+    homeXI,
+    awayXI,
+    extraInputValues,
+  } = args;
+
+  const params: Record<string, unknown> = {};
+
+  for (const key of requiredContext) {
+    const val = contextValues[key];
+    if (val && val !== "" && val !== "All") {
+      params[key] = val;
+    }
+  }
+
+  if (needsSquadBuilder) {
+    params.home_xi = homeXI;
+    params.away_xi = awayXI;
+  }
+
+  Object.entries(extraInputValues).forEach(([key, val]) => {
+    if (val) params[key] = val;
+  });
+
+  return params;
+}
+
+function formatExecuteError(err: unknown): string {
+  const fallback = "Execution failed. Please try again.";
+  if (!(err instanceof Error)) return fallback;
+
+  const maybeStatus = (err as Error & { status?: number }).status;
+  const message = err.message?.trim();
+  if (message && !message.startsWith("[") && !message.startsWith("{")) {
+    return message;
+  }
+
+  if (maybeStatus === 422) {
+    return "Validation Error: Please verify the selected context and required inputs.";
+  }
+  if (typeof maybeStatus === "number" && maybeStatus >= 500) {
+    return "Server Error: Backend execution failed. Please retry in a moment.";
+  }
+  return fallback;
+}
 
 export default function Page() {
   return (
@@ -71,12 +225,7 @@ function AppShell() {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        overflow: "hidden",
-      }}
+      className="[display:flex] [flex-direction:column] [height:100vh] [overflow:hidden]"
     >
       {/* Layer 1: Format Selector */}
       <FormatSelector />
@@ -85,19 +234,14 @@ function AppShell() {
       <ContextBar />
 
       {/* Layer 3: Sidebar + Content */}
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <div className="[display:flex] [flex:1] [overflow:hidden]">
         <Sidebar
           activeCategory={activeCategory}
           onCategorySelect={handleCategorySelect}
         />
         <main
           id="main-content"
-          style={{
-            flex: 1,
-            overflow: "auto",
-            padding: "24px",
-            background: "var(--bg-deepest)",
-          }}
+          className="[flex:1] [overflow:auto] [padding:24px] [background:var(--bg-deepest)]"
         >
           {activeCategory === "dashboard" ? (
             <DashboardScreen />
@@ -127,26 +271,20 @@ function DashboardScreen() {
   return (
     <div className="animate-fade-in">
       {/* ── Welcome Header ──────────────────────────────────────────── */}
-      <div style={{ marginBottom: "32px" }}>
+      <div className="[margin-bottom:32px]">
         <h2
-          className="gradient-text"
-          style={{ fontSize: "1.75rem", fontWeight: 800, marginBottom: "8px" }}
+          className="gradient-text [font-size:1.75rem] [font-weight:800] [margin-bottom:8px]"
         >
           {manifest.format_icon} {manifest.format_label} Command Center
         </h2>
-        <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>
+        <p className="[color:var(--text-secondary)] [font-size:0.9rem]">
           Algorithmic trading intelligence powered by deep cricket analytics
         </p>
       </div>
 
       {/* ── Stats Cards ─────────────────────────────────────────────── */}
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-          gap: "16px",
-          marginBottom: "32px",
-        }}
+        className="[display:grid] [grid-template-columns:repeat(auto-fill,_minmax(220px,_1fr))] [gap:16px] [margin-bottom:32px]"
       >
         <StatCard
           icon={<Database size={20} />}
@@ -176,35 +314,17 @@ function DashboardScreen() {
 
       {/* ── Category Quick Access Grid ──────────────────────────────── */}
       <h3
-        style={{
-          fontSize: "1rem",
-          fontWeight: 700,
-          color: "var(--text-primary)",
-          marginBottom: "16px",
-        }}
+        className="[font-size:1rem] [font-weight:700] [color:var(--text-primary)] [margin-bottom:16px]"
       >
         Quick Access
       </h3>
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: "12px",
-        }}
+        className="[display:grid] [grid-template-columns:repeat(auto-fill,_minmax(280px,_1fr))] [gap:12px]"
       >
         {manifest.categories.map((cat, i) => (
           <button
             key={cat.key}
-            className="glass-card glass-card-hover"
-            style={{
-              padding: "16px 20px",
-              cursor: "pointer",
-              textAlign: "left",
-              border: "1px solid var(--glass-border)",
-              fontFamily: "inherit",
-              background: "var(--glass-bg)",
-              animationDelay: `${i * 60}ms`,
-            }}
+            className={`glass-card glass-card-hover [padding:16px_20px] [cursor:pointer] [text-align:left] [border:1px_solid_var(--glass-border)] [font-family:inherit] [background:var(--glass-bg)] [animation-delay:${i * 60}ms]`}
             onClick={() => {
               // This triggers sidebar category selection from parent
               const el = document.getElementById(`sidebar-${cat.key}`);
@@ -212,53 +332,30 @@ function DashboardScreen() {
             }}
           >
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "8px",
-              }}
+              className="[display:flex] [justify-content:space-between] [align-items:center] [margin-bottom:8px]"
             >
-              <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-primary)" }}>
+              <span className="[font-size:0.95rem] [font-weight:600] [color:var(--text-primary)]">
                 {cat.label}
               </span>
-              <ChevronRight size={16} style={{ color: "var(--text-disabled)" }} />
+              <ChevronRight size={16} className="[color:var(--text-disabled)]" />
             </div>
             <p
-              style={{
-                fontSize: "0.78rem",
-                color: "var(--text-muted)",
-                lineHeight: 1.4,
-                marginBottom: "10px",
-              }}
+              className="[font-size:0.78rem] [color:var(--text-muted)] [line-height:1.4] [margin-bottom:10px]"
             >
               {cat.description}
             </p>
-            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+            <div className="[display:flex] [gap:6px] [flex-wrap:wrap]">
               {cat.functions.slice(0, 3).map((fn) => (
                 <span
                   key={fn.key}
-                  style={{
-                    fontSize: "0.7rem",
-                    padding: "2px 8px",
-                    borderRadius: "9999px",
-                    background: "var(--bg-active)",
-                    color: "var(--text-muted)",
-                  }}
+                  className="[font-size:0.7rem] [padding:2px_8px] [border-radius:9999px] [background:var(--bg-active)] [color:var(--text-muted)]"
                 >
                   {fn.label}
                 </span>
               ))}
               {cat.functions.length > 3 && (
                 <span
-                  style={{
-                    fontSize: "0.7rem",
-                    padding: "2px 8px",
-                    borderRadius: "9999px",
-                    background: "var(--accent-glow)",
-                    color: "var(--accent-primary)",
-                    fontWeight: 600,
-                  }}
+                  className="[font-size:0.7rem] [padding:2px_8px] [border-radius:9999px] [background:var(--accent-glow)] [color:var(--accent-primary)] [font-weight:600]"
                 >
                   +{cat.functions.length - 3} more
                 </span>
@@ -283,44 +380,20 @@ function StatCard({
   color: string;
 }) {
   return (
-    <div
-      className="glass-card"
-      style={{ padding: "18px 20px", display: "flex", gap: "14px", alignItems: "center" }}
-    >
+    <div className="glass-card [padding:18px_20px] [display:flex] [gap:14px] [align-items:center]">
       <div
-        style={{
-          width: 42,
-          height: 42,
-          borderRadius: "var(--radius-md)",
-          background: `${color}15`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color,
-          flexShrink: 0,
-        }}
+        className={`[width:42px] [height:42px] [border-radius:var(--radius-md)] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] [background:${color}15] [color:${color}]`}
       >
         {icon}
       </div>
       <div>
         <div
-          style={{
-            fontSize: "0.7rem",
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
-            color: "var(--text-disabled)",
-            fontWeight: 600,
-          }}
+          className="[font-size:0.7rem] [text-transform:uppercase] [letter-spacing:0.06em] [color:var(--text-disabled)] [font-weight:600]"
         >
           {label}
         </div>
         <div
-          style={{
-            fontSize: "1.25rem",
-            fontWeight: 800,
-            color: "var(--text-primary)",
-            lineHeight: 1.2,
-          }}
+          className="[font-size:1.25rem] [font-weight:800] [color:var(--text-primary)] [line-height:1.2]"
         >
           {value}
         </div>
@@ -341,22 +414,26 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
   const [error, setError] = useState<string | null>(null);
   const [homeXI, setHomeXI] = useState<string[]>([]);
   const [awayXI, setAwayXI] = useState<string[]>([]);
+  const [extraInputValues, setExtraInputValues] = useState<Record<string, string>>({});
 
-  // Human-readable labels for context field keys
-  const contextLabels: Record<string, string> = {
-    venue: "🏟️ Venue",
-    team_a: "🏏 Home Team",
-    team_b: "🏏 Away Team",
-    years: "📅 Years",
-    region: "🌍 Region",
-  };
+  const getContextLabel = (key: string) =>
+    manifest?.context_fields?.[key]?.label ?? key.replace(/_/g, " ");
 
   // Reset active tab when category changes
   useEffect(() => {
     setActiveTab(0);
     setResult(null);
     setError(null);
+    setExtraInputValues({});
   }, [categoryKey]);
+
+  // Reset result/error when function tab changes
+  useEffect(() => {
+    setResult(null);
+    setError(null);
+    // Keep extra inputs if the keys overlap, but usually better to clear to avoid stale values
+    setExtraInputValues({});
+  }, [activeTab]);
 
   if (!manifest) return null;
 
@@ -364,51 +441,64 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
   if (!category) {
     return (
       <div
-        className="glass-card animate-fade-in"
-        style={{
-          padding: "40px",
-          textAlign: "center",
-          maxWidth: 500,
-          margin: "60px auto",
-        }}
+        className="glass-card animate-fade-in [padding:32px] [text-align:center] [max-width:500px] [margin:60px_auto]"
       >
         <AlertCircle
           size={48}
-          style={{ color: "var(--tier-caution)", marginBottom: "16px" }}
+          className="[color:var(--tier-caution)] [margin-bottom:16px]"
         />
-        <h3 style={{ fontSize: "1.1rem", marginBottom: "8px" }}>
+        <h3 className="[font-size:1.1rem] [margin-bottom:8px]">
           Category Not Found
         </h3>
-        <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
+        <p className="[color:var(--text-secondary)] [font-size:0.875rem]">
           Category &quot;{categoryKey}&quot; is not in the {manifest.format_label} manifest.
         </p>
       </div>
     );
   }
 
-  const activeFn = category.functions[activeTab];
+  if (!category.functions || category.functions.length === 0) {
+    return (
+      <div
+        className="glass-card animate-fade-in [padding:32px] [text-align:center] [max-width:500px] [margin:60px_auto]"
+      >
+        <AlertCircle
+          size={48}
+          className="[color:var(--tier-caution)] [margin-bottom:16px]"
+        />
+        <h3 className="[font-size:1.1rem] [margin-bottom:8px]">
+          No Functions Available
+        </h3>
+        <p className="[color:var(--text-secondary)] [font-size:0.875rem]">
+          Category &quot;{category.label}&quot; has no runnable functions in the manifest.
+        </p>
+      </div>
+    );
+  }
 
-  // Check if required context is filled
-  const missingContext = activeFn.required_context.filter((key) => {
-    const val = contextValues[key];
-    return !val || val === "" || val === "All";
-  });
+  const safeActiveTab = Math.min(activeTab, category.functions.length - 1);
+  const activeFn = category.functions[safeActiveTab];
+  const effectiveRequiredContext = activeFn.required_context;
+  const missingContext = getMissingContext(effectiveRequiredContext, contextValues);
 
-  const canExecute = missingContext.length === 0 ||
-    // Allow execution if only optional fields are missing
-    missingContext.every((key) => {
-      const field = manifest.context_fields[key];
-      return field && !field.required;
-    });
+  const canExecute = missingContext.length === 0;
 
-  // Detect if this function needs squad builder
-  const needsSquadBuilder = activeFn.extra_inputs &&
-    typeof activeFn.extra_inputs === "object" &&
-    (activeFn.extra_inputs as Record<string, unknown>).squad_builder === true;
+  // Detect if this function needs squad builder and max squad size from manifest.
+  const squadBuilderConfig = resolveSquadBuilderConfig(activeFn.extra_inputs);
+  const needsSquadBuilder = squadBuilderConfig.enabled;
+  const squadMaxPlayers = squadBuilderConfig.maxPlayers;
+
+  const extraInputFields = getExtraInputFields(activeFn.extra_inputs);
 
   // For squad functions, also check if squads are filled
-  const squadReady = !needsSquadBuilder || (homeXI.length > 0 && awayXI.length > 0);
-  const canRun = canExecute && squadReady;
+  const squadReady = !needsSquadBuilder || (homeXI.length !== 0 && awayXI.length !== 0);
+
+  // Check if required extra inputs are filled
+  const missingExtraInputs = Object.entries(extraInputFields)
+    .filter(([key, field]) => Boolean(field.required) && !extraInputValues[key])
+    .map(([, field]) => field.label);
+
+  const canRun = canExecute && squadReady && missingExtraInputs.length === 0;
 
   async function runExecute() {
     if (!activeFn || !activeFormat) return;
@@ -418,25 +508,19 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
     setResult(null);
 
     try {
-      // Build params from context values — only send what the function needs
-      const params: Record<string, unknown> = {};
-      for (const key of activeFn.required_context) {
-        const val = contextValues[key];
-        if (val && val !== "" && val !== "All") {
-          params[key] = val;
-        }
-      }
-
-      // Add squad lists if this function needs them
-      if (needsSquadBuilder) {
-        params.home_xi = homeXI;
-        params.away_xi = awayXI;
-      }
+      const params = buildExecuteParams({
+        requiredContext: effectiveRequiredContext,
+        contextValues,
+        needsSquadBuilder,
+        homeXI,
+        awayXI,
+        extraInputValues,
+      });
 
       const res = await executeFunction(activeFormat, activeFn.key, params);
       setResult(res);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Execution failed");
+      setError(formatExecuteError(err));
     } finally {
       setIsLoading(false);
     }
@@ -445,43 +529,31 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
   return (
     <div className="animate-fade-in">
       {/* ── Category Header ──────────────────────────────────────────── */}
-      <div style={{ marginBottom: "20px" }}>
+      <div className="[margin-bottom:20px]">
         <h2
-          style={{
-            fontSize: "1.35rem",
-            fontWeight: 700,
-            color: "var(--text-primary)",
-            marginBottom: "4px",
-          }}
+          className="[font-size:1.35rem] [font-weight:700] [color:var(--text-primary)] [margin-bottom:4px]"
         >
           {category.label}
         </h2>
-        <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
+        <p className="[color:var(--text-muted)] [font-size:0.85rem]">
           {category.description}
         </p>
       </div>
 
       {/* ── Function Tabs ────────────────────────────────────────────── */}
       <div
-        style={{
-          display: "flex",
-          gap: "4px",
-          marginBottom: "20px",
-          overflowX: "auto",
-          paddingBottom: "4px",
-        }}
+        className="[display:flex] [gap:4px] [margin-bottom:20px] [overflow-x:auto] [padding-bottom:4px]"
       >
         {category.functions.map((fn, i) => (
           <button
             key={fn.key}
             id={`tab-${fn.key}`}
-            className={`format-tab ${i === activeTab ? "active" : ""}`}
+            className={`format-tab ${i === safeActiveTab ? "active" : ""} [font-family:inherit]`}
             onClick={() => {
               setActiveTab(i);
               setResult(null);
               setError(null);
             }}
-            style={{ fontFamily: "inherit" }}
           >
             {fn.label}
           </button>
@@ -489,64 +561,43 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
       </div>
 
       {/* ── Active Function Panel ────────────────────────────────────── */}
-      <div className="glass-card" style={{ padding: "24px" }}>
+      <div className="glass-card [padding:24px]">
         {/* Function info */}
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: "16px",
-            flexWrap: "wrap",
-            gap: "12px",
-          }}
+          className="[display:flex] [justify-content:space-between] [align-items:flex-start] [margin-bottom:16px] [flex-wrap:wrap] [gap:12px]"
         >
           <div>
             <h3
-              style={{
-                fontSize: "1.05rem",
-                fontWeight: 700,
-                color: "var(--text-primary)",
-                marginBottom: "4px",
-              }}
+              className="[font-size:1.05rem] [font-weight:700] [color:var(--text-primary)] [margin-bottom:4px]"
             >
               {activeFn.label}
             </h3>
             <div
-              style={{
-                display: "flex",
-                gap: "6px",
-                flexWrap: "wrap",
-                fontSize: "0.75rem",
-              }}
+              className="[display:flex] [gap:6px] [flex-wrap:wrap] [font-size:0.75rem]"
             >
               <span className="badge badge-strong">
                 {activeFn.output_type}
               </span>
               <span
-                style={{
-                  padding: "2px 8px",
-                  borderRadius: "9999px",
-                  background: "var(--bg-active)",
-                  color: "var(--text-muted)",
-                }}
+                className="[padding:2px_8px] [border-radius:9999px] [background:var(--bg-active)] [color:var(--text-muted)]"
               >
                 {activeFn.engine_class}.{activeFn.engine_method}
               </span>
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <div className="[display:flex] [gap:8px] [align-items:center]">
             {/* Required context chips */}
-            {activeFn.required_context.map((key) => {
+            {effectiveRequiredContext.map((key) => {
               const val = contextValues[key];
-              const isFilled = val && val !== "" && val !== "All";
+              const isContextComplete = Boolean(val && val !== "" && val !== "All");
+              const contextBadgeClass = resolveContextBadgeClass(isContextComplete);
               return (
                 <span
                   key={key}
-                  className={`badge ${isFilled ? "badge-elite" : "badge-caution"}`}
+                  className={`badge ${contextBadgeClass}`}
                 >
-                  {contextLabels[key] || key}: {isFilled ? String(val) : "needed"}
+                  {getContextLabel(key)}: {isContextComplete ? String(val) : "needed"}
                 </span>
               );
             })}
@@ -556,41 +607,39 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         {/* ── Missing Context Alert ──────────────────────────────────── */}
         {!canExecute && missingContext.length > 0 && (
           <div
-            className="animate-fade-in"
-            style={{
-              padding: "16px 20px",
-              background: "rgba(245, 158, 11, 0.08)",
-              border: "1px solid rgba(245, 158, 11, 0.25)",
-              borderRadius: "var(--radius-md)",
-              marginBottom: "16px",
-              display: "flex",
-              gap: "12px",
-              alignItems: "flex-start",
-            }}
+            className="animate-fade-in [padding:16px] [background:rgba(245,_158,_11,_0.08)] [border:1px_solid_rgba(245,_158,_11,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px] [display:flex] [gap:12px] [align-items:flex-start]"
           >
             <AlertCircle
               size={20}
-              style={{ color: "var(--tier-caution)", flexShrink: 0, marginTop: 2 }}
+              className="[color:var(--tier-caution)] [flex-shrink:0] [margin-top:2px]"
             />
             <div>
               <p
-                style={{
-                  color: "var(--tier-caution)",
-                  fontSize: "0.9rem",
-                  fontWeight: 600,
-                  marginBottom: "6px",
-                }}
+                className="[color:var(--tier-caution)] [font-size:0.9rem] [font-weight:600] [margin-bottom:6px]"
               >
                 Missing Required Context
               </p>
-              <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", lineHeight: 1.5 }}>
+              <p className="[color:var(--text-secondary)] [font-size:0.82rem] [line-height:1.5]">
                 Please fill in the following fields in the Context Bar above:{" "}
-                <strong style={{ color: "var(--text-primary)" }}>
-                  {missingContext.map((k) => contextLabels[k] || k).join(", ")}
+                <strong className="[color:var(--text-primary)]">
+                  {missingContext.map((k) => getContextLabel(k)).join(", ")}
                 </strong>
               </p>
             </div>
           </div>
+        )}
+
+        {/* ── Extra Inputs (manifest-driven) ────────────────────────── */}
+        {Object.keys(extraInputFields).length > 0 && activeFormat && (
+          <ExtraInputRenderer
+            formatKey={activeFormat}
+            extraInputs={extraInputFields}
+            contextValues={contextValues}
+            values={extraInputValues}
+            onChange={(key, val) =>
+              setExtraInputValues((prev) => ({ ...prev, [key]: val }))
+            }
+          />
         )}
 
         {/* ── Squad Builder (for squad-dependent functions) ───────── */}
@@ -599,6 +648,7 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
             formatKey={activeFormat}
             teamA={String(contextValues.team_a || "")}
             teamB={String(contextValues.team_b || "")}
+            maxPlayers={squadMaxPlayers}
             homeXI={homeXI}
             awayXI={awayXI}
             onHomeXIChange={setHomeXI}
@@ -609,23 +659,25 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         {/* Squad not ready alert */}
         {needsSquadBuilder && canExecute && !squadReady && (
           <div
-            className="animate-fade-in"
-            style={{
-              padding: "14px 18px",
-              background: "rgba(96, 165, 250, 0.08)",
-              border: "1px solid rgba(96, 165, 250, 0.25)",
-              borderRadius: "var(--radius-md)",
-              marginBottom: "16px",
-              display: "flex",
-              gap: "12px",
-              alignItems: "center",
-            }}
+            className="animate-fade-in [padding:14px] [background:rgba(59,_130,_246,_0.08)] [border:1px_solid_rgba(59,_130,_246,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px] [display:flex] [gap:12px] [align-items:center]"
           >
-            <Users size={18} style={{ color: "var(--accent-blue)", flexShrink: 0 }} />
-            <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem" }}>
-              Select players for <strong style={{ color: "var(--text-primary)" }}>Home XI</strong> and{" "}
-              <strong style={{ color: "var(--text-primary)" }}>Away XI</strong> above, or click{" "}
-              <strong style={{ color: "var(--accent-blue)" }}>Load Squad</strong> to auto-fill.
+            <Users size={18} className="[color:var(--accent-blue)] [flex-shrink:0]" />
+            <p className="[color:var(--text-secondary)] [font-size:0.82rem]">
+              Select players for <strong className="[color:var(--text-primary)]">Home XI</strong> and{" "}
+              <strong className="[color:var(--text-primary)]">Away XI</strong> above, or click{" "}
+              <strong className="[color:var(--accent-blue)]">Load Squad</strong> to auto-fill.
+            </p>
+          </div>
+        )}
+
+        {/* Extra inputs missing alert */}
+        {canExecute && squadReady && missingExtraInputs.length > 0 && (
+          <div
+            className="animate-fade-in [padding:14px] [background:rgba(59,_130,_246,_0.08)] [border:1px_solid_rgba(59,_130,_246,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px] [display:flex] [gap:12px] [align-items:center]"
+          >
+            <AlertCircle size={18} className="[color:var(--accent-blue)] [flex-shrink:0]" />
+            <p className="[color:var(--text-secondary)] [font-size:0.82rem]">
+              Please select <strong className="[color:var(--text-primary)]">{missingExtraInputs.join(", ")}</strong> to proceed.
             </p>
           </div>
         )}
@@ -633,27 +685,23 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         {/* Execute button */}
         <button
           id={`execute-${activeFn.key}`}
-          className="btn-primary"
+          className={`btn-primary [margin-bottom:20px] [display:flex] [align-items:center] [gap:8px] ${isLoading || !canRun ? "[opacity:0.5] [cursor:not-allowed]" : "[opacity:1] [cursor:pointer]"}`}
           onClick={runExecute}
           disabled={isLoading || !canRun}
-          style={{
-            marginBottom: "20px",
-            opacity: isLoading || !canRun ? 0.5 : 1,
-            cursor: isLoading || !canRun ? "not-allowed" : "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
         >
           {isLoading ? (
             <>
-              <Loader2 size={16} className="animate-spin" style={{ animation: "spin 1s linear infinite" }} />
+              <Loader2 size={16} className="animate-spin" />
               Executing...
             </>
           ) : !canRun ? (
             <>
               <AlertCircle size={16} />
-              {!canExecute ? "Fill Required Fields" : "Select Squads"}
+              {!canExecute
+                ? "Fill Required Fields"
+                : !squadReady
+                  ? "Select Squads"
+                  : `Missing ${missingExtraInputs[0]}`}
             </>
           ) : (
             <>
@@ -666,39 +714,25 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         {/* Error display with Retry */}
         {error && (
           <div
-            className="animate-fade-in"
-            style={{
-              padding: "14px 18px",
-              background: "rgba(239, 68, 68, 0.08)",
-              border: "1px solid rgba(239, 68, 68, 0.25)",
-              borderRadius: "var(--radius-md)",
-              marginBottom: "16px",
-            }}
+            className="animate-fade-in [padding:14px] [background:rgba(239,_68,_68,_0.08)] [border:1px_solid_rgba(239,_68,_68,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px]"
           >
-            <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+            <div className="[display:flex] [gap:10px] [align-items:flex-start]">
               <AlertCircle
                 size={18}
-                style={{ color: "var(--tier-danger)", flexShrink: 0, marginTop: 2 }}
+                className="[color:var(--tier-danger)] [flex-shrink:0] [margin-top:2px]"
               />
-              <div style={{ flex: 1 }}>
-                <p style={{ color: "var(--tier-danger)", fontSize: "0.9rem", fontWeight: 600, marginBottom: "4px" }}>
+              <div className="[flex:1]">
+                <p className="[color:var(--tier-danger)] [font-size:0.9rem] [font-weight:600] [margin-bottom:4px]">
                   Execution Failed
                 </p>
-                <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", lineHeight: 1.5 }}>
+                <p className="[color:var(--text-secondary)] [font-size:0.82rem] [line-height:1.5]">
                   {error}
                 </p>
               </div>
             </div>
             <button
-              className="btn-ghost"
+              className="btn-ghost [margin-top:10px] [font-size:0.8rem] [display:flex] [align-items:center] [gap:6px]"
               onClick={runExecute}
-              style={{
-                marginTop: "10px",
-                fontSize: "0.8rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-              }}
             >
               <Zap size={14} />
               Retry
@@ -741,4 +775,3 @@ function CategoryScreen({ categoryKey }: { categoryKey: string }) {
 //   matchup_table   → MatchupTable
 //   download_json   → DownloadPanel
 // ═══════════════════════════════════════════════════════════════════════════
-

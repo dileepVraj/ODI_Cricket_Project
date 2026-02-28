@@ -42,7 +42,7 @@ class HomeDominanceTruthBridge(TruthBridgeBase):
             try:
                 # analyze_home_dominance(self, home_team, years_back=10)
                 engine_data = self.engine.analyze_home_dominance(team_name, years_back=years)
-            except Exception as e:
+            except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                 print(f"      ❌ [ERROR] Engine failed for {team_name}: {e}")
                 continue
 

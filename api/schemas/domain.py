@@ -1,0 +1,108 @@
+from typing import Dict, List, Optional
+
+from pydantic import BaseModel, ConfigDict, JsonValue
+
+class BattingStatsSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    innings: int
+    runs: int
+    average: float
+    strike_rate: float
+    centuries: int
+    fifties: int
+    highest_score: int
+    form_last_10: List[str]
+
+class BowlingStatsSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    innings: int
+    wickets: int
+    average: float
+    economy: float
+    best_figures: str
+    form_last_10: List[str]
+
+class ContextStatsSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    batting: BattingStatsSchema
+    bowling: Optional[BowlingStatsSchema] = None
+
+class PlayerProfileSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    name: str
+    role: str
+    batting: BattingStatsSchema
+    bowling: Optional[BowlingStatsSchema] = None
+    venue_stats: Optional[ContextStatsSchema] = None
+    vs_opponent_stats: Optional[ContextStatsSchema] = None
+
+class MatchupStatsSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    batter: str
+    bowler: str
+    balls: int
+    runs: int
+    outs: int
+    avg: float
+    sr: float
+    is_bunny: bool
+    highlight_flags: Optional[Dict[str, bool]] = None
+    derived_badges: Optional[List[str]] = None
+    cell_tones: Optional[Dict[str, str]] = None
+
+class SquadMetricsSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    caps: int
+    runs: int
+    wickets: int
+    centuries: int
+    fifties: int
+    five_wkt_hauls: int
+    avg_caps: int
+
+class TacticalMatrixRowSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    player: str
+    role: str
+    stats_per_style: Dict[str, Dict[str, JsonValue]]
+
+class SquadComparisonDataSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    team_a_name: str
+    team_b_name: str
+    metrics_a: SquadMetricsSchema
+    metrics_b: SquadMetricsSchema
+    player_stats_a: List[Dict[str, JsonValue]]
+    player_stats_b: List[Dict[str, JsonValue]]
+    tactical_matrix_a: List[Dict[str, JsonValue]]
+    tactical_matrix_b: List[Dict[str, JsonValue]]
+    matchups_a: Dict[str, List[Dict[str, JsonValue]]]
+    matchups_b: Dict[str, List[Dict[str, JsonValue]]]
+    venue_id: str
+    years: int
+
+
+class TeamVenueStatsSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    wins: int
+    defended: int
+    chased: int
+    bat1: Dict[str, JsonValue]
+    chase: Dict[str, JsonValue]
+    team_color: Optional[str] = None
+    team_tone: Optional[str] = None
+    low_sample_warnings: Optional[List[str]] = None
+    highlight_flags: Optional[Dict[str, bool]] = None
+    derived_badges: Optional[List[str]] = None
+
+
+class MatchIntelligenceSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    summary: Dict[str, JsonValue]
+    team_a: Dict[str, JsonValue]  # {name: str, stats: TeamVenueStatsSchema}
+    team_b: Dict[str, JsonValue]  # {name: str, stats: TeamVenueStatsSchema}
+    venue_avg: Dict[str, JsonValue]
+    MATCH_IDS: Optional[str] = None
+    low_sample_warnings: Optional[List[str]] = None
+    highlight_flags: Optional[Dict[str, bool]] = None
+    derived_badges: Optional[List[str]] = None

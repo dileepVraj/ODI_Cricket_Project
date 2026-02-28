@@ -111,8 +111,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (!activeFormat) return;
         let cancelled = false;
 
-        setIsLoadingManifest(true);
-        setManifest(null);
+        queueMicrotask(() => {
+            if (cancelled) return;
+            setIsLoadingManifest(true);
+            setManifest(null);
+        });
 
         fetchManifest(activeFormat)
             .then((m) => {
@@ -133,7 +136,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (!activeFormat) return;
         let cancelled = false;
 
-        setIsLoadingContext(true);
+        queueMicrotask(() => {
+            if (cancelled) return;
+            setIsLoadingContext(true);
+        });
         Promise.all([fetchTeams(activeFormat), fetchVenues(activeFormat)])
             .then(([t, v]) => {
                 if (cancelled) return;
@@ -143,19 +149,72 @@ export function AppProvider({ children }: { children: ReactNode }) {
             .catch((err) => console.error("Failed to fetch context:", err))
             .finally(() => { if (!cancelled) setIsLoadingContext(false); });
 
+        // Load initial context from URL
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const newContext: ContextValues = { ...defaultContextValues };
+            let hasUrlParams = false;
+
+            for (const [key, value] of params.entries()) {
+                if (key in defaultContextValues) {
+                    newContext[key] = isNaN(Number(value)) ? value : Number(value);
+                    hasUrlParams = true;
+                }
+            }
+
+            if (hasUrlParams) {
+                queueMicrotask(() => {
+                    if (cancelled) return;
+                    setContextValues(prev => ({ ...prev, ...newContext }));
+                });
+            }
+        }
+
         return () => { cancelled = true; };
     }, [activeFormat]);
 
-    // ── Set a single context value ────────────────────────────────────
+    // ── Set a single context value ───────────────────────────────────
     const setContextValue = useCallback((key: string, value: string | number) => {
         setContextValues((prev) => ({ ...prev, [key]: value }));
     }, []);
+
+    // ── Synchronize contextValues → URL ──────────────────────────────
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const url = new URL(window.location.href);
+
+        // Clear existing context params
+        Object.keys(defaultContextValues).forEach(k => {
+            if (url.searchParams.has(k)) {
+                url.searchParams.delete(k);
+            }
+        });
+
+        // Add new non-default params
+        Object.entries(contextValues).forEach(([k, v]) => {
+            if (v && v !== "" && v !== 0 && v !== "All" && v !== defaultContextValues[k]) {
+                url.searchParams.set(k, String(v));
+            }
+        });
+
+        // Only update if changed. Use replaceState to avoid polluting back-stack
+        // on frequent context interactions (e.g., years slider drags).
+        const currentSearch = window.location.search;
+        const newSearch = url.search;
+
+        if (currentSearch !== newSearch) {
+            window.history.replaceState({}, '', url.toString());
+        }
+    }, [contextValues]);
 
     // ── Switch format ─────────────────────────────────────────────────
     const switchFormat = useCallback((formatKey: string) => {
         const fmt = formats.find((f) => f.key === formatKey);
         if (fmt && fmt.has_manifest) {
             setActiveFormat(formatKey);
+            // Clear context on format switch
+            setContextValues(defaultContextValues);
         }
     }, [formats]);
 

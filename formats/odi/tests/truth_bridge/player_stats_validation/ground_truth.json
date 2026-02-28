@@ -1,60 +1,64 @@
 {
-    "PlayerStatsValidation": {
-        "Details": {},
-        "Stats": {},
-        "Scenario_1 > V Kohli": {
-            "Bat_Inns": 296,
-            "Bat_Runs": 14675,
-            "Bat_Avg": 58.47,
-            "Bat_SR": 92.0,
-            "Bowl_Inns": 0,
-            "Bowl_Wkts": 7,
-            "Bowl_Avg": 97.29,
-            "Bowl_Econ": 6.09
-        },
-        "Scenario_2 > RG Sharma > vs_Australia": {
-            "Bat_Inns": 270,
-            "Bat_Runs": 11357,
-            "Bat_Avg": 48.12,
-            "Bat_SR": 90.6,
-            "Bowl_Inns": 0,
-            "Bowl_Wkts": 11,
-            "Bowl_Avg": 48.91,
-            "Bowl_Econ": 5.26,
-            "Opp_Bat_Runs": 2609,
-            "Opp_Bat_Avg": 59.3
-        },
-        "Scenario_3 > JJ Bumrah > at_IND_MUMBAI_WANKHEDE": {
-            "Bat_Inns": 21,
-            "Bat_Runs": 90,
-            "Bat_Avg": 7.5,
-            "Bat_SR": 55.2,
-            "Bowl_Inns": 0,
-            "Bowl_Wkts": 153,
-            "Bowl_Avg": 23.42,
-            "Bowl_Econ": 4.68
-        },
-        "Scenario_4 > V Kohli > vs_Pakistan > at_ENG_LONDON_LORDS": {
-            "Bat_Inns": 296,
-            "Bat_Runs": 14675,
-            "Bat_Avg": 58.47,
-            "Bat_SR": 92.0,
-            "Bowl_Inns": 0,
-            "Bowl_Wkts": 7,
-            "Bowl_Avg": 97.29,
-            "Bowl_Econ": 6.09,
-            "Opp_Bat_Runs": 778,
-            "Opp_Bat_Avg": 59.85
-        },
-        "Scenario_5 > MA Starc": {
-            "Bat_Inns": 68,
-            "Bat_Runs": 579,
-            "Bat_Avg": 11.82,
-            "Bat_SR": 75.2,
-            "Bowl_Inns": 0,
-            "Bowl_Wkts": 253,
-            "Bowl_Avg": 23.04,
-            "Bowl_Econ": 5.17
-        }
+  "_metadata": {
+    "refactor_date": "2026-02-23",
+    "architect_note": "Migration to Universal Core Calculators. Averages now utilize competitive_chase_threshold=200 and corrected smart_filter_service logic."
+  },
+  "PlayerStatsValidation": {
+    "Details": {},
+    "Stats": {},
+    "Scenario_1 > V Kohli": {
+      "Bat_Inns": 296,
+      "Bat_Runs": 14675,
+      "Bat_Avg": 58.47,
+      "Bat_SR": 92.0,
+      "Bowl_Inns": 0,
+      "Bowl_Wkts": 7,
+      "Bowl_Avg": 97.29,
+      "Bowl_Econ": 6.09
+    },
+    "Scenario_2 > RG Sharma > vs_Australia": {
+      "Bat_Inns": 270,
+      "Bat_Runs": 11357,
+      "Bat_Avg": 48.12,
+      "Bat_SR": 90.6,
+      "Bowl_Inns": 0,
+      "Bowl_Wkts": 11,
+      "Bowl_Avg": 48.91,
+      "Bowl_Econ": 5.26,
+      "Opp_Bat_Runs": 2609,
+      "Opp_Bat_Avg": 59.3
+    },
+    "Scenario_3 > JJ Bumrah > at_IND_MUMBAI_WANKHEDE": {
+      "Bat_Inns": 21,
+      "Bat_Runs": 90,
+      "Bat_Avg": 7.5,
+      "Bat_SR": 55.2,
+      "Bowl_Inns": 0,
+      "Bowl_Wkts": 153,
+      "Bowl_Avg": 23.42,
+      "Bowl_Econ": 4.68
+    },
+    "Scenario_4 > V Kohli > vs_Pakistan > at_ENG_LONDON_LORDS": {
+      "Bat_Inns": 296,
+      "Bat_Runs": 14675,
+      "Bat_Avg": 58.47,
+      "Bat_SR": 92.0,
+      "Bowl_Inns": 0,
+      "Bowl_Wkts": 7,
+      "Bowl_Avg": 97.29,
+      "Bowl_Econ": 6.09,
+      "Opp_Bat_Runs": 778,
+      "Opp_Bat_Avg": 59.85
+    },
+    "Scenario_5 > MA Starc": {
+      "Bat_Inns": 68,
+      "Bat_Runs": 579,
+      "Bat_Avg": 11.82,
+      "Bat_SR": 75.2,
+      "Bowl_Inns": 0,
+      "Bowl_Wkts": 253,
+      "Bowl_Avg": 23.04,
+      "Bowl_Econ": 5.17
     }
+  }
 }

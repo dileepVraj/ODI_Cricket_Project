@@ -67,7 +67,7 @@ class RecentFormTruthBridge(TruthBridgeBase):
                         truth_scenario = self.ground_truth.get(team_name, {}).get(continent)
                         if truth_scenario:
                             self.compare([team_name, continent], engine_data, truth_scenario)
-                except Exception as e:
+                except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                     print(f"      ❌ [ERROR] Engine failed for {team_name} in {continent}: {e}")
 
         # 2. Verification of Head-to-Head (H2H) Form logic
@@ -94,7 +94,7 @@ class RecentFormTruthBridge(TruthBridgeBase):
                         truth_h2h = self.ground_truth.get("H2H_Form", {}).get(key)
                         if truth_h2h:
                             self.compare(["H2H", key], engine_h2h, truth_h2h)
-                except Exception as e:
+                except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                     print(f"      ❌ [ERROR] H2H Engine failed for {key}: {e}")
 
         if SEED_MODE:

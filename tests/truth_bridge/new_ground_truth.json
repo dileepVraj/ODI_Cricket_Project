@@ -1,0 +1,117 @@
+{
+  "generated_at": "2026-02-23",
+  "audit_role": "Lead Quant Auditor",
+  "methodology": {
+    "dual_path": "Legacy truth_bridge baselines vs TeamEngine shell backed by core/calculators",
+    "vectorization_policy": "Vectorized Pandas/NumPy math is treated as source of truth per ENGINEERING_STANDARDS.md Directive 2",
+    "standards_refs": [
+      "docs/guides/ENGINEERING_STANDARDS.md#Directive-2-Vectorization-Mandate",
+      "docs/guides/ENGINEERING_STANDARDS.md#Workflow-C-System-Modifications"
+    ]
+  },
+  "samples": {
+    "venue_matchup_AUS_MELBOURNE_AUS_ENG_10y": {
+      "Matches Played": 2,
+      "Tied / No Result": 0,
+      "Home Win %": "50%",
+      "Home Total Wins": 1,
+      "Visitor Total Wins": 1,
+      "Overall Avg 1st Innings": "329 [2]",
+      "Overall Avg 2nd Innings": "225 [2]",
+      "MATCH_IDS": "1317491,1072310"
+    },
+    "phase_baseline_ENG_LONDON_LORDS_10y": {
+      "MATCH_IDS": "1029003,1031429,1119547,1144512,1144514,1144519,1144525,1144530,1239538,1276908,1336055,1448355,913655",
+      "innings_1_n": 13,
+      "innings_2_n": 12,
+      "innings_1_total_avg": 275.4,
+      "innings_2_total_avg": 221.2,
+      "missing_ids_vs_legacy_truth": [
+        "1385703"
+      ],
+      "first_missing_match_record": {
+        "match_id": "1385703",
+        "winner": "England",
+        "balls_inn1": 234.0,
+        "wickets_inn1": 5.0,
+        "balls_inn2": 148.0,
+        "wickets_inn2": 10.0,
+        "score_inn1": 312.0,
+        "score_inn2": 126.0,
+        "team_bat_1": "England",
+        "team_bat_2": "Australia",
+        "venue": "Lord's, London",
+        "start_date": "2024-09-27 00:00:00"
+      }
+    },
+    "team_metrics_competitive_threshold_demo": {
+      "team": "India",
+      "legacy_unthresholded_avg_2nd": "231 [252]",
+      "new_competitive_avg_2nd": "247 [209]",
+      "removed_low_target_chase_wins_n": 43,
+      "removed_example_match_ids": [
+        "1387600",
+        "1384403",
+        "1388414",
+        "1381214",
+        "1348656",
+        "1348647",
+        "1327511",
+        "1325550",
+        "1325549",
+        "1276907"
+      ]
+    }
+  },
+  "discrepancy_report": [
+    {
+      "metric_scope": "AUS_MELBOURNE Australia vs England",
+      "legacy_reference": {
+        "Overall Avg 1st Innings": "329 (2)",
+        "Overall Avg 2nd Innings": "225 (2)",
+        "MATCH_IDS": "1072310,1317491"
+      },
+      "new_result": {
+        "Overall Avg 1st Innings": "329 [2]",
+        "Overall Avg 2nd Innings": "225 [2]",
+        "MATCH_IDS": "1317491,1072310"
+      },
+      "classification": "TYPE_FORMAT",
+      "root_cause": "No numeric drift. Only sample-size token format changed from (n) to [n], and MATCH_IDS ordering changed.",
+      "accuracy_verdict": "New result is equivalent numerically; drift is non-semantic."
+    },
+    {
+      "metric_scope": "ENG_LONDON_LORDS phase baseline",
+      "legacy_reference": {
+        "innings_1_n": 14,
+        "innings_2_n": 14,
+        "includes_match_id": "1385703"
+      },
+      "new_result": {
+        "innings_1_n": 13,
+        "innings_2_n": 12,
+        "excludes_match_id": "1385703"
+      },
+      "classification": "FILTER_QUALITY",
+      "root_cause": "Match 1385703 has innings-1 = 234 balls, 5 wickets (short and not all-out). New phase pipeline excludes this curtailed innings per min_balls/all-out quality rules; legacy baseline leaked it.",
+      "accuracy_verdict": "New result is more accurate because it removes low-quality innings from phase baselines while preserving valid match context."
+    },
+    {
+      "metric_scope": "Team metrics competitive chase control (India, global)",
+      "legacy_reference": {
+        "avg_2nd_unthresholded": "231 [252]"
+      },
+      "new_result": {
+        "avg_2nd_competitive_threshold_200": "247 [209]"
+      },
+      "classification": "COMPETITIVE_THRESHOLD",
+      "root_cause": "43 low-target successful chases (<200) are intentionally excluded from batting-power chase average by calculate_team_metrics.",
+      "accuracy_verdict": "New result is more representative of competitive chase ability and aligns with configured ODI competitive_chase_threshold logic."
+    }
+  ],
+  "final_decision": {
+    "logic_status": "CONFIRMED_CORRECT",
+    "action": "New baseline accepted",
+    "note": "Legacy truth JSONs should be refreshed in a controlled SEED_MODE run after stakeholder sign-off."
+  }
+}

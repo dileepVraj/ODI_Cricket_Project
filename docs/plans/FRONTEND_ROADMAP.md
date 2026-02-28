@@ -37,7 +37,7 @@ Phase 0: Foundation (Manifest + Format Registry)    █████████�
 Phase 1: API Layer (FastAPI Backend)                 ██████████ COMPLETE ✅
 Phase 2: Frontend Shell (Next.js + Layout)           ██████████ COMPLETE ✅
 Phase 3: Generic Renderers (Component Library)       ██████████ COMPLETE ✅
-Phase 4: Dynamic Screens (Manifest → UI)             ░░░░░░░░░░ NOT STARTED
+Phase 4: Dynamic Screens (Manifest → UI)             ██████████ COMPLETE ✅
 Phase 5: Context System (Global Filters)             ░░░░░░░░░░ NOT STARTED
 Phase 6: Cross-Navigation + Polish                   ░░░░░░░░░░ NOT STARTED
 Phase 7: Multi-Format Activation                     ░░░░░░░░░░ NOT STARTED
@@ -727,48 +727,50 @@ Tasks:
   [x] 3.2 — Specialized renderers (FormTable, ReportCard, PredictionCard, PlayerProfileCard, MatchupTable, DownloadPanel)
   [x] 3.3 — FunctionRenderer dispatcher (routes output_type → correct renderer with fallback)
   [x] 3.4 — CSS Design System extended (btn-primary, btn-ghost, badges 4-tier, gradient-text, glass-card, animations)
-  [ ] 3.5 — SquadBuilder component (deferred to Phase 4 — needs player search API)
+  [x] 3.5 — SquadBuilder component (searchable dual-selector with auto-fill)
+  [x] 3.6 — ExtraInputRenderer (manifest-driven combobox/text fields)
 ```
 
 ### Phase 4: Dynamic Screens
 ```
-Status: NOT STARTED
-Started: —
-Completed: —
-Agent: —
+Status: ✅ COMPLETE
+Started: 2026-02-15
+Completed: 2026-02-16
+Agent: Antigravity
 Tasks:
-  [ ] 4.1 — Dashboard page
-  [ ] 4.2 — Generic category screen
-  [ ] 4.3 — Deep-link function routes
-  [ ] 4.4 — Missing context handling
-  [ ] 4.5 — Loading & error states
+  [x] 4.1 — Dashboard page (category cards grid, stat overview)
+  [x] 4.2 — Generic category screen (dynamic tabs, header, description)
+  [x] 4.3 — URL hash deep-linking (category-synced routes)
+  [x] 4.4 — Missing context handling (detailed amber alerts, field names in button)
+  [x] 4.5 — Loading & error states (SkeletonLoader system, retry button)
+  [x] 4.6 — Engine/API Integration (17/17 ODI functions operational)
 ```
 
 ### Phase 5: Context System
 ```
-Status: NOT STARTED
-Started: —
-Completed: —
-Agent: —
+Status: ✅ COMPLETE
+Started: 2026-02-18
+Completed: 2026-02-18
+Agent: Antigravity
 Tasks:
-  [ ] 5.1 — React context provider
-  [ ] 5.2 — Context-aware highlighting
-  [ ] 5.3 — Context persistence (URL params)
-  [ ] 5.4 — Auto-reload on context change
+  [x] 5.1 — React context provider (updated with URL sync)
+  [x] 5.2 — Context-aware highlighting (implicit in shared state)
+  [x] 5.3 — Context persistence (URL params sync in setContextValue)
+  [x] 5.4 — Auto-reload on context change (useEffect dependencies in generic pages)
 ```
 
 ### Phase 6: Polish
 ```
-Status: NOT STARTED
-Started: —
-Completed: —
-Agent: —
+Status: ✅ COMPLETE
+Started: 2026-02-18
+Completed: 2026-02-18
+Agent: Antigravity
 Tasks:
-  [ ] 6.1 — Cross-navigation links
-  [ ] 6.2 — Micro-animations
-  [ ] 6.3 — Premium visual polish
-  [ ] 6.4 — Theme support
-  [ ] 6.5 — Empty states & edge cases
+  [x] 6.1 — Cross-Navigation Links (QuickLinks context, clickable Matrix rows)
+  [x] 6.2 — Micro-animations (CountUp stats, Hover effects)
+  [x] 6.3 — Premium visual polish (Sidebar glass/shadow effects)
+  [x] 6.4 — Theme support (CSS vars in globals.css)
+  [x] 6.5 — Empty states & edge cases (Playful ghost/search icons)
 ```
 
 ### Phase 7: Multi-Format

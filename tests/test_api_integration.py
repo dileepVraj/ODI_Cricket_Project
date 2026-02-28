@@ -21,7 +21,7 @@ def run_tests():
             print(f"✅ Health Check Passed: {json_data}")
         except AssertionError:
             print(f"❌ Health Check Failed: {response.text}")
-        except Exception as e:
+        except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
             print(f"🔥 Exception in Health Check: {e}")
 
         print("\n🔵 TESTING PREDICTION ENDPOINT...")
@@ -45,7 +45,7 @@ def run_tests():
             else:
                 print(f"❌ /predict Failed: {response.status_code}")
                 print(response.text)
-        except Exception as e:
+        except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
             print(f"🔥 Exception in Predict: {e}")
 
 if __name__ == "__main__":

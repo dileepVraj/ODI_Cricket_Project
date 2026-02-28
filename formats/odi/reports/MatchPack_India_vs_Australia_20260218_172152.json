@@ -1,0 +1,853 @@
+{
+  "meta": {
+    "report_type": "ODI_Match_Pack",
+    "version": "3.2",
+    "generated_at": "2026-02-18 17:21:52",
+    "home_team": "India",
+    "away_team": "Australia",
+    "venue": "IND_MUMBAI_WANKHEDE",
+    "home_xi": [
+      "V Kohli",
+      "RG Sharma"
+    ],
+    "away_xi": [
+      "DA Warner",
+      "AJ Finch"
+    ],
+    "match_context": {
+      "time": "2023-01-01",
+      "toss": "India won toss and chose to bat",
+      "pitch": "Good batting track"
+    }
+  },
+  "Executive_Summary": {
+    "prediction": "Too close to call — both teams have matching strengths and weaknesses.",
+    "key_factors": [],
+    "risk_alerts": [],
+    "condition_adjustments": "No significant condition modifiers."
+  },
+  "Chapter_1_Macro_Context": {
+    "chapter_description": "High-level rivalry and momentum analysis. Covers head-to-head records, recent form for both teams, and home/away performance matrices.",
+    "global_h2h_4y": {
+      "section_description": "Head-to-head record between India and Australia over Last 4 Years. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 12,
+        "home_wins": 6,
+        "away_wins": 6,
+        "no_result": 0,
+        "home_win_pct": 50,
+        "home_won_batting_first": 1,
+        "home_won_chasing": 5,
+        "away_won_batting_first": 2,
+        "away_won_chasing": 4
+      },
+      "context": {
+        "timeline": "Last 4 Years",
+        "dominance": "COMPETITIVE",
+        "dominance_reasoning": "Win rate of 50% falls within the 45-55% competitive band.",
+        "intensity": "TIGHT",
+        "intensity_reasoning": "Gap of 0 points — very tight contest historically."
+      },
+      "narrative": "This rivalry is evenly split over Last 4 Years — both teams have won 6 of 12 decided matches. In this matchup, chasing has produced 9 wins vs 3 batting first."
+    },
+    "global_h2h_8y": {
+      "section_description": "Head-to-head record between India and Australia over Last 8 Years. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 27,
+        "home_wins": 14,
+        "away_wins": 13,
+        "no_result": 0,
+        "home_win_pct": 51,
+        "home_won_batting_first": 5,
+        "home_won_chasing": 9,
+        "away_won_batting_first": 7,
+        "away_won_chasing": 6
+      },
+      "context": {
+        "timeline": "Last 8 Years",
+        "dominance": "COMPETITIVE",
+        "dominance_reasoning": "Win rate of 51% falls within the 45-55% competitive band.",
+        "intensity": "TIGHT",
+        "intensity_reasoning": "Gap of 2 points — very tight contest historically."
+      },
+      "narrative": "India lead this rivalry with a 51% win rate over Last 8 Years (14 wins from 27 matches). In this matchup, chasing has produced 15 wins vs 12 batting first."
+    },
+    "home_form": {
+      "global": {
+        "data": {
+          "error": "No data returned from engine"
+        },
+        "context": {
+          "status": "NO_DATA"
+        },
+        "narrative": "Insufficient data for this analysis.",
+        "section_description": "Recent match results and form."
+      },
+      "vs_opponent": {
+        "data": {
+          "error": "No data returned from engine"
+        },
+        "context": {
+          "status": "NO_DATA"
+        },
+        "narrative": "Insufficient data for this analysis.",
+        "section_description": "Recent match results and form."
+      }
+    },
+    "away_form": {
+      "global": {
+        "data": {
+          "error": "No data returned from engine"
+        },
+        "context": {
+          "status": "NO_DATA"
+        },
+        "narrative": "Insufficient data for this analysis.",
+        "section_description": "Recent match results and form."
+      },
+      "vs_opponent": {
+        "data": {
+          "error": "No data returned from engine"
+        },
+        "context": {
+          "status": "NO_DATA"
+        },
+        "narrative": "Insufficient data for this analysis.",
+        "section_description": "Recent match results and form."
+      }
+    },
+    "country_h2h": {
+      "section_description": "Head-to-head record between India and Australia over In-Country, 8Y. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 11,
+        "home_wins": 5,
+        "away_wins": 6,
+        "no_result": 0,
+        "home_win_pct": 45,
+        "home_won_batting_first": 3,
+        "home_won_chasing": 2,
+        "away_won_batting_first": 3,
+        "away_won_chasing": 3
+      },
+      "context": {
+        "timeline": "In-Country, 8Y",
+        "dominance": "COMPETITIVE",
+        "dominance_reasoning": "Win rate of 45% falls within the 45-55% competitive band.",
+        "intensity": "MODERATE",
+        "intensity_reasoning": "Gap of 10 points — moderate separation."
+      },
+      "narrative": "Australia lead this rivalry with a 55% win rate over In-Country, 8Y (6 wins from 11 matches). In this matchup, batting first has produced 6 wins vs 5 chasing."
+    },
+    "home_dominance": {
+      "section_description": "Overall home performance matrix for India against all major opponents. Identifies which teams they dominate and struggle against home.",
+      "data": {
+        "team": "India",
+        "overall": {
+          "matches": 12,
+          "wins": 9,
+          "losses": 3,
+          "win_pct": 75
+        },
+        "vs_opponents": [
+          {
+            "opponent": "Australia",
+            "played": 4,
+            "won": 2,
+            "lost": 2,
+            "win_pct": 50,
+            "form": ""
+          },
+          {
+            "opponent": "New Zealand",
+            "played": 4,
+            "won": 3,
+            "lost": 1,
+            "win_pct": 75,
+            "form": ""
+          },
+          {
+            "opponent": "South Africa",
+            "played": 2,
+            "won": 2,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          },
+          {
+            "opponent": "Sri Lanka",
+            "played": 2,
+            "won": 2,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          }
+        ]
+      },
+      "context": {
+        "strength": "STRONG",
+        "strength_reasoning": "75% win rate at home (9/12) — above 65% threshold.",
+        "mode": "HOME"
+      },
+      "narrative": "India win 75% of home matches (9/12). Best record vs New Zealand (75%, 3/4). Worst record vs Australia (50%, 2/4)."
+    },
+    "away_performance": {
+      "section_description": "Overall away performance matrix for Australia against all major opponents. Identifies which teams they dominate and struggle against away.",
+      "data": {
+        "team": "Australia",
+        "overall": {
+          "matches": 40,
+          "wins": 21,
+          "losses": 19,
+          "win_pct": 52
+        },
+        "vs_opponents": [
+          {
+            "opponent": "India",
+            "played": 9,
+            "won": 4,
+            "lost": 5,
+            "win_pct": 44,
+            "form": ""
+          },
+          {
+            "opponent": "South Africa",
+            "played": 9,
+            "won": 4,
+            "lost": 5,
+            "win_pct": 44,
+            "form": ""
+          },
+          {
+            "opponent": "Sri Lanka",
+            "played": 8,
+            "won": 3,
+            "lost": 5,
+            "win_pct": 38,
+            "form": ""
+          },
+          {
+            "opponent": "England",
+            "played": 7,
+            "won": 5,
+            "lost": 2,
+            "win_pct": 71,
+            "form": ""
+          },
+          {
+            "opponent": "Pakistan",
+            "played": 4,
+            "won": 2,
+            "lost": 2,
+            "win_pct": 50,
+            "form": ""
+          },
+          {
+            "opponent": "New Zealand",
+            "played": 1,
+            "won": 1,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          },
+          {
+            "opponent": "West Indies",
+            "played": 1,
+            "won": 1,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          },
+          {
+            "opponent": "Bangladesh",
+            "played": 1,
+            "won": 1,
+            "lost": 0,
+            "win_pct": 100,
+            "form": ""
+          }
+        ]
+      },
+      "context": {
+        "strength": "STRONG_TRAVELLER",
+        "strength_reasoning": "52% win rate away (21/40) — winning more than losing on the road.",
+        "mode": "AWAY"
+      },
+      "narrative": "Australia win 52% of away matches (21/40). Best record vs England (71%, 5/7). Worst record vs Sri Lanka (38%, 3/8)."
+    }
+  },
+  "Chapter_2_Battlefield": {
+    "chapter_description": "Venue-specific intelligence. Analyses whether the ground is a fortress for the home team, the head-to-head record at this specific venue, and historical toss impact.",
+    "fortress_check": {
+      "section_description": "Evaluates whether this venue is a 'fortress' for India based on their historical win rate here. Includes key score thresholds (lowest defended, highest chased).",
+      "data": {
+        "matches_played": 5,
+        "home_wins": 3,
+        "away_wins": 2,
+        "no_result": 0,
+        "home_win_pct": 60,
+        "batting_first": {
+          "home_avg_score": 322,
+          "home_avg_winning_score": 377,
+          "home_lowest_defended": 357,
+          "home_won_batting_first": 2,
+          "away_avg_score": 188,
+          "away_avg_winning_score": 0,
+          "away_lowest_defended": 0,
+          "away_won_batting_first": 0
+        },
+        "chasing": {
+          "home_highest_chase": 191,
+          "home_avg_successful_chase": 191,
+          "home_won_chasing": 1,
+          "away_highest_chase": 284,
+          "away_avg_successful_chase": 271,
+          "away_won_chasing": 2
+        },
+        "avg_winning_score": 377
+      },
+      "context": {
+        "fortress_status": "SLIGHT_HOME_EDGE",
+        "fortress_reasoning": "60% home win rate (3/5) — slight home advantage but not a fortress.",
+        "batting_first_bias": "STRONG",
+        "defend_threshold": 357,
+        "chase_ceiling": 284
+      },
+      "narrative": "This venue is visitor-friendly for India (60% win rate, 3/5 matches). Average winning score here is 377. Lowest successfully defended score is 357. Visitors have never chased above 284 here."
+    },
+    "venue_h2h": {
+      "section_description": "Head-to-head record between India and Australia over At This Venue, 15Y. Shows who holds the historical advantage and how matches are typically won.",
+      "data": {
+        "matches_played": 2,
+        "home_wins": 1,
+        "away_wins": 1,
+        "no_result": 0,
+        "home_win_pct": 50,
+        "batting_first": {
+          "home_avg_score": 255,
+          "home_avg_winning_score": 0,
+          "home_lowest_defended": 0,
+          "home_won_batting_first": 0,
+          "away_avg_score": 188,
+          "away_avg_winning_score": 0,
+          "away_lowest_defended": 0,
+          "away_won_batting_first": 0
+        },
+        "chasing": {
+          "home_highest_chase": 191,
+          "home_avg_successful_chase": 191,
+          "home_won_chasing": 1,
+          "away_highest_chase": 258,
+          "away_avg_successful_chase": 258,
+          "away_won_chasing": 1
+        },
+        "avg_winning_score": 0
+      },
+      "context": {
+        "timeline": "At This Venue, 15Y",
+        "dominance": "COMPETITIVE",
+        "dominance_reasoning": "Win rate of 50% falls within the 45-55% competitive band.",
+        "intensity": "TIGHT",
+        "intensity_reasoning": "Gap of 0 points — very tight contest historically."
+      },
+      "narrative": "This rivalry is evenly split over At This Venue, 15Y — both teams have won 1 of 2 decided matches. In this matchup, chasing has produced 2 wins vs 0 batting first."
+    },
+    "toss_bias": {
+      "section_description": "Analyses whether batting first or chasing has historically won more at this venue (). Combined with live toss information to assess alignment.",
+      "data": {
+        "period": "",
+        "matches_analyzed": 0,
+        "bat_first_wins": 0,
+        "bat_first_win_pct": 0,
+        "chase_wins": 0,
+        "chase_win_pct": 0,
+        "avg_1st_innings": 0,
+        "avg_2nd_innings": 0,
+        "score_drop_2nd_innings": 0,
+        "verdict": "NEUTRAL"
+      },
+      "context": {
+        "verdict": "NEUTRAL",
+        "strength": "SLIGHT",
+        "strength_reasoning": "Only 0pp gap — toss has minimal historical impact.",
+        "toss_alignment": "UNKNOWN",
+        "toss_reasoning": "No toss information provided.",
+        "toss_winner_advantage": false
+      },
+      "narrative": "This venue favours neither side (0% bat-first win rate vs 0% chasing, 0 matches over )."
+    },
+    "battlefield_timeline": {
+      "section_description": "Historical scoring and win-percentage trends at this venue.",
+      "data": {
+        "recent_3y_bat_first_win_pct": 0,
+        "all_time_bat_first_win_pct": 0,
+        "trend": "STABLE"
+      },
+      "narrative": "Recent 3-year trend shows a 0% decrease in Batting First success compared to the long-term average."
+    }
+  },
+  "Chapter_3_Tactical_Engine": {
+    "chapter_description": "Phase-by-phase scoring patterns at this venue and globally. Identifies powerplay, middle-overs, and death-overs tendencies for both teams, plus condition adjustments from pitch/time/toss inputs.",
+    "phase_analysis": {
+      "section_description": "Scoring and wicket-loss patterns across Powerplay (overs 1-10), Middle Overs (11-40), and Death Overs (41-50) for both teams. venue_baseline = all teams at this venue; home_at_venue/away_at_venue = team-specific at venue; global_habits = team's overall patterns across all venues.",
+      "data": {
+        "stadium_id": "IND_MUMBAI_WANKHEDE",
+        "match_count": 10,
+        "years": 4,
+        "baseline": {
+          "1": {
+            "pp": {
+              "avg": 61.2,
+              "n": 5,
+              "wkts": 1.2
+            },
+            "mid": {
+              "avg": 185.4,
+              "n": 5,
+              "wkts": 3.4
+            },
+            "dth": {
+              "avg": 98.0,
+              "n": 5,
+              "wkts": 2.2
+            },
+            "total": {
+              "avg": 344.6,
+              "n": 5,
+              "wkts": 0.0
+            }
+          },
+          "2": {
+            "pp": {
+              "avg": 40.2,
+              "n": 5,
+              "wkts": 3.6
+            },
+            "mid": {
+              "avg": 133.0,
+              "n": 5,
+              "wkts": 3.6
+            },
+            "dth": {
+              "avg": 22.0,
+              "n": 5,
+              "wkts": 1.6
+            },
+            "total": {
+              "avg": 195.2,
+              "n": 5,
+              "wkts": 0.0
+            }
+          }
+        },
+        "home_at_venue": {
+          "team": "India",
+          "stats": {
+            "1": {
+              "pp": {
+                "avg": 72.0,
+                "n": 2,
+                "wkts": 1.0
+              },
+              "mid": {
+                "avg": 203.5,
+                "n": 2,
+                "wkts": 1.5
+              },
+              "dth": {
+                "avg": 101.5,
+                "n": 2,
+                "wkts": 3.5
+              },
+              "total": {
+                "avg": 377.0,
+                "n": 2,
+                "wkts": 0.0
+              }
+            },
+            "2": {
+              "pp": {
+                "avg": 39.0,
+                "n": 1,
+                "wkts": 3.0
+              },
+              "mid": {
+                "avg": 152.0,
+                "n": 1,
+                "wkts": 2.0
+              },
+              "dth": {
+                "avg": 0.0,
+                "n": 1,
+                "wkts": 0.0
+              },
+              "total": {
+                "avg": 191.0,
+                "n": 1,
+                "wkts": 0.0
+              }
+            }
+          }
+        },
+        "away_at_venue": {
+          "team": "Australia",
+          "stats": {
+            "1": {
+              "pp": {
+                "avg": 59.0,
+                "n": 1,
+                "wkts": 1.0
+              },
+              "mid": {
+                "avg": 129.0,
+                "n": 1,
+                "wkts": 9.0
+              },
+              "dth": {
+                "avg": 0.0,
+                "n": 1,
+                "wkts": 0.0
+              },
+              "total": {
+                "avg": 188.0,
+                "n": 1,
+                "wkts": 0.0
+              }
+            },
+            "2": {
+              "pp": {
+                "avg": 0.0,
+                "n": 0,
+                "wkts": 0.0
+              },
+              "mid": {
+                "avg": 0.0,
+                "n": 0,
+                "wkts": 0.0
+              },
+              "dth": {
+                "avg": 0.0,
+                "n": 0,
+                "wkts": 0.0
+              },
+              "total": {
+                "avg": 0.0,
+                "n": 0,
+                "wkts": 0.0
+              }
+            }
+          }
+        },
+        "global_habits": {
+          "home": {
+            "pp_rr": 5.07,
+            "mid_rr": 4.93,
+            "dth_rr": 4.77,
+            "avg_score": 246.3
+          },
+          "away": {
+            "pp_rr": 5.25,
+            "mid_rr": 4.73,
+            "dth_rr": 5.19,
+            "avg_score": 246.4
+          },
+          "start_year": 2022
+        }
+      },
+      "context": {
+        "alerts": []
+      },
+      "narrative": "Phase analysis data available — see detailed breakdown."
+    },
+    "condition_weights": {
+      "adjustments": [],
+      "weights": {},
+      "pitch_report": "Good batting track",
+      "match_time": "2023-01-01",
+      "toss_decision": "India won toss and chose to bat"
+    }
+  },
+  "Chapter_4_Player_Intelligence": {
+    "chapter_description": "Player-level analysis: squad aggregate comparison, tactical matrix (per-player stats), individual matchups, per-player batting/bowling form + venue metrics, and bowling roster composition vs pitch conditions.",
+    "squad_comparison": {
+      "section_description": "Aggregate squad metrics comparing India and Australia. Shows combined experience (caps), run-scoring depth (total runs, centuries, fifties), and wicket-taking ability (total wickets, 5-wicket hauls).",
+      "data": {},
+      "narrative": "No squad data available."
+    },
+    "tactical_matrix": {
+      "section_description": "Per-player batting average vs each bowling type in the opposing squad. Format: 'Avg (StrikeRate)'. Low averages vs a bowling type indicate vulnerability. High averages with high strike rate indicate domination of that bowling type.",
+      "data": {
+        "India": [
+          {
+            "Player": "V Kohli",
+            "Role": "Batter",
+            "🌀 Slow Left-Arm Orth": [
+              73.0,
+              87
+            ],
+            "🌀 Slow Left-Arm Orth_raw": 73.0
+          },
+          {
+            "Player": "RG Sharma",
+            "Role": "Batter",
+            "🌀 Slow Left-Arm Orth": [
+              69.3,
+              89
+            ],
+            "🌀 Slow Left-Arm Orth_raw": 69.3
+          }
+        ],
+        "Australia": [
+          {
+            "Player": "DA Warner",
+            "Role": "Batter",
+            "⚡ Right-Arm Fast/Med": [
+              45.3,
+              100
+            ],
+            "⚡ Right-Arm Fast/Med_raw": 45.3,
+            "🌀 Off Spin": [
+              33.8,
+              77
+            ],
+            "🌀 Off Spin_raw": 33.8
+          },
+          {
+            "Player": "AJ Finch",
+            "Role": "Batter",
+            "⚡ Right-Arm Fast/Med": [
+              40.7,
+              80
+            ],
+            "⚡ Right-Arm Fast/Med_raw": 40.7,
+            "🌀 Off Spin": [
+              55.1,
+              107
+            ],
+            "🌀 Off Spin_raw": 55.1
+          }
+        ]
+      },
+      "narrative": "Both lineups appear tactically balanced against opposition bowling styles."
+    },
+    "matchups": {
+      "section_description": "Batter vs specific bowler head-to-head records. Shows runs scored, balls faced, dismissals, average, and strike rate. Bunny alerts flag batters dismissed 3+ times at avg <20 by a specific bowler.",
+      "data": {
+        "India": {
+          "V Kohli": [
+            {
+              "Bowler": "AJ Finch",
+              "Style": "🌀 Slow Left-Arm Orth",
+              "IsBunny": false,
+              "Runs": 17,
+              "Balls": 18,
+              "Outs": 0,
+              "Avg": 17,
+              "SR": 94.4
+            }
+          ],
+          "RG Sharma": [
+            {
+              "Bowler": "AJ Finch",
+              "Style": "🌀 Slow Left-Arm Orth",
+              "IsBunny": false,
+              "Runs": 41,
+              "Balls": 40,
+              "Outs": 1,
+              "Avg": 41.0,
+              "SR": 102.5
+            }
+          ]
+        },
+        "Australia": {
+          "AJ Finch": [
+            {
+              "Bowler": "V Kohli",
+              "Style": "Right-Arm Fast/Med",
+              "IsBunny": false,
+              "Runs": 13,
+              "Balls": 8,
+              "Outs": 0,
+              "Avg": 13,
+              "SR": 162.5
+            }
+          ]
+        }
+      },
+      "narrative": "No extreme bunny alerts or domination matchups detected."
+    },
+    "player_stats": {
+      "section_description": "Per-player detailed statistics: batting form (last 10 match scores), career batting average, average vs this specific opponent, venue-specific batting record (innings, runs, avg, highest score), bowling form and economy, venue bowling economy and wickets. This is the most granular player-level data available for prediction.",
+      "data": {
+        "India": {
+          "V Kohli": {
+            "player": "V Kohli",
+            "batting": {
+              "innings": 296,
+              "form_scores": [
+                "124",
+                "23",
+                "93",
+                "65*",
+                "102",
+                "135",
+                "74*",
+                "0",
+                "0",
+                "1"
+              ],
+              "average": 59.2,
+              "vs_opponent_avg": 53.7,
+              "venue": {
+                "innings": 8,
+                "runs": 474,
+                "average": 67.7,
+                "highest": 121
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 6.2,
+              "venue_economy": 4.9,
+              "venue_wickets": 0,
+              "venue_matches": 3
+            }
+          },
+          "RG Sharma": {
+            "player": "RG Sharma",
+            "batting": {
+              "innings": 270,
+              "form_scores": [
+                "11",
+                "24",
+                "26",
+                "75",
+                "14",
+                "57",
+                "121*",
+                "73",
+                "8",
+                "76"
+              ],
+              "average": 49.8,
+              "vs_opponent_avg": 60.7,
+              "venue": {
+                "innings": 5,
+                "runs": 97,
+                "average": 19.4,
+                "highest": 47
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 5.2,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          }
+        },
+        "Australia": {
+          "DA Warner": {
+            "player": "DA Warner",
+            "batting": {
+              "innings": 154,
+              "form_scores": [
+                "7",
+                "29",
+                "53",
+                "15",
+                "81",
+                "104",
+                "163",
+                "11",
+                "13",
+                "41"
+              ],
+              "average": 44.8,
+              "vs_opponent_avg": 50.9,
+              "venue": {
+                "innings": 1,
+                "runs": 128,
+                "average": 128.0,
+                "highest": 128
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 8.0,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          },
+          "AJ Finch": {
+            "player": "AJ Finch",
+            "batting": {
+              "innings": 139,
+              "form_scores": [
+                "5",
+                "0",
+                "5",
+                "5",
+                "1",
+                "15",
+                "0",
+                "0",
+                "62",
+                "14"
+              ],
+              "average": 38.4,
+              "vs_opponent_avg": 50.3,
+              "venue": {
+                "innings": 1,
+                "runs": 110,
+                "average": 110.0,
+                "highest": 110
+              }
+            },
+            "bowling": {
+              "form_display": "-, -, -, -, -, -, -, -, -, -",
+              "economy": 5.5,
+              "venue_economy": 0.0,
+              "venue_wickets": 0,
+              "venue_matches": 0
+            }
+          }
+        }
+      },
+      "narrative": "IN-FORM BATTERS: V Kohli (India), RG Sharma (India) are in elite touch (Avg 45+). VENUE SPECIALISTS: V Kohli (67.7 Avg) have historically dominated these conditions."
+    },
+    "bowling_roster": {
+      "home": [
+        {
+          "bowler": "V Kohli",
+          "type": "Right-Arm Fast/Med",
+          "role": "Batter",
+          "experience": "INTERMEDIATE"
+        },
+        {
+          "bowler": "RG Sharma",
+          "type": "Off Spin",
+          "role": "Batter",
+          "experience": "INTERMEDIATE"
+        }
+      ],
+      "away": [
+        {
+          "bowler": "AJ Finch",
+          "type": "Slow Left-Arm Orth",
+          "role": "Batter",
+          "experience": "INTERMEDIATE"
+        }
+      ],
+      "pitch_suitability": {
+        "home_spin_bowlers": 1,
+        "away_spin_bowlers": 1,
+        "home_pace_bowlers": 1,
+        "away_pace_bowlers": 0,
+        "verdict": "BALANCED",
+        "narrative": "Balanced conditions — Home has 1S/1P, Away has 1S/0P."
+      }
+    }
+  }
+}

@@ -65,7 +65,7 @@ class TruthBridgeRunner:
                     
                     try:
                         engine_data = self.engine.analyze_venue_matchup(venue_id, home_team, opp_team, years_back=10)
-                    except Exception as e:
+                    except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                         print(f"      ❌ [ERROR] Engine failed: {e}")
                         continue
 

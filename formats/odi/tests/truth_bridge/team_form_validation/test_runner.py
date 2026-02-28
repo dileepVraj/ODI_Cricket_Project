@@ -54,7 +54,7 @@ class TeamFormValidationRunner(TruthBridgeBase):
                     print(f"      🌱 New Scenario Detected. Seeding Ground Truth...")
                     self.ground_truth.setdefault(self.suite_name, {})[item_label] = fingerprint
 
-            except Exception as e:
+            except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                 print(f"      🔴 [CRASH] {e}")
                 self.results["failures"].append({"item": item_label, "status": "CRASH", "error": str(e)})
                 self.results["summary"]["fail"] += 1

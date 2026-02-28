@@ -10,19 +10,137 @@ Write operations (init) happen only at startup.
 import os
 import sys
 import logging
-from typing import Dict, Optional
+import importlib
+import pandas as pd
+from typing import Dict, Optional, List
 
 # Add project root to path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from config.format_registry import FORMATS, get_format_manifest
+from config.format_registry import (
+    FORMATS, 
+    get_format_manifest, 
+    get_format_engines, 
+    get_format_config
+)
+from core.data_loader import create_data_source
 
 logger = logging.getLogger("CricketAPI")
 
 # ── The Pool ─────────────────────────────────────────────────────────────
-# Maps format_key → CricketAnalyzer instance
+# ── The Analyzer Facade ──────────────────────────────────────────────────
+class FormatAnalyzer:
+    """
+    Format-aware analyzer facade that satisfies AnalyzerProtocol.
+    Wires together individual strategy engines with pre-loaded data.
+    """
+    def __init__(self, format_type: str, format_rules: dict):
+        self.format_type = format_type
+        self.format_rules = format_rules
+        
+        # 1. Get Registry Assets
+        engines = get_format_engines(format_type)
+        format_config = get_format_config(format_type)
+        
+        # 2. Initialize DAL (DuckDB)
+        self.dal = create_data_source(format_config)
+        
+        # 3. Pre-load DataFrames for Engines
+        self.match_df = self.dal.get_matches()
+        self.phase_df = self.dal.get_phase_stats()
+        self.player_df = self.dal.get_player_stats()
+        self.meta_df = self.dal.get_player_metadata()
+        self.squads_df = self.dal.get_squads()
+        
+        # 4. Instantiate Strategy Engines
+        team_cls = engines.get("TeamEngine")
+        player_cls = engines.get("PlayerEngine")
+        predictor_cls = engines.get("PredictorEngine")
+        
+        if team_cls:
+            self.team_engine = team_cls(
+                match_df=self.match_df,
+                phase_df=self.phase_df,
+                dal=self.dal,
+                format_rules=self.format_rules
+            )
+        else:
+            self.team_engine = None
+
+        if player_cls:
+            self.player_engine = player_cls(
+                player_df=self.player_df,
+                meta_df=self.meta_df,
+                squads_df=self.squads_df,
+                dal=self.dal,
+                format_rules=self.format_rules
+            )
+        else:
+            self.player_engine = None
+
+        if predictor_cls:
+            self.predictor_engine = predictor_cls(
+                player_df=self.player_df,
+                dal=self.dal,
+                format_config=format_config,
+                format_rules=self.format_rules
+            )
+        else:
+            self.predictor_engine = None
+
+    # ── MatchPackGenerator Compatibility Proxies ──────────────────────────
+    # These methods delegate to team_engine to satisfy legacy Facade calls.
+
+    def analyze_global_h2h(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_global_h2h(*args, **kwargs)
+        return None
+
+    def check_recent_form(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_team_form(*args, **kwargs)
+        return None
+
+    def analyze_country_h2h(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_country_h2h(*args, **kwargs)
+        return None
+
+    def analyze_home_dominance(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_home_dominance(*args, **kwargs)
+        return None
+
+    def analyze_away_performance(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_away_performance(*args, **kwargs)
+        return None
+
+    def analyze_home_fortress(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_home_fortress(*args, **kwargs)
+        return None
+
+    def analyze_venue_matchup(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_venue_matchup_structured(*args, **kwargs)
+        return None
+
+    def analyze_venue_bias(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_venue_bias(*args, **kwargs)
+        return None
+
+    def analyze_venue_phases(self, *args, **kwargs):
+        if self.team_engine:
+            return self.team_engine.analyze_venue_phases(*args, **kwargs)
+        return None
+
+
+# ── The Pool ─────────────────────────────────────────────────────────────
+# Maps format_key → FormatAnalyzer instance
 _engine_pool: Dict[str, object] = {}
 
 # Track which formats have manifests (only these are API-ready)
@@ -39,8 +157,7 @@ def initialize_pool(formats: list = None):
     """
     global _engine_pool, _active_formats
 
-    # Lazy import to avoid circular imports at module level
-    from engine import CricketAnalyzer
+    # Engines are initialized via FormatAnalyzer
 
     if formats is None:
         # Auto-detect: only load formats that have manifests
@@ -57,7 +174,14 @@ def initialize_pool(formats: list = None):
     for fmt_key in formats:
         try:
             logger.info(f"   Loading {fmt_key.upper()}...")
-            analyzer = CricketAnalyzer(format_type=fmt_key)
+            format_rules = {}
+            try:
+                manifest_module = importlib.import_module(f"{FORMATS[fmt_key]['module']}.manifest")
+                format_rules = getattr(manifest_module, "FORMAT_RULES", {}) or {}
+            except (ImportError, KeyError, AttributeError):
+                format_rules = {}
+
+            analyzer = FormatAnalyzer(format_type=fmt_key, format_rules=format_rules)
 
             _engine_pool[fmt_key] = analyzer
             _active_formats[fmt_key] = {
@@ -65,13 +189,13 @@ def initialize_pool(formats: list = None):
                 "icon": FORMATS[fmt_key]["icon"],
                 "matches": len(analyzer.match_df) if hasattr(analyzer, "match_df") else 0,
             }
-            logger.info(f"   ✅ {fmt_key.upper()} ready — {_active_formats[fmt_key]['matches']} matches")
+            logger.info(f"   ✅ {fmt_key.upper()} ready — {len(analyzer.match_df)} matches")
 
         except FileNotFoundError as e:
             logger.warning(f"   ⚠️ {fmt_key.upper()} skipped — data file not found: {e}")
         except (ImportError, AttributeError) as e:
             logger.warning(f"   ⚠️ {fmt_key.upper()} skipped — engine error: {e}")
-        except Exception as e:
+        except (KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
             logger.error(f"   ❌ {fmt_key.upper()} FAILED: {e}")
 
 

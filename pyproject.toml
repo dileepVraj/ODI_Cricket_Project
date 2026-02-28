@@ -52,3 +52,4 @@ exclude = [
 testpaths = ["tests", "formats/odi/tests"]
 python_files = ["test_*.py", "verify_*.py"]
 python_functions = ["test_*"]
+addopts = "--import-mode=importlib"

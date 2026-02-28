@@ -51,7 +51,7 @@ class ContinentPerformanceTruthBridge(TruthBridgeBase):
                         "Payload": data.get('expected_output', [])
                     }
             return scenarios
-        except Exception as e:
+        except (OSError, ValueError, KeyError, TypeError) as e:
             print(f"⚠️ Could not load legacy scenarios: {e}")
             return {}
 
@@ -89,7 +89,7 @@ class ContinentPerformanceTruthBridge(TruthBridgeBase):
                     opp_team='All', 
                     years_back=meta['years_back']
                 )
-            except Exception as e:
+            except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                 print(f"      ❌ [ERROR] Engine failed for {scenario_key}: {e}")
                 continue
 

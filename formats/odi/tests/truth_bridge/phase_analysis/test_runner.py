@@ -102,7 +102,7 @@ class PhaseAnalysisTruthBridge(TruthBridgeBase):
                         else:
                             print(f"      ⚠️ No truth matchup (vs_{rival}) for {venue_id}")
 
-            except Exception as e:
+            except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                 print(f"      ❌ [ERROR] Engine failed for {venue_id}: {e}")
 
         print(f"🏁 Done. Total comparisons made: {compare_count}")

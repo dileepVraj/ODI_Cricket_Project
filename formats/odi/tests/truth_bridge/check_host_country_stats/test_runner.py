@@ -57,7 +57,7 @@ class CountryH2HTruthBridge(TruthBridgeBase):
             try:
                 # analyze_country_h2h(self, home_team, opp_team, country_name, years_back=10)
                 engine_data = self.engine.analyze_country_h2h(home_team, opp_team, host_country, years_back=years)
-            except Exception as e:
+            except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                 print(f"      ❌ [ERROR] Engine failed for {composite_key}: {e}")
                 continue
 

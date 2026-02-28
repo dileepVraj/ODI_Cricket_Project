@@ -1,50 +1,49 @@
 """
 core/player_engine.py
-Format-agnostic Player Engine factory.
-
-Usage:
-    from core.player_engine import get_player_engine
-    PlayerEngine = get_player_engine("odi")
-
-For backward compatibility, a direct import of PlayerEngine still works
-and defaults to the ODI format.
+Strict Player Engine strategy loader.
 """
 import importlib
-import logging
+from typing import Type
 
-logger = logging.getLogger("CricketAnalyzer")
+from core.interfaces.player_interface import IPlayerEngine
 
 
-def get_player_engine(format_type: str = "odi"):
+def get_player_engine(format_key: str) -> Type[IPlayerEngine]:
     """
-    Factory: Dynamically loads the PlayerEngine class for the given format.
-    Returns the CLASS (not an instance).
+    Returns the concrete PlayerEngine class for a required format key.
     """
+    if format_key is None or not str(format_key).strip():
+        raise ValueError("format_key is required (must be a registered format key).")
+
     from config.format_registry import FORMATS
-    entry = FORMATS.get(format_type)
+
+    normalized_key = str(format_key).strip().lower()
+    entry = FORMATS.get(normalized_key)
     if not entry:
-        raise KeyError(f"Unknown format: '{format_type}'. Available: {list(FORMATS.keys())}")
+        raise ValueError(
+            f"Unknown format_key '{normalized_key}'. Available: {list(FORMATS.keys())}"
+        )
 
     module_path = f"{entry['module']}.engines.player_engine"
     try:
         module = importlib.import_module(module_path)
-        return module.PlayerEngine
-    except (ImportError, AttributeError) as e:
-        raise ImportError(
-            f"PlayerEngine not found for format '{format_type}' at '{module_path}'. Error: {e}"
+    except ImportError as exc:
+        raise NotImplementedError(
+            f"No player engine module for format '{normalized_key}' at '{module_path}'."
+        ) from exc
+
+    engine_cls = getattr(module, "PlayerEngine", None)
+    if engine_cls is None:
+        raise NotImplementedError(
+            f"Module '{module_path}' does not define PlayerEngine."
         )
 
+    if not issubclass(engine_cls, IPlayerEngine):
+        raise TypeError(
+            f"{module_path}.PlayerEngine must inherit from core.interfaces.player_interface.IPlayerEngine."
+        )
 
-# --- BACKWARD COMPATIBILITY ---
-# Direct `from core.player_engine import PlayerEngine` defaults to ODI.
-try:
-    from formats.odi.engines.player_engine import PlayerEngine
-except ImportError:
-    logger.warning("ODI PlayerEngine not available. Use get_player_engine() factory for other formats.")
+    return engine_cls
 
-    class PlayerEngine:
-        """Placeholder — ODI format module not found."""
-        def __init__(self, *args, **kwargs):
-            raise ImportError(
-                "ODI Format not found. Use get_player_engine(format_type) to load a specific format."
-            )
+
+__all__ = ["get_player_engine"]

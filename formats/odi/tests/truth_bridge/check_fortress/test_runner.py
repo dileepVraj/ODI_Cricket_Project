@@ -63,7 +63,7 @@ class FortressTruthBridge(TruthBridgeBase):
                 try:
                     # engine_data is a LIST of Metric/Value dicts
                     engine_data = self.engine.analyze_home_fortress(stadium, home_team, opp_team=opp_team, years_back=years)
-                except Exception as e:
+                except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                     print(f"      ❌ [ERROR] Engine failed for {venue_key} ({scenario_name}): {e}")
                     continue
 

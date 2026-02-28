@@ -1,50 +1,49 @@
 """
 core/team_engine.py
-Format-agnostic Team Engine factory.
-
-Usage:
-    from core.team_engine import get_team_engine
-    TeamEngine = get_team_engine("odi")
-
-For backward compatibility, a direct import of TeamEngine still works
-and defaults to the ODI format.
+Strict Team Engine strategy loader.
 """
 import importlib
-import logging
+from typing import Type
 
-logger = logging.getLogger("CricketAnalyzer")
+from core.interfaces.team_interface import ITeamEngine
 
 
-def get_team_engine(format_type: str = "odi"):
+def get_team_engine(format_key: str) -> Type[ITeamEngine]:
     """
-    Factory: Dynamically loads the TeamEngine class for the given format.
-    Returns the CLASS (not an instance).
+    Returns the concrete TeamEngine class for a required format key.
     """
+    if format_key is None or not str(format_key).strip():
+        raise ValueError("format_key is required (must be a registered format key).")
+
     from config.format_registry import FORMATS
-    entry = FORMATS.get(format_type)
+
+    normalized_key = str(format_key).strip().lower()
+    entry = FORMATS.get(normalized_key)
     if not entry:
-        raise KeyError(f"Unknown format: '{format_type}'. Available: {list(FORMATS.keys())}")
+        raise ValueError(
+            f"Unknown format_key '{normalized_key}'. Available: {list(FORMATS.keys())}"
+        )
 
     module_path = f"{entry['module']}.engines.team_engine"
     try:
         module = importlib.import_module(module_path)
-        return module.TeamEngine
-    except (ImportError, AttributeError) as e:
-        raise ImportError(
-            f"TeamEngine not found for format '{format_type}' at '{module_path}'. Error: {e}"
+    except ImportError as exc:
+        raise NotImplementedError(
+            f"No team engine module for format '{normalized_key}' at '{module_path}'."
+        ) from exc
+
+    engine_cls = getattr(module, "TeamEngine", None)
+    if engine_cls is None:
+        raise NotImplementedError(
+            f"Module '{module_path}' does not define TeamEngine."
         )
 
+    if not issubclass(engine_cls, ITeamEngine):
+        raise TypeError(
+            f"{module_path}.TeamEngine must inherit from core.interfaces.team_interface.ITeamEngine."
+        )
 
-# --- BACKWARD COMPATIBILITY ---
-# Direct `from core.team_engine import TeamEngine` defaults to ODI.
-try:
-    from formats.odi.engines.team_engine import TeamEngine
-except ImportError:
-    logger.warning("ODI TeamEngine not available. Use get_team_engine() factory for other formats.")
+    return engine_cls
 
-    class TeamEngine:
-        """Placeholder — ODI format module not found."""
-        def __init__(self, *args, **kwargs):
-            raise ImportError(
-                "ODI Format not found. Use get_team_engine(format_type) to load a specific format."
-            )
+
+__all__ = ["get_team_engine"]

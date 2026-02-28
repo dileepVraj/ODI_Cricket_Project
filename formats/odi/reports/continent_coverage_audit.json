@@ -1,0 +1,8 @@
+{
+  "db_path": "formats/odi/data/odi.duckdb",
+  "years_back": 10,
+  "generated_at": "2026-02-20T15:01:05.695271Z",
+  "checked_pair_region_cases": 255,
+  "mismatch_cases": 0,
+  "mismatches": []
+}

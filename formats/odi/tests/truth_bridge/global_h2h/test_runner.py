@@ -62,7 +62,7 @@ class GlobalH2HTruthBridge(TruthBridgeBase):
                 try:
                     # analyze_global_h2h(self, home_team, opp_team, years_back=5)
                     engine_data = self.engine.analyze_global_h2h(team_a, team_b, years_back=years)
-                except Exception as e:
+                except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                     print(f"      ❌ [ERROR] Engine failed for {matchup_key}: {e}")
                     continue
 

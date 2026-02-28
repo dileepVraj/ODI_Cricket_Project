@@ -2,6 +2,7 @@ import os
 import sys
 import json
 from datetime import datetime
+import pandas as pd
 
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))
@@ -36,7 +37,7 @@ class CompareSquadsTruthBridge(TruthBridgeBase):
         try:
             with open(self.legacy_fixture_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except Exception as e:
+        except (OSError, ValueError, KeyError, TypeError) as e:
             print(f"⚠️ Could not load legacy scenarios: {e}")
             return {}
 
@@ -72,14 +73,30 @@ class CompareSquadsTruthBridge(TruthBridgeBase):
             away_team = scenario_key.split("_vs_")[1]
             
             try:
+                context_df = pd.DataFrame()
+                dal = getattr(self.analyzer, "dal", None)
+                if dal is not None:
+                    players = sorted(set(meta['HomeXI'] + meta['AwayXI']))
+                    context_df = dal.get_balls(players=players)
+                    if not context_df.empty and 'start_date' in context_df.columns:
+                        context_df = context_df.copy()
+                        context_df['start_date'] = pd.to_datetime(context_df['start_date'], errors='coerce')
+                        max_date = context_df['start_date'].max()
+                        if pd.notna(max_date):
+                            cutoff_date = pd.Timestamp(max_date).floor('D') - pd.DateOffset(years=int(meta['Years']))
+                        else:
+                            cutoff_date = pd.Timestamp.now().floor('D') - pd.DateOffset(years=int(meta['Years']))
+                        context_df = context_df[context_df['start_date'] >= cutoff_date]
+
                 # _generate_comparison_payload(self, team_a_name, team_a_players, team_b_name, team_b_players, venue_id, years=None)
                 engine_data = self.analyzer.player_engine._generate_comparison_payload(
                     home_team, meta['HomeXI'], 
                     away_team, meta['AwayXI'], 
                     meta['Venue'], 
-                    years=meta['Years']
+                    years=meta['Years'],
+                    context_df=context_df,
                 )
-            except Exception as e:
+            except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
                 print(f"      ❌ [ERROR] Engine failed for {scenario_key}: {e}")
                 continue
 

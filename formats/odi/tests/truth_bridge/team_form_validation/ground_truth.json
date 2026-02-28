@@ -1,154 +1,158 @@
 {
-    "TeamFormValidation": {
-        "Details": {},
-        "Stats": {},
-        "Scenario_1 > India > vs_All > in_All": [
-            {
-                "Date": "2026-01-18",
-                "Opponent": "New Zealand",
-                "Result": "LOSS",
-                "Score": "296 (2nd)",
-                "OppScore": "337 (1st)"
-            },
-            {
-                "Date": "2026-01-14",
-                "Opponent": "New Zealand",
-                "Result": "LOSS",
-                "Score": "284 (1st)",
-                "OppScore": "286 (2nd)"
-            },
-            {
-                "Date": "2026-01-11",
-                "Opponent": "New Zealand",
-                "Result": "WIN",
-                "Score": "306 (2nd)",
-                "OppScore": "300 (1st)"
-            },
-            {
-                "Date": "2025-12-06",
-                "Opponent": "South Africa",
-                "Result": "WIN",
-                "Score": "271 (2nd)",
-                "OppScore": "270 (1st)"
-            },
-            {
-                "Date": "2025-12-03",
-                "Opponent": "South Africa",
-                "Result": "LOSS",
-                "Score": "358 (1st)",
-                "OppScore": "362 (2nd)"
-            }
-        ],
-        "Scenario_2 > Australia > vs_India > in_All": [
-            {
-                "Date": "2025-10-25",
-                "Opponent": "India",
-                "Result": "LOSS",
-                "Score": "236 (1st)",
-                "OppScore": "237 (2nd)"
-            },
-            {
-                "Date": "2025-10-23",
-                "Opponent": "India",
-                "Result": "WIN",
-                "Score": "265 (2nd)",
-                "OppScore": "264 (1st)"
-            },
-            {
-                "Date": "2025-10-19",
-                "Opponent": "India",
-                "Result": "WIN",
-                "Score": "131 (2nd)",
-                "OppScore": "136 (1st)"
-            },
-            {
-                "Date": "2025-03-04",
-                "Opponent": "India",
-                "Result": "LOSS",
-                "Score": "264 (1st)",
-                "OppScore": "267 (2nd)"
-            },
-            {
-                "Date": "2023-11-19",
-                "Opponent": "India",
-                "Result": "WIN",
-                "Score": "241 (2nd)",
-                "OppScore": "240 (1st)"
-            }
-        ],
-        "Scenario_3 > England > vs_All > in_Asia": [
-            {
-                "Date": "2026-01-27",
-                "Opponent": "Sri Lanka",
-                "Result": "WIN",
-                "Score": "357 (1st)",
-                "OppScore": "304 (2nd)"
-            },
-            {
-                "Date": "2026-01-24",
-                "Opponent": "Sri Lanka",
-                "Result": "WIN",
-                "Score": "223 (2nd)",
-                "OppScore": "219 (1st)"
-            },
-            {
-                "Date": "2026-01-22",
-                "Opponent": "Sri Lanka",
-                "Result": "LOSS",
-                "Score": "252 (2nd)",
-                "OppScore": "271 (1st)"
-            },
-            {
-                "Date": "2025-03-01",
-                "Opponent": "South Africa",
-                "Result": "LOSS",
-                "Score": "179 (1st)",
-                "OppScore": "181 (2nd)"
-            },
-            {
-                "Date": "2025-02-22",
-                "Opponent": "Australia",
-                "Result": "LOSS",
-                "Score": "351 (1st)",
-                "OppScore": "356 (2nd)"
-            }
-        ],
-        "Scenario_4 > South Africa > vs_Australia > in_Oceania": [
-            {
-                "Date": "2025-08-24",
-                "Opponent": "Australia",
-                "Result": "LOSS",
-                "Score": "155 (2nd)",
-                "OppScore": "431 (1st)"
-            },
-            {
-                "Date": "2025-08-22",
-                "Opponent": "Australia",
-                "Result": "WIN",
-                "Score": "277 (1st)",
-                "OppScore": "193 (2nd)"
-            },
-            {
-                "Date": "2025-08-19",
-                "Opponent": "Australia",
-                "Result": "WIN",
-                "Score": "296 (1st)",
-                "OppScore": "198 (2nd)"
-            },
-            {
-                "Date": "2018-11-11",
-                "Opponent": "Australia",
-                "Result": "WIN",
-                "Score": "320 (1st)",
-                "OppScore": "280 (2nd)"
-            },
-            {
-                "Date": "2018-11-09",
-                "Opponent": "Australia",
-                "Result": "LOSS",
-                "Score": "224 (2nd)",
-                "OppScore": "231 (1st)"
-            }
-        ]
-    }
+  "_metadata": {
+    "refactor_date": "2026-02-23",
+    "architect_note": "Migration to Universal Core Calculators. Averages now utilize competitive_chase_threshold=200 and corrected smart_filter_service logic."
+  },
+  "TeamFormValidation": {
+    "Details": {},
+    "Stats": {},
+    "Scenario_1 > India > vs_All > in_All": [
+      {
+        "Date": "2026-01-18",
+        "Opponent": "New Zealand",
+        "Result": "LOSS",
+        "Score": "296 (2nd)",
+        "OppScore": "337 (1st)"
+      },
+      {
+        "Date": "2026-01-14",
+        "Opponent": "New Zealand",
+        "Result": "LOSS",
+        "Score": "284 (1st)",
+        "OppScore": "286 (2nd)"
+      },
+      {
+        "Date": "2026-01-11",
+        "Opponent": "New Zealand",
+        "Result": "WIN",
+        "Score": "306 (2nd)",
+        "OppScore": "300 (1st)"
+      },
+      {
+        "Date": "2025-12-06",
+        "Opponent": "South Africa",
+        "Result": "WIN",
+        "Score": "271 (2nd)",
+        "OppScore": "270 (1st)"
+      },
+      {
+        "Date": "2025-12-03",
+        "Opponent": "South Africa",
+        "Result": "LOSS",
+        "Score": "358 (1st)",
+        "OppScore": "362 (2nd)"
+      }
+    ],
+    "Scenario_2 > Australia > vs_India > in_All": [
+      {
+        "Date": "2025-10-25",
+        "Opponent": "India",
+        "Result": "LOSS",
+        "Score": "236 (1st)",
+        "OppScore": "237 (2nd)"
+      },
+      {
+        "Date": "2025-10-23",
+        "Opponent": "India",
+        "Result": "WIN",
+        "Score": "265 (2nd)",
+        "OppScore": "264 (1st)"
+      },
+      {
+        "Date": "2025-10-19",
+        "Opponent": "India",
+        "Result": "WIN",
+        "Score": "131 (2nd)",
+        "OppScore": "136 (1st)"
+      },
+      {
+        "Date": "2025-03-04",
+        "Opponent": "India",
+        "Result": "LOSS",
+        "Score": "264 (1st)",
+        "OppScore": "267 (2nd)"
+      },
+      {
+        "Date": "2023-11-19",
+        "Opponent": "India",
+        "Result": "WIN",
+        "Score": "241 (2nd)",
+        "OppScore": "240 (1st)"
+      }
+    ],
+    "Scenario_3 > England > vs_All > in_Asia": [
+      {
+        "Date": "2026-01-27",
+        "Opponent": "Sri Lanka",
+        "Result": "WIN",
+        "Score": "357 (1st)",
+        "OppScore": "304 (2nd)"
+      },
+      {
+        "Date": "2026-01-24",
+        "Opponent": "Sri Lanka",
+        "Result": "WIN",
+        "Score": "223 (2nd)",
+        "OppScore": "219 (1st)"
+      },
+      {
+        "Date": "2026-01-22",
+        "Opponent": "Sri Lanka",
+        "Result": "LOSS",
+        "Score": "252 (2nd)",
+        "OppScore": "271 (1st)"
+      },
+      {
+        "Date": "2025-03-01",
+        "Opponent": "South Africa",
+        "Result": "LOSS",
+        "Score": "179 (1st)",
+        "OppScore": "181 (2nd)"
+      },
+      {
+        "Date": "2025-02-22",
+        "Opponent": "Australia",
+        "Result": "LOSS",
+        "Score": "351 (1st)",
+        "OppScore": "356 (2nd)"
+      }
+    ],
+    "Scenario_4 > South Africa > vs_Australia > in_Oceania": [
+      {
+        "Date": "2025-08-24",
+        "Opponent": "Australia",
+        "Result": "LOSS",
+        "Score": "155 (2nd)",
+        "OppScore": "431 (1st)"
+      },
+      {
+        "Date": "2025-08-22",
+        "Opponent": "Australia",
+        "Result": "WIN",
+        "Score": "277 (1st)",
+        "OppScore": "193 (2nd)"
+      },
+      {
+        "Date": "2025-08-19",
+        "Opponent": "Australia",
+        "Result": "WIN",
+        "Score": "296 (1st)",
+        "OppScore": "198 (2nd)"
+      },
+      {
+        "Date": "2018-11-11",
+        "Opponent": "Australia",
+        "Result": "WIN",
+        "Score": "320 (1st)",
+        "OppScore": "280 (2nd)"
+      },
+      {
+        "Date": "2018-11-09",
+        "Opponent": "Australia",
+        "Result": "LOSS",
+        "Score": "224 (2nd)",
+        "OppScore": "231 (1st)"
+      }
+    ]
+  }
 }

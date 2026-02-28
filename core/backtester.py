@@ -28,9 +28,11 @@ class Backtester:
     🏏 The Chronos Engine.
     Allows re-running historical matches through current logic to verify ROI.
     """
-    def __init__(self, engine: Any, format_type: str = 'odi'):
+    def __init__(self, engine: Any, format_type: str):
+        if format_type is None or not str(format_type).strip():
+            raise ValueError("format_type is required for Backtester initialization.")
         self.engine = engine
-        self.format_type = format_type
+        self.format_type = str(format_type).strip().lower()
         
     def run_simulation(self, matches: List[str], strategy: str = 'ValueBet') -> Dict[str, Any]:
         """

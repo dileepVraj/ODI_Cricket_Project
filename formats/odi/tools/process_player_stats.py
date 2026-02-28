@@ -21,7 +21,7 @@ def process_ball_by_ball():
             print("❌ CSV File not found.")
             return
 
-    except Exception as e:
+    except (OSError, ValueError, KeyError, TypeError) as e:
         print(f"❌ Error loading CSV: {e}")
         return
 

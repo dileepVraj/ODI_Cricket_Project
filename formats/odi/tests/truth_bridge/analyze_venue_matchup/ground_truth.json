@@ -1,1417 +1,1421 @@
 {
-    "Analyze venue matchup": {
-        "Details": {
-            "teams involved": [
-                "Australia",
-                "England",
-                "India",
-                "New Zealand",
-                "South Africa"
-            ],
-            "Australia venues": {
-                "Melbourne": "AUS_MELBOURNE",
-                "Sydney": "AUS_SYDNEY",
-                "Adelaide": "AUS_ADELAIDE",
-                "Brisbane": "AUS_BRISBANE",
-                "Perth": "AUS_PERTH_OPTUS",
-                "Hobart": "AUS_HOBART",
-                "Canberra": "AUS_CANBERRA",
-                "Cairns": "AUS_CAIRNS",
-                "Mackay": "AUS_MACKAY"
-            },
-            "England venues": {
-                "Lords London": "ENG_LONDON_LORDS",
-                "Lords oval": "ENG_LONDON_OVAL",
-                "Birmingham": "ENG_BIRMINGHAM",
-                "Manchester": "ENG_MANCHESTER",
-                "Leeds": "ENG_LEEDS",
-                "Nottingham": "ENG_NOTTINGHAM",
-                "Southampton": "ENG_SOUTHAMPTON",
-                "Cardiff": "ENG_CARDIFF",
-                "Bristol": "ENG_BRISTOL"
-            },
-            "India venues": {
-                "Wankhede": "IND_MUMBAI_WANKHEDE",
-                "Brabourne": "IND_MUMBAI_BRABOURNE",
-                "Ahmedabad": "IND_AHMEDABAD",
-                "Kolkata": "IND_KOLKATA",
-                "Chennai": "IND_CHENNAI",
-                "Banglore": "IND_BANGALORE",
-                "Delhi": "IND_DELHI",
-                "Hyderabad": "IND_HYDERABAD",
-                "Dharamsala": "IND_DHARAMSALA",
-                "Mohali": "IND_MOHALI(I.S BINDRA)",
-                "Pune": "IND_PUNE",
-                "Jaipur": "IND_JAIPUR",
-                "Kanpur": "IND_KANPUR",
-                "Cuttack": "IND_CUTTACK",
-                "Indore": "IND_INDORE",
-                "Guwahati": "IND_GUWAHATI",
-                "Lucknow": "IND_LUCKNOW",
-                "Trivandrum": "IND_TRIVANDRUM",
-                "Vishakapatnam": "IND_VISAKHAPATNAM",
-                "Ranchi": "IND_RANCHI",
-                "Rajkot": "IND_RAJKOT",
-                "Nagpur": "IND_NAGPUR",
-                "Raipur": "IND_RAIPUR"
-            },
-            "New Zealand venues": {
-                "Auckland": "NZ_AUCKLAND",
-                "Wellington": "NZ_WELLINGTON",
-                "Wellington_basin": "NZ_WELLINGTON_BASIN",
-                "hamilton": "NZ_HAMILTON",
-                "Christchurch": "NZ_CHRISTCHURCH",
-                "Napier": "NZ_NAPIER",
-                "Dunedin": "NZ_DUNEDIN",
-                "Mt_Maunganui": "NZ_MT_MAUNGANUI",
-                "Nelson": "NZ_NELSON",
-                "Whangarei": "NZ_WHANGAREI"
-            },
-            "South Africa venues": {
-                "Johannesburg": "SA_JOHANNESBURG",
-                "Centurion": "SA_CENTURION",
-                "Durban": "SA_DURBAN",
-                "Gqeberha": "SA_GQEBERHA(Port.Elz)",
-                "Paarl": "SA_PAARL",
-                "Bloemfontein": "SA_BLOEMFONTEIN",
-                "Potchefstroom": "SA_POTCHEFSTROOM",
-                "East_London": "SA_EAST_LONDON",
-                "Kimberley": "SA_KIMBERLEY"
-            },
-            "Metrics tracked": [
-                "Matches Played",
-                "Tied / No Result",
-                "Home Win %",
-                "Home Total Wins",
-                "Visitor Total Wins",
-                "Overall Avg 1st Innings",
-                "Overall Avg 2nd Innings"
-            ]
+  "_metadata": {
+    "refactor_date": "2026-02-23",
+    "architect_note": "Migration to Universal Core Calculators. Averages now utilize competitive_chase_threshold=200 and corrected smart_filter_service logic."
+  },
+  "Analyze venue matchup": {
+    "Details": {
+      "teams involved": [
+        "Australia",
+        "England",
+        "India",
+        "New Zealand",
+        "South Africa"
+      ],
+      "Australia venues": {
+        "Melbourne": "AUS_MELBOURNE",
+        "Sydney": "AUS_SYDNEY",
+        "Adelaide": "AUS_ADELAIDE",
+        "Brisbane": "AUS_BRISBANE",
+        "Perth": "AUS_PERTH_OPTUS",
+        "Hobart": "AUS_HOBART",
+        "Canberra": "AUS_CANBERRA",
+        "Cairns": "AUS_CAIRNS",
+        "Mackay": "AUS_MACKAY"
+      },
+      "England venues": {
+        "Lords London": "ENG_LONDON_LORDS",
+        "Lords oval": "ENG_LONDON_OVAL",
+        "Birmingham": "ENG_BIRMINGHAM",
+        "Manchester": "ENG_MANCHESTER",
+        "Leeds": "ENG_LEEDS",
+        "Nottingham": "ENG_NOTTINGHAM",
+        "Southampton": "ENG_SOUTHAMPTON",
+        "Cardiff": "ENG_CARDIFF",
+        "Bristol": "ENG_BRISTOL"
+      },
+      "India venues": {
+        "Wankhede": "IND_MUMBAI_WANKHEDE",
+        "Brabourne": "IND_MUMBAI_BRABOURNE",
+        "Ahmedabad": "IND_AHMEDABAD",
+        "Kolkata": "IND_KOLKATA",
+        "Chennai": "IND_CHENNAI",
+        "Banglore": "IND_BANGALORE",
+        "Delhi": "IND_DELHI",
+        "Hyderabad": "IND_HYDERABAD",
+        "Dharamsala": "IND_DHARAMSALA",
+        "Mohali": "IND_MOHALI(I.S BINDRA)",
+        "Pune": "IND_PUNE",
+        "Jaipur": "IND_JAIPUR",
+        "Kanpur": "IND_KANPUR",
+        "Cuttack": "IND_CUTTACK",
+        "Indore": "IND_INDORE",
+        "Guwahati": "IND_GUWAHATI",
+        "Lucknow": "IND_LUCKNOW",
+        "Trivandrum": "IND_TRIVANDRUM",
+        "Vishakapatnam": "IND_VISAKHAPATNAM",
+        "Ranchi": "IND_RANCHI",
+        "Rajkot": "IND_RAJKOT",
+        "Nagpur": "IND_NAGPUR",
+        "Raipur": "IND_RAIPUR"
+      },
+      "New Zealand venues": {
+        "Auckland": "NZ_AUCKLAND",
+        "Wellington": "NZ_WELLINGTON",
+        "Wellington_basin": "NZ_WELLINGTON_BASIN",
+        "hamilton": "NZ_HAMILTON",
+        "Christchurch": "NZ_CHRISTCHURCH",
+        "Napier": "NZ_NAPIER",
+        "Dunedin": "NZ_DUNEDIN",
+        "Mt_Maunganui": "NZ_MT_MAUNGANUI",
+        "Nelson": "NZ_NELSON",
+        "Whangarei": "NZ_WHANGAREI"
+      },
+      "South Africa venues": {
+        "Johannesburg": "SA_JOHANNESBURG",
+        "Centurion": "SA_CENTURION",
+        "Durban": "SA_DURBAN",
+        "Gqeberha": "SA_GQEBERHA(Port.Elz)",
+        "Paarl": "SA_PAARL",
+        "Bloemfontein": "SA_BLOEMFONTEIN",
+        "Potchefstroom": "SA_POTCHEFSTROOM",
+        "East_London": "SA_EAST_LONDON",
+        "Kimberley": "SA_KIMBERLEY"
+      },
+      "Metrics tracked": [
+        "Matches Played",
+        "Tied / No Result",
+        "Home Win %",
+        "Home Total Wins",
+        "Visitor Total Wins",
+        "Overall Avg 1st Innings",
+        "Overall Avg 2nd Innings"
+      ]
+    },
+    "Australia stats at it's grounds": {
+      "Australia vs England": {
+        "AUS_MELBOURNE": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "308 [1]"
         },
-        "Australia stats at it's grounds": {
-            "Australia vs England": {
-                "AUS_MELBOURNE": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "329 (2)",
-                    "Overall Avg 2nd Innings": "225 (2)",
-                    "MATCH_IDS": "1072310,1317491"
-                },
-                "AUS_SYDNEY": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "291 (2)",
-                    "Overall Avg 2nd Innings": "247 (2)",
-                    "MATCH_IDS": "1072312,1317490"
-                },
-                "AUS_ADELAIDE": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "241 (2)",
-                    "Overall Avg 2nd Innings": "244 (2)",
-                    "MATCH_IDS": "1072313,1317489"
-                },
-                "AUS_BRISBANE": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "270 (1)",
-                    "Overall Avg 2nd Innings": "274 (1)",
-                    "MATCH_IDS": "1072311"
-                },
-                "AUS_PERTH_OPTUS": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "259 (1)",
-                    "Overall Avg 2nd Innings": "247 (1)",
-                    "MATCH_IDS": "1072314"
-                },
-                "AUS_HOBART": "No data available",
-                "AUS_CANBERRA": "No data available",
-                "AUS_CAIRNS": "No data available",
-                "AUS_MACKAY": "No data available"
-            },
-            "Australia vs India": {
-                "AUS_MELBOURNE": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "230 (1)",
-                    "Overall Avg 2nd Innings": "234 (1)",
-                    "MATCH_IDS": "1144999"
-                },
-                "AUS_SYDNEY": {
-                    "Matches Played": 4,
-                    "Tied / No Result": 0,
-                    "Home Win %": "75%",
-                    "Home Total Wins": 3,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "321 (4)",
-                    "Overall Avg 2nd Innings": "284 (4)",
-                    "MATCH_IDS": "1144997,1223955,1223956,1478906"
-                },
-                "AUS_ADELAIDE": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "281 (2)",
-                    "Overall Avg 2nd Innings": "282 (2)",
-                    "MATCH_IDS": "1144998,1478905"
-                },
-                "AUS_BRISBANE": "No data available",
-                "AUS_PERTH_OPTUS": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "-",
-                    "Overall Avg 2nd Innings": "-",
-                    "MATCH_IDS": "1478904"
-                },
-                "AUS_HOBART": "No data available",
-                "AUS_CANBERRA": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "302 (1)",
-                    "Overall Avg 2nd Innings": "289 (1)",
-                    "MATCH_IDS": "1223957"
-                },
-                "AUS_CAIRNS": "No data available",
-                "AUS_MACKAY": "No data available"
-            },
-            "Australia vs New Zealand": {
-                "AUS_MELBOURNE": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "264 (1)",
-                    "Overall Avg 2nd Innings": "147 (1)",
-                    "MATCH_IDS": "1001375"
-                },
-                "AUS_SYDNEY": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "291 (2)",
-                    "Overall Avg 2nd Innings": "221 (2)",
-                    "MATCH_IDS": "1001371,1183537"
-                },
-                "AUS_ADELAIDE": "No data available",
-                "AUS_BRISBANE": "No data available",
-                "AUS_PERTH_OPTUS": "No data available",
-                "AUS_HOBART": "No data available",
-                "AUS_CANBERRA": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "378 (1)",
-                    "Overall Avg 2nd Innings": "262 (1)",
-                    "MATCH_IDS": "1001373"
-                },
-                "AUS_CAIRNS": {
-                    "Matches Played": 3,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 3,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "231 (3)",
-                    "Overall Avg 2nd Innings": "185 (3)",
-                    "MATCH_IDS": "1317479,1317480,1317481"
-                },
-                "AUS_MACKAY": "No data available"
-            },
-            "Australia vs South Africa": {
-                "AUS_MELBOURNE": "No data available",
-                "AUS_SYDNEY": "No data available",
-                "AUS_ADELAIDE": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "231 (1)",
-                    "Overall Avg 2nd Innings": "224 (1)",
-                    "MATCH_IDS": "1144987"
-                },
-                "AUS_BRISBANE": "No data available",
-                "AUS_PERTH_OPTUS": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "152 (1)",
-                    "Overall Avg 2nd Innings": "153 (1)",
-                    "MATCH_IDS": "1144986"
-                },
-                "AUS_HOBART": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "320 (1)",
-                    "Overall Avg 2nd Innings": "280 (1)",
-                    "MATCH_IDS": "1144988"
-                },
-                "AUS_CANBERRA": "No data available",
-                "AUS_CAIRNS": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "296 (1)",
-                    "Overall Avg 2nd Innings": "198 (1)",
-                    "MATCH_IDS": "1478901"
-                },
-                "AUS_MACKAY": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "354 (2)",
-                    "Overall Avg 2nd Innings": "174 (2)",
-                    "MATCH_IDS": "1478902,1478903"
-                }
-            }
+        "AUS_SYDNEY": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
         },
-        "England stats at it's grounds": {
-            "England vs Australia": {
-                "ENG_LONDON_LORDS": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "285 (1)",
-                    "Overall Avg 2nd Innings": "221 (1)",
-                    "MATCH_IDS": "1144514,1385703"
-                },
-                "ENG_LONDON_OVAL": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "214 (1)",
-                    "Overall Avg 2nd Innings": "218 (1)",
-                    "MATCH_IDS": "1119537"
-                },
-                "ENG_BIRMINGHAM": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "250 (2)",
-                    "Overall Avg 2nd Innings": "226 (1)",
-                    "MATCH_IDS": "1022365,1144529"
-                },
-                "ENG_MANCHESTER": {
-                    "Matches Played": 4,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 2,
-                    "Overall Avg 1st Innings": "258 (4)",
-                    "Overall Avg 2nd Innings": "248 (4)",
-                    "MATCH_IDS": "1119541,1198238,1198239,1198240"
-                },
-                "ENG_LEEDS": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "270 (1)",
-                    "Overall Avg 2nd Innings": "202 (1)",
-                    "MATCH_IDS": "1385701"
-                },
-                "ENG_NOTTINGHAM": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "398 (2)",
-                    "Overall Avg 2nd Innings": "278 (2)",
-                    "MATCH_IDS": "1119539,1385700"
-                },
-                "ENG_SOUTHAMPTON": "No data available",
-                "ENG_CARDIFF": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "342 (1)",
-                    "Overall Avg 2nd Innings": "304 (1)",
-                    "MATCH_IDS": "1119538"
-                },
-                "ENG_BRISTOL": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "309 (1)",
-                    "Overall Avg 2nd Innings": "-",
-                    "MATCH_IDS": "1385704"
-                }
-            },
-            "England vs India": {
-                "ENG_LONDON_LORDS": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "284 (2)",
-                    "Overall Avg 2nd Innings": "191 (2)",
-                    "MATCH_IDS": "1119547,1276908"
-                },
-                "ENG_LONDON_OVAL": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "110 (1)",
-                    "Overall Avg 2nd Innings": "114 (1)",
-                    "MATCH_IDS": "1276907"
-                },
-                "ENG_BIRMINGHAM": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "337 (1)",
-                    "Overall Avg 2nd Innings": "306 (1)",
-                    "MATCH_IDS": "1144520"
-                },
-                "ENG_MANCHESTER": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "259 (1)",
-                    "Overall Avg 2nd Innings": "261 (1)",
-                    "MATCH_IDS": "1276909"
-                },
-                "ENG_LEEDS": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "256 (1)",
-                    "Overall Avg 2nd Innings": "260 (1)",
-                    "MATCH_IDS": "1119548"
-                },
-                "ENG_NOTTINGHAM": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "268 (1)",
-                    "Overall Avg 2nd Innings": "269 (1)",
-                    "MATCH_IDS": "1119546"
-                },
-                "ENG_SOUTHAMPTON": "No data available",
-                "ENG_CARDIFF": "No data available",
-                "ENG_BRISTOL": "No data available"
-            },
-            "England vs New Zealand": {
-                "ENG_LONDON_LORDS": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 1,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "276 (2)",
-                    "Overall Avg 2nd Innings": "241 (1)",
-                    "MATCH_IDS": "1144530,1336055"
-                },
-                "ENG_LONDON_OVAL": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "368 (1)",
-                    "Overall Avg 2nd Innings": "187 (1)",
-                    "MATCH_IDS": "1336054"
-                },
-                "ENG_BIRMINGHAM": "No data available",
-                "ENG_MANCHESTER": "No data available",
-                "ENG_LEEDS": "No data available",
-                "ENG_NOTTINGHAM": "No data available",
-                "ENG_SOUTHAMPTON": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "-",
-                    "Overall Avg 2nd Innings": "-",
-                    "MATCH_IDS": "1336053"
-                },
-                "ENG_CARDIFF": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "300 (2)",
-                    "Overall Avg 2nd Innings": "260 (2)",
-                    "MATCH_IDS": "1022357,1336052"
-                },
-                "ENG_BRISTOL": "No data available"
-            },
-            "England vs South Africa": {
-                "ENG_LONDON_LORDS": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 2,
-                    "Overall Avg 1st Innings": "241 (2)",
-                    "Overall Avg 2nd Innings": "240 (2)",
-                    "MATCH_IDS": "1031429,1448355"
-                },
-                "ENG_LONDON_OVAL": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "311 (1)",
-                    "Overall Avg 2nd Innings": "207 (1)",
-                    "MATCH_IDS": "1144483"
-                },
-                "ENG_BIRMINGHAM": "No data available",
-                "ENG_MANCHESTER": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "201 (1)",
-                    "Overall Avg 2nd Innings": "83 (1)",
-                    "MATCH_IDS": "1276911"
-                },
-                "ENG_LEEDS": {
-                    "Matches Played": 3,
-                    "Tied / No Result": 1,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "235 (2)",
-                    "Overall Avg 2nd Innings": "202 (2)",
-                    "MATCH_IDS": "1031425,1276912,1448354"
-                },
-                "ENG_NOTTINGHAM": "No data available",
-                "ENG_SOUTHAMPTON": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "372 (2)",
-                    "Overall Avg 2nd Innings": "328 (1)",
-                    "MATCH_IDS": "1031427,1448356"
-                },
-                "ENG_CARDIFF": "No data available",
-                "ENG_BRISTOL": "No data available"
-            }
+        "AUS_ADELAIDE": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 2,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
         },
-        "India stats at it's grounds": {
-            "India vs England": {
-                "IND_MUMBAI_WANKHEDE": "No data available",
-                "IND_MUMBAI_BRABOURNE": "No data available",
-                "IND_AHMEDABAD": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "356 (1)",
-                    "Overall Avg 2nd Innings": "214 (1)",
-                    "MATCH_IDS": "1439906"
-                },
-                "IND_KOLKATA": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "321 (1)",
-                    "Overall Avg 2nd Innings": "316 (1)",
-                    "MATCH_IDS": "1034823"
-                },
-                "IND_CHENNAI": "No data available",
-                "IND_BANGALORE": "No data available",
-                "IND_DELHI": "No data available",
-                "IND_HYDERABAD": "No data available",
-                "IND_DHARAMSALA": "No data available",
-                "IND_MOHALI(I.S BINDRA)": "No data available",
-                "IND_PUNE": {
-                    "Matches Played": 4,
-                    "Tied / No Result": 0,
-                    "Home Win %": "75%",
-                    "Home Total Wins": 3,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "333 (4)",
-                    "Overall Avg 2nd Innings": "316 (4)",
-                    "MATCH_IDS": "1034819,1243393,1243394,1243395"
-                },
-                "IND_JAIPUR": "No data available",
-                "IND_KANPUR": "No data available",
-                "IND_CUTTACK": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "342 (2)",
-                    "Overall Avg 2nd Innings": "337 (2)",
-                    "MATCH_IDS": "1034821,1439905"
-                },
-                "IND_INDORE": "No data available",
-                "IND_GUWAHATI": "No data available",
-                "IND_LUCKNOW": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "229 (1)",
-                    "Overall Avg 2nd Innings": "129 (1)",
-                    "MATCH_IDS": "1384420"
-                },
-                "IND_TRIVANDRUM": "No data available",
-                "IND_VISAKHAPATNAM": "No data available",
-                "IND_RANCHI": "No data available",
-                "IND_RAJKOT": "No data available",
-                "IND_NAGPUR": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "248 (1)",
-                    "Overall Avg 2nd Innings": "251 (1)",
-                    "MATCH_IDS": "1439904"
-                },
-                "IND_RAIPUR": "No data available"
-            },
-            "India vs Australia": {
-                "IND_MUMBAI_WANKHEDE": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "221 (2)",
-                    "Overall Avg 2nd Innings": "224 (2)",
-                    "MATCH_IDS": "1187027,1348656"
-                },
-                "IND_MUMBAI_BRABOURNE": "No data available",
-                "IND_AHMEDABAD": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "240 (1)",
-                    "Overall Avg 2nd Innings": "241 (1)",
-                    "MATCH_IDS": "1384439"
-                },
-                "IND_KOLKATA": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "252 (1)",
-                    "Overall Avg 2nd Innings": "202 (1)",
-                    "MATCH_IDS": "1119497"
-                },
-                "IND_CHENNAI": {
-                    "Matches Played": 3,
-                    "Tied / No Result": 0,
-                    "Home Win %": "66%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "249 (3)",
-                    "Overall Avg 2nd Innings": "224 (2)",
-                    "MATCH_IDS": "1119496,1348658,1384396"
-                },
-                "IND_BANGALORE": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "310 (2)",
-                    "Overall Avg 2nd Innings": "301 (2)",
-                    "MATCH_IDS": "1119499,1187029"
-                },
-                "IND_DELHI": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "272 (1)",
-                    "Overall Avg 2nd Innings": "237 (1)",
-                    "MATCH_IDS": "1168246"
-                },
-                "IND_HYDERABAD": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "236 (1)",
-                    "Overall Avg 2nd Innings": "240 (1)",
-                    "MATCH_IDS": "1168242"
-                },
-                "IND_DHARAMSALA": "No data available",
-                "IND_MOHALI(I.S BINDRA)": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "317 (2)",
-                    "Overall Avg 2nd Innings": "320 (2)",
-                    "MATCH_IDS": "1168245,1389388"
-                },
-                "IND_PUNE": "No data available",
-                "IND_JAIPUR": "No data available",
-                "IND_KANPUR": "No data available",
-                "IND_CUTTACK": "No data available",
-                "IND_INDORE": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "346 (2)",
-                    "Overall Avg 2nd Innings": "255 (2)",
-                    "MATCH_IDS": "1119498,1389389"
-                },
-                "IND_GUWAHATI": "No data available",
-                "IND_LUCKNOW": "No data available",
-                "IND_TRIVANDRUM": "No data available",
-                "IND_VISAKHAPATNAM": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "117 (1)",
-                    "Overall Avg 2nd Innings": "121 (1)",
-                    "MATCH_IDS": "1348657"
-                },
-                "IND_RANCHI": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "313 (1)",
-                    "Overall Avg 2nd Innings": "281 (1)",
-                    "MATCH_IDS": "1168244"
-                },
-                "IND_RAJKOT": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "346 (2)",
-                    "Overall Avg 2nd Innings": "295 (2)",
-                    "MATCH_IDS": "1187028,1389390"
-                },
-                "IND_NAGPUR": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "246 (2)",
-                    "Overall Avg 2nd Innings": "242 (2)",
-                    "MATCH_IDS": "1119500,1168243"
-                },
-                "IND_RAIPUR": "No data available"
-            },
-            "India vs New Zealand": {
-                "IND_MUMBAI_WANKHEDE": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "338 (2)",
-                    "Overall Avg 2nd Innings": "305 (2)",
-                    "MATCH_IDS": "1120090,1384437"
-                },
-                "IND_MUMBAI_BRABOURNE": "No data available",
-                "IND_AHMEDABAD": "No data available",
-                "IND_KOLKATA": "No data available",
-                "IND_CHENNAI": "No data available",
-                "IND_BANGALORE": "No data available",
-                "IND_DELHI": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "242 (1)",
-                    "Overall Avg 2nd Innings": "236 (1)",
-                    "MATCH_IDS": "1030221"
-                },
-                "IND_HYDERABAD": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "349 (1)",
-                    "Overall Avg 2nd Innings": "337 (1)",
-                    "MATCH_IDS": "1348646"
-                },
-                "IND_DHARAMSALA": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "231 (2)",
-                    "Overall Avg 2nd Innings": "234 (2)",
-                    "MATCH_IDS": "1030219,1384412"
-                },
-                "IND_MOHALI(I.S BINDRA)": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "285 (1)",
-                    "Overall Avg 2nd Innings": "289 (1)",
-                    "MATCH_IDS": "1030223"
-                },
-                "IND_PUNE": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "230 (1)",
-                    "Overall Avg 2nd Innings": "232 (1)",
-                    "MATCH_IDS": "1120091"
-                },
-                "IND_JAIPUR": "No data available",
-                "IND_KANPUR": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "337 (1)",
-                    "Overall Avg 2nd Innings": "331 (1)",
-                    "MATCH_IDS": "1120092"
-                },
-                "IND_CUTTACK": "No data available",
-                "IND_INDORE": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "361 (2)",
-                    "Overall Avg 2nd Innings": "295 (2)",
-                    "MATCH_IDS": "1348648,1490233"
-                },
-                "IND_GUWAHATI": "No data available",
-                "IND_LUCKNOW": "No data available",
-                "IND_TRIVANDRUM": "No data available",
-                "IND_VISAKHAPATNAM": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "269 (1)",
-                    "Overall Avg 2nd Innings": "79 (1)",
-                    "MATCH_IDS": "1030227"
-                },
-                "IND_RANCHI": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "260 (1)",
-                    "Overall Avg 2nd Innings": "241 (1)",
-                    "MATCH_IDS": "1030225"
-                },
-                "IND_RAJKOT": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "284 (1)",
-                    "Overall Avg 2nd Innings": "286 (1)",
-                    "MATCH_IDS": "1490232"
-                },
-                "IND_NAGPUR": "No data available",
-                "IND_RAIPUR": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "108 (1)",
-                    "Overall Avg 2nd Innings": "111 (1)",
-                    "MATCH_IDS": "1348647"
-                }
-            },
-            "India vs South Africa": {
-                "IND_MUMBAI_WANKHEDE": "No data available",
-                "IND_MUMBAI_BRABOURNE": "No data available",
-                "IND_AHMEDABAD": "No data available",
-                "IND_KOLKATA": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "326 (1)",
-                    "Overall Avg 2nd Innings": "83 (1)",
-                    "MATCH_IDS": "1384428"
-                },
-                "IND_CHENNAI": "No data available",
-                "IND_BANGALORE": "No data available",
-                "IND_DELHI": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "99 (1)",
-                    "Overall Avg 2nd Innings": "105 (1)",
-                    "MATCH_IDS": "1327511"
-                },
-                "IND_HYDERABAD": "No data available",
-                "IND_DHARAMSALA": "No data available",
-                "IND_MOHALI(I.S BINDRA)": "No data available",
-                "IND_PUNE": "No data available",
-                "IND_JAIPUR": "No data available",
-                "IND_KANPUR": "No data available",
-                "IND_CUTTACK": "No data available",
-                "IND_INDORE": "No data available",
-                "IND_GUWAHATI": "No data available",
-                "IND_LUCKNOW": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "-",
-                    "Overall Avg 2nd Innings": "-",
-                    "MATCH_IDS": "1327509"
-                },
-                "IND_TRIVANDRUM": "No data available",
-                "IND_VISAKHAPATNAM": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "270 (1)",
-                    "Overall Avg 2nd Innings": "271 (1)",
-                    "MATCH_IDS": "1479575"
-                },
-                "IND_RANCHI": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "313 (2)",
-                    "Overall Avg 2nd Innings": "307 (2)",
-                    "MATCH_IDS": "1327510,1479573"
-                },
-                "IND_RAJKOT": "No data available",
-                "IND_NAGPUR": "No data available",
-                "IND_RAIPUR": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "358 (1)",
-                    "Overall Avg 2nd Innings": "362 (1)",
-                    "MATCH_IDS": "1479574"
-                }
-            }
+        "AUS_BRISBANE": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "274 [1]"
         },
-        "New Zealand stats at it's grounds": {
-            "New Zealand vs England": {
-                "NZ_AUCKLAND": "No data available",
-                "NZ_WELLINGTON": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "228 (2)",
-                    "Overall Avg 2nd Innings": "228 (2)",
-                    "MATCH_IDS": "1115777,1491722"
-                },
-                "NZ_WELLINGTON_BASIN": "No data available",
-                "NZ_HAMILTON": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "229 (2)",
-                    "Overall Avg 2nd Innings": "232 (2)",
-                    "MATCH_IDS": "1115775,1491721"
-                },
-                "NZ_CHRISTCHURCH": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "223 (1)",
-                    "Overall Avg 2nd Innings": "229 (1)",
-                    "MATCH_IDS": "1115779"
-                },
-                "NZ_NAPIER": "No data available",
-                "NZ_DUNEDIN": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "335 (1)",
-                    "Overall Avg 2nd Innings": "339 (1)",
-                    "MATCH_IDS": "1115778"
-                },
-                "NZ_MT_MAUNGANUI": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "223 (2)",
-                    "Overall Avg 2nd Innings": "224 (2)",
-                    "MATCH_IDS": "1115776,1491720"
-                },
-                "NZ_NELSON": "No data available",
-                "NZ_WHANGAREI": "No data available"
-            },
-            "New Zealand vs India": {
-                "NZ_AUCKLAND": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "289 (2)",
-                    "Overall Avg 2nd Innings": "280 (2)",
-                    "MATCH_IDS": "1187683,1322278"
-                },
-                "NZ_WELLINGTON": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "252 (1)",
-                    "Overall Avg 2nd Innings": "217 (1)",
-                    "MATCH_IDS": "1153695"
-                },
-                "NZ_WELLINGTON_BASIN": "No data available",
-                "NZ_HAMILTON": {
-                    "Matches Played": 3,
-                    "Tied / No Result": 1,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "219 (2)",
-                    "Overall Avg 2nd Innings": "220 (2)",
-                    "MATCH_IDS": "1153694,1187682,1322279"
-                },
-                "NZ_CHRISTCHURCH": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 1,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "219 (1)",
-                    "Overall Avg 2nd Innings": "-",
-                    "MATCH_IDS": "1322280"
-                },
-                "NZ_NAPIER": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "157 (1)",
-                    "Overall Avg 2nd Innings": "-",
-                    "MATCH_IDS": "1153691"
-                },
-                "NZ_DUNEDIN": "No data available",
-                "NZ_MT_MAUNGANUI": {
-                    "Matches Played": 3,
-                    "Tied / No Result": 0,
-                    "Home Win %": "33%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 2,
-                    "Overall Avg 1st Innings": "287 (3)",
-                    "Overall Avg 2nd Innings": "259 (3)",
-                    "MATCH_IDS": "1153692,1153693,1187684"
-                },
-                "NZ_NELSON": "No data available",
-                "NZ_WHANGAREI": "No data available"
-            },
-            "New Zealand vs Australia": {
-                "NZ_AUCKLAND": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "296 (2)",
-                    "Overall Avg 2nd Innings": "214 (2)",
-                    "MATCH_IDS": "914231,1020013"
-                },
-                "NZ_WELLINGTON": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "281 (1)",
-                    "Overall Avg 2nd Innings": "283 (1)",
-                    "MATCH_IDS": "914233"
-                },
-                "NZ_WELLINGTON_BASIN": "No data available",
-                "NZ_HAMILTON": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "263 (2)",
-                    "Overall Avg 2nd Innings": "224 (2)",
-                    "MATCH_IDS": "914235,1020017"
-                },
-                "NZ_CHRISTCHURCH": "No data available",
-                "NZ_NAPIER": "No data available",
-                "NZ_DUNEDIN": "No data available",
-                "NZ_MT_MAUNGANUI": "No data available",
-                "NZ_NELSON": "No data available",
-                "NZ_WHANGAREI": "No data available"
-            },
-            "New Zealand vs South Africa": {
-                "NZ_AUCKLAND": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "149 (1)",
-                    "Overall Avg 2nd Innings": "150 (1)",
-                    "MATCH_IDS": "1020039"
-                },
-                "NZ_WELLINGTON": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "271 (1)",
-                    "Overall Avg 2nd Innings": "112 (1)",
-                    "MATCH_IDS": "1020035"
-                },
-                "NZ_WELLINGTON_BASIN": "No data available",
-                "NZ_HAMILTON": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "279 (1)",
-                    "Overall Avg 2nd Innings": "280 (1)",
-                    "MATCH_IDS": "1020031,1020037"
-                },
-                "NZ_CHRISTCHURCH": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "289 (1)",
-                    "Overall Avg 2nd Innings": "283 (1)",
-                    "MATCH_IDS": "1020033"
-                },
-                "NZ_NAPIER": "No data available",
-                "NZ_DUNEDIN": "No data available",
-                "NZ_MT_MAUNGANUI": "No data available",
-                "NZ_NELSON": "No data available",
-                "NZ_WHANGAREI": "No data available"
-            }
+        "AUS_PERTH_OPTUS": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
         },
-        "South Africa stats at it's grounds": {
-            "South Africa vs England": {
-                "SA_JOHANNESBURG": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "259 (2)",
-                    "Overall Avg 2nd Innings": "261 (2)",
-                    "MATCH_IDS": "800475,1185312"
-                },
-                "SA_CENTURION": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "318 (1)",
-                    "Overall Avg 2nd Innings": "319 (1)",
-                    "MATCH_IDS": "800473"
-                },
-                "SA_DURBAN": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 1,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "-",
-                    "Overall Avg 2nd Innings": "-",
-                    "MATCH_IDS": "1185311"
-                },
-                "SA_GQEBERHA(Port.Elz)": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "262 (1)",
-                    "Overall Avg 2nd Innings": "263 (1)",
-                    "MATCH_IDS": "800471"
-                },
-                "SA_PAARL": "No data available",
-                "SA_BLOEMFONTEIN": {
-                    "Matches Played": 3,
-                    "Tied / No Result": 0,
-                    "Home Win %": "66%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "346 (3)",
-                    "Overall Avg 2nd Innings": "309 (2)",
-                    "MATCH_IDS": "800469,1339595,1339596"
-                },
-                "SA_POTCHEFSTROOM": "No data available",
-                "SA_EAST_LONDON": "No data available",
-                "SA_KIMBERLEY": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "346 (1)",
-                    "Overall Avg 2nd Innings": "287 (1)",
-                    "MATCH_IDS": "1339597"
-                }
-            },
-            "South Africa vs India": {
-                "SA_JOHANNESBURG": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "202 (2)",
-                    "Overall Avg 2nd Innings": "117 (1)",
-                    "MATCH_IDS": "1122282,1387600"
-                },
-                "SA_CENTURION": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 2,
-                    "Overall Avg 1st Innings": "161 (2)",
-                    "Overall Avg 2nd Innings": "162 (2)",
-                    "MATCH_IDS": "1122280,1122284"
-                },
-                "SA_DURBAN": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "0%",
-                    "Home Total Wins": 0,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "269 (1)",
-                    "Overall Avg 2nd Innings": "270 (1)",
-                    "MATCH_IDS": "1122279"
-                },
-                "SA_GQEBERHA(Port.Elz)": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "50%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "242 (2)",
-                    "Overall Avg 2nd Innings": "208 (2)",
-                    "MATCH_IDS": "1122283,1387601"
-                },
-                "SA_PAARL": {
-                    "Matches Played": 3,
-                    "Tied / No Result": 0,
-                    "Home Win %": "66%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 1,
-                    "Overall Avg 1st Innings": "293 (3)",
-                    "Overall Avg 2nd Innings": "257 (3)",
-                    "MATCH_IDS": "1277082,1277083,1387602"
-                },
-                "SA_BLOEMFONTEIN": "No data available",
-                "SA_POTCHEFSTROOM": "No data available",
-                "SA_EAST_LONDON": "No data available",
-                "SA_KIMBERLEY": "No data available"
-            },
-            "South Africa vs Australia": {
-                "SA_JOHANNESBURG": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "338 (2)",
-                    "Overall Avg 2nd Innings": "206 (2)",
-                    "MATCH_IDS": "936137,1373575"
-                },
-                "SA_CENTURION": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "355 (2)",
-                    "Overall Avg 2nd Innings": "273 (2)",
-                    "MATCH_IDS": "936135,1373574"
-                },
-                "SA_DURBAN": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "371 (1)",
-                    "Overall Avg 2nd Innings": "372 (1)",
-                    "MATCH_IDS": "936139"
-                },
-                "SA_GQEBERHA(Port.Elz)": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "167 (1)",
-                    "Overall Avg 2nd Innings": "168 (1)",
-                    "MATCH_IDS": "936141"
-                },
-                "SA_PAARL": {
-                    "Matches Played": 1,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "291 (1)",
-                    "Overall Avg 2nd Innings": "217 (1)",
-                    "MATCH_IDS": "1185319"
-                },
-                "SA_BLOEMFONTEIN": {
-                    "Matches Played": 3,
-                    "Tied / No Result": 0,
-                    "Home Win %": "33%",
-                    "Home Total Wins": 1,
-                    "Visitor Total Wins": 2,
-                    "Overall Avg 1st Innings": "295 (3)",
-                    "Overall Avg 2nd Innings": "256 (3)",
-                    "MATCH_IDS": "1185320,1373571,1373572"
-                },
-                "SA_POTCHEFSTROOM": {
-                    "Matches Played": 2,
-                    "Tied / No Result": 0,
-                    "Home Win %": "100%",
-                    "Home Total Wins": 2,
-                    "Visitor Total Wins": 0,
-                    "Overall Avg 1st Innings": "296 (2)",
-                    "Overall Avg 2nd Innings": "242 (2)",
-                    "MATCH_IDS": "1185321,1373573"
-                },
-                "SA_EAST_LONDON": "No data available",
-                "SA_KIMBERLEY": "No data available"
-            },
-            "South Africa vs New Zealand": {
-                "SA_JOHANNESBURG": "No data available",
-                "SA_CENTURION": "No data available",
-                "SA_DURBAN": "No data available",
-                "SA_GQEBERHA(Port.Elz)": "No data available",
-                "SA_PAARL": "No data available",
-                "SA_BLOEMFONTEIN": "No data available",
-                "SA_POTCHEFSTROOM": "No data available",
-                "SA_EAST_LONDON": "No data available",
-                "SA_KIMBERLEY": "No data available"
-            }
+        "AUS_HOBART": "No data available",
+        "AUS_CANBERRA": "No data available",
+        "AUS_CAIRNS": "No data available",
+        "AUS_MACKAY": "No data available"
+      },
+      "Australia vs India": {
+        "AUS_MELBOURNE": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "234 [1]"
+        },
+        "AUS_SYDNEY": {
+          "Matches Played": 4,
+          "Tied / No Result": 0,
+          "Home Win %": "75%",
+          "Home Total Wins": "\u2705 \u274c \u274c \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "237 [1]"
+        },
+        "AUS_ADELAIDE": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "299 [1]"
+        },
+        "AUS_BRISBANE": "No data available",
+        "AUS_PERTH_OPTUS": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_HOBART": "No data available",
+        "AUS_CANBERRA": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_CAIRNS": "No data available",
+        "AUS_MACKAY": "No data available"
+      },
+      "Australia vs New Zealand": {
+        "AUS_MELBOURNE": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_SYDNEY": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_ADELAIDE": "No data available",
+        "AUS_BRISBANE": "No data available",
+        "AUS_PERTH_OPTUS": "No data available",
+        "AUS_HOBART": "No data available",
+        "AUS_CANBERRA": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_CAIRNS": {
+          "Matches Played": 3,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_MACKAY": "No data available"
+      },
+      "Australia vs South Africa": {
+        "AUS_MELBOURNE": "No data available",
+        "AUS_SYDNEY": "No data available",
+        "AUS_ADELAIDE": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_BRISBANE": "No data available",
+        "AUS_PERTH_OPTUS": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "153 [1]"
+        },
+        "AUS_HOBART": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_CANBERRA": "No data available",
+        "AUS_CAIRNS": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "AUS_MACKAY": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
         }
+      }
+    },
+    "England stats at it's grounds": {
+      "England vs Australia": {
+        "ENG_LONDON_LORDS": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_LONDON_OVAL": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_BIRMINGHAM": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 2,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_MANCHESTER": {
+          "Matches Played": 4,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u2705 \u274c \u2705 \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "305 [1]"
+        },
+        "ENG_LEEDS": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_NOTTINGHAM": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u2705 \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "317 [1]"
+        },
+        "ENG_SOUTHAMPTON": "No data available",
+        "ENG_CARDIFF": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_BRISTOL": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        }
+      },
+      "England vs India": {
+        "ENG_LONDON_LORDS": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_LONDON_OVAL": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "114 [1]"
+        },
+        "ENG_BIRMINGHAM": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_MANCHESTER": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "261 [1]"
+        },
+        "ENG_LEEDS": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_NOTTINGHAM": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "269 [1]"
+        },
+        "ENG_SOUTHAMPTON": "No data available",
+        "ENG_CARDIFF": "No data available",
+        "ENG_BRISTOL": "No data available"
+      },
+      "England vs New Zealand": {
+        "ENG_LONDON_LORDS": {
+          "Matches Played": 2,
+          "Tied / No Result": 1,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \ud83e\udd1d",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_LONDON_OVAL": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_BIRMINGHAM": "No data available",
+        "ENG_MANCHESTER": "No data available",
+        "ENG_LEEDS": "No data available",
+        "ENG_NOTTINGHAM": "No data available",
+        "ENG_SOUTHAMPTON": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_CARDIFF": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u2705 \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "297 [1]"
+        },
+        "ENG_BRISTOL": "No data available"
+      },
+      "England vs South Africa": {
+        "ENG_LONDON_LORDS": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705 \u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "156 [1]"
+        },
+        "ENG_LONDON_OVAL": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_BIRMINGHAM": "No data available",
+        "ENG_MANCHESTER": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_LEEDS": {
+          "Matches Played": 3,
+          "Tied / No Result": 1,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u2705 \ud83c\udf27\ufe0f \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "137 [1]"
+        },
+        "ENG_NOTTINGHAM": "No data available",
+        "ENG_SOUTHAMPTON": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "ENG_CARDIFF": "No data available",
+        "ENG_BRISTOL": "No data available"
+      }
+    },
+    "India stats at it's grounds": {
+      "India vs England": {
+        "IND_MUMBAI_WANKHEDE": "No data available",
+        "IND_MUMBAI_BRABOURNE": "No data available",
+        "IND_AHMEDABAD": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_KOLKATA": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_CHENNAI": "No data available",
+        "IND_BANGALORE": "No data available",
+        "IND_DELHI": "No data available",
+        "IND_HYDERABAD": "No data available",
+        "IND_DHARAMSALA": "No data available",
+        "IND_MOHALI(I.S BINDRA)": "No data available",
+        "IND_PUNE": {
+          "Matches Played": 4,
+          "Tied / No Result": 0,
+          "Home Win %": "75%",
+          "Home Total Wins": "\u274c \u2705 \u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "337 [1]"
+        },
+        "IND_JAIPUR": "No data available",
+        "IND_KANPUR": "No data available",
+        "IND_CUTTACK": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_INDORE": "No data available",
+        "IND_GUWAHATI": "No data available",
+        "IND_LUCKNOW": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_TRIVANDRUM": "No data available",
+        "IND_VISAKHAPATNAM": "No data available",
+        "IND_RANCHI": "No data available",
+        "IND_RAJKOT": "No data available",
+        "IND_NAGPUR": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_RAIPUR": "No data available"
+      },
+      "India vs Australia": {
+        "IND_MUMBAI_WANKHEDE": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "258 [1]"
+        },
+        "IND_MUMBAI_BRABOURNE": "No data available",
+        "IND_AHMEDABAD": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "241 [1]"
+        },
+        "IND_KOLKATA": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_CHENNAI": {
+          "Matches Played": 3,
+          "Tied / No Result": 0,
+          "Home Win %": "66%",
+          "Home Total Wins": "\u274c \u2705 \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_BANGALORE": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_DELHI": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_HYDERABAD": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_DHARAMSALA": "No data available",
+        "IND_MOHALI(I.S BINDRA)": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "359 [1]"
+        },
+        "IND_PUNE": "No data available",
+        "IND_JAIPUR": "No data available",
+        "IND_KANPUR": "No data available",
+        "IND_CUTTACK": "No data available",
+        "IND_INDORE": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_GUWAHATI": "No data available",
+        "IND_LUCKNOW": "No data available",
+        "IND_TRIVANDRUM": "No data available",
+        "IND_VISAKHAPATNAM": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "121 [1]"
+        },
+        "IND_RANCHI": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_RAJKOT": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u2705 \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_NAGPUR": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_RAIPUR": "No data available"
+      },
+      "India vs New Zealand": {
+        "IND_MUMBAI_WANKHEDE": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "284 [1]"
+        },
+        "IND_MUMBAI_BRABOURNE": "No data available",
+        "IND_AHMEDABAD": "No data available",
+        "IND_KOLKATA": "No data available",
+        "IND_CHENNAI": "No data available",
+        "IND_BANGALORE": "No data available",
+        "IND_DELHI": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_HYDERABAD": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_DHARAMSALA": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 2,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_MOHALI(I.S BINDRA)": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_PUNE": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_JAIPUR": "No data available",
+        "IND_KANPUR": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_CUTTACK": "No data available",
+        "IND_INDORE": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u2705 \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_GUWAHATI": "No data available",
+        "IND_LUCKNOW": "No data available",
+        "IND_TRIVANDRUM": "No data available",
+        "IND_VISAKHAPATNAM": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_RANCHI": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_RAJKOT": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "286 [1]"
+        },
+        "IND_NAGPUR": "No data available",
+        "IND_RAIPUR": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        }
+      },
+      "India vs South Africa": {
+        "IND_MUMBAI_WANKHEDE": "No data available",
+        "IND_MUMBAI_BRABOURNE": "No data available",
+        "IND_AHMEDABAD": "No data available",
+        "IND_KOLKATA": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_CHENNAI": "No data available",
+        "IND_BANGALORE": "No data available",
+        "IND_DELHI": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_HYDERABAD": "No data available",
+        "IND_DHARAMSALA": "No data available",
+        "IND_MOHALI(I.S BINDRA)": "No data available",
+        "IND_PUNE": "No data available",
+        "IND_JAIPUR": "No data available",
+        "IND_KANPUR": "No data available",
+        "IND_CUTTACK": "No data available",
+        "IND_INDORE": "No data available",
+        "IND_GUWAHATI": "No data available",
+        "IND_LUCKNOW": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_TRIVANDRUM": "No data available",
+        "IND_VISAKHAPATNAM": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_RANCHI": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "IND_RAJKOT": "No data available",
+        "IND_NAGPUR": "No data available",
+        "IND_RAIPUR": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "362 [1]"
+        }
+      }
+    },
+    "New Zealand stats at it's grounds": {
+      "New Zealand vs England": {
+        "NZ_AUCKLAND": "No data available",
+        "NZ_WELLINGTON": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_WELLINGTON_BASIN": "No data available",
+        "NZ_HAMILTON": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 2,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_CHRISTCHURCH": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "229 [1]"
+        },
+        "NZ_NAPIER": "No data available",
+        "NZ_DUNEDIN": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_MT_MAUNGANUI": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "225 [1]"
+        },
+        "NZ_NELSON": "No data available",
+        "NZ_WHANGAREI": "No data available"
+      },
+      "New Zealand vs India": {
+        "NZ_AUCKLAND": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_WELLINGTON": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_WELLINGTON_BASIN": "No data available",
+        "NZ_HAMILTON": {
+          "Matches Played": 3,
+          "Tied / No Result": 1,
+          "Home Win %": "100%",
+          "Home Total Wins": "\ud83c\udf27\ufe0f \u274c \u274c",
+          "Visitor Total Wins": 2,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_CHRISTCHURCH": {
+          "Matches Played": 1,
+          "Tied / No Result": 1,
+          "Home Win %": "0%",
+          "Home Total Wins": "\ud83c\udf27\ufe0f",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_NAPIER": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_DUNEDIN": "No data available",
+        "NZ_MT_MAUNGANUI": {
+          "Matches Played": 3,
+          "Tied / No Result": 0,
+          "Home Win %": "33%",
+          "Home Total Wins": "\u274c \u2705 \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "245 [1]"
+        },
+        "NZ_NELSON": "No data available",
+        "NZ_WHANGAREI": "No data available"
+      },
+      "New Zealand vs Australia": {
+        "NZ_AUCKLAND": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_WELLINGTON": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "283 [1]"
+        },
+        "NZ_WELLINGTON_BASIN": "No data available",
+        "NZ_HAMILTON": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_CHRISTCHURCH": "No data available",
+        "NZ_NAPIER": "No data available",
+        "NZ_DUNEDIN": "No data available",
+        "NZ_MT_MAUNGANUI": "No data available",
+        "NZ_NELSON": "No data available",
+        "NZ_WHANGAREI": "No data available"
+      },
+      "New Zealand vs South Africa": {
+        "NZ_AUCKLAND": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "150 [1]"
+        },
+        "NZ_WELLINGTON": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_WELLINGTON_BASIN": "No data available",
+        "NZ_HAMILTON": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_CHRISTCHURCH": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "NZ_NAPIER": "No data available",
+        "NZ_DUNEDIN": "No data available",
+        "NZ_MT_MAUNGANUI": "No data available",
+        "NZ_NELSON": "No data available",
+        "NZ_WHANGAREI": "No data available"
+      }
+    },
+    "South Africa stats at it's grounds": {
+      "South Africa vs England": {
+        "SA_JOHANNESBURG": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u2705 \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "257 [1]"
+        },
+        "SA_CENTURION": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_DURBAN": {
+          "Matches Played": 1,
+          "Tied / No Result": 1,
+          "Home Win %": "0%",
+          "Home Total Wins": "\ud83c\udf27\ufe0f",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_GQEBERHA(Port.Elz)": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "263 [1]"
+        },
+        "SA_PAARL": "No data available",
+        "SA_BLOEMFONTEIN": {
+          "Matches Played": 3,
+          "Tied / No Result": 0,
+          "Home Win %": "66%",
+          "Home Total Wins": "\u274c \u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_POTCHEFSTROOM": "No data available",
+        "SA_EAST_LONDON": "No data available",
+        "SA_KIMBERLEY": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        }
+      },
+      "South Africa vs India": {
+        "SA_JOHANNESBURG": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u2705 \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "117 [1]"
+        },
+        "SA_CENTURION": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705 \u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 2,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "162 [2]"
+        },
+        "SA_DURBAN": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "0%",
+          "Home Total Wins": "\u2705",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "270 [1]"
+        },
+        "SA_GQEBERHA(Port.Elz)": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "50%",
+          "Home Total Wins": "\u274c \u2705",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_PAARL": {
+          "Matches Played": 3,
+          "Tied / No Result": 0,
+          "Home Win %": "66%",
+          "Home Total Wins": "\u2705 \u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_BLOEMFONTEIN": "No data available",
+        "SA_POTCHEFSTROOM": "No data available",
+        "SA_EAST_LONDON": "No data available",
+        "SA_KIMBERLEY": "No data available"
+      },
+      "South Africa vs Australia": {
+        "SA_JOHANNESBURG": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_CENTURION": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_DURBAN": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_GQEBERHA(Port.Elz)": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_PAARL": {
+          "Matches Played": 1,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c",
+          "Visitor Total Wins": 0,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_BLOEMFONTEIN": {
+          "Matches Played": 3,
+          "Tied / No Result": 0,
+          "Home Win %": "33%",
+          "Home Total Wins": "\u2705 \u2705 \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 1,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "225 [1]"
+        },
+        "SA_POTCHEFSTROOM": {
+          "Matches Played": 2,
+          "Tied / No Result": 0,
+          "Home Win %": "100%",
+          "Home Total Wins": "\u274c \u274c",
+          "Visitor Total Wins": 1,
+          "Overall Avg 1st Innings": 0,
+          "Overall Avg 2nd Innings": "",
+          "MATCH_IDS": "-"
+        },
+        "SA_EAST_LONDON": "No data available",
+        "SA_KIMBERLEY": "No data available"
+      },
+      "South Africa vs New Zealand": {
+        "SA_JOHANNESBURG": "No data available",
+        "SA_CENTURION": "No data available",
+        "SA_DURBAN": "No data available",
+        "SA_GQEBERHA(Port.Elz)": "No data available",
+        "SA_PAARL": "No data available",
+        "SA_BLOEMFONTEIN": "No data available",
+        "SA_POTCHEFSTROOM": "No data available",
+        "SA_EAST_LONDON": "No data available",
+        "SA_KIMBERLEY": "No data available"
+      }
     }
+  }
 }

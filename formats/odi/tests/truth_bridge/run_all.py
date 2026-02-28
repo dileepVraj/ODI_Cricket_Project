@@ -52,7 +52,7 @@ def run_all_verification():
                  report_path = os.path.join(folder, "report.json")
                  runner.save_report(report_path)
             
-        except Exception as e:
+        except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:
             print(f"❌ Runner {runner.suite_name} Failed: {e}")
             import traceback
             traceback.print_exc()

@@ -2,7 +2,7 @@
  * components/inputs/SquadBuilder.tsx — Dual-Panel Squad Selector
  * 
  * Lets users build Home XI and Away XI for squad-dependent functions:
- *   - compare_squads, tactical_matrix, matchups, predict_score, generate_pack
+ *   - compare_squads, tactical_matrix, matchups, generate_pack
  * 
  * Features:
  *   - Search-to-add player combobox per team panel
@@ -22,6 +22,7 @@ interface SquadBuilderProps {
     formatKey: string;
     teamA: string;
     teamB: string;
+    maxPlayers: number;
     homeXI: string[];
     awayXI: string[];
     onHomeXIChange: (players: string[]) => void;
@@ -32,6 +33,7 @@ export default function SquadBuilder({
     formatKey,
     teamA,
     teamB,
+    maxPlayers,
     homeXI,
     awayXI,
     onHomeXIChange,
@@ -39,17 +41,13 @@ export default function SquadBuilder({
 }: SquadBuilderProps) {
     return (
         <div
-            style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "16px",
-                marginBottom: "20px",
-            }}
+            className="[display:grid] [grid-template-columns:1fr_1fr] [gap:16px] [margin-bottom:20px]"
         >
             <SquadPanel
                 title="Home XI"
                 team={teamA}
                 formatKey={formatKey}
+                maxPlayers={maxPlayers}
                 selectedPlayers={homeXI}
                 onPlayersChange={onHomeXIChange}
                 accentColor="var(--accent-blue)"
@@ -58,6 +56,7 @@ export default function SquadBuilder({
                 title="Away XI"
                 team={teamB}
                 formatKey={formatKey}
+                maxPlayers={maxPlayers}
                 selectedPlayers={awayXI}
                 onPlayersChange={onAwayXIChange}
                 accentColor="var(--accent-purple)"
@@ -74,20 +73,37 @@ interface SquadPanelProps {
     title: string;
     team: string;
     formatKey: string;
+    maxPlayers: number;
     selectedPlayers: string[];
     onPlayersChange: (players: string[]) => void;
     accentColor: string;
+}
+
+type SquadBadgeState = "full" | "partial" | "empty";
+
+const SQUAD_BADGE_CLASS: Record<SquadBadgeState, string> = {
+    full: "badge-elite",
+    partial: "badge-strong",
+    empty: "badge-caution",
+};
+
+function resolveSquadBadgeState(args: { isFull: boolean; hasPlayers: boolean }): SquadBadgeState {
+    if (args.isFull) return "full";
+    if (args.hasPlayers) return "partial";
+    return "empty";
 }
 
 function SquadPanel({
     title,
     team,
     formatKey,
+    maxPlayers,
     selectedPlayers,
     onPlayersChange,
     accentColor,
 }: SquadPanelProps) {
     const [availablePlayers, setAvailablePlayers] = useState<string[]>([]);
+    const [loadError, setLoadError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isLoadingPlayers, setIsLoadingPlayers] = useState(false);
@@ -101,22 +117,26 @@ function SquadPanel({
     useEffect(() => {
         if (!validTeam) {
             setAvailablePlayers([]);
+            setLoadError(null);
             return;
         }
 
         let cancelled = false;
         setIsLoadingPlayers(true);
+        setLoadError(null);
         fetchPlayers(formatKey, team)
             .then((players) => {
                 if (!cancelled) {
                     setAvailablePlayers(players);
                     setIsLoadingPlayers(false);
+                    setLoadError(null);
                 }
             })
             .catch(() => {
                 if (!cancelled) {
                     setAvailablePlayers([]);
                     setIsLoadingPlayers(false);
+                    setLoadError("Could not load player list.");
                 }
             });
 
@@ -131,12 +151,12 @@ function SquadPanel({
     );
 
     const addPlayer = useCallback((player: string) => {
-        if (selectedPlayers.length >= 11) return;
+        if (selectedPlayers.length >= maxPlayers) return;
         if (selectedPlayers.includes(player)) return;
         onPlayersChange([...selectedPlayers, player]);
         setSearchTerm("");
         setIsDropdownOpen(false);
-    }, [selectedPlayers, onPlayersChange]);
+    }, [maxPlayers, selectedPlayers, onPlayersChange]);
 
     const removePlayer = useCallback((player: string) => {
         onPlayersChange(selectedPlayers.filter((p) => p !== player));
@@ -149,16 +169,17 @@ function SquadPanel({
     const loadSquad = useCallback(async () => {
         if (!validTeam) return;
         setIsLoadingPlayers(true);
+        setLoadError(null);
         try {
             const players = await fetchPlayers(formatKey, team);
-            // Take first 11
-            onPlayersChange(players.slice(0, 11));
+            // Take first max players from manifest-driven limit.
+            onPlayersChange(players.slice(0, maxPlayers));
         } catch {
-            // silently fail
+            setLoadError("Failed to auto-load XI. Please try again.");
         } finally {
             setIsLoadingPlayers(false);
         }
-    }, [formatKey, team, validTeam, onPlayersChange]);
+    }, [formatKey, maxPlayers, team, validTeam, onPlayersChange]);
 
     // Update dropdown position
     const updateDropdownPos = useCallback(() => {
@@ -189,53 +210,36 @@ function SquadPanel({
     }, []);
 
     const playerCount = selectedPlayers.length;
-    const isFull = playerCount >= 11;
+    const hasPlayers = selectedPlayers.length !== 0;
+    const isFull = playerCount >= maxPlayers;
+    const squadBadgeState = resolveSquadBadgeState({ isFull, hasPlayers });
+    const squadBadgeClass = SQUAD_BADGE_CLASS[squadBadgeState];
 
     return (
         <div
             ref={containerRef}
-            className="glass-card"
-            style={{
-                padding: "16px",
-                borderTop: `3px solid ${accentColor}`,
-            }}
+            className={`glass-card [padding:16px] [border-top:3px_solid_${accentColor}]`}
         >
             {/* Panel Header */}
             <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "12px",
-                }}
+                className="[display:flex] [justify-content:space-between] [align-items:center] [margin-bottom:12px]"
             >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <Users size={16} style={{ color: accentColor }} />
+                <div className="[display:flex] [align-items:center] [gap:8px]">
+                    <Users size={16} className={`[color:${accentColor}]`} />
                     <span
-                        style={{
-                            fontSize: "0.9rem",
-                            fontWeight: 700,
-                            color: "var(--text-primary)",
-                        }}
+                        className="[font-size:0.9rem] [font-weight:700] [color:var(--text-primary)]"
                     >
                         {title}
                     </span>
                     <span
-                        className={`badge ${isFull ? "badge-elite" : playerCount > 0 ? "badge-strong" : "badge-caution"}`}
-                        style={{ fontSize: "0.7rem" }}
+                        className={`badge ${squadBadgeClass} [font-size:0.7rem]`}
                     >
-                        {playerCount}/11
+                        {playerCount}/{maxPlayers}
                     </span>
                 </div>
 
                 {validTeam && (
-                    <span
-                        style={{
-                            fontSize: "0.75rem",
-                            color: accentColor,
-                            fontWeight: 600,
-                        }}
-                    >
+                    <span className={`[font-size:0.75rem] [font-weight:600] [color:${accentColor}]`}>
                         {team}
                     </span>
                 )}
@@ -244,12 +248,7 @@ function SquadPanel({
             {/* No Team Selected State */}
             {!validTeam && (
                 <div
-                    style={{
-                        padding: "20px",
-                        textAlign: "center",
-                        color: "var(--text-muted)",
-                        fontSize: "0.82rem",
-                    }}
+                    className="[padding:20px] [text-align:center] [color:var(--text-muted)] [font-size:0.82rem]"
                 >
                     Select a team from the Context Bar above
                 </div>
@@ -260,64 +259,41 @@ function SquadPanel({
                 <>
                     {/* Action Buttons */}
                     <div
-                        style={{
-                            display: "flex",
-                            gap: "6px",
-                            marginBottom: "10px",
-                        }}
+                        className="[display:flex] [gap:6px] [margin-bottom:10px]"
                     >
                         <button
-                            className="btn-ghost"
+                            className="btn-ghost [font-size:0.75rem] [display:flex] [align-items:center] [gap:4px] [padding:4px_10px]"
                             onClick={loadSquad}
                             disabled={isLoadingPlayers}
-                            style={{
-                                fontSize: "0.75rem",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "4px",
-                                padding: "4px 10px",
-                            }}
                         >
                             <Download size={12} />
                             Load Squad
                         </button>
-                        {playerCount > 0 && (
+                        {hasPlayers && (
                             <button
-                                className="btn-ghost"
+                                className="btn-ghost [font-size:0.75rem] [display:flex] [align-items:center] [gap:4px] [padding:4px_10px] [color:var(--tier-danger)]"
                                 onClick={clearAll}
-                                style={{
-                                    fontSize: "0.75rem",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "4px",
-                                    padding: "4px 10px",
-                                    color: "var(--tier-danger)",
-                                }}
                             >
                                 <Trash2 size={12} />
                                 Clear
                             </button>
                         )}
                     </div>
+                    {loadError && (
+                        <div
+                            className="[margin-bottom:10px] [font-size:0.74rem] [color:var(--tier-caution)]"
+                        >
+                            {loadError}
+                        </div>
+                    )}
 
                     {/* Player Search Input */}
                     {!isFull && (
-                        <div style={{ position: "relative", marginBottom: "10px" }}>
+                        <div className="[position:relative] [margin-bottom:10px]">
                             <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "6px",
-                                    background: "var(--bg-active)",
-                                    borderRadius: "var(--radius-sm)",
-                                    padding: "6px 10px",
-                                    border: isDropdownOpen
-                                        ? "1px solid var(--accent-blue)"
-                                        : "1px solid var(--border)",
-                                    transition: "border-color 0.2s",
-                                }}
+                                className={`[display:flex] [align-items:center] [gap:6px] [background:var(--bg-active)] [border-radius:var(--radius-sm)] [padding:6px_10px] [transition:border-color_0.2s] ${isDropdownOpen ? "[border:1px_solid_var(--accent-blue)]" : "[border:1px_solid_var(--border)]"}`}
                             >
-                                <Search size={14} style={{ color: "var(--text-muted)", flexShrink: 0 }} />
+                                <Search size={14} className="[color:var(--text-muted)] [flex-shrink:0]" />
                                 <input
                                     ref={inputRef}
                                     type="text"
@@ -332,25 +308,11 @@ function SquadPanel({
                                         setIsDropdownOpen(true);
                                         updateDropdownPos();
                                     }}
-                                    style={{
-                                        background: "transparent",
-                                        border: "none",
-                                        outline: "none",
-                                        color: "var(--text-primary)",
-                                        fontSize: "0.82rem",
-                                        width: "100%",
-                                        fontFamily: "inherit",
-                                    }}
+                                    className="[background:transparent] [border:none] [outline:none] [color:var(--text-primary)] [font-size:0.82rem] [width:100%] [font-family:inherit]"
                                 />
                                 <ChevronDown
                                     size={14}
-                                    style={{
-                                        color: "var(--text-muted)",
-                                        flexShrink: 0,
-                                        transform: isDropdownOpen ? "rotate(180deg)" : "none",
-                                        transition: "transform 0.2s",
-                                        cursor: "pointer",
-                                    }}
+                                    className={`[color:var(--text-muted)] [flex-shrink:0] [transition:transform_0.2s] [cursor:pointer] ${isDropdownOpen ? "[transform:rotate(180deg)]" : "[transform:none]"}`}
                                     onClick={() => {
                                         setIsDropdownOpen(!isDropdownOpen);
                                         updateDropdownPos();
@@ -364,45 +326,20 @@ function SquadPanel({
                                 ReactDOM.createPortal(
                                     <div
                                         data-squad-dropdown
+                                        className="[position:fixed] [max-height:200px] [overflow-y:auto] [background:var(--bg-elevated)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [z-index:99999] [box-shadow:0_8px_24px_rgba(0,_0,_0,_0.4)]"
                                         style={{
-                                            position: "fixed",
                                             top: dropdownPos.top,
                                             left: dropdownPos.left,
                                             width: dropdownPos.width,
-                                            maxHeight: "200px",
-                                            overflowY: "auto",
-                                            background: "var(--bg-elevated)",
-                                            border: "1px solid var(--border)",
-                                            borderRadius: "var(--radius-sm)",
-                                            zIndex: 99999,
-                                            boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
                                         }}
                                     >
                                         {filteredPlayers.map((player) => (
                                             <div
                                                 key={player}
                                                 onClick={() => addPlayer(player)}
-                                                style={{
-                                                    padding: "8px 12px",
-                                                    fontSize: "0.82rem",
-                                                    color: "var(--text-primary)",
-                                                    cursor: "pointer",
-                                                    borderBottom: "1px solid var(--border)",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: "8px",
-                                                    transition: "background 0.15s",
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    (e.currentTarget as HTMLElement).style.background =
-                                                        "var(--bg-active)";
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    (e.currentTarget as HTMLElement).style.background =
-                                                        "transparent";
-                                                }}
+                                                className="[padding:8px_12px] [font-size:0.82rem] [color:var(--text-primary)] [cursor:pointer] [border-bottom:1px_solid_var(--border)] [display:flex] [align-items:center] [gap:8px] [transition:background_0.15s] hover:[background:var(--bg-active)]"
                                             >
-                                                <UserPlus size={12} style={{ color: accentColor }} />
+                                                <UserPlus size={12} className={`[color:${accentColor}]`} />
                                                 {player}
                                             </div>
                                         ))}
@@ -414,22 +351,11 @@ function SquadPanel({
 
                     {/* Selected Players List */}
                     <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "4px",
-                            minHeight: "40px",
-                        }}
+                        className="[display:flex] [flex-direction:column] [gap:4px] [min-height:40px]"
                     >
                         {selectedPlayers.length === 0 && (
                             <div
-                                style={{
-                                    padding: "12px",
-                                    textAlign: "center",
-                                    color: "var(--text-muted)",
-                                    fontSize: "0.78rem",
-                                    fontStyle: "italic",
-                                }}
+                                className="[padding:12px] [text-align:center] [color:var(--text-muted)] [font-size:0.78rem] [font-style:italic]"
                             >
                                 No players selected. Search above or Load Squad.
                             </div>
@@ -437,49 +363,20 @@ function SquadPanel({
                         {selectedPlayers.map((player, idx) => (
                             <div
                                 key={player}
-                                className="animate-fade-in"
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "8px",
-                                    padding: "5px 10px",
-                                    background: "var(--bg-active)",
-                                    borderRadius: "var(--radius-sm)",
-                                    borderLeft: `3px solid ${accentColor}`,
-                                    fontSize: "0.8rem",
-                                }}
+                                className={`animate-fade-in [display:flex] [align-items:center] [gap:8px] [padding:5px_10px] [background:var(--bg-active)] [border-radius:var(--radius-sm)] [font-size:0.8rem] [border-left:3px_solid_${accentColor}]`}
                             >
                                 <span
-                                    style={{
-                                        color: "var(--text-muted)",
-                                        fontSize: "0.7rem",
-                                        width: "20px",
-                                        textAlign: "right",
-                                        flexShrink: 0,
-                                    }}
+                                    className="[color:var(--text-muted)] [font-size:0.7rem] [width:20px] [text-align:right] [flex-shrink:0]"
                                 >
                                     {idx + 1}.
                                 </span>
-                                <span style={{ flex: 1, color: "var(--text-primary)" }}>
+                                <span className="[flex:1] [color:var(--text-primary)]">
                                     {player}
                                 </span>
                                 <X
                                     size={14}
-                                    style={{
-                                        color: "var(--text-muted)",
-                                        cursor: "pointer",
-                                        flexShrink: 0,
-                                        transition: "color 0.15s",
-                                    }}
+                                    className="[color:var(--text-muted)] [cursor:pointer] [flex-shrink:0] [transition:color_0.15s] hover:[color:var(--tier-danger)]"
                                     onClick={() => removePlayer(player)}
-                                    onMouseEnter={(e) => {
-                                        (e.currentTarget as SVGElement).style.color =
-                                            "var(--tier-danger)";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        (e.currentTarget as SVGElement).style.color =
-                                            "var(--text-muted)";
-                                    }}
                                 />
                             </div>
                         ))}

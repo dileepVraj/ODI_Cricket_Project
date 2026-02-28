@@ -1,0 +1,10 @@
+❌ Found 4 violations:
+
+🔴 [GOVERNANCE_DOC_MISSING] docs/ai/GEMINI.md:0
+   🚨 CRITICAL: Governance doc missing: docs/ai/GEMINI.md (Agent Protocols & Governance Rules). This file is required for agent context pipeline.
+🔴 [GOVERNANCE_DOC_MISSING] docs/ai/AI_MEMORY.md:0
+   🚨 CRITICAL: Governance doc missing: docs/ai/AI_MEMORY.md (Living Memory — Sprint Status & Session History). This file is required for agent context pipeline.
+🔴 [GOVERNANCE_DOC_MISSING] docs/context/active_state.md:0
+   🚨 CRITICAL: Governance doc missing: docs/context/active_state.md (Current Architecture State & Anti-Patterns). This file is required for agent context pipeline.
+🔴 [GOVERNANCE_DOC_MISSING] docs/context/rules.json:0
+   🚨 CRITICAL: Governance doc missing: docs/context/rules.json (Automated Linting Rules). This file is required for agent context pipeline.
