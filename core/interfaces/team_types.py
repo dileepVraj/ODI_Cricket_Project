@@ -4,7 +4,7 @@ Typed contracts for TeamEngine payloads and request context.
 
 from __future__ import annotations
 
-from typing import Literal, Protocol, TypeAlias, TypedDict, Union, Sequence
+from typing import Dict, Literal, Protocol, Sequence, Tuple, TypeAlias, TypedDict, Union
 
 import pandas as pd
 
@@ -306,6 +306,12 @@ class PhaseSummaryCell(TypedDict):
     avg: float
     n: int
     wkts: float
+
+
+class PhasePayload(TypedDict):
+    phase_df: pd.DataFrame
+    phase_bounds: Dict[str, Tuple[int, int]]
+    phase_overs: Dict[str, float]
 
 
 class InningsPhaseSummary(TypedDict):

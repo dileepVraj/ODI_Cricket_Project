@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
+
+from core.interfaces.team_types import (
+    PhasePayload,
+    ScenarioRow,
+    ScenarioRows,
+)
 
 _CANONICAL_PHASE_IDS: Tuple[str, str, str] = ("pp", "mid", "dth")
 _PHASE_KEY_ALIASES = {
@@ -18,7 +24,14 @@ _PHASE_KEY_ALIASES = {
 }
 
 
-def _parse_phase_bounds(bounds: Any) -> Tuple[int, int] | None:
+def _parse_phase_bounds(
+    bounds: Union[
+        Dict[str, int],
+        List[int],
+        Tuple[int, int],
+        None,
+    ]
+) -> Optional[Tuple[int, int]]:
     if isinstance(bounds, dict):
         start = pd.to_numeric(bounds.get("start"), errors="coerce")
         end = pd.to_numeric(bounds.get("end"), errors="coerce")
@@ -68,7 +81,7 @@ def _resolve_phase_bounds(phase_config: Dict[str, List[int]]) -> Dict[str, Tuple
     return resolved
 
 
-def _default_payload() -> Dict[str, Any]:
+def _default_payload() -> PhasePayload:
     return {
         "phase_df": pd.DataFrame(),
         "phase_bounds": {},
@@ -102,7 +115,7 @@ def _ensure_phase_metric_columns(df: pd.DataFrame) -> pd.DataFrame:
 def calculate_phase_breakdown(
     ball_df: pd.DataFrame,
     phase_config: Dict[str, List[int]],
-) -> Dict[str, Any]:
+) -> PhasePayload:
     """Normalize phase data into wide `pp/mid/dth` metrics using runtime phase config."""
     if ball_df is None or ball_df.empty:
         return _default_payload()
@@ -197,7 +210,9 @@ def calculate_phase_breakdown(
 
         suffix_map = {"phase_runs": "runs", "phase_wkts": "wkts", "phase_balls": "balls"}
 
-        def _flatten_phase_col(col: Any) -> Any:
+        def _flatten_phase_col(
+            col: Union[str, Tuple[str, str]]
+        ) -> str:
             if not isinstance(col, tuple):
                 return col
             metric = col[0]
@@ -329,7 +344,12 @@ def calculate_team_phase_habits(
     }
 
 
-def _scenario_row(label: str, home_value: float | None, away_value: float | None, higher_better: bool) -> Dict[str, Any]:
+def _scenario_row(
+    label: str,
+    home_value: float | None,
+    away_value: float | None,
+    higher_better: bool,
+) -> ScenarioRow:
     if home_value is None or away_value is None:
         return {
             "label": label,
@@ -366,7 +386,7 @@ def _scenario_row(label: str, home_value: float | None, away_value: float | None
 def build_phase_scenario_rows(
     home_habits: Dict[str, Dict[str, float]],
     away_habits: Dict[str, Dict[str, float]],
-) -> Dict[str, List[Dict[str, Any]]]:
+) -> ScenarioRows:
     """Build UI scenario rows for bat-first and chasing comparisons."""
     bat_first_rows = [
         _scenario_row("Avg PP Runs", home_habits["bat_first"].get("pp_runs"), away_habits["bat_first"].get("pp_runs"), True),

@@ -494,6 +494,64 @@ SERVICE_LITERAL_REGISTRY += [
 
 
 # ── Quick Stats (for validators and introspection) ──────────────────────
+# Calculator literal registry —
+# internal column keys and computation
+# strings used by core/calculators/
+CALCULATOR_LITERAL_REGISTRY = [
+    # phase_engine.py internal column keys
+    "over_num",
+    "phase_bucket",
+    "phase_runs",
+    "phase_wkts",
+    "phase_balls",
+    "extras",
+    "_runs",
+    "_wkts",
+    "phase_bounds",
+    "mean",
+    "n",
+    "start",
+    "end",
+    "both",
+    "pp_rr",
+    "mid_rr",
+    "dth_rr",
+    "avg_score",
+    "pp_balls",
+    "mid_balls",
+    "dth_balls",
+    "home_value",
+    "away_value",
+    "higher_better",
+    "diff_text",
+    "diff_tone",
+    # _scenario_row direction labels
+    "UP",
+    "DOWN",
+    # _scenario_row tone values
+    "success",
+    # _scenario_row neutral diff
+    "0.0",
+    # summarize_phase_by_innings innings keys
+    "1",
+    # build_phase_scenario_rows UI labels
+    "Avg PP Runs",
+    "Avg PP Wkts",
+    "Avg Mid Runs",
+    "Avg Mid Wkts",
+    "Avg Death Runs",
+    "Avg Death Wkts",
+    "Avg PP Score",
+    # performance.py column keys
+    # (already fixed but register for completeness)
+    "is_defended",
+    "is_chased",
+    # phase_engine.py numeric literals
+    6.0,
+    0.05,
+]
+
+
 def get_manifest_stats() -> dict:
     """Returns summary statistics about this manifest."""
     total_funcs = sum(len(cat["functions"]) for cat in MANIFEST["categories"])
