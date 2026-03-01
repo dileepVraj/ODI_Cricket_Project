@@ -936,34 +936,93 @@ Current baseline: ~247 MB. Phase 12 live layer adds approximately 10–30 MB. Bo
 All agentic governance skills are internalized in the repository and MUST be referenced from project-local paths only. Global user-profile skill paths (`~/.codex/skills/`) are non-authoritative and MUST NOT be used.
 
 Current project skills:
-- `core/gen_ai/skills/boundary-sentinel/`
-- `core/gen_ai/skills/duckdb-lint-ops/`
-- `core/gen_ai/skills/event-state-linter/`
-- `core/gen_ai/skills/executive-auditor/`
-- `core/gen_ai/skills/manifest-contract-verifier/`
-- `core/gen_ai/skills/paradigm-sentinel/`
-- `core/gen_ai/skills/serialization-guard/`
+**Guide skills** (`core/gen_ai/skills/guides/`):
+- `core/gen_ai/skills/guides/duckdb-lint-ops/`
 
-When creating new skills, ALWAYS create them at:
-`C:\Cricket_Project_Stable\core\gen_ai\skills\[skill-name]\`
+**Validation skills** 
+(`core/gen_ai/skills/validators/`):
+- `core/gen_ai/skills/validators/boundary-sentinel/`
+- `core/gen_ai/skills/validators/event-state-linter/`
+- `core/gen_ai/skills/validators/executive-auditor/`
+- `core/gen_ai/skills/validators/manifest-contract-verifier/`
+- `core/gen_ai/skills/validators/paradigm-sentinel/`
+- `core/gen_ai/skills/validators/serialization-guard/`
+
+**System skills** (`core/gen_ai/skills/.system/`):
+- `core/gen_ai/skills/.system/skill-creator/`
+- `core/gen_ai/skills/.system/skill-installer/`
+
+When creating new skills, place them in the 
+correct typed subdirectory:
+- Guide skills: 
+  `core/gen_ai/skills/guides/[skill-name]/`
+- Validation skills: 
+  `core/gen_ai/skills/validators/[skill-name]/`
 
 ---
 
 ### 5.2 Logic Gate Requirement (Pre-Bouncer)
 
-Before a task can be marked ready for a `compliance-bouncer` PASS, the following logic gates MUST be executed and pass criteria recorded:
+Before a task can be marked ready for a 
+`compliance-bouncer` PASS, the following 
+logic gates MUST be executed in order and 
+pass criteria recorded. This sequence mirrors 
+section 4.3 exactly.
 
-1. `core/gen_ai/skills/boundary-sentinel/` — layer boundary check
-2. `core/gen_ai/skills/duckdb-lint-ops/` — DuckDB usage check
-3. `core/gen_ai/skills/paradigm-sentinel/` — final architectural sweep
+**GATE 1 - boundary-sentinel**
+Trigger: any modification to `core/` files.
+Path: `core/gen_ai/skills/validators/
+boundary-sentinel/`
 
-`compliance-bouncer.py` is a final gate. It is not a substitute for the skill gates.
+**GATE 2 - duckdb-lint-ops (DOD lint)**
+Trigger: any modification to `calculators/`, 
+`engines/`, or `services/`.
+Path: `core/gen_ai/skills/guides/duckdb-lint-ops/`
+
+**GATE 3 - manifest-contract-verifier**
+Trigger: any modification to `manifest.py` 
+or any engine file in `formats/`.
+Path: `core/gen_ai/skills/validators/
+manifest-contract-verifier/`
+
+**GATE 4 - serialization-guard**
+Trigger: any modification to 
+`api/serializers.py` or engine return types.
+Path: `core/gen_ai/skills/validators/
+serialization-guard/`
+
+**GATE 5 - paradigm-sentinel (meta-gate)**
+Trigger: always - after all primary gates pass.
+Path: `core/gen_ai/skills/validators/
+paradigm-sentinel/`
+
+**GATE 6 - compliance-bouncer (final gate)**
+Trigger: always - last step before every commit.
+Command: `python core/utils/compliance-bouncer.py 
+--root .`
+
+Dormant: `event-state-linter` activates when 
+`core/live/` is created in Phase 12. Insert 
+as GATE 3.5.
+
+`compliance-bouncer.py` is a final gate - 
+not a substitute for the skill gates. 
+All six gates must pass. A task with missing 
+gate results is `FAIL` regardless of bouncer 
+output.
 
 ---
 
 ### 5.3 Hard-Stop Condition
 
-If any required skill gate fails, a stale path is referenced, or gate results are missing from the task report, compliance status is `FAIL` regardless of bouncer output. The task is not complete.
+If any required skill gate fails, a stale 
+or pre-restructure path is referenced 
+(e.g. `core/gen_ai/skills/boundary-sentinel/` 
+instead of 
+`core/gen_ai/skills/validators/boundary-sentinel/`),
+or gate results are missing from the task 
+report, compliance status is `FAIL` regardless 
+of bouncer output. The task is not complete.
 
 ---
 
