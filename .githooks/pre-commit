@@ -1,8 +1,8 @@
-﻿#!/usr/bin/env sh
+#!/bin/sh
 python core/utils/compliance-bouncer.py --root .
-status=$?
-if [ "$status" -ne 0 ]; then
-  echo "[COMPLIANCE BOUNCER] FAIL: Commit blocked."
-  exit "$status"
+if [ $? -ne 0 ]; then
+    echo "Commit blocked: compliance violations found."
+    echo "Fix all violations then retry."
+    exit 1
 fi
 exit 0
