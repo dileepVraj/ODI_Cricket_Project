@@ -17,11 +17,18 @@ VALID_WICKET_TYPES = (
 class MatchupEngine:
     """Vectorized matchup/archetype calculator with semantic outputs."""
 
-    def __init__(self, format_rules: Optional[Mapping[str, object]] = None) -> None:
+    def __init__(
+        self,
+        format_rules: Optional[Mapping[str, Union[str, int, float, bool, dict, list, None]]] = None
+    ) -> None:
         self.rules = dict(format_rules or {})
 
     @staticmethod
-    def _as_int_threshold(thresholds: Optional[Mapping[str, object]], key: str, default: int) -> int:
+    def _as_int_threshold(
+        thresholds: Optional[Mapping[str, Union[str, int, float, None]]],
+        key: str,
+        default: int,
+    ) -> int:
         raw_value = (thresholds or {}).get(key, default)
         try:
             return int(raw_value)
@@ -48,13 +55,13 @@ class MatchupEngine:
         return round(float(value), 1)
 
     @staticmethod
-    def _default_player_role(raw_role: object) -> str:
+    def _default_player_role(raw_role: Union[str, None]) -> str:
         if isinstance(raw_role, str) and raw_role.strip():
             return raw_role.strip()
         return "All-Rounder"
 
     @staticmethod
-    def _as_numeric_or_none(value: object) -> Optional[Union[int, float]]:
+    def _as_numeric_or_none(value: Union[str, int, float, None]) -> Optional[Union[int, float]]:
         try:
             if value is None or pd.isna(value):
                 return None
@@ -77,7 +84,7 @@ class MatchupEngine:
         players: pd.Series,
         styles: pd.Index,
         player_roles: Optional[Dict[str, str]],
-    ) -> List[Dict[str, object]]:
+    ) -> List[Dict[str, Union[str, int, float, dict, None]]]:
         if players.empty or styles.empty:
             return []
 
@@ -93,7 +100,7 @@ class MatchupEngine:
             .drop(columns="_join_key")
         )
 
-        by_player: Dict[str, Dict[str, object]] = {}
+        by_player: Dict[str, Dict[str, Union[str, int, float, dict, None]]] = {}
         for row in scaffold.to_dict("records"):
             player_name = str(row["player_name"])
             player_role = str(row["player_role"])
@@ -122,7 +129,7 @@ class MatchupEngine:
         players: Sequence[str],
         opposition_bowlers: Sequence[str],
         player_roles: Optional[Dict[str, str]] = None,
-    ) -> List[Dict[str, object]]:
+    ) -> List[Dict[str, Union[str, int, float, dict, None]]]:
         """
         Build batter-vs-style tactical distribution using vectorized operations only.
         Returns row-wise records for UI table rendering.
@@ -253,7 +260,7 @@ class MatchupEngine:
             how="left",
         ).drop(columns="striker")
 
-        by_player: Dict[str, Dict[str, object]] = {}
+        by_player: Dict[str, Dict[str, Union[str, int, float, dict, None]]] = {}
         for row in merged[["player_name", "player_role", "style_key", "avg", "sr"]].to_dict("records"):
             player_name = str(row["player_name"])
             player_role = str(row["player_role"])

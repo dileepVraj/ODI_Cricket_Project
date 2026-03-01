@@ -549,6 +549,32 @@ CALCULATOR_LITERAL_REGISTRY = [
     # phase_engine.py numeric literals
     6.0,
     0.05,
+    # matchup_engine.py literals
+    "style_key",
+    "_join_key",
+    "inner",
+    "style",
+    "Part-Timer",
+    "balls_delivered",
+    "outs",
+    "sr",
+    "::",
+    100.0,
+    # player_math.py literals
+    "balls_faced",
+    "fours",
+    "sixes",
+    "boundaries",
+    "size",
+    "player_name must be a non-empty string.",
+    "balls_df is missing required column(s): ",
+    # team/venue_calculator.py literals
+    "defended",
+    "chased",
+    "bat1",
+    "team_color",
+    "team_tone",
+    "low_sample_warnings",
 ]
 
 

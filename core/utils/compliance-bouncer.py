@@ -131,7 +131,11 @@ def _literal_key(value: object) -> tuple[str, str] | None:
 def _iter_python_files(root: Path) -> Iterable[Path]:
     for path in root.rglob("*.py"):
         parts = {p.lower() for p in path.parts}
-        if "engines" in parts or "services" in parts:
+        if (
+            "engines" in parts
+            or "services" in parts
+            or "calculators" in parts
+        ):
             yield path
 
 
