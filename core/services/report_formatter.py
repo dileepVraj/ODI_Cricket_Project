@@ -11,6 +11,12 @@ from core.interfaces.team_types import (
     FormSequencePayload, 
     FormGuidePayload
 )
+from core.interfaces.team_types import (
+    ScenarioDiff,
+    ScenarioDiffRows,
+    ScenarioRow,
+    ScenarioRows,
+)
 
 
 class ReportFormatter:
@@ -338,3 +344,56 @@ class ReportFormatter:
 
             formatted.append(row)
         return formatted
+
+    @staticmethod
+    def format_scenario_rows(
+        diff_rows: ScenarioDiffRows,
+    ) -> ScenarioRows:
+        """Convert raw ScenarioDiff rows into display-ready ScenarioRow structures.
+
+        Applies tone ("success", "danger", "muted")
+        and direction text ("UP x.x", "DOWN x.x")
+        from raw numeric diff and advantage fields.
+        This is the only place in the codebase
+        permitted to produce these presentation tokens.
+        """
+
+        def _format_one(row: ScenarioDiff) -> ScenarioRow:
+            diff = row["diff"]
+            advantage = row["advantage"]
+
+            if advantage == "neutral" and diff == 0.0:
+                diff_text = "-" if (
+                    row["home_value"] is None
+                    or row["away_value"] is None
+                ) else "0.0"
+                return {
+                    "label": row["label"],
+                    "home_value": row["home_value"],
+                    "away_value": row["away_value"],
+                    "higher_better": row["higher_better"],
+                    "diff_text": diff_text,
+                    "diff_tone": "muted",
+                }
+
+            sign = "UP" if advantage == "home" else "DOWN"
+            tone = "success" if advantage == "home" else "danger"
+            return {
+                "label": row["label"],
+                "home_value": row["home_value"],
+                "away_value": row["away_value"],
+                "higher_better": row["higher_better"],
+                "diff_text": f"{sign} {diff:.1f}",
+                "diff_tone": tone,
+            }
+
+        return {
+            "bat_first": [
+                _format_one(r)
+                for r in diff_rows["bat_first"]
+            ],
+            "chasing": [
+                _format_one(r)
+                for r in diff_rows["chasing"]
+            ],
+        }

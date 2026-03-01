@@ -799,6 +799,7 @@ From this phase onward, **no code may be committed** unless `core/utils/complian
 ```
 PASS: 100% compliance
 ```
+This is GATE 6 in the six-gate sentinel sequence defined in section 4.3. Gates 1-5 must pass before GATE 6 is reached.
 
 Blocking command:
 ```powershell
@@ -824,13 +825,86 @@ This hook MUST be enabled. Commits made without the hook active are non-complian
 
 ### 4.3 Sentinel Order of Execution
 
-All skill-driven workflows MUST conclude with the `paradigm-sentinel` meta-skill. A task is considered compliant only if all three of the following are satisfied in order:
+Validation skills are mandatory gates — not optional. Every code-modifying task MUST pass all applicable gates in the order below before it is considered complete. Skipping any gate is a HARD FAIL.
 
-1. Primary skill checks pass (`boundary-sentinel`, `duckdb-lint-ops`).
-2. `paradigm-sentinel` pass is recorded.
-3. `compliance-bouncer.py` returns `PASS: 100%`.
+Skills are divided into two types:
+- **Guide skills** — instruct the agent how to perform a task correctly.
+- **Validation skills** — verify the work done is architecturally correct.
 
-The bouncer is a final gate — not a substitute for the skill gates.
+Only validation skills appear in this gate sequence.
+
+---
+
+**GATE 1 — boundary-sentinel**
+Trigger: any modification to `core/` files.
+```powershell
+python core/gen_ai/skills/validators/
+boundary-sentinel/scripts/run_sentinel.py
+--root . --paths core/
+```
+Pass condition: zero cross-layer import violations, zero `self.dal` usage outside DAL, zero `duckdb.connect()` outside `core/data_access.py`.
+
+---
+
+**GATE 2 — duckdb-lint-ops (DOD lint only)**
+Trigger: any modification to `calculators/`, `engines/`, or `services/`.
+```powershell
+python core/gen_ai/skills/validators/
+duckdb-lint-ops/scripts/run_lint.py --root .
+```
+Pass condition: zero `.iterrows()` / `.itertuples()` violations.
+
+---
+
+**GATE 3 — manifest-contract-verifier**
+Trigger: any modification to `manifest.py` or any engine file in `formats/`.
+```powershell
+python core/gen_ai/skills/validators/
+manifest-contract-verifier/scripts/
+run_verifier.py --root .
+--manifest formats/odi/manifest.py
+```
+Pass condition: all `engine_class` / `engine_method` contracts verified, all `required_context` fields map to valid engine parameters.
+
+---
+
+**GATE 4 — serialization-guard**
+Trigger: any modification to `api/serializers.py` or engine return types.
+```powershell
+python core/gen_ai/skills/validators/
+serialization-guard/scripts/run_lint.py
+--root . --paths api/serializers.py
+--max-record-rows 500
+```
+Pass condition: zero memory bombs, zero high-latency recursive serialization patterns.
+
+---
+
+**GATE 5 — paradigm-sentinel (meta-gate)**
+Trigger: always — runs after all primary gates pass.
+Follow instructions in:
+`core/gen_ai/skills/validators/
+paradigm-sentinel/SKILL.md`
+Pass condition: zero violations across all paradigm checks including boundary scan, DAL bypass probe, and bouncer gate.
+
+---
+
+**GATE 6 — compliance-bouncer (final gate)**
+Trigger: always — last step before every commit.
+```powershell
+python core/utils/compliance-bouncer.py
+--root .
+```
+Pass condition: `PASS: 100% compliance`.
+
+---
+
+**Dormant gates (activate when phase ships):**
+- `event-state-linter` — activate when `core/live/` is created in Phase 12. Insert as GATE 3.5 between manifest-verifier and serialization-guard.
+
+---
+
+The bouncer is a final gate — not a substitute for the skill gates. All six gates must pass in sequence. A task is COMPLETE only when GATE 6 returns `PASS: 100% compliance`.
 
 ---
 

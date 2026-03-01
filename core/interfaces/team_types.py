@@ -349,9 +349,26 @@ class ScenarioRow(TypedDict):
     diff_tone: str
 
 
+class ScenarioDiff(TypedDict):
+    label: str
+    home_value: float | None
+    away_value: float | None
+    higher_better: bool
+    diff: float
+    advantage: str
+
+
 class ScenarioRows(TypedDict):
     bat_first: list[ScenarioRow]
     chasing: list[ScenarioRow]
+
+
+class ScenarioDiffRows(TypedDict):
+    bat_first: list[ScenarioDiff]
+    chasing: list[ScenarioDiff]
+
+
+ScenarioDiffs: TypeAlias = list[ScenarioDiff]
 
 
 class BatFirstGlobalHabits(TypedDict):

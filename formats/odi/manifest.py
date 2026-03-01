@@ -523,6 +523,8 @@ CALCULATOR_LITERAL_REGISTRY = [
     "home_value",
     "away_value",
     "higher_better",
+    "diff",
+    "advantage",
     "diff_text",
     "diff_tone",
     # _scenario_row direction labels

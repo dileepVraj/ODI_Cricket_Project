@@ -465,7 +465,7 @@ def _global_habits(phase_df: pd.DataFrame, home_team: str | None, away_team: str
             "home_team_pp_runs": home_habits["chasing"]["pp_runs"], "away_team_pp_runs": away_habits["chasing"]["pp_runs"],
             "home_team_mid_wkts": home_habits["chasing"]["mid_wkts"], "away_team_mid_wkts": away_habits["chasing"]["mid_wkts"],
             "home_team_dth_wkts": home_habits["chasing"]["dth_wkts"], "away_team_dth_wkts": away_habits["chasing"]["dth_wkts"]},
-        "home": home_habits["rr"], "away": away_habits["rr"], "scenario_rows": build_phase_scenario_rows(home_habits, away_habits)
+        "home": home_habits["rr"], "away": away_habits["rr"], "scenario_rows": ReportFormatter.format_scenario_rows(build_phase_scenario_rows(home_habits, away_habits))
     })
 
 

@@ -9,6 +9,9 @@ import pandas as pd
 
 from core.interfaces.team_types import (
     PhasePayload,
+    ScenarioDiff,
+    ScenarioDiffRows,
+    ScenarioDiffs,
     ScenarioRow,
     ScenarioRows,
 )
@@ -344,20 +347,20 @@ def calculate_team_phase_habits(
     }
 
 
-def _scenario_row(
+def _scenario_diff(
     label: str,
     home_value: float | None,
     away_value: float | None,
     higher_better: bool,
-) -> ScenarioRow:
+) -> ScenarioDiff:
     if home_value is None or away_value is None:
         return {
             "label": label,
             "home_value": home_value,
             "away_value": away_value,
             "higher_better": higher_better,
-            "diff_text": "-",
-            "diff_tone": "muted",
+            "diff": 0.0,
+            "advantage": "neutral",
         }
 
     diff = round(float(home_value) - float(away_value), 1)
@@ -367,38 +370,39 @@ def _scenario_row(
             "home_value": home_value,
             "away_value": away_value,
             "higher_better": higher_better,
-            "diff_text": "0.0",
-            "diff_tone": "muted",
+            "diff": 0.0,
+            "advantage": "neutral",
         }
 
     positive_is_good = diff > 0 if higher_better else diff < 0
-    sign = "UP" if positive_is_good else "DOWN"
     return {
         "label": label,
         "home_value": home_value,
         "away_value": away_value,
         "higher_better": higher_better,
-        "diff_text": f"{sign} {abs(diff):.1f}",
-        "diff_tone": "success" if positive_is_good else "danger",
+        "diff": abs(diff),
+        "advantage": "home" if positive_is_good else "away",
     }
 
 
 def build_phase_scenario_rows(
     home_habits: Dict[str, Dict[str, float]],
     away_habits: Dict[str, Dict[str, float]],
-) -> ScenarioRows:
-    """Build UI scenario rows for bat-first and chasing comparisons."""
+) -> ScenarioDiffRows:
+    """Build raw numeric diff rows for bat-first and chasing comparisons.
+    Presentation formatting applied by ReportFormatter.format_scenario_rows().
+    """
     bat_first_rows = [
-        _scenario_row("Avg PP Runs", home_habits["bat_first"].get("pp_runs"), away_habits["bat_first"].get("pp_runs"), True),
-        _scenario_row("Avg PP Wkts", home_habits["bat_first"].get("pp_wkts"), away_habits["bat_first"].get("pp_wkts"), False),
-        _scenario_row("Avg Mid Runs", home_habits["bat_first"].get("mid_runs"), away_habits["bat_first"].get("mid_runs"), True),
-        _scenario_row("Avg Mid Wkts", home_habits["bat_first"].get("mid_wkts"), away_habits["bat_first"].get("mid_wkts"), False),
-        _scenario_row("Avg Death Runs", home_habits["bat_first"].get("dth_runs"), away_habits["bat_first"].get("dth_runs"), True),
-        _scenario_row("Avg Death Wkts", home_habits["bat_first"].get("dth_wkts"), away_habits["bat_first"].get("dth_wkts"), False),
+        _scenario_diff("Avg PP Runs", home_habits["bat_first"].get("pp_runs"), away_habits["bat_first"].get("pp_runs"), True),
+        _scenario_diff("Avg PP Wkts", home_habits["bat_first"].get("pp_wkts"), away_habits["bat_first"].get("pp_wkts"), False),
+        _scenario_diff("Avg Mid Runs", home_habits["bat_first"].get("mid_runs"), away_habits["bat_first"].get("mid_runs"), True),
+        _scenario_diff("Avg Mid Wkts", home_habits["bat_first"].get("mid_wkts"), away_habits["bat_first"].get("mid_wkts"), False),
+        _scenario_diff("Avg Death Runs", home_habits["bat_first"].get("dth_runs"), away_habits["bat_first"].get("dth_runs"), True),
+        _scenario_diff("Avg Death Wkts", home_habits["bat_first"].get("dth_wkts"), away_habits["bat_first"].get("dth_wkts"), False),
     ]
     chasing_rows = [
-        _scenario_row("Avg PP Score", home_habits["chasing"].get("pp_runs"), away_habits["chasing"].get("pp_runs"), True),
-        _scenario_row("Avg Mid Wkts", home_habits["chasing"].get("mid_wkts"), away_habits["chasing"].get("mid_wkts"), False),
-        _scenario_row("Avg Death Wkts", home_habits["chasing"].get("dth_wkts"), away_habits["chasing"].get("dth_wkts"), False),
+        _scenario_diff("Avg PP Score", home_habits["chasing"].get("pp_runs"), away_habits["chasing"].get("pp_runs"), True),
+        _scenario_diff("Avg Mid Wkts", home_habits["chasing"].get("mid_wkts"), away_habits["chasing"].get("mid_wkts"), False),
+        _scenario_diff("Avg Death Wkts", home_habits["chasing"].get("dth_wkts"), away_habits["chasing"].get("dth_wkts"), False),
     ]
     return {"bat_first": bat_first_rows, "chasing": chasing_rows}
