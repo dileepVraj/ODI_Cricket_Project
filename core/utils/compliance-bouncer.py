@@ -2,10 +2,25 @@
 """Phase 12 Compliance Bouncer.
 
 AST-based governance linter enforcing:
-- Zero-Literal
-- Anti-Any
-- I/O Air-Gap
-- Presentation Purity
+- ZERO_LITERAL: Hardcoded literals not
+  declared in manifest registries
+- ANTI_ANY: Any/object in type signatures
+- MISSING_RETURN_TYPE: Missing return
+  annotations
+- IO_AIR_GAP: File/OS I/O in engine
+  execute paths
+- PRESENTATION_PURITY: UI strings in
+  service layer (formatters exempt)
+- DOD_VIOLATION: Scalar loops
+  (.iterrows/.itertuples forbidden)
+- BOUNDARY_VIOLATION: Infrastructure
+  imports in Domain Core files
+- CONSTITUTIONAL_VISUAL_SILENCE: Visual
+  tokens in core/
+- CONSTITUTIONAL_TYPED_TRUTH: Deprecated
+  imports in engines and calculators
+- CONSTITUTIONAL_ANTI_GREASE:
+  Dict[str,Any]/object in signatures
 """
 
 from __future__ import annotations
@@ -33,7 +48,7 @@ RULE_CONST_VISUAL = "CONSTITUTIONAL_VISUAL_SILENCE"
 RULE_CONST_TYPED = "CONSTITUTIONAL_TYPED_TRUTH"
 RULE_CONST_GREASE = "CONSTITUTIONAL_ANTI_GREASE"
 
-FORBIDDEN_INFRASTRUCTURE_IMPORTS = {
+FORBIDDEN_INFRASTRUCTURE_IMPORTS: frozenset[str] = frozenset({
     "duckdb",
     "fastapi",
     "flask",
@@ -42,7 +57,7 @@ FORBIDDEN_INFRASTRUCTURE_IMPORTS = {
     "requests",
     "sqlalchemy",
     "aiohttp",
-}
+})
 
 UI_TOKENS = (
     "placeholder",
@@ -58,6 +73,13 @@ UI_TOKENS = (
     "pixel",
     "click",
     "html",
+    "n/a",
+    "dnb",
+    "bat form",
+    "bowl form",
+    "not out",
+    "no data",
+    "unavailable",
 )
 
 ALLOWED_TECHNICAL_STRINGS = {
@@ -75,14 +97,9 @@ VISUAL_SILENCE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("token_last_5", re.compile(r"\bLast" r"\s+5\b", re.IGNORECASE)),
 )
 
-DEPRECATED_SYMBOLS = {
+DEPRECATED_SYMBOLS: frozenset[str] = frozenset({
     "MatchIntelligenceData",
-}
-
-TYPED_TRUTH_IMPORT_PATTERN = re.compile(
-    r"^\s*from core\.interfaces\.team_interface import MatchIntelligenceData\s*$",
-    re.MULTILINE,
-)
+})
 
 ANTI_GREASE_SIGNATURE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
@@ -364,7 +381,11 @@ def _scan_file(
                         f"Literal {key[1]} is not declared in manifest.py",
                     )
 
-                if is_service_layer and isinstance(node.value, str):
+                if (
+                    is_service_layer
+                    and not _is_formatter_file(path)
+                    and isinstance(node.value, str)
+                ):
                     lower = node.value.lower()
                     if any(token in lower for token in UI_TOKENS):
                         _record(
@@ -386,6 +407,43 @@ def _scan_file(
                         node,
                         RULE_ANTI_ANY,
                         "Importing Any from typing is forbidden",
+                    )
+
+        if isinstance(node, ast.Attribute):
+            if node.attr in ("iterrows", "itertuples"):
+                _record(
+                    violations,
+                    path,
+                    lines,
+                    node,
+                    RULE_DOD,
+                    f"Scalar loop detected: "
+                    f".{node.attr}() is forbidden. "
+                    f"Use vectorized operations.",
+                )
+
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                root_mod = alias.name.split(".")[0]
+                if root_mod in FORBIDDEN_INFRASTRUCTURE_IMPORTS:
+                    _record(
+                        violations, path, lines, node,
+                        RULE_BOUNDARY,
+                        f"Infrastructure import "
+                        f"'{alias.name}' forbidden "
+                        f"in Domain Core files.",
+                    )
+
+        if isinstance(node, ast.ImportFrom):
+            if node.module is not None:
+                root_mod = node.module.split(".")[0]
+                if root_mod in FORBIDDEN_INFRASTRUCTURE_IMPORTS:
+                    _record(
+                        violations, path, lines, node,
+                        RULE_BOUNDARY,
+                        f"Infrastructure import from "
+                        f"'{node.module}' forbidden "
+                        f"in Domain Core files.",
                     )
 
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -502,26 +560,54 @@ def _scan_constitutional(root: Path, scoped_paths: list[Path] | None = None) -> 
                     f"Visual Silence token detected ({token_name})",
                 )
 
-    team_engine_path = (root / "formats" / "odi" / "engines" / "team_engine.py").resolve()
-    should_scan_team_engine = (
-        team_engine_path.exists()
-        and (scoped_set is None or team_engine_path in scoped_set)
-    )
-    if should_scan_team_engine:
-        src = _read_text(team_engine_path)
-        lines = src.splitlines()
-        for match in TYPED_TRUTH_IMPORT_PATTERN.finditer(src):
-            _record_regex_match(
-                violations,
-                team_engine_path,
-                lines,
-                src,
-                match,
-                RULE_CONST_TYPED,
-                "Forbidden legacy import detected for MatchIntelligenceData",
-            )
-
     signature_scan_files = sorted(scoped_set) if scoped_set is not None else sorted(_iter_python_files(root))
+    for path in signature_scan_files:
+        if path.suffix != ".py":
+            continue
+        tree_tt, _, _ = _safe_parse(path)
+        if tree_tt is None:
+            continue
+        path_parts_tt = {p.lower() for p in path.parts}
+        lines_tt = _read_text(path).splitlines()
+        for node in ast.walk(tree_tt):
+            if not isinstance(node, ast.ImportFrom):
+                continue
+            if node.module is None:
+                continue
+            module_parts = set(node.module.split("."))
+            deprecated_segments = {
+                "legacy", "old", "deprecated",
+                "v1", "compat",
+            }
+            if module_parts & deprecated_segments:
+                _record(
+                    violations, path, lines_tt, node,
+                    RULE_CONST_TYPED,
+                    f"Import from deprecated module "
+                    f"'{node.module}' detected.",
+                )
+            for alias in node.names:
+                if alias.name in DEPRECATED_SYMBOLS:
+                    _record(
+                        violations, path, lines_tt, node,
+                        RULE_CONST_TYPED,
+                        f"Deprecated symbol "
+                        f"'{alias.name}' imported "
+                        f"from '{node.module}'.",
+                    )
+            if (
+                "engines" in path_parts_tt
+                or "calculators" in path_parts_tt
+            ):
+                if "engines" in module_parts:
+                    _record(
+                        violations, path, lines_tt, node,
+                        RULE_CONST_TYPED,
+                        f"Cross-engine import: "
+                        f"'{node.module}'. Engines must "
+                        f"import from core/interfaces/ only.",
+                    )
+
     for path in signature_scan_files:
         if path.suffix != ".py":
             continue
