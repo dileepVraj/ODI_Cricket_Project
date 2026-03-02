@@ -1,11 +1,27 @@
 # System Architecture & Engineering Standards
+# BACKEND AGENT FILE
 
 **Last Updated:** 2026-03-02
 **Version:** 2.2
-**Target Audience:** Human Architects & Autonomous AI Agents.
-**Core Directive:** "Assume data is dirty, boundaries are strict, and trust is zero."
+**Target Audience:** Autonomous AI Agents 
+— Backend Tasks Only.
+**Core Directive:** "Assume data is dirty, 
+boundaries are strict, and trust is zero."
 
-This document is the **absolute and non-negotiable source of truth** for all code generation, refactoring, and architectural decisions within the Multi-format Cricket Algo-Trading Platform. Every rule in this document is a hard constraint. AI agents MUST parse this document in full before executing any task. Partial compliance is non-compliance. When in doubt, do less — not more.
+This document is the non-negotiable source 
+of truth for all backend code generation, 
+refactoring, and architectural decisions. 
+Every rule is a hard constraint. Parse this 
+document in full before executing any task. 
+Partial compliance is non-compliance. When 
+in doubt, do less — not more.
+
+**SCOPE:** This file covers backend tasks 
+(Python, FastAPI, DuckDB, engines, 
+calculators, services, DAL). For frontend 
+tasks use ENGINEERING_STANDARDS_FRONTEND.md. 
+The authoritative full document is 
+ENGINEERING_STANDARDS_CORE.md.
 
 ---
 
@@ -362,8 +378,7 @@ ws.onmessage = (event) => {
 
 ---
 
-
-## PART 1: ARCHITECTURAL TOPOLOGY & THE 6 PARADIGMS
+## PART 1: SYSTEM TOPOLOGY & PARADIGMS
 
 The application follows a strict Hexagonal / Port-and-Adapter architecture. The layer roles defined in Part 0 map to the following directory structure in the current project. Layer boundaries are enforced by the compliance bouncer and by code review. Agents MUST NOT violate layer boundaries under any circumstances.
 
@@ -458,9 +473,11 @@ Scraper (every 10s)
 
 ---
 
-## PART 2: THE CODING CONSTITUTION (Tactical Execution)
+## PART 2: THE CODING CONSTITUTION 
+(Tactical Execution — Backend)
 
-Every rule in this section is a hard constraint. "I didn't know" is not an acceptable explanation for a violation.
+Every rule in this section is a hard 
+constraint.
 
 ---
 
@@ -500,22 +517,6 @@ def run_simulation(self) -> SimulationResult:
 **7. Ephemeral Branches:** Do not create `temp_test.py`, `debug_script.py`, or `scratch.py` in the main codebase. All experimental code MUST reside in a git branch and MUST be deleted post-merge. The main branch is always production-ready.
 
 **8. Module Naming:** All Python module filenames MUST use `snake_case`. Hyphens in filenames break Python import conventions and create friction across hooks and scripts. Any hyphenated filename MUST be renamed before the module is extended.
-
----
-
-### 2.2 Tactical Frontend Execution Rules
-
-**1. The API Wrapper Mandate:** Never write raw `fetch()` calls inside React components. AI agents MUST use the standardised API wrappers inside `frontend/lib/api.ts` (e.g., `executeFunction()`). This ensures consistent error handling, auth headers, and base URL management across all API calls.
-
-**2. Strict Tailwind CSS:** Styling MUST be handled exclusively by Tailwind CSS utility classes. AI agents MUST NEVER use React inline `style={{ ... }}` attributes unless dynamically calculating a progress bar width or an absolute chart coordinate — where the value is computed at runtime and cannot be expressed as a static class.
-
-**3. Global State Purity:** Rely solely on React Context for global state. AI agents MUST NOT introduce Redux, Zustand, MobX, or any other state management library. All global state MUST be managed inside `frontend/lib/context.tsx` (`AppProvider`) and accessed via `useAppContext()`.
-
-**4. Component Modularity:** UI files MUST be strictly partitioned. AI agents MUST NOT create monolithic React components exceeding 300 lines. Complex UI elements MUST be decomposed into focused sub-components.
-
-**5. No Domain Logic in the Frontend:** React components MUST NOT contain cricket domain logic, statistical formulas, or format-specific conditional branches. All domain decisions are made in Python and delivered as pre-computed values in the API response.
-
-**6. TypeScript Strict Mode:** All frontend code MUST be written in TypeScript. The use of `any` as a type annotation in TypeScript is forbidden. Every API response type MUST be defined in `frontend/lib/types.ts` and used consistently.
 
 ---
 
@@ -989,15 +990,25 @@ of bouncer output. The task is not complete.
 
 ---
 
-### 5.4 Agent Context Requirement (Session Startup)
+### 5.4 Agent Context Requirement 
+(Session Startup)
 
-Every AI agent session that involves code changes MUST begin with the following three documents attached or pasted into the context window:
+Every AI agent session that involves backend 
+code changes MUST begin with:
 
-1. This engineering standards document (full text) — `docs/guides/engineering_standards.md`
-2. The current technical audit report — `docs/guides/TECHNICAL_AUDIT_REPORT.md`
-3. The AI memory log — `docs/ai/AI_MEMORY.md`
+1. This file — 
+   docs/guides/
+   ENGINEERING_STANDARDS_BACKEND.md
+2. Session state — 
+   docs/ai/SESSION_STATE.md
+3. Technical audit report (architecture 
+   tasks only) — 
+   docs/guides/TECHNICAL_AUDIT_REPORT.md
 
-An agent that begins a task without these three documents has insufficient context to make safe architectural decisions. Any task started without this context MUST be restarted.
+An agent that begins a task without items 
+1 and 2 has insufficient context. Any task 
+started without this context MUST be 
+restarted.
 
 ---
 
@@ -1094,5 +1105,9 @@ decision.
 
 ---
 
-*End of Document — Version 2.2 — Last Updated: 2026-03-02*
-*Any modification to this document requires architect approval and a version increment.*
+*End of Document — BACKEND AGENT FILE — 
+Version 2.2 — Last Updated: 2026-03-02*
+*Authoritative source: 
+ENGINEERING_STANDARDS_CORE.md*
+*Any modification requires updating CORE 
+first, then propagating to this file.*
