@@ -1,7 +1,7 @@
 # System Architecture & Engineering Standards
 
-**Last Updated:** 2026-02-27
-**Version:** 2.1
+**Last Updated:** 2026-03-02
+**Version:** 2.2
 **Target Audience:** Human Architects & Autonomous AI Agents.
 **Core Directive:** "Assume data is dirty, boundaries are strict, and trust is zero."
 
@@ -28,7 +28,7 @@ Before applying any mandate, you must first classify the file you are working on
 | Reading from or writing to the database | **Data Access** | Mandates 2, 4 |
 | Rendering UI components, displaying data | **UI Adapter** | Mandate 4 |
 | Extracting, transforming, or loading data into the database | **ETL Infrastructure** | Mandate 4 |
-| Managing live match state, scraping, broadcasting live updates | **Live Layer** | Mandates 5, 6, 7 |
+| Managing live match state, scraping, broadcasting live updates | **Live Layer** | Mandates 5, 6 |
 
 **A file's layer role is determined by what it does — not where it lives.**
 
@@ -362,55 +362,6 @@ ws.onmessage = (event) => {
 
 ---
 
-### Mandate 7: Numba AOT Warm-Up (JIT Tax Elimination)
-
-**APPLIES TO:** Any file that defines a Numba-decorated function (`@numba.jit`, `@numba.njit`, `@numba.vectorize`), and the application startup file that manages the FastAPI lifespan event.
-
-**PRINCIPLE:**
-Numba compiles Python to machine code on the first call to a decorated function. This is called JIT (Just-In-Time) compilation. The compilation happens once and is then cached for the lifetime of the process — but the first call pays a 5 to 15 second CPU spike as the compiler runs. On the Ryzen 5 3500U, this spike temporarily saturates all cores at 100%.
-
-If this compilation fires during a user request — especially during a live match session when the scraper is simultaneously running — the result is a frozen UI, a delayed live feed, and a potentially missed trading signal.
-
-The solution is AOT (Ahead-of-Time) warm-up: call every Numba function once with a minimal synthetic input during application startup, before any user can send a request. The compilation happens once at boot time, invisibly, at a moment when no user is waiting.
-
-**The warm-up contract:**
-Every `@numba.jit` or `@numba.njit` decorated function MUST be registered in the startup warm-up module and called once during the FastAPI lifespan startup event. The warm-up call MUST use the same dtypes (e.g., `np.float32`) that the function will receive in production — otherwise Numba will recompile on the first real call anyway, defeating the purpose.
-
-**VIOLATIONS — apply to any file with a Numba-decorated function:**
-```python
-# VIOLATION — Numba function defined but never pre-warmed at startup
-@numba.njit
-def run_monte_carlo(
-    balls: np.ndarray, n_simulations: int
-) -> np.ndarray:
-    ...
-# If this is not called during lifespan startup, the first user
-# click during a live session pays the compilation cost.
-
-# CORRECT — registered in the warm-up module
-# In core/simulations/warm_up.py:
-def warm_up_all_simulations() -> None:
-    """
-    Forces Numba JIT compilation for all decorated functions at startup.
-    Called once during FastAPI lifespan. NEVER called during a request.
-    Uses float32 synthetic inputs to match production dtypes exactly.
-    Add every new @njit function here when it is created.
-    """
-    synthetic = np.zeros(10, dtype=np.float32)
-    _ = run_monte_carlo(synthetic, n_simulations=10)
-
-# In api/main.py lifespan startup event:
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    initialize_pool()             # load engines and DataFrames
-    warm_up_all_simulations()     # pre-compile all Numba functions
-    yield
-    # shutdown logic here
-```
-
-**HARD STOP:** Any `@numba.jit` or `@numba.njit` decorated function that is not registered in `warm_up_all_simulations()` and not called during the lifespan startup event is a Hard Fail. Register it before the task is marked complete.
-
----
 
 ## PART 1: ARCHITECTURAL TOPOLOGY & THE 6 PARADIGMS
 
@@ -808,11 +759,23 @@ python core/utils/compliance-bouncer.py --root .
 
 A single violation is sufficient to block the commit. Fix the violation. Re-run the bouncer. Only then proceed.
 
+**What the bouncer enforces (10 rules):**
+- `ZERO_LITERAL` — hardcoded literals not declared in manifest registries
+- `ANTI_ANY` — `Any` or `object` in type signatures
+- `MISSING_RETURN_TYPE` — missing return annotations on functions
+- `IO_AIR_GAP` — file or OS I/O inside engine execute paths
+- `PRESENTATION_PURITY` — UI strings in service layer (formatters are exempt)
+- `DOD_VIOLATION` — scalar loops (`.iterrows()` / `.itertuples()` forbidden)
+- `BOUNDARY_VIOLATION` — infrastructure imports in Domain Core files
+- `CONSTITUTIONAL_VISUAL_SILENCE` — visual tokens inside `core/`
+- `CONSTITUTIONAL_TYPED_TRUTH` — deprecated or legacy imports in engines and calculators
+- `CONSTITUTIONAL_ANTI_GREASE` — `Dict[str, Any]` or `object` in signatures
+
 ---
 
 ### 4.2 Git Commit Enforcement (Local)
 
-The repository includes `.githooks/pre-commit` and `.githooks/pre-commit.ps1` to enforce the compliance gate at commit time.
+The repository includes `.githooks/pre-commit` to enforce the compliance gate at commit time.
 
 Enable once per clone:
 ```powershell
@@ -849,7 +812,7 @@ Pass condition: zero cross-layer import violations, zero `self.dal` usage outsid
 **GATE 2 — duckdb-lint-ops (DOD lint only)**
 Trigger: any modification to `calculators/`, `engines/`, or `services/`.
 ```powershell
-python core/gen_ai/skills/validators/
+python core/gen_ai/skills/guides/
 duckdb-lint-ops/scripts/run_lint.py --root .
 ```
 Pass condition: zero `.iterrows()` / `.itertuples()` violations.
@@ -1031,7 +994,7 @@ of bouncer output. The task is not complete.
 Every AI agent session that involves code changes MUST begin with the following three documents attached or pasted into the context window:
 
 1. This engineering standards document (full text) — `docs/guides/engineering_standards.md`
-2. The current technical audit report — `TECHNICAL_AUDIT_REPORT.md`
+2. The current technical audit report — `docs/guides/TECHNICAL_AUDIT_REPORT.md`
 3. The AI memory log — `docs/ai/AI_MEMORY.md`
 
 An agent that begins a task without these three documents has insufficient context to make safe architectural decisions. Any task started without this context MUST be restarted.
@@ -1131,5 +1094,5 @@ decision.
 
 ---
 
-*End of Document — Version 2.1 — Last Updated: 2026-02-27*
+*End of Document — Version 2.2 — Last Updated: 2026-03-02*
 *Any modification to this document requires architect approval and a version increment.*
