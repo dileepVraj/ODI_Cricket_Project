@@ -1,4 +1,4 @@
-# AGENTS.MD — Governing Law for AI Agents (Codex CLI)
+# GEMINI.MD — Governing Law for AI Agents (Gemini / Antigravity IDE)
 
 **Version:** 2.0
 **Last Updated:** 2026-03-03
@@ -175,6 +175,11 @@ Modifying a registered file without explicit instruction or a completed stop-sta
 - If modifying a single function, output only that function unless instructed otherwise.
 - If modifying multiple files, ensure they are updated in a single consistent state.
 
+### Defensive Data
+- Always check `if col in df.columns` before accessing any column.
+- Never assume a DataFrame has rows. Guard against empty DataFrames before calculations.
+- Never assume a player, team, or venue exists in a lookup. Use `.get()` with a safe default.
+
 ### Filesystem Integrity Rules (Hard Prohibitions)
 
 These are non-negotiable. Violation of any rule below is an immediate 
@@ -218,22 +223,35 @@ as CRITICAL DEVIATION before doing anything else.
 
 ---
 
-## PART 6: DEFINITION OF DONE
+## PART 6: SCOPE BOUNDARIES FOR GEMINI TASKS
+
+Gemini is used for: document changes, boilerplate code, small bug fixes, frontend component work.
+Codex CLI handles: complex refactors, engine-layer work, multi-file architectural changes.
+
+**For Gemini tasks specifically:**
+- If the task involves engine refactoring across multiple files → flag it. This is Codex territory.
+- If the task touches `formats/` engine files as primary work → flag it. This is Codex territory.
+- Document-only tasks (`.md` files) → do not run gates, do not run bouncer. Document changes only.
+- Boilerplate and frontend tasks → run Gate 5 and Gate 6 minimum. Run Gates 1–4 if any `core/` or `api/` files are touched.
+
+---
+
+## PART 7: DEFINITION OF DONE
 
 A task is NOT complete until all of the following are true:
 
 1. All triggered gate results are recorded (gate name, path, pass/fail).
-2. Gate 5 (paradigm-sentinel) result is recorded.
-3. Gate 6 (compliance-bouncer) output is `PASS: 100% compliance`.
+2. Gate 5 (paradigm-sentinel) result is recorded — for any code change task.
+3. Gate 6 (compliance-bouncer) output is `PASS: 100% compliance` — for any code change task.
 4. Post-change bouncer output matches or improves on baseline bouncer output.
 5. No registered file was modified without explicit instruction or stop-state-trace-confirm.
-6. Report is submitted in the required format (see Part 8).
+6. Report is submitted in the required format (see Part 9).
 
-A passing bouncer with missing gate results is a FAIL. All gates must be present.
+Document-only tasks: steps 2–4 are not required. Steps 5–6 still apply.
 
 ---
 
-## PART 7: REPORT FORMAT
+## PART 8: REPORT FORMAT
 
 Every completed task must produce a report in this exact format. Max 30 lines.
 
@@ -242,17 +260,18 @@ TASK REPORT
 ===========
 Task: [one-line description]
 Date: [date]
+Agent: Gemini
 
-Baseline Bouncer: [PASS/FAIL — N violations]
-Post-Task Bouncer: [PASS/FAIL — N violations — matches baseline: YES/NO]
+Baseline Bouncer: [PASS/FAIL — N violations / DOC TASK — not run]
+Post-Task Bouncer: [PASS/FAIL — N violations — matches baseline: YES/NO / DOC TASK — not run]
 
 Gates Triggered:
 - GATE 1 (boundary-sentinel): [TRIGGERED/SKIPPED] — [PASS/FAIL]
 - GATE 2 (duckdb-lint-ops): [TRIGGERED/SKIPPED] — [PASS/FAIL]
 - GATE 3 (manifest-contract-verifier): [TRIGGERED/SKIPPED] — [PASS/FAIL]
 - GATE 4 (serialization-guard): [TRIGGERED/SKIPPED] — [PASS/FAIL]
-- GATE 5 (paradigm-sentinel): TRIGGERED — [PASS/FAIL]
-- GATE 6 (compliance-bouncer): TRIGGERED — [PASS/FAIL]
+- GATE 5 (paradigm-sentinel): [TRIGGERED/SKIPPED] — [PASS/FAIL]
+- GATE 6 (compliance-bouncer): [TRIGGERED/SKIPPED] — [PASS/FAIL]
 
 Files Modified: [list]
 Registered Files Touched: [list or NONE]
@@ -267,7 +286,7 @@ Status: [COMPLETE / BLOCKED — reason]
 
 ---
 
-## PART 8: HARD PROHIBITIONS
+## PART 9: HARD PROHIBITIONS
 
 These are sins. Any occurrence is an immediate hard fail.
 
@@ -288,6 +307,6 @@ These are sins. Any occurrence is an immediate hard fail.
 
 ---
 
-*End of AGENTS.md — Version 2.0 — 2026-03-03*
+*End of GEMINI.md — Version 2.0 — 2026-03-03*
 *Source of truth for current project state: docs/ai/SESSION_STATE.md*
 *Authoritative standards: docs/guides/ENGINEERING_STANDARDS_CORE.md (human) / BACKEND.md or FRONTEND.md (agents)*
