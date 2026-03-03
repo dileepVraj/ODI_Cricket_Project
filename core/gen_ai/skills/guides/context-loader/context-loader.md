@@ -58,3 +58,15 @@ Files attached: [list]
 Phase: [phase]
 Ready to proceed.
 ```
+
+## 6. Read Discipline
+
+Once a file has been read and values extracted, do NOT re-read it.
+Work from extracted values only for the remainder of the task.
+
+Extract once. Reference the extraction.
+
+Violations:
+- Reading SESSION_STATE.md more than once per session
+- Reading standards files more than once per session
+- Re-opening any file to "verify" something already extracted
