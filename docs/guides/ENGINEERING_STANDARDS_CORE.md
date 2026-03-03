@@ -1,7 +1,7 @@
 # System Architecture & Engineering Standards
 
-**Last Updated:** 2026-03-02
-**Version:** 2.2
+**Last Updated:** 2026-03-03
+**Version:** 2.3
 **Target Audience:** Human Architects 
 (authoritative source — do not attach 
 directly to agents).
@@ -530,6 +530,47 @@ def run_simulation(self) -> SimulationResult:
 
 **6. TypeScript Strict Mode:** All frontend code MUST be written in TypeScript. The use of `any` as a type annotation in TypeScript is forbidden. Every API response type MUST be defined in `frontend/lib/types.ts` and used consistently.
 
+--- Full Frontend Rules ---
+The complete frontend rule set is documented in
+ENGINEERING_STANDARDS_FRONTEND.md.
+CORE carries the 6 universal rules above.
+The FRONTEND file extends these with:
+
+2.2A — Architectural Rules (15 rules)
+       Boundary enforcement, manifest contract,
+       state discipline, error handling, navigation,
+       async cancellation, parameter construction,
+       format agnosticism, no polling.
+
+2.2B — UI Implementation Standards (10 rules)
+       CSS token system, named utility classes,
+       4-tier badge semantics, icon library,
+       font system, animation discipline,
+       renderer pattern, empty states,
+       layout component pattern, directory contract.
+
+2.2C — Performance Standards (3 rules)
+       Lazy loading renderers, memoisation
+       discipline, no inline object/array props.
+
+2.2D — Resilience Standards (3 rules)
+       Error boundary isolation, error boundary
+       placement, backend type sync contract.
+
+2.2E — Accessibility Standards (3 rules)
+       Interactive element labels, keyboard
+       navigation, loading and error announcements.
+
+2.2F — Testing Standards (4 rules)
+       Testing stack (Vitest + RTL), what must
+       be tested, what must not be tested,
+       no hardcoded format keys in test fixtures.
+
+Any modification to frontend rules requires
+updating ENGINEERING_STANDARDS_FRONTEND.md first,
+then propagating summary changes to this block.
+---
+
 ---
 
 ### 2.3 Memory Management Standards (4 GB Hard Budget)
@@ -1004,13 +1045,21 @@ of bouncer output. The task is not complete.
 
 ### 5.4 Agent Context Requirement (Session Startup)
 
-Every AI agent session that involves code changes MUST begin with the following three documents attached or pasted into the context window:
+Every AI agent session that involves code changes MUST begin with the following context pipeline:
 
-1. This engineering standards document (full text) — `docs/guides/engineering_standards.md`
-2. The current technical audit report — `docs/guides/TECHNICAL_AUDIT_REPORT.md`
-3. The AI memory log — `docs/ai/AI_MEMORY.md`
+Tier 1 — Always attach (scoped agent file):
+  Backend tasks: ENGINEERING_STANDARDS_BACKEND.md
+  Frontend tasks: ENGINEERING_STANDARDS_FRONTEND.md
 
-An agent that begins a task without these three documents has insufficient context to make safe architectural decisions. Any task started without this context MUST be restarted.
+Tier 2 — Always attach:
+  docs/ai/SESSION_STATE.md
+
+Tier 3 — Architecture tasks only:
+  docs/guides/TECHNICAL_AUDIT_REPORT.md
+
+Never attach AI_MEMORY.md — deprecated.
+
+An agent that begins a task without the correct Tier 1 and Tier 2 context has insufficient context to make safe architectural decisions. Any task started without this context MUST be restarted.
 
 ---
 
@@ -1108,7 +1157,7 @@ decision.
 ---
 
 *End of Document — CORE (Authoritative) — 
-Version 2.2 — Last Updated: 2026-03-02*
+Version 2.3 — Last Updated: 2026-03-03*
 *This is the source of truth. Any 
 modification requires architect approval 
 and a version increment. After modifying, 

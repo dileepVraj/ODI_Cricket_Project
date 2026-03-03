@@ -389,22 +389,214 @@ constraint.
 
 ---
 
-### 2.2 Tactical Frontend Execution Rules
+### 2.2A Tactical Frontend Execution Rules
 
-**1. The API Wrapper Mandate:** Never write raw `fetch()` calls inside React components. AI agents MUST use the standardised API wrappers inside `frontend/lib/api.ts` (e.g., `executeFunction()`). This ensures consistent error handling, auth headers, and base URL management across all API calls.
+**1. The API Wrapper Mandate:** 
+All communication with the backend MUST flow through the standardized wrappers in `frontend/lib/api.ts` (e.g., `executeFunction()`). Direct use of the raw `fetch()` API or third-party libraries (Axios, etc.) inside React components is strictly forbidden. This ensures centralized handling of origin prefixes, headers, and error parsing.
+**Hard Fail:** Any `fetch()` call found outside `lib/api.ts`.
 
-**2. Strict Tailwind CSS:** Styling MUST be handled exclusively by Tailwind CSS utility classes. AI agents MUST NEVER use React inline `style={{ ... }}` attributes unless dynamically calculating a progress bar width or an absolute chart coordinate — where the value is computed at runtime and cannot be expressed as a static class.
+**2. Strict Tailwind CSS:** 
+All styling MUST be implemented using Tailwind CSS utility classes. The use of React inline `style={{}}` attributes is forbidden except for values that are computed at runtime (e.g., dynamic chart coordinates or progress bar widths). Use of arbitrary value syntax (e.g., `[padding:24px]`) is permitted and encouraged for high-precision layouts to avoid custom CSS bloat.
 
-**3. Global State Purity:** Rely solely on React Context for global state. AI agents MUST NOT introduce Redux, Zustand, MobX, or any other state management library. All global state MUST be managed inside `frontend/lib/context.tsx` (`AppProvider`) and accessed via `useAppContext()`.
+**3. Global App State Purity:** 
+The application MUST use React Context (`useAppContext()` from `lib/context.tsx`) as the exclusive mechanism for global state. Introduction of external state management libraries (Redux, Zustand, MobX, Jotai) is forbidden unless explicitly approved by the architect. Local Component State (`useState`) is permitted ONLY for concerns that are strictly local to the UI (e.g., `activeTab`, `isExpanded`, `isLoading`).
 
-**4. Component Modularity:** UI files MUST be strictly partitioned. AI agents MUST NOT create monolithic React components exceeding 300 lines. Complex UI elements MUST be decomposed into focused sub-components.
+**4. Component Modularity & SRP:** 
+Individual React components MUST NOT exceed a 300-line limit. If a component exceeds this threshold, it MUST be decomposed into focused sub-components. Follow the "Describe without and" test: if you cannot describe a component's responsibility without using the word "and", it violates the Single Responsibility Principle. Components MUST be placed in the appropriate `components/` subdirectory based on their role (`layout/`, `renderers/`, `inputs/`).
 
-**5. No Domain Logic in the Frontend:** React components MUST NOT contain cricket domain logic, statistical formulas, or format-specific conditional branches. All domain decisions are made in Python and delivered as pre-computed values in the API response.
+**5. No Domain Logic (Pre-Computed Payload Mandate):** 
+React components MUST remain "Visual-Deaf." They are forbidden from performing cricket domain logic, statistical formulas, or deriving UI states from raw numbers. No `val.match()` for string parsing, no `if (n < 3)` for sample size checks, and no badge colour derivation. All such decisions MUST be pre-computed by the Python backend and delivered as explicit flags or tagged primitives.
+**Hard Stop:** Any React component performing arithmetic or statistical comparison on API response data to generate UI tokens is a Hard Fail.
 
-**6. TypeScript Strict Mode:** All frontend code MUST be written in TypeScript. The use of `any` as a type annotation in TypeScript is forbidden. Every API response type MUST be defined in `frontend/lib/types.ts` and used consistently.
+**6. TypeScript Strict Mode:** 
+All frontend code MUST be written in strict TypeScript. The use of `any` or `unknown` as a final type for domain data is forbidden. All API response shapes MUST be defined as interfaces in `lib/api.ts` or `lib/types.ts`. Favor type guards (e.g., `isExtraInputFieldConfig`) or dedicated parser functions (e.g., `parsePositiveInteger`) over inline `as` casts to maintain type safety.
+
+**7. Manifest-Driven Rendering:** 
+The UI MUST be a dynamic reflection of the backend manifest. Hardcoding function keys, category keys, or output type names in React components is forbidden. If a feature or category is not declared in the active format's manifest, it MUST NOT be rendered. The UI acts as a generic dispatcher for manifest-registered capabilities.
+**Hard Stop:** Any React component that hardcodes a specific function key (e.g., `venue_intel`) to trigger a unique layout not defined by the manifest-contract is a Hard Fail.
+
+**8. Standardized Error Handling:** 
+Every call to `executeFunction()` MUST be wrapped in a `try/catch` block. Errors MUST be processed by a dedicated formatter (e.g., `formatExecuteError`) to provide user-friendly feedback. React components are forbidden from rendering raw `err.message` or technical stack traces from the backend. 
+
+**9. Hash-Based Navigation Pattern:** 
+Switching between analysis categories MUST be handled via hash-based deep linking using `window.history.replaceState()`. This allows users to bookmark specific analysis screens without polluting the browser's back-stack or triggering full page reloads. Avoid using Next.js `router.push()` for internal view transitions that do not change the base page.
+**Alignment:** URL state management and context sync pattern — bidirectional sync with window.history.replaceState() as established in frontend/lib/context.tsx. No back-stack pollution.
+
+**10. Async Effect Cancellation:** 
+Every `useEffect` hook performing asynchronous operations (API calls) MUST implement a cancellation guard (e.g., `let cancelled = false`). The cleanup function MUST set this guard to `true`. Every state setter within the async path MUST check the guard before execution to prevent memory leaks and race conditions on unmounted components.
+
+**11. Manifest-Driven Input Rendering:** 
+Optional UI elements like the `SquadBuilder` or `ExtraInputRenderer` MUST be rendered conditionally based on the active function's `extra_inputs` definition in the manifest. Configuration for these builders (e.g., `maxPlayers`) MUST be resolved via dedicated helper functions (e.g., `resolveSquadBuilderConfig`) rather than hardcoded defaults in the UI layer.
+
+**12. Execute Parameter Construction:** 
+Gathering parameters for an API call MUST be handled by a dedicated builder function (e.g., `buildExecuteParams`). Constructing large parameter dictionaries inline inside event handlers or `useEffect` hooks is forbidden as it obscures the data contract and complicates testing.
+
+**13. Format String Agnosticism:** 
+React components MUST NOT contain hardcoded format strings (e.g., `"odi"`, `"t20i"`). All format-specific context MUST be derived from the `activeFormat` and `manifest` provided by `useAppContext()`. UI labels, icons, and rules MUST flow from the manifest rather than local constants.
+
+**14. No Polling on Execute Endpoints:** 
+Implementing live updates by calling standard analytical endpoints (e.g., `/execute/`) on a timer (`setInterval`/`setTimeout`) is a violation of the system architecture. Historical analysis endpoints are high-latency and not orchestrated for live state.
+**Hard Stop:** Any `setInterval` or `setTimeout` implementation found calling the `/execute/` endpoint is a Critical Architecture Violation.
+
+**15. No Unapproved State Libraries:** 
+The use of `useAppContext()` and the established `lib/context.tsx` pattern is the non-negotiable standard for global state. Introduction of any new state management library (Zustand, Redux, etc.) is strictly forbidden without explicit written approval from the Human Architect and a corresponding version increment in `ENGINEERING_STANDARDS_CORE.md`.
+**Alignment:** Mandate 4 SRP (one state mechanism, one reason to change) + Paradigm 3 (no tight coupling to specific libraries)
 
 ---
 
+### 2.2B UI Implementation Standards
+
+**1. CSS VARIABLE SYSTEM — Mandatory Token Usage:**
+All styling for colours, spacing, radius, shadows, and transitions MUST utilize the CSS custom properties defined in `frontend/app/globals.css`. Raw hex values, hardcoded pixel values for non-intrinsic spacing, and raw `rgba()` colours that duplicate existing design tokens are strictly forbidden. UI components MUST be theme-aware by relying on these tokens.
+- **Available Tokens:** `--bg-*`, `--accent-*`, `--tier-*`, `--text-*`, `--border-*`, `--glass-*`, `--shadow-*`, `--radius-*`, `--transition-*`, `--sidebar-width`, `--topbar-height`, `--context-bar-height`.
+- **Grounded in:** `frontend/app/globals.css` (:root block).
+**Hard Fail:** Any raw hex colour (e.g., `#3B82F6`) or duplicated `rgba()` found in a component that has an equivalent token.
+
+**2. NAMED UTILITY CLASSES — Use Before Inventing:**
+The design system provides a set of high-level named utility classes in `globals.css` that encapsulate complex styles (glassmorphism, gradients, component primitives). These MUST be used as the primary styling mechanism before writing arbitrary Tailwind utility strings or custom CSS.
+- **Available Classes:** `glass-card`, `glass-card-hover`, `gradient-text`, `gradient-text-purple`, `btn-primary`, `btn-ghost`, `badge`, `badge-elite`, `badge-strong`, `badge-caution`, `badge-danger`, `format-tab`, `sidebar-item`, `sidebar-group-label`, `context-input`, `fn-count`, `skeleton`, `animate-fade-in`, `animate-slide-in`, `animate-spin`, `animate-pulse-glow`.
+- **Grounded in:** `frontend/app/globals.css` (Utility classes block).
+**Hard Fail:** Reimplementing a glass card or primary button as a string of inline Tailwind classes when the named class (e.g., `.glass-card`) exists.
+
+**3. FOUR-TIER BADGE SEMANTIC SYSTEM:**
+Status and performance indicators MUST strictly adhere to the 4-tier semantic badge system. The selection of the badge class (`badge-elite`, `badge-strong`, etc.) MUST be driven by pre-computed flags from the backend. The frontend is forbidden from calculating tier thresholds.
+- **Tier Mapping:** 
+  - `badge-elite` → Positive/Top Tier (`--tier-elite` green)
+  - `badge-strong` → Good/Above Average (`--tier-strong` teal)
+  - `badge-caution` → Warning/Below Average (`--tier-caution` amber)
+  - `badge-danger` → Critical/Failure (`--tier-danger` red)
+- **Grounded in:** `frontend/app/globals.css` and `ENGINEERING_STANDARDS_FRONTEND.md` Part 2.2A Rule 5.
+**Hard Fail:** Any component performing a numeric comparison (e.g., `avg > 50 ? 'badge-elite' : ...`) to decide a badge class.
+
+**4. ICON LIBRARY — lucide-react Only:**
+`lucide-react` is the silver-bullet icon library for this platform. No other icon packages (Heroicons, FontAwesome, etc.) are permitted. Icon sizing MUST be controlled via the `size` prop to ensure consistency; using CSS `width`/`height` attributes on icons is forbidden.
+- **Grounded in:** Observed pattern in `page.tsx`, `FunctionRenderer.tsx`, and `FormatSelector.tsx`.
+**Hard Fail:** Any import from `heroicons`, `react-icons`, `@phosphor-icons/react`, or other icon libraries.
+
+**5. FONT SYSTEM — Two-Font Rule:**
+The UI enforces a strict dual-font system. Body text, labels, and UI controls use the monospace font for a "terminal" aesthetic. Statistical and numeric data use a high-readability sans-serif font with tabular numbers to prevent horizontal shifting.
+- **Body/UI:** `var(--font-text)` (Cascadia Code).
+- **Numeric/Stats:** `var(--font-numeric)` (Segoe UI / Inter). Apply via `.font-numeric` class or `data-numeric="true"`.
+- **Grounded in:** `frontend/app/globals.css` (:root and .font-numeric block).
+**Hard Fail:** Applying `font-family` directly via inline style or arbitrary Tailwind for numeric data blocks.
+
+**6. ANIMATION — Design System Animations Only:**
+All UI animations MUST use the standardized keyframes and classes defined in the design system. Custom `@keyframes` or transition durations MUST NOT be defined within individual component files or CSS modules.
+- **Entrance:** Use `animate-fade-in` or `animate-slide-in`.
+- **Loading:** Use `skeleton` class for layout shimmers; use `animate-spin` on a `Loader2` icon for spinners.
+- **Grounded in:** `frontend/app/globals.css` (Animations block).
+**Hard Fail:** Any `@keyframes` definition found inside a `.tsx` file or a component-specific CSS file.
+
+**7. RENDERER PATTERN — One File Per Output Type:**
+To maintain SRP and scalability, every `output_type` declared in a backend manifest MUST have exactly one corresponding renderer component located in `components/renderers/`. All rendering dispatch logic MUST be centralized in `FunctionRenderer.tsx`.
+- **Workflow:** Register key in manifest → Add case to `FunctionRenderer` switch → Implement file in `components/renderers/`.
+- **Grounded in:** `frontend/components/renderers/FunctionRenderer.tsx` architecture.
+**Hard Fail:** Rendering an `output_type` (e.g., `comparison_table`) inline within `page.tsx` or a general layout component.
+
+**8. EMPTY AND FALLBACK STATES:**
+Renderers MUST handle null, undefined, or empty data arrays gracefully. Silent failure (returning `null`) is forbidden. Components MUST utilize the `EmptyState` primitive for empty data and the `FallbackBanner` must be triggered if a specific renderer cannot be matched.
+- **Requirement:** Use `<EmptyState />` for no-data scenarios.
+- **Fallback:** `FunctionRenderer` MUST provide a visual fallback (e.g., raw JSON view with a warning) for unknown types.
+- **Grounded in:** `frontend/components/renderers/FunctionRenderer.tsx` (Null check and fallback logic).
+**Hard Fail:** Any renderer component returning an empty fragment `<></>` or `null` when its primary data prop is empty.
+
+**9. LAYOUT COMPONENT PATTERN:**
+Layout components (navigation, sidebars, headers) MUST be decoupled from domain-specific data props. They read their configuration (active format, available formats, manifest status) directly from the `useAppContext` hook.
+- **Requirement:** Use `fmt.has_manifest` to control enabled/disabled states for format-selection UI.
+- **Forbidden:** Passing the list of formats or the active manifest as a prop from `page.tsx` into a layout component.
+- **Grounded in:** `frontend/components/layout/FormatSelector.tsx`.
+**Hard Fail:** Any component in `components/layout/` receiving manifest or format data as props instead of reading from context.
+
+**10. COMPONENT PLACEMENT — Directory Contract:**
+Components MUST be placed strictly according to their architectural role. Cross-directory imports are only permitted in a "downward" direction towards `common/` or `lib/`.
+- `components/layout/`: Navigation, Topbar, Sidebar, FormatSelector.
+- `components/renderers/`: Output-specific data renderers and the `FunctionRenderer` dispatcher.
+- `components/inputs/`: Squad Builders, Extra Input Fields, forms.
+- `components/common/`: Primitives used by multiple layers (Badges, Loaders, EmptyState).
+- **Grounded in:** Frontend directory structure and `FunctionRenderer.tsx` import patterns.
+**Hard Fail:** A data renderer component placed in `layout/` or a layout-shell component placed in `renderers/`.
+
+---
+
+### 2.2C — Performance Standards (3 rules)
+
+**Rule 1 — Lazy Loading Renderers**
+All renderer components imported in `FunctionRenderer.tsx` MUST use `React.lazy()` with a `Suspense` fallback wrapping the switch dispatch block. Eager importing 11+ renderer components on initial load is forbidden. `Suspense` fallback MUST use the `skeleton` class from `globals.css` — not a spinner.
+**Hard Fail:** any eager import of a renderer component in `FunctionRenderer.tsx`.
+
+**Rule 2 — Memoisation Discipline**
+`useMemo` and `useCallback` MUST only be used when the value is demonstrably expensive to recompute or when referential stability is required to prevent child re-renders. Wrapping every value in `useMemo` as a default is forbidden — it adds overhead without benefit in most cases.
+**Required cases:** manifest-derived derived values computed in effects, callback props passed to memoised child components.
+**Hard Fail:** `useMemo` or `useCallback` wrapping primitive values or simple variable lookups.
+
+**Rule 3 — No Inline Object/Array Props**
+Inline object literals and array literals passed as props (e.g. `style={{}}` or `value={[]}`) create new references on every render and cause unnecessary child re-renders. These MUST be extracted to constants outside the component or wrapped in `useMemo`.
+**Exception:** the existing inline `style={{}}` exemption from Rule 2 (runtime-computed progress bar widths) applies here too.
+**Hard Fail:** any object or array literal passed as a prop that is not runtime-computed.
+
+---
+
+### 2.2D — Resilience Standards (3 rules)
+
+**Rule 1 — Error Boundaries — Renderer Isolation**
+Every output rendered by `FunctionRenderer` MUST be wrapped in a React Error Boundary. A single renderer throwing MUST NOT crash `CategoryScreen` or the entire page. Error Boundary MUST display a recoverable error state using `badge-danger` and `btn-ghost` retry — never a blank screen. Place Error Boundary component in `components/common/`.
+**Hard Fail:** any renderer output not wrapped in an Error Boundary.
+
+**Rule 2 — Error Boundary Placement Rule**
+Error Boundaries MUST be placed at the renderer dispatch level — wrapping `FunctionRenderer` output in `CategoryScreen` — not inside individual renderer components. Individual renderers MUST throw on bad data — they MUST NOT catch their own errors silently.
+**Hard Fail:** `try/catch` inside a renderer component swallowing a render error.
+
+**Rule 3 — Backend Type Sync Contract**
+Every TypeScript type in `frontend/lib/types.ts` that maps to a backend Pydantic schema MUST include a JSDoc comment in this exact format:
+`/** @schema {PydanticClassName} in {python_file_path} */`
+Silent drift between backend output shape and frontend type is a Hard Fail on any API response change task. When a backend schema changes, the corresponding frontend type MUST be updated in the same task — not deferred.
+**Hard Fail:** any type in `lib/types.ts` mapping to a backend schema without the `@schema` JSDoc comment.
+
+---
+
+### 2.2E — Accessibility Standards (3 rules)
+
+**Rule 1 — Interactive Element Labels**
+Every interactive element that does not contain visible text MUST have an `aria-label` or `aria-labelledby` attribute. This includes icon-only buttons, format tabs with only an emoji label, and sidebar items that collapse to icon-only on narrow viewports.
+**Hard Fail:** any `<button>` or `<a>` element containing only an icon with no `aria-label`.
+
+**Rule 2 — Keyboard Navigation**
+All interactive elements MUST be reachable and operable via keyboard. Tab order MUST follow visual reading order. `Execute` button, format tabs, function tabs, and sidebar items MUST be focusable and respond to `Enter`/`Space`.
+**Hard Fail:** any `onClick` handler on a non-interactive element (`div`, `span`) without a corresponding `onKeyDown` handler and `role="button"` with `tabIndex={0}`.
+
+**Rule 3 — Loading and Error State Announcements**
+Loading states and error states MUST be announced to screen readers via `aria-live="polite"` regions. The execute result container MUST have `aria-live="polite"` so result arrival is announced without interrupting the user. Error messages MUST have `role="alert"` so they are announced immediately.
+**Hard Fail:** any error display or result container without the correct `aria-live` or `role` attribute.
+
+---
+
+### 2.2F — Testing Standards (4 rules)
+
+**Rule 1 — Testing Stack**
+Frontend tests MUST use Vitest as the test runner and React Testing Library for component tests. No other testing framework may be introduced. Test files MUST be colocated with components using the pattern: `ComponentName.test.tsx`.
+**Hard Fail:** any `Jest`, `Mocha`, `Enzyme`, or other testing framework import in test files.
+
+**Rule 2 — What Must Be Tested**
+The following MUST have test coverage:
+- `FunctionRenderer`: one test per `output_type` verifying correct renderer is mounted
+- `lib/api.ts`: all error code paths (422, 5xx, network failure)
+- `lib/context.tsx`: format switching clears `contextValues`, manifest load sets `years` default correctly
+- Type guard functions: all branches of `isExtraInputFieldConfig()`, `resolveSquadBuilderConfig()`, `extractEnrichedData()`
+**Hard Fail:** a new renderer added without a corresponding `FunctionRenderer` routing test.
+
+**Rule 3 — What Must Not Be Tested**
+Do not write tests for:
+- CSS class names or visual styling
+- Tailwind class presence
+- Internal implementation details of hooks
+- Third-party library behaviour
+Tests assert behaviour and output — not implementation.
+
+**Rule 4 — Test Data — No Hardcoded Format Keys**
+Test fixtures MUST NOT hardcode format keys like `"odi"` as magic strings. Use a `TEST_FORMAT` constant defined once at the top of the test file.
+**Hard Fail:** `"odi"` or any format key as a raw string literal inside a test assertion or mock payload.
+
+---
 ## PART 3: THE MODIFICATION & WORKFLOW PROTOCOL
 
 AI agents executing tasks MUST follow these exact workflows. Skipping a step is not permitted. If a step cannot be completed, the agent MUST stop and report — not proceed.
