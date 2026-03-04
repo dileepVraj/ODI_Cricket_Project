@@ -180,69 +180,54 @@ Modifying a registered file without explicit instruction or a completed stop-sta
 - Never assume a DataFrame has rows. Guard against empty DataFrames before calculations.
 - Never assume a player, team, or venue exists in a lookup. Use `.get()` with a safe default.
 
-### Filesystem Integrity Rules (Hard Prohibitions)
+### Filesystem Integrity Rules
 
-These are non-negotiable. Violation of any rule below is an immediate 
-CRITICAL STOP regardless of task state.
+These rules are non-negotiable. Violation of any rule below is an immediate CRITICAL STOP regardless of task state.
 
-**RULE: Never delete files outside the task scope**
-You are only permitted to create or modify files explicitly listed in the 
-current task prompt. Deleting, moving, or renaming any file not explicitly 
-named in the task prompt is a hard architectural violation.
+**RULE 1 — Never delete, move, or rename files outside task scope**
+You may only create or modify files explicitly listed in the current task prompt.
+Deleting, moving, or renaming any file not explicitly named is a hard architectural violation.
 
-**RULE: Never run destructive git operations**
-The following git commands are strictly forbidden during any task:
+**RULE 2 — Banned git commands (no exceptions)**
+The following commands are strictly forbidden during any task:
 - `git clean`
-- `git checkout -- .` or `git checkout <path>`
-- `git restore` (except to undo your own changes in the current task)
 - `git reset --hard`
 - `git rm`
-Any of these commands touching files outside the task scope is an 
-immediate CRITICAL STOP.
+- `git checkout -- .` or `git checkout <path>`
+- `git restore` (except to undo your own changes in the current task)
+- `git status` with no path argument (see Rule 3)
 
-**RULE: Missing reference files = hard stop**
-If any file required by Step 1 (READ FIRST) of the task prompt is absent 
-from the worktree, do NOT proceed. Output:
+**RULE 3 — git status must be scoped to the task directory**
+Always scope git status to the task's target directory:
+  git status --short <target_directory>
+Example for a test task: `git status --short tests/`
+Never run `git status` or `git status --short` without a path argument.
+
+**RULE 4 — Act on what git status shows**
+Run `git status --short <target_directory>` BEFORE and AFTER every file operation.
+If the output shows any file modified or deleted that is NOT in the task prompt's file list — stop immediately. Output:
+  CRITICAL DEVIATION: [filename] modified/deleted but not in task scope.
+  Halting. Architect review required before proceeding.
+Do not commit. Do not continue.
+
+**RULE 5 — docs/ai/ is human-write-only**
+Never create, modify, or delete any file under `docs/ai/`
+(includes SESSION_STATE.md, PROJECT_CONTEXT.md, BACKLOG.md, and any other file in that directory).
+These files are updated by the human architect only. Agent writes to this directory are a hard violation.
+
+**RULE 6 — Missing reference files = hard stop**
+If any file required by the READ FIRST section of the task prompt is absent from the worktree, output:
   CRITICAL BLOCKER: [filename] missing from worktree.
   Cannot verify reference pattern. Task halted.
   Action required: architect must restore missing files before rerunning.
-Do not attempt workarounds. Do not read from git history as a substitute. 
-Stop and report.
+Do not attempt workarounds. Do not read from git history as a substitute. Stop and report.
 
-**RULE: No speculative filesystem exploration**
-Do not run recursive directory scans (`Get-ChildItem -Recurse`, `find`, 
-`rg --files`) across the full project to locate missing files. 
-If a required path is not where the task prompt says it is — stop.
+**RULE 7 — No speculative filesystem scans**
+Do not run recursive directory scans (`Get-ChildItem -Recurse`, `find`, `rg --files`) across the full project.
+If a required path is not where the task prompt says it is — stop and report.
 
-**RULE: git status check before AND after every file operation**
-Before creating any file, run `git status` on the target directory only.
-After creating any file, run `git status` on the target directory only.
-If unexpected deletions or modifications appear in git status output that 
-were not caused by your current task — stop immediately and report them 
-as CRITICAL DEVIATION before doing anything else.
-
-## Filesystem Integrity Rules
-
-These rules are **mandatory** for every agent task. No exceptions.
-
-### Hard Rules
-
-- MUST NOT delete, move, or rename any file not explicitly listed in the task prompt.
-- MUST NOT run any of the following commands under any circumstances:
-  - `git clean`
-  - `git reset --hard`
-  - `git rm`
-  - `git checkout -- .`
-- If any required reference file is missing from the worktree — **hard stop**.
-  Output exactly: `CRITICAL BLOCKER: [file] missing. Task halted. Do not improvise.`
-- MUST NOT run recursive filesystem scans to locate missing files.
-- Run `git status` on the target directory **BEFORE** and **AFTER** every file operation.
-- If unexpected deletions appear in `git status` — stop immediately.
-  Report as `CRITICAL DEVIATION: [description]` before any further action.
-
-### Rationale
-
-Codex deleted `core/` contents during a worktree task on 2026-03-03.
+**Rationale:** Codex deleted `core/` contents during a worktree task on 2026-03-03.
+Codex modified `docs/ai/` files outside task scope on 2026-03-04.
 These rules exist to prevent recurrence. Treat any violation as a critical incident.
 
 ---
@@ -328,6 +313,7 @@ These are sins. Any occurrence is an immediate hard fail.
 - Using `core/gen_ai/skills/validators/duckdb-lint-ops/` — wrong path, Gate 2 is in `guides/`
 - Running `git commit --no-verify` — bouncer is not optional
 - Skipping context-loader invocation at session start — it is mandatory for all task scopes
+- Running `git status --short .` or `git status --short` without an explicit named directory — BANNED. Required form: `git status --short tests/` or `git status --short api/` etc. The `.` argument is not a valid scope.
 
 ---
 

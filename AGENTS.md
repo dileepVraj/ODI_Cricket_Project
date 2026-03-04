@@ -294,7 +294,7 @@ These are sins. Any occurrence is an immediate hard fail.
 - Using `core/gen_ai/skills/validators/duckdb-lint-ops/` — wrong path, Gate 2 is in `guides/`
 - Running `git commit --no-verify` — bouncer is not optional
 - Skipping context-loader invocation at session start — it is mandatory for all task scopes
-- Running `git status` without a path argument — use `git status --short <target_directory>`
+- Running `git status --short .` or `git status --short` without an explicit named directory — BANNED. Required form: `git status --short tests/` or `git status --short api/` etc. The `.` argument is not a valid scope.
 
 ---
 
