@@ -244,7 +244,7 @@ A passing bouncer with missing gate results is a FAIL. All gates must be present
 
 ## PART 7: REPORT FORMAT
 
-Every completed task must produce a report in this exact format. Max 30 lines.
+Every completed task MUST produce a report in EXACTLY this format. No prose summaries, no alternative layouts, no "what changed" sections. Deviation from this template is a hard fail. Max 30 lines.
 
 ```
 TASK REPORT
@@ -295,6 +295,7 @@ These are sins. Any occurrence is an immediate hard fail.
 - Running `git commit --no-verify` — bouncer is not optional
 - Skipping context-loader invocation at session start — it is mandatory for all task scopes
 - Running `git status --short .` or `git status --short` without an explicit named directory — BANNED. Required form: `git status --short tests/` or `git status --short api/` etc. The `.` argument is not a valid scope.
+- Submitting a task report in any format other than the template defined in Part 7 — report format is mandatory, not a suggestion
 
 ---
 
