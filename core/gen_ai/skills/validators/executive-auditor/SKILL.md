@@ -13,7 +13,7 @@ Run this skill after any code modification.
 2. Execute:
 
 ```powershell
-python core/utils/compliance-bouncer.py --root .
+python core/utils/compliance_bouncer.py --root .
 ```
 
 3. Parse violations and enforce decision:

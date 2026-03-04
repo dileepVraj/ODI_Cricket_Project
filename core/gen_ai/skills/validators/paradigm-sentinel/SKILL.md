@@ -22,7 +22,7 @@ python "core/gen_ai/skills/boundary-sentinel/scripts/run_sentinel.py" --root "."
 2. Run Compliance Bouncer gate:
 
 ```powershell
-python core/utils/compliance-bouncer.py --root .
+python core/utils/compliance_bouncer.py --root .
 ```
 
 3. Probe for hidden DAL bypass patterns:

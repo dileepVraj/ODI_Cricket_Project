@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 from __future__ import annotations
 
 import argparse
@@ -32,7 +32,7 @@ def main() -> int:
     args = parser.parse_args()
     root = Path(args.root).resolve()
 
-    cmd = [sys.executable, str(root / "core/utils/compliance-bouncer.py"), "--root", str(root)]
+    cmd = [sys.executable, str(root / "core/utils/compliance_bouncer.py"), "--root", str(root)]
     proc = subprocess.run(cmd, capture_output=True, text=True, errors="replace")
     output = (proc.stdout or "") + (proc.stderr or "")
     findings = parse_findings(output)
