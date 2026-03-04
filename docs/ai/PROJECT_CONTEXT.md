@@ -242,17 +242,19 @@ Part 7/8 — Report Format
 Part 8/9 — Hard Prohibitions
 ```
 
-### 5.2 Filesystem Integrity Rules (added 2026-03-03)
+### 5.2 AI Agent Filesystem Integrity Rules
 
-Added to Part 5 of AGENTS.md and GEMINI.md after Codex deleted `core/` contents
-during a worktree task. Rules cover:
+Added 2026-03-03 following a Codex incident where `core/` contents were deleted during a worktree task.
 
-- Never delete files outside task scope
-- Never run destructive git operations (`git clean`, `git reset --hard`, `git rm`)
-- Missing reference files = hard stop, do not improvise workarounds
-- No speculative recursive filesystem exploration
-- Run `git status` on target directory before AND after every file operation
-- If unexpected deletions appear in git status — stop immediately, report as CRITICAL DEVIATION
+Rules are documented in `AGENTS.md Part 5` and `GEMINI.md Part 5`. Both files are the source of truth for agent constraints.
+
+**Summary of enforced rules:**
+- No file deletion/move/rename unless explicitly listed in the task prompt
+- Banned commands: `git clean`, `git reset --hard`, `git rm`, `git checkout -- .`
+- Missing reference file = hard stop with `CRITICAL BLOCKER` output
+- No recursive filesystem scans
+- `git status` required before and after every file operation
+- Unexpected deletions = immediate halt + `CRITICAL DEVIATION` report
 
 ### 5.3 Key Decisions in Agent Config Files
 
@@ -434,6 +436,8 @@ In priority order:
 | core/ strategy loaders documented | team_engine.py, predictor.py, player_engine.py in Section 1.1 | Were undocumented — agents treated them as clutter candidates |
 | match_pack/ documented | Section 1 key directories | Undocumented feature — invisible to agents |
 | backtester.py + base_engine.py removed | Confirmed dead scaffolding | No imports found anywhere, print("Skeleton Initialized") confirmed placeholder status |
+| context-loader skill built and verified | TASK-007 COMPLETE 2026-03-03 | 
+SKILL.md + context-loader.md — all spec items passed human review |
 
 ---
 

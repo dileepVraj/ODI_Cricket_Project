@@ -216,6 +216,30 @@ If unexpected deletions or modifications appear in git status output that
 were not caused by your current task — stop immediately and report them 
 as CRITICAL DEVIATION before doing anything else.
 
+## Filesystem Integrity Rules
+
+These rules are **mandatory** for every agent task. No exceptions.
+
+### Hard Rules
+
+- MUST NOT delete, move, or rename any file not explicitly listed in the task prompt.
+- MUST NOT run any of the following commands under any circumstances:
+  - `git clean`
+  - `git reset --hard`
+  - `git rm`
+  - `git checkout -- .`
+- If any required reference file is missing from the worktree — **hard stop**.
+  Output exactly: `CRITICAL BLOCKER: [file] missing. Task halted. Do not improvise.`
+- MUST NOT run recursive filesystem scans to locate missing files.
+- Run `git status` on the target directory **BEFORE** and **AFTER** every file operation.
+- If unexpected deletions appear in `git status` — stop immediately.
+  Report as `CRITICAL DEVIATION: [description]` before any further action.
+
+### Rationale
+
+Codex deleted `core/` contents during a worktree task on 2026-03-03.
+These rules exist to prevent recurrence. Treat any violation as a critical incident.
+
 ---
 
 ## PART 6: DEFINITION OF DONE
