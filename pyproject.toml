@@ -21,7 +21,6 @@ dependencies = [
 [project.optional-dependencies]
 jupyter = [
     "ipython==9.7.0",
-    "ipywidgets>=8.0.0",
 ]
 api = [
     "fastapi==0.109.2",
