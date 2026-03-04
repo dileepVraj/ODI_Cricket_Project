@@ -42,7 +42,7 @@ from config.settings import (
     API_V1_PREFIX,
     CORS_ORIGINS,
 )
-from api.engine_pool import initialize_pool, get_analyzer, get_active_formats, is_format_loaded
+from api.engine_pool import get_analyzer, get_active_formats, is_format_loaded
 from api.context_builder import (
     AnalyzerProtocol,
     EngineCallParams,
@@ -50,6 +50,7 @@ from api.context_builder import (
     _inject_player_engine_context,
     _inject_team_engine_context,
 )
+from api.lifespan import run_startup_initialization
 from api.schemas import (
     ExecuteRequest, ExecuteResponse, ErrorResponse,
     ManifestResponse, TeamsResponse, VenuesResponse, PlayersResponse,
@@ -104,13 +105,7 @@ app.add_middleware(
 @app.on_event("startup")
 def startup_event() -> None:
     """Initialize engine pool at API startup."""
-    logger.info("=" * 60)
-    logger.info("🚀 CRICKET API STARTING — Initializing Engine Pool...")
-    logger.info("=" * 60)
-    initialize_pool()  # Auto-discovers formats with manifests
-    active = get_active_formats()
-    logger.info(f"✅ API READY — {len(active)} format(s) loaded: {list(active.keys())}")
-    logger.info("=" * 60)
+    run_startup_initialization(logger)
 
 
 # ── Global Error Handling ────────────────────────────────────────────────
