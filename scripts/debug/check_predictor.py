@@ -1,7 +1,8 @@
 import requests
 import json
+from config.settings import API_BASE_URL, API_V1_PREFIX
 
-URL = "http://127.0.0.1:8000/api/v1/odi/execute/predict_score"
+URL = f"{API_BASE_URL}{API_V1_PREFIX}/odi/execute/predict_score"
 payload = {
     "params": {
         "team_a": "India",

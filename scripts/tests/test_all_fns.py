@@ -1,7 +1,8 @@
 """Full regression test of ALL 17 ODI functions."""
 import requests
+from config.settings import API_BASE_URL, API_V1_PREFIX
 
-BASE = "http://127.0.0.1:8000"
+BASE = API_BASE_URL
 
 tests = [
     # ── Venue Intelligence (no squad needed) ──
@@ -55,7 +56,7 @@ pass_count = 0
 fail_count = 0
 for fn, params in tests:
     try:
-        r = requests.post(f"{BASE}/api/v1/odi/execute/{fn}", json={"params": params}, timeout=30)
+        r = requests.post(f"{BASE}{API_V1_PREFIX}/odi/execute/{fn}", json={"params": params}, timeout=30)
         if r.status_code == 200:
             data = r.json()
             has_data = bool(data.get("data"))

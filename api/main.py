@@ -33,6 +33,15 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 from config.format_registry import get_format_manifest, get_format_engines
+from config.settings import (
+    API_DOCS_URL,
+    API_HOST,
+    API_LEGACY_PREFIX,
+    API_PORT,
+    API_REDOC_URL,
+    API_V1_PREFIX,
+    CORS_ORIGINS,
+)
 from api.engine_pool import initialize_pool, get_analyzer, get_active_formats, is_format_loaded
 from api.schemas import (
     ExecuteRequest, ExecuteResponse, ErrorResponse,
@@ -128,14 +137,14 @@ app = FastAPI(
         "Serves all engine functions for all formats via a single generic endpoint."
     ),
     version="2.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url=API_DOCS_URL,
+    redoc_url=API_REDOC_URL,
 )
 
 # ── CORS (for Next.js frontend at localhost:3000) ────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -182,7 +191,7 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
     )
 
 # ── V1 API Router ────────────────────────────────────────────────────────
-v1_router = APIRouter(prefix="/api/v1")
+v1_router = APIRouter(prefix=API_V1_PREFIX)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # HEALTH CHECK
@@ -506,35 +515,35 @@ def execute_function(
 app.include_router(v1_router)
 
 # ── Backward Compatibility Redirects ─────────────────────────────────────
-@app.get("/api/formats", response_model=List[FormatMetadata], tags=["Legacy"], include_in_schema=False)
+@app.get(f"{API_LEGACY_PREFIX}/formats", response_model=List[FormatMetadata], tags=["Legacy"], include_in_schema=False)
 def legacy_formats() -> List[FormatMetadata]:
     return list_formats()
 
-@app.get("/api/{format_type}/manifest", response_model=ManifestResponse, tags=["Legacy"], include_in_schema=False)
+@app.get(f"{API_LEGACY_PREFIX}/{{format_type}}/manifest", response_model=ManifestResponse, tags=["Legacy"], include_in_schema=False)
 def legacy_manifest(format_type: str) -> ManifestResponse:
     return get_manifest(format_type)
 
-@app.get("/api/{format_type}/context/teams", response_model=TeamsResponse, tags=["Legacy"], include_in_schema=False)
+@app.get(f"{API_LEGACY_PREFIX}/{{format_type}}/context/teams", response_model=TeamsResponse, tags=["Legacy"], include_in_schema=False)
 def legacy_teams(format_type: str) -> TeamsResponse:
     return get_teams(format_type)
 
-@app.get("/api/{format_type}/context/venues", response_model=VenuesResponse, tags=["Legacy"], include_in_schema=False)
+@app.get(f"{API_LEGACY_PREFIX}/{{format_type}}/context/venues", response_model=VenuesResponse, tags=["Legacy"], include_in_schema=False)
 def legacy_venues(format_type: str) -> VenuesResponse:
     return get_venues(format_type)
 
-@app.get("/api/{format_type}/context/players/{team}", response_model=PlayersResponse, tags=["Legacy"], include_in_schema=False)
+@app.get(f"{API_LEGACY_PREFIX}/{{format_type}}/context/players/{{team}}", response_model=PlayersResponse, tags=["Legacy"], include_in_schema=False)
 def legacy_players(format_type: str, team: str) -> PlayersResponse:
     return get_players(team=team, format_type=format_type)
 
-@app.get("/api/{format_type}/context/regions", response_model=RegionsResponse, tags=["Legacy"], include_in_schema=False)
+@app.get(f"{API_LEGACY_PREFIX}/{{format_type}}/context/regions", response_model=RegionsResponse, tags=["Legacy"], include_in_schema=False)
 def legacy_regions(format_type: str) -> RegionsResponse:
     return get_regions(format_type)
 
-@app.get("/api/{format_type}/context/host_countries", response_model=HostCountriesResponse, tags=["Legacy"], include_in_schema=False)
+@app.get(f"{API_LEGACY_PREFIX}/{{format_type}}/context/host_countries", response_model=HostCountriesResponse, tags=["Legacy"], include_in_schema=False)
 def legacy_host_countries(format_type: str) -> HostCountriesResponse:
     return get_host_countries(format_type)
 
-@app.post("/api/{format_type}/execute/{function_key}", response_model=ExecuteResponse, tags=["Legacy"], include_in_schema=False)
+@app.post(f"{API_LEGACY_PREFIX}/{{format_type}}/execute/{{function_key}}", response_model=ExecuteResponse, tags=["Legacy"], include_in_schema=False)
 def legacy_execute(request: ExecuteRequest, format_type: str, function_key: str) -> ExecuteResponse:
     return execute_function(request=request, format_type=format_type, function_key=function_key)
 
@@ -764,4 +773,4 @@ def _inject_player_engine_context(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host=API_HOST, port=API_PORT)

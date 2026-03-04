@@ -20,6 +20,7 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 from core.data_access import DataAccess
+from config.settings import ODI_DB_PATH
 from formats.odi.engines.team_engine import TeamEngine
 
 
@@ -123,7 +124,7 @@ def run_continent_coverage_audit(
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Audit continent coverage drift across team pairs.")
-    parser.add_argument("--db-path", default="formats/odi/data/odi.duckdb", help="Path to ODI DuckDB.")
+    parser.add_argument("--db-path", default=ODI_DB_PATH, help="Path to ODI DuckDB.")
     parser.add_argument("--years-back", type=int, default=10, help="Lookback window for match sampling.")
     parser.add_argument("--team-limit", type=int, default=12, help="Top-N teams (by match frequency) to include in pair audit.")
     parser.add_argument(

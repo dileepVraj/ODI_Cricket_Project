@@ -1,8 +1,8 @@
 """Quick DuckDB inspection — output to file."""
 import duckdb
-import os
+from config.settings import ODI_DB_PATH
 
-db_path = "formats/odi/data/odi.duckdb"
+db_path = ODI_DB_PATH
 con = duckdb.connect(db_path, read_only=True)
 
 lines = []

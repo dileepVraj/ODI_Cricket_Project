@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional
 
 import duckdb
 import pandas as pd
+from config.settings import ODI_DB_PATH
 
 
 def _count_csv_rows(csv_path: str) -> int:
@@ -252,7 +253,7 @@ def run_reconciliation_checks(
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run ODI ETL reconciliation checks against DuckDB.")
-    parser.add_argument("--db-path", default="formats/odi/data/odi.duckdb", help="Path to DuckDB file.")
+    parser.add_argument("--db-path", default=ODI_DB_PATH, help="Path to DuckDB file.")
     parser.add_argument("--source-balls-csv", default="formats/odi/data/FINAL_ODI_MASTER.csv", help="Source ball-by-ball CSV path.")
     parser.add_argument("--max-unresolved-venue-ratio", type=float, default=0.05, help="Hard-fail threshold for unresolved venue_id ratio.")
     parser.add_argument("--report-path", default="formats/odi/reports/reconciliation_audit.json", help="Optional JSON report output path.")

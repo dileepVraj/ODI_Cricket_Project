@@ -1,9 +1,10 @@
 """Check all manifest functions and test each via the API. Output to file."""
 import requests
 import json
+from config.settings import API_BASE_URL, API_LEGACY_PREFIX
 
-BASE = "http://127.0.0.1:8000"
-m = requests.get(f"{BASE}/api/odi/manifest").json()
+BASE = API_BASE_URL
+m = requests.get(f"{BASE}{API_LEGACY_PREFIX}/odi/manifest").json()
 
 all_fns = []
 for cat in m["categories"]:
@@ -23,7 +24,7 @@ results = []
 for cat_id, fn_id, out_type, req_ctx in all_fns:
     try:
         r = requests.post(
-            f"{BASE}/api/odi/execute/{fn_id}",
+            f"{BASE}{API_LEGACY_PREFIX}/odi/execute/{fn_id}",
             json={"params": sample_ctx},
             timeout=30,
         )

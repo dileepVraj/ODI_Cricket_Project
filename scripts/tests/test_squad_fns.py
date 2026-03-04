@@ -1,7 +1,8 @@
 """Quick test of squad-dependent functions via the API."""
 import requests
+from config.settings import API_BASE_URL, API_LEGACY_PREFIX
 
-BASE = "http://127.0.0.1:8000"
+BASE = API_BASE_URL
 
 tests = [
     ("compare_squads", {
@@ -41,7 +42,7 @@ tests = [
 results = []
 for fn, params in tests:
     try:
-        r = requests.post(f"{BASE}/api/odi/execute/{fn}", json={"params": params}, timeout=30)
+        r = requests.post(f"{BASE}{API_LEGACY_PREFIX}/odi/execute/{fn}", json={"params": params}, timeout=30)
         if r.status_code == 200:
             data = r.json()
             has_data = bool(data.get("data"))

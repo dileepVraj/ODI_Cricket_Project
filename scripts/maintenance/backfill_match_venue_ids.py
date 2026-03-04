@@ -26,6 +26,7 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 from config.shared.venues import resolve_venue_id
+from config.settings import ODI_DB_PATH
 
 
 def _count_missing(con: duckdb.DuckDBPyConnection) -> int:
@@ -125,7 +126,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Backfill matches.venue_id in DuckDB.")
     parser.add_argument(
         "--db-path",
-        default="formats/odi/data/odi.duckdb",
+        default=ODI_DB_PATH,
         help="Path to DuckDB file.",
     )
     parser.add_argument(
