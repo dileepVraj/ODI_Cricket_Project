@@ -1,5 +1,5 @@
 #!/bin/sh
-python core/utils/compliance-bouncer.py --root .
+python core/utils/compliance_bouncer.py --root .
 if [ $? -ne 0 ]; then
     echo "Commit blocked: compliance violations found."
     echo "Fix all violations then retry."

@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-03
+**Last Updated:** 2026-03-04
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -31,7 +31,7 @@ core/predictor.py            — Strategy loader: routes to formats/odi/predicto
 core/player_engine.py        — Strategy loader: routes to formats/odi player engine
 core/exceptions.py           — Shared exception classes
 core/data_loader.py          — Data feeding layer into engines
-core/utils/compliance-bouncer.py — 10-rule compliance enforcer
+core/utils/compliance_bouncer.py — 10-rule compliance enforcer
 core/gen_ai/skills/          — AI agent skill system
 formats/                     — Per-format manifests and engines
 api/                         — FastAPI routes, serializers, engine pool
@@ -70,6 +70,10 @@ They are NOT legacy. Do not delete them.
 **Phase:** Post Phase 11.3 — calculators fully refactored and compliant.
 **Next phase:** Engine-layer refactoring (active work area).
 **Phase 12 (live layer / Numba AOT): NOT started — do not push agents toward it.**
+### 5.2 Filesystem Integrity Rules (added 2026-03-03, committed 2026-03-04)
+
+Added to Part 5 of AGENTS.md and GEMINI.md after Codex deleted `core/` contents
+during a worktree task.
 
 ---
 
@@ -108,7 +112,7 @@ Never recommend attaching AI_MEMORY.md — it is deprecated.
 | GATE 3 | `validators/manifest-contract-verifier` | Any modification to `manifest.py` or engine files |
 | GATE 4 | `validators/serialization-guard` | Any modification to `api/serializers.py` or engine return types |
 | GATE 5 | `validators/paradigm-sentinel` | Always — after all primary gates pass |
-| GATE 6 | `core/utils/compliance-bouncer.py` | Always — last step before every commit |
+| GATE 6 | `core/utils/compliance_bouncer.py` | Always — last step before every commit |
 
 Dormant: `event-state-linter` — activates when `core/live/` is created in Phase 12.
 
@@ -380,23 +384,18 @@ Rules are documented in `AGENTS.md Part 5` and `GEMINI.md Part 5`. Both files ar
 
 In priority order:
 
-1. **Engine refactoring** — primary active work, engine files need refactoring
-2. **Wire context-loader bootstrap into AGENTS.md + GEMINI.md** — skill is built,
-   needs wiring so it fires automatically at agent session start
-3. **Add Filesystem Integrity Rules to AGENTS.md + GEMINI.md** — Part 5 addition,
-   prevents repeat of Codex worktree deletion incident
-4. **Core/ file audit** — verify no stray/legacy files remain. `backtester.py` and
-   `base_engine.py` confirmed safe to delete — pending commit.
-5. **Update TECHNICAL_AUDIT_REPORT.md** — stale since 2026-02-27, predates Phase 11.3
-6. **Create CLAUDE.md** — when Claude CLI pro sub is activated, copy from AGENTS.md
-7. **Frontend compliance debt** — 5 items above, after engine queue clears
+1. **Engine refactoring** — primary active work (TASK-010)
+2. **Update TECHNICAL_AUDIT_REPORT.md** — blocked until TASK-010 completes (TASK-011)
+3. **Create CLAUDE.md** — when Claude CLI pro sub is activated, copy from AGENTS.md
+4. **Frontend compliance debt** — 5 items in Section 7.1, after engine queue clears
+5. **MCP Integration** — ICEBOX, revisit when Phase 12 scoping begins
 
 ---
 
 ## 9. IMPORTANT CONVENTIONS
 
 - **Never attach AI_MEMORY.md to agents** — deprecated, noise
-- **Bouncer must pass before every commit** — `python core/utils/compliance-bouncer.py --root .`
+- **Bouncer must pass before every commit** — `python core/utils/compliance_bouncer.py --root .`
 - **Pre-commit hook enforces compliance** — `.githooks/pre-commit`
 - **No `--no-verify` commits** — bouncer is not optional
 - **High-impact files require stop-state-trace-confirm** — Section 3.6
@@ -438,6 +437,10 @@ In priority order:
 | backtester.py + base_engine.py removed | Confirmed dead scaffolding | No imports found anywhere, print("Skeleton Initialized") confirmed placeholder status |
 | context-loader skill built and verified | TASK-007 COMPLETE 2026-03-03 | 
 SKILL.md + context-loader.md — all spec items passed human review |
+| TASK-008 closed | Filesystem Integrity Rules committed to AGENTS.md + GEMINI.md Part 5 | 2026-03-04 |
+| TASK-009 closed | backtester.py + base_engine.py confirmed never git-tracked, already absent | 2026-03-04 |
+| BACKLOG.md Status field adopted | All tasks now carry Status: Open / In Progress / Blocked / Closed — YYYY-MM-DD | 2026-03-04 |
+| MCP Integration icebox'd | ICE-001 created — revisit at Phase 12 scoping | 2026-03-04 |
 
 ---
 

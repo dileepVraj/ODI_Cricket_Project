@@ -466,7 +466,7 @@ SERVICE_LITERAL_REGISTRY = ['match_df', 'get', "Non-fatal enrichment lookup issu
 
 # Phase 12 Strike-1 Recovery: TypedDict key registration for FormGuidePayload, FormSequencePayload,
 # and MatchStatus display labels. These are all service-layer semantic keys from team_types.py
-# that must be declared here so the Zero-Literal rule in compliance-bouncer.py can authorize them.
+# that must be declared here so the Zero-Literal rule in compliance_bouncer.py can authorize them.
 SERVICE_LITERAL_REGISTRY += [
     # FormGuidePayload keys (core/interfaces/team_types.py: FormGuidePayload)
     'no_results',

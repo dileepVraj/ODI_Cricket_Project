@@ -196,56 +196,56 @@ on fresh installs and CI.
 ---
 
 ### [TASK-017] Extract context_builder.py from api/main.py
-**Status:** Open
+**Status:** Closed - 2026-03-04
 **Priority:** High
 **Scope:** Backend refactor
-**Blocked by:** TASK-015 — dotenv changes touch main.py, do that first
+**Blocked by:** Nothing
 **Why:** Context injection logic inline in main.py (~120 lines that don't belong there).
 Extraction improves testability and reduces agent collision risk during TASK-010.
 **Estimate:** Half day
 **Subtasks:**
-- [ ] Identify all context building logic in api/main.py
-- [ ] Create core/services/context_builder.py with extracted logic — fully typed
-- [ ] Update api/main.py to call context_builder
-- [ ] Run compliance bouncer — confirm still passes
-- [ ] Commit: refactor(services): extract context_builder from main.py [TASK-017]
+- [ x] Identify all context building logic in api/main.py
+- [ x] Create core/services/context_builder.py with extracted logic — fully typed
+- [ x] Update api/main.py to call context_builder
+- [ x] Run compliance bouncer — confirm still passes
+- [ x] Commit: refactor(services): extract context_builder from main.py [TASK-017]
 
 ---
 
 ### [TASK-018] Extract startup/lifespan DB loading from api/main.py
-**Status:** Open
+**Status:** Closed - 2026-03-04
 **Priority:** High
 **Scope:** Backend refactor
-**Blocked by:** TASK-017 — do in same sweep while main.py is open
+**Blocked by:** Nothing
 **Why:** Inline DB loading logic in main.py causes agents to accidentally touch
 data loading when working on routing. Clean separation protects TASK-010.
 **Estimate:** 2 hours
 **Subtasks:**
-- [ ] Identify lifespan/startup DB loading logic in api/main.py
-- [ ] Create core/services/startup.py with extracted logic — fully typed
-- [ ] Update api/main.py lifespan to delegate to startup.py
-- [ ] Run compliance bouncer — confirm still passes
-- [ ] Commit: refactor(services): extract DB startup logic into startup.py [TASK-018]
+- [ x] Identify lifespan/startup DB loading logic in api/main.py
+- [ x] Create core/services/startup.py with extracted logic — fully typed
+- [ x] Update api/main.py lifespan to delegate to startup.py
+- [ x] Run compliance bouncer — confirm still passes
+- [ x] Commit: refactor(services): extract DB startup logic into startup.py [TASK-018]
 
 ---
 
-### [TASK-019] Rename compliance-bouncer.py to compliance_bouncer.py
-**Status:** Open
+### [TASK-019] Rename compliance_bouncer.py to compliance_bouncer.py
+**Status:** Closed - 2026-03-04
 **Priority:** Medium
 **Scope:** Backend housekeeping
-**Blocked by:** TASK-017, TASK-018 — do last, after main.py churn settles
+**Blocked by:** Nothing
 **Why:** Hyphen violates Module Naming standard. Causes ergonomic friction
 everywhere it is referenced. Must be done atomically — many files reference it.
 **Estimate:** 1 hour
 **Subtasks:**
-- [ ] Rename core/utils/compliance-bouncer.py → core/utils/compliance_bouncer.py
-- [ ] Update .githooks/pre-commit
-- [ ] Update AGENTS.md and GEMINI.md
-- [ ] Update ENGINEERING_STANDARDS_BACKEND.md, ENGINEERING_STANDARDS_CORE.md, ENGINEERING_STANDARDS_FRONTEND.md
-- [ ] Update PROJECT_CONTEXT.md — all references
-- [ ] Update SESSION_STATE.md
-- [ ] Run renamed bouncer — confirm still passes
-- [ ] Commit: chore(utils): rename compliance-bouncer.py to compliance_bouncer.py [TASK-019]
+- [x] Rename core/utils/compliance_bouncer.py → core/utils/compliance_bouncer.py
+- [x] Update .githooks/pre-commit
+- [x] Update AGENTS.md and GEMINI.md
+- [x] Update ENGINEERING_STANDARDS_BACKEND.md, ENGINEERING_STANDARDS_CORE.md, ENGINEERING_STANDARDS_FRONTEND.md
+- [x] Update PROJECT_CONTEXT.md — all references
+- [x] Update SESSION_STATE.md
+- [x] Run renamed bouncer — confirm still passes
+- [x] Commit: chore(utils): rename compliance_bouncer.py to compliance_bouncer.py [TASK-019]
 
 ---
 

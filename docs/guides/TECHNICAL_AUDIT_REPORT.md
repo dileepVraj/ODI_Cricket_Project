@@ -50,7 +50,7 @@ Every task MUST pass through these gates in order:
 3. **GATE 3 — manifest-contract-verifier:** Manifest-to-engine signature sync.
 4. **GATE 4 — serialization-guard:** Payload size and latency check.
 5. **GATE 5 — paradigm-sentinel:** Meta-check for all mandates.
-6. **GATE 6 — compliance-bouncer:** Final 10-rule check (ZERO_LITERAL, ANTI_ANY, IO_AIR_GAP, etc.).
+6. **GATE 6 — compliance_bouncer:** Final 10-rule check (ZERO_LITERAL, ANTI_ANY, IO_AIR_GAP, etc.).
 
 **Dormant:** `event-state-linter` (reserved for Phase 12).
 

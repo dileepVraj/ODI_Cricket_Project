@@ -40,7 +40,7 @@ Do not read or update `docs/ai/AI_MEMORY.md` — it is deprecated and replaced b
 
 ### Step 3 — Run Baseline Bouncer
 ```bash
-python core/utils/compliance-bouncer.py --root .
+python core/utils/compliance_bouncer.py --root .
 ```
 Record the output. This is your before-snapshot. Do not proceed if you cannot run this command.
 
@@ -117,7 +117,7 @@ Gates are not optional. Gates are not substitutes for each other. All triggered 
 | GATE 3 | `core/gen_ai/skills/validators/manifest-contract-verifier/` | Any modification to `manifest.py` or engine files in `formats/` |
 | GATE 4 | `core/gen_ai/skills/validators/serialization-guard/` | Any modification to `api/serializers.py` or engine return types |
 | GATE 5 | `core/gen_ai/skills/validators/paradigm-sentinel/` | Always — after all primary gates pass |
-| GATE 6 | `python core/utils/compliance-bouncer.py --root .` | Always — last step before task complete |
+| GATE 6 | `python core/utils/compliance_bouncer.py --root .` | Always — last step before task complete |
 
 **Critical path rule:** Gate 2 (duckdb-lint-ops) is in `guides/` not `validators/`. Using the wrong path is a hard fail.
 
@@ -233,7 +233,7 @@ A task is NOT complete until all of the following are true:
 
 1. All triggered gate results are recorded (gate name, path, pass/fail).
 2. Gate 5 (paradigm-sentinel) result is recorded.
-3. Gate 6 (compliance-bouncer) output is `PASS: 100% compliance`.
+3. Gate 6 (compliance_bouncer) output is `PASS: 100% compliance`.
 4. Post-change bouncer output matches or improves on baseline bouncer output.
 5. No registered file was modified without explicit instruction or stop-state-trace-confirm.
 6. Report is submitted in the required format (see Part 8).
@@ -261,7 +261,7 @@ Gates Triggered:
 - GATE 3 (manifest-contract-verifier): [TRIGGERED/SKIPPED] — [PASS/FAIL]
 - GATE 4 (serialization-guard): [TRIGGERED/SKIPPED] — [PASS/FAIL]
 - GATE 5 (paradigm-sentinel): TRIGGERED — [PASS/FAIL]
-- GATE 6 (compliance-bouncer): TRIGGERED — [PASS/FAIL]
+- GATE 6 (compliance_bouncer): TRIGGERED — [PASS/FAIL]
 
 Files Modified: [list]
 Registered Files Touched: [list or NONE]

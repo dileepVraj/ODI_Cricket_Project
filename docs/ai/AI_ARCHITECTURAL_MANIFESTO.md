@@ -88,7 +88,7 @@ To append new laws to this Manifesto:
 
 ## 📝 8. The Compliance Law
 
-** Zero-Violation Policy:** Every delivery MUST pass `python core/utils/compliance-bouncer.py --root .` with zero hits for `ZERO_LITERAL`, `ANTI_GREASE`, or `VISUAL_SILENCE`.
+** Zero-Violation Policy:** Every delivery MUST pass `python core/utils/compliance_bouncer.py --root .` with zero hits for `ZERO_LITERAL`, `ANTI_GREASE`, or `VISUAL_SILENCE`.
 
 ** Physical Audit:** "Ghost Passes" (claiming success without physical file updates) are considered a total failure. The AI must verify that strings are physically written to the `SERVICE_LITERAL_REGISTRY` in the manifest.
 ---

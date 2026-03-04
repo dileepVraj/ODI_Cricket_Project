@@ -799,7 +799,7 @@ No code enters Phase 12 without passing every gate in this section. These are no
 
 ### 4.1 Mandatory Gatekeeper
 
-From this phase onward, **no code may be committed** unless `core/utils/compliance-bouncer.py` returns:
+From this phase onward, **no code may be committed** unless `core/utils/compliance_bouncer.py` returns:
 
 ```
 PASS: 100% compliance
@@ -808,7 +808,7 @@ This is GATE 6 in the six-gate sentinel sequence defined in section 4.3. Gates 1
 
 Blocking command:
 ```powershell
-python core/utils/compliance-bouncer.py --root .
+python core/utils/compliance_bouncer.py --root .
 ```
 
 A single violation is sufficient to block the commit. Fix the violation. Re-run the bouncer. Only then proceed.
@@ -906,10 +906,10 @@ Pass condition: zero violations across all paradigm checks including boundary sc
 
 ---
 
-**GATE 6 — compliance-bouncer (final gate)**
+**GATE 6 — compliance_bouncer (final gate)**
 Trigger: always — last step before every commit.
 ```powershell
-python core/utils/compliance-bouncer.py
+python core/utils/compliance_bouncer.py
 --root .
 ```
 Pass condition: `PASS: 100% compliance`.
@@ -927,7 +927,7 @@ The bouncer is a final gate — not a substitute for the skill gates. All six ga
 
 ### 4.4 Non-Negotiable Block Condition
 
-Any `FAIL` from `compliance-bouncer.py` is a hard stop for merge and release readiness. No exceptions. No deadline overrides this rule. Fix the violation first.
+Any `FAIL` from `compliance_bouncer.py` is a hard stop for merge and release readiness. No exceptions. No deadline overrides this rule. Fix the violation first.
 
 ---
 
@@ -981,7 +981,7 @@ correct typed subdirectory:
 ### 5.2 Logic Gate Requirement (Pre-Bouncer)
 
 Before a task can be marked ready for a 
-`compliance-bouncer` PASS, the following 
+`compliance_bouncer` PASS, the following 
 logic gates MUST be executed in order and 
 pass criteria recorded. This sequence mirrors 
 section 4.3 exactly.
@@ -1013,16 +1013,16 @@ Trigger: always - after all primary gates pass.
 Path: `core/gen_ai/skills/validators/
 paradigm-sentinel/`
 
-**GATE 6 - compliance-bouncer (final gate)**
+**GATE 6 - compliance_bouncer (final gate)**
 Trigger: always - last step before every commit.
-Command: `python core/utils/compliance-bouncer.py 
+Command: `python core/utils/compliance_bouncer.py 
 --root .`
 
 Dormant: `event-state-linter` activates when 
 `core/live/` is created in Phase 12. Insert 
 as GATE 3.5.
 
-`compliance-bouncer.py` is a final gate - 
+`compliance_bouncer.py` is a final gate - 
 not a substitute for the skill gates. 
 All six gates must pass. A task with missing 
 gate results is `FAIL` regardless of bouncer 
