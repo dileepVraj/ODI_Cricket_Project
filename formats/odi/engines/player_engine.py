@@ -250,7 +250,8 @@ class PlayerEngine(IPlayerEngine):
         team_b_players: List[str],
         venue_id: str,
         years: Optional[int] = None,
-        context_df: Optional[pd.DataFrame] = None,
+        *,
+        context_df: pd.DataFrame,
     ) -> SquadComparisonData:
         """
         Headless API: Fetches all data required for a Squad Comparison.
@@ -259,7 +260,7 @@ class PlayerEngine(IPlayerEngine):
         # 1. OPTIMIZATION: Create Squad Context Subset
         years_back = self._get_years_back(years)
         cutoff_date = self._get_reference_date() - pd.DateOffset(years=years_back)
-        squad_context_df = context_df.copy() if isinstance(context_df, pd.DataFrame) else pd.DataFrame()
+        squad_context_df = context_df.copy()
         if not squad_context_df.empty and 'start_date' in squad_context_df.columns:
             squad_context_df['start_date'] = pd.to_datetime(squad_context_df['start_date'], errors='coerce')
             squad_context_df = squad_context_df[squad_context_df['start_date'] >= cutoff_date]
@@ -337,7 +338,8 @@ class PlayerEngine(IPlayerEngine):
         venue_id: str,
         years: Optional[int] = None,
         recorder: Optional[TacticalRecorderPort] = None,
-        context_df: Optional[pd.DataFrame] = None,
+        *,
+        context_df: pd.DataFrame,
     ) -> SquadComparisonData:
         """
         Headless API: Orchestrates squad comparison logic.
@@ -361,7 +363,8 @@ class PlayerEngine(IPlayerEngine):
         opposition_bowlers: List[str],
         years: Optional[int] = None,
         recorder: Optional[TacticalRecorderPort] = None,
-        context_df: Optional[pd.DataFrame] = None,
+        *,
+        context_df: pd.DataFrame,
     ) -> List[DisplayRecord]:
         """
         Headless logic for Tactical Breakdown.
@@ -369,10 +372,7 @@ class PlayerEngine(IPlayerEngine):
         """
         years_back = self._get_years_back(years)
         cutoff_date = self._get_reference_date() - pd.DateOffset(years=years_back)
-        if context_df is not None:
-            base_df = context_df
-        else:
-            return []
+        base_df = context_df
 
         if base_df.empty:
             return []
@@ -440,7 +440,7 @@ class PlayerEngine(IPlayerEngine):
         opp_team: Optional[str] = None,
         home_xi: Optional[List[str]] = None,
         away_xi: Optional[List[str]] = None,
-        context_df: Optional[pd.DataFrame] = None,
+        context_df: pd.DataFrame,
     ) -> List[DisplayRecord]:
         """
         Headless logic for Batter vs Bowlers.
@@ -470,10 +470,7 @@ class PlayerEngine(IPlayerEngine):
         if not inferred_bowlers:
             return []
 
-        if context_df is not None:
-            base_df = context_df
-        else:
-            return []
+        base_df = context_df
 
         required_cols = {"striker", "bowler", "runs_off_bat", "match_id", "player_dismissed"}
         if not required_cols.issubset(set(base_df.columns)):
