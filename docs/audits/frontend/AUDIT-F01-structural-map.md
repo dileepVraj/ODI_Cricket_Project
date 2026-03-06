@@ -145,6 +145,11 @@ Contract from Rule 10 (2.2B):
 | `components/renderers/PhaseAnalysisCard.tsx` | 425 | FLAG (>300 lines) |
 | `components/inputs/SquadBuilder.tsx` | 388 | FLAG (>300 lines) |
 | `components/inputs/ExtraInputRenderer.tsx` | 326 | FLAG (>300 lines) |
+| `app/page.tsx` → `CategoryScreen` component | ~353 lines | FLAG (component >300 lines — SRP violation candidate, separate from file-level warning) |
+
+**Note:** CategoryScreen component identified by Agent 2 cross-check. 
+File-level flag (777 lines) and component-level flag (353 lines) are 
+separate concerns. Component-level violation will be examined in F04.
 
 No files exceed 800 lines — no VIOLATIONS.
 
