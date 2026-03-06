@@ -1,7 +1,6 @@
 from typing import Dict, List, Optional, Tuple
 import pandas as pd
 import numpy as np
-import logging
 from config.shared.venues import get_venue_aliases
 import re
 from core.calculators import MatchupEngine
@@ -25,8 +24,6 @@ from core.interfaces.team_types import (
     SquadComparisonPayload,
     TacticalRecorderPort,
 )
-
-logger = logging.getLogger("CricketAnalyzer")
 
 class PlayerEngine(IPlayerEngine):
     """
@@ -141,8 +138,8 @@ class PlayerEngine(IPlayerEngine):
                 parsed = pd.Timestamp(rule_date)
                 if pd.notna(parsed):
                     return parsed.floor('D')
-            except (TypeError, ValueError) as exc:
-                logger.debug("Invalid reference_date rule '%s': %s", rule_date, exc)
+            except (TypeError, ValueError):
+                pass
         return pd.Timestamp.now().floor('D')
 
     def _get_reference_date(self) -> pd.Timestamp:
@@ -232,7 +229,7 @@ class PlayerEngine(IPlayerEngine):
         backscan_limit = self._get_engine_default("squad_backscan_match_limit")
         
         for match_id in sorted_matches[:backscan_limit]: 
-            if len(squad) >= 11:
+            if len(squad) >= self.rules["player_rules"]["last_xi_match_limit"]:
                 break
             if balls_source.empty:
                 continue
@@ -519,7 +516,7 @@ class PlayerEngine(IPlayerEngine):
         )
         matchup_stats['SR'] = np.where(
             matchup_stats['Balls'] > 0,
-            ((matchup_stats['Runs'] / matchup_stats['Balls']) * 100).round(1),
+            ((matchup_stats['Runs'] / matchup_stats['Balls']) * self.rules["SPORT_CONSTANTS"]["percent_scale"]).round(1),
             0.0,
         )
 
@@ -599,8 +596,11 @@ class PlayerEngine(IPlayerEngine):
     def _get_batting_milestones(self, df: pd.DataFrame) -> Tuple[int, int, int]:
         if df.empty: return 0, 0, 0
         match_sums = df.groupby('match_id')['runs_off_bat'].sum()
-        centuries = (match_sums >= 100).sum()
-        fifties = ((match_sums >= 50) & (match_sums < 100)).sum()
+        centuries = (match_sums >= self.rules["player_rules"]["milestone_century"]).sum()
+        fifties = (
+            (match_sums >= self.rules["player_rules"]["milestone_half_century"])
+            & (match_sums < self.rules["player_rules"]["milestone_century"])
+        ).sum()
         hs = match_sums.max() if not match_sums.empty else 0
         return centuries, fifties, hs
 
@@ -609,7 +609,7 @@ class PlayerEngine(IPlayerEngine):
         player_name: str,
         opposition: Optional[str] = None,
         venue_id: Optional[str] = None,
-        years: Optional[int] = 10,
+        years: Optional[int] = None,
         raw_balls_df: Optional[pd.DataFrame] = None,
     ) -> Optional[PlayerProfile]:
         """
@@ -623,7 +623,10 @@ class PlayerEngine(IPlayerEngine):
         p_stats = self.player_df[self.player_df['player'] == player_name].copy()
         
         # BATTING
-        career_bat = p_stats[(p_stats['context'] == 'vs_team') & (p_stats['role'] == 'batting')].copy()
+        career_bat = p_stats[
+            (p_stats['context'] == self.rules["player_context_types"]["vs_team"])
+            & (p_stats['role'] == self.rules["player_context_types"]["batting"])
+        ].copy()
         bat_stats = BattingStats(0, 0, 0.0, 0.0, 0, 0, 0, [])
         if not career_bat.empty:
             runs = int(career_bat['runs'].sum())
@@ -631,7 +634,7 @@ class PlayerEngine(IPlayerEngine):
             outs = int(career_bat['dismissals'].sum())
             balls = int(career_bat['balls'].sum())
             avg = round(runs / outs, 2) if outs > 0 else runs
-            sr = round((runs / balls) * 100, 1) if balls > 0 else 0.0
+            sr = round((runs / balls) * self.rules["SPORT_CONSTANTS"]["percent_scale"], 1) if balls > 0 else 0.0
             
             raw_bat = pd.DataFrame()
             if isinstance(raw_balls_df, pd.DataFrame) and not raw_balls_df.empty:
@@ -645,35 +648,46 @@ class PlayerEngine(IPlayerEngine):
                  bat_stats = BattingStats(inns, runs, avg, sr, c100, c50, hs, [])
 
         # BOWLING
-        career_bowl = p_stats[(p_stats['context'] == 'vs_team') & (p_stats['role'] == 'bowling')].copy()
+        career_bowl = p_stats[
+            (p_stats['context'] == self.rules["player_context_types"]["vs_team"])
+            & (p_stats['role'] == self.rules["player_context_types"]["bowling"])
+        ].copy()
         bowl_stats = None
         if not career_bowl.empty:
             b_runs = int(career_bowl['runs'].sum())
             b_balls = int(career_bowl['balls'].sum())
             b_wkts = int(career_bowl['dismissals'].sum())
-            if b_balls > 60:
+            if b_balls > self.rules["player_rules"]["profile_sr_min_balls"]:
                 b_avg = round(b_runs / b_wkts, 2) if b_wkts > 0 else 0.0
-                b_econ = round((b_runs / b_balls) * 6, 2) if b_balls > 0 else 0.0
+                b_econ = round((b_runs / b_balls) * self.rules["SPORT_CONSTANTS"]["balls_per_over"], 2) if b_balls > 0 else 0.0
                 bowl_stats = BowlingStats(0, b_wkts, b_avg, b_econ, "N/A", [])
 
         # CONTEXT
         vs_opponent_context = None
-        if opposition and opposition != 'All':
+        if opposition and opposition != self.rules["player_context_types"]["all"]:
             opp_bat_stats = None
-            opp_bat = p_stats[(p_stats['context'] == 'vs_team') & (p_stats['role'] == 'batting') & (p_stats['opponent'] == opposition)]
+            opp_bat = p_stats[
+                (p_stats['context'] == self.rules["player_context_types"]["vs_team"])
+                & (p_stats['role'] == self.rules["player_context_types"]["batting"])
+                & (p_stats['opponent'] == opposition)
+            ]
             if not opp_bat.empty:
                 r = int(opp_bat['runs'].sum()); i = int(opp_bat['innings'].sum()); o = int(opp_bat['dismissals'].sum()); b = int(opp_bat['balls'].sum())
-                av = round(r / o, 2) if o > 0 else r; sr = round((r / b) * 100, 1) if b > 0 else 0.0
+                av = round(r / o, 2) if o > 0 else r; sr = round((r / b) * self.rules["SPORT_CONSTANTS"]["percent_scale"], 1) if b > 0 else 0.0
                 vs_opponent_context = ContextStats(batting=BattingStats(i, r, av, sr, 0, 0, 0, []), bowling=None)
 
         venue_context = None
         if venue_id:
             aliases = get_venue_aliases(venue_id)
             ven_pattern = '|'.join([re.escape(v) for v in aliases])
-            ven_bat = p_stats[(p_stats['context'] == 'at_venue') & (p_stats['role'] == 'batting') & (p_stats['opponent'].str.contains(ven_pattern, case=False, regex=True))]
+            ven_bat = p_stats[
+                (p_stats['context'] == self.rules["player_context_types"]["at_venue"])
+                & (p_stats['role'] == self.rules["player_context_types"]["batting"])
+                & (p_stats['opponent'].str.contains(ven_pattern, case=False, regex=True))
+            ]
             if not ven_bat.empty:
                 r = int(ven_bat['runs'].sum()); i = int(ven_bat['innings'].sum()); o = int(ven_bat['dismissals'].sum()); b = int(ven_bat['balls'].sum())
-                av = round(r / o, 2) if o > 0 else r; sr = round((r / b) * 100, 1) if b > 0 else 0.0
+                av = round(r / o, 2) if o > 0 else r; sr = round((r / b) * self.rules["SPORT_CONSTANTS"]["percent_scale"], 1) if b > 0 else 0.0
                 venue_context = ContextStats(batting=BattingStats(i, r, av, sr, 0, 0, 0, []), bowling=None)
 
         return PlayerProfile(
@@ -691,7 +705,7 @@ class PlayerEngine(IPlayerEngine):
         opposition: Optional[str] = None,
         venue_id: Optional[str] = None,
         active_bowlers: Optional[List[str]] = None,
-        years: Optional[int] = 10,
+        years: Optional[int] = None,
         raw_balls_df: Optional[pd.DataFrame] = None,
     ) -> Optional[PlayerProfile]:
         """

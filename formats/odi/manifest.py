@@ -45,6 +45,24 @@ ENGINE_DEFAULTS = {
     "unmapped_min_balls_fallback": 6,
 }
 
+PLAYER_RULES = {
+    "default_years_window": 10,
+    "last_xi_match_limit": 11,
+    "profile_years_default": 10,
+    "milestone_century": 100,
+    "milestone_half_century": 50,
+    "min_innings_threshold": 2,
+    "profile_sr_min_balls": 60,
+}
+
+PLAYER_CONTEXT_TYPES = {
+    "vs_team": "vs_team",
+    "at_venue": "at_venue",
+    "batting": "batting",
+    "bowling": "bowling",
+    "all": "All",
+}
+
 FORMAT_RULES = {
     "max_overs": 50,
     "min_balls_for_completed_innings": 270,  # Used to filter rain-affected/shortened matches if not all-out/chased.
@@ -61,6 +79,8 @@ FORMAT_RULES = {
     "default_player_role": "All-Rounder",
     "default_years_window": 5,
     "engine_defaults": ENGINE_DEFAULTS,
+    "player_rules": PLAYER_RULES,
+    "player_context_types": PLAYER_CONTEXT_TYPES,
 }
 
 MANIFEST = {
@@ -459,6 +479,21 @@ ENGINE_LITERAL_REGISTRY += [
     "report",
 ]
 
+
+ENGINE_LITERAL_REGISTRY += [
+    # TASK-027a: Player engine literal registrations
+    # PLAYER_RULES numeric constant keys
+    "default_years_window",
+    "last_xi_match_limit",
+    "profile_years_default",
+    "milestone_century",
+    "milestone_half_century",
+    "min_innings_threshold",
+    "profile_sr_min_balls",
+    # PLAYER_CONTEXT_TYPES values absent from the original engine registry
+    "all",
+    "All",
+]
 
 # Phase 11.2: Service literal registry for compliance-bouncer
 SERVICE_LITERAL_REGISTRY = ['match_df', 'get', "Non-fatal enrichment lookup issue for key '%s': %s", 'keys', 'Non-fatal enrichment key extraction issue: %s', 'strftime', '%Y-%m-%d', "Non-fatal date normalization issue for value '%s': %s", 'elite', 'excluded', 'caution', 'error', 'danger', 'muted', 'inn', 'score_inn', 'wickets_inn', 'wicket', 'balls_inn', 'ball', '/', ' (', '.1f', 'Included', 'status_tone', 'team_engine', 'apply_smart_filters', '_mid_str', 'match_ids', 'Opponent', 'OVERALL', 'Metric', 'Value', 'match_audit', 'inn1', 'inn2', 'bat', '2', '✅ Included', '☔ Excluded (No Result)', '☔ Excluded (Short 1st)', '☔ Excluded (Short 2nd)', '☔ Excluded', '*', 'stadium_name', 'home_team', 'opp_team', 'years_back', 'continent', 'home_xi', 'batting_players', 'away_xi', 'bowling_players', 'team_a_name', 'team_b_name', 'team_a_players', 'team_b_players', 'opposition', 'away_team', 'team_name', 'opposition_bowlers', 'batter', 'bowlers', 'get_player_profile', 'limit', 'time', 'toss', 'pitch', 'persist', 'dal', 'is_legal_ball', 'average', 'strike_rate', 'highest_score', 'centuries', 'fifties', 'CricketAPI', 'PlayerService fallback failed: ', ' [', ']', 'home_team_ref', 'Matches Played', 'Tied / No Result', ' Win %', '%', ' Last 5', '--- HOME PERFORMANCE ---', 'Total Wins', 'Won Batting 1st (Defended)', 'Won Batting 2nd (Chased)', '--- VISITOR PERFORMANCE ---', '--- VENUE AVERAGES ---', 'Overall Avg 1st Innings', 'Overall Avg 2nd Innings', 'Avg 1st Innings Winning Score', '--- BATTING 1ST (', ') ---', 'Average 1st Innings', 'Highest 1st Innings', 'Lowest 1st Innings', 'Lowest Defended Score', '--- CHASING (', 'Average 2nd Innings', 'Highest Chased', 'Avg Successful Chase', 'Avg Failed Chase', 'Overview', '---', '- ', 'row_kind', 'section', 'display_metric', 'section_label', 'section_tone', 'value_tone', 'is_zero_or_empty', 'meta', 'metric', '0', 'win %', 'India', 'Australia', 'England', 'South Africa', 'New Zealand', 'Pakistan', 'Sri Lanka', 'West Indies', 'Bangladesh', 'Afghanistan', 'Mat', 'Won', 'Lost', 'Tie/NR', 'Win %', 'form_guide', ' Avg (1st)', 'Opp Avg (1st)', 'cell_tones', 'is_overall', '% win rate', '🔹 OVERALL', 'Overall benchmark', 'Player', 'SquadComparison', 'TacticalMatrix', 'Matchups', 'PlayerStats', 'Result', 'WIN', 'TIE', 'NR', 'LOSS', 'Int64', '<NA>', '(1st)', '(2nd)', 'TeamScore', 'OppScore', 'Venue', 'Date', 'RawResult', 'ResultTone', 'ResultSymbol', 'W', 'L', 'T', 'wins', 'losses', 'ties_or_nr', 'total', 'form_summary', 'is_win', 'Result: ', '\\[(\\d+)\\]', 45, 'strong', 30, 'BAT', 'primary', 'BOWL', 'CHASE', 'secondary', 'slate', '#', '[0-9a-fA-F]{6}', 16, 255.0, 4, 360, 255, 'blue', 85, 160, 'emerald', 35, 65, 'amber', 330, 'rose', 'violet', 'batting 1st', 'visitor', 'overall', 'tertiary', '✅', '🤝', '🌧️', '❌', 'Bunny Alert', 'bunny_alert', ', ', 'player_role', 'batting_form', 'DNB', 'bowling_form', 'batting_average', 'venue_runs', 'venue_batting_activity', 'Role', 'Inns', 'Bat Form', 'Bat Avg', 'vs Opp', 'vs_opposition_average', 'Ven Inns', 'venue_innings', 'Ven Runs', 'Ven Avg', 'venue_average', 'Ven HS', 'venue_high_score', 'Bowl Form', 'Bowl Econ', 'bowling_economy', 'Ven Econ', 'venue_economy', 'Ven Wkts', 'venue_wickets', 'Ven Matches', 'venue_matches', 'Unmapped', '_raw', 'model_dump', 'Team A', 'Team B', 'metrics_a', 'metrics_b', 'Caps (Combined)', 'caps', 'Avg Caps / Player', 'avg_caps', 'Total Runs', '100s', '50s', 'Total Wickets', 'wickets', '5W Hauls', 'five_wkt_hauls', 'XI Size', 'Years Window', 'player_stats_a', 'player_stats_b', 500, 'max_rows must be a positive integer.', '[]', 'iso', 'bowled', 'caught', 'lbw', 'stumped', 'caught and bowled', 'hit wicket', 'index', 'wicket_type', 'int64', 'float64', 'object', 'last', 'rank', 'runs_num', 'is_out', 'left', 'entry', 'wides_num', 'wides', 'noballs_num', 'noballs', 'is_wkt', 'legal_ball', 'total_runs', 'legal_balls', 'wkts', 'nunique', 'bool', 'empty', 'Non-fatal team phase normalization issue: %s', '[^a-z0-9]+', '\\([^)]*\\)', 'IND_', 'PAK_', 'SL_', 'BAN_', 'AFG_', 'UAE_', 'ENG_', 'IRE_', 'SCO_', 'NED_', 'AUS_', 'NZ_', 'SA_', 'ZIM_', 'WI_', 'USA_']

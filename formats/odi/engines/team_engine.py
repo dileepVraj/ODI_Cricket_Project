@@ -17,6 +17,11 @@ from formats.odi.config.settings import ODI_COUNTRY_PREFIX_MAP
 
 class TeamEngine(ITeamEngine):
     def __init__(
+        # INTENTIONAL: match_df, phase_df, dal
+        # discarded — engine is stateless.
+        # Data arrives via match_context per request.
+        # Do not assign or store these parameters.
+        # Do not remove this discard pattern.
         self,
         match_df: Optional[pd.DataFrame] = None,
         phase_df: Optional[pd.DataFrame] = None,
@@ -48,6 +53,8 @@ class TeamEngine(ITeamEngine):
     def _context_reference_date(self, match_context: TeamMatchContext) -> pd.Timestamp:
         raw_value = match_context.get("reference_date")
         if raw_value is None:
+            # _context_match_df is defined later in this file — not missing.
+            # Do not add a duplicate definition here.
             return self._compute_reference_date(self._context_match_df(match_context))
         try:
             return pd.Timestamp(raw_value).floor("D")
