@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 from dataclasses import dataclass
 import pandas as pd
+from core.interfaces.team_types import TacticalRecorderPort, DisplayRecord
 
 @dataclass
 class BattingStats:
@@ -53,12 +54,12 @@ class SquadComparisonData:
     team_b_name: str
     metrics_a: SquadMetrics
     metrics_b: SquadMetrics
-    player_stats_a: List[Dict[str, Any]]
-    player_stats_b: List[Dict[str, Any]]
-    tactical_matrix_a: List[Dict[str, Any]]
-    tactical_matrix_b: List[Dict[str, Any]]
-    matchups_a: Dict[str, List[Dict[str, Any]]]
-    matchups_b: Dict[str, List[Dict[str, Any]]]
+    player_stats_a: List[DisplayRecord]
+    player_stats_b: List[DisplayRecord]
+    tactical_matrix_a: List[DisplayRecord]
+    tactical_matrix_b: List[DisplayRecord]
+    matchups_a: Dict[str, List[DisplayRecord]]
+    matchups_b: Dict[str, List[DisplayRecord]]
     venue_id: str
     years: int
 
@@ -76,8 +77,20 @@ class IPlayerEngine(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_last_match_xi(self, team_name: str) -> List[str]:
-        """Returns the XI from the most recent match."""
+    def get_last_match_xi(
+        self,
+        team_name: str,
+        team_matches: Optional[pd.DataFrame] = None,
+        match_balls_df: Optional[pd.DataFrame] = None,
+    ) -> List[str]:
+        """
+        Returns the XI from the most recent match.
+
+        Dual-path contract (ARCH-DEC-01):
+        - Primary path: uses self.squads_df if populated (constructor data)
+        - Fallback path: uses team_matches + match_balls_df if provided (injection enrichment)
+        Returns [] if neither source yields results.
+        """
         raise NotImplementedError
 
     @abstractmethod
@@ -89,6 +102,8 @@ class IPlayerEngine(ABC):
         team_b_players: List[str],
         venue_id: str,
         years: Optional[int] = None,
+        *,
+        context_df: pd.DataFrame,
     ) -> SquadComparisonData:
         """Builds structured squad-comparison payload."""
         raise NotImplementedError
@@ -102,7 +117,9 @@ class IPlayerEngine(ABC):
         team_b_players: List[str],
         venue_id: str,
         years: Optional[int] = None,
-        recorder: Any = None,
+        recorder: Optional[TacticalRecorderPort] = None,
+        *,
+        context_df: pd.DataFrame,
     ) -> SquadComparisonData:
         """Compares two squads in a match context."""
         raise NotImplementedError
@@ -114,9 +131,10 @@ class IPlayerEngine(ABC):
         players: List[str],
         opposition_bowlers: List[str],
         years: Optional[int] = None,
-        recorder: Any = None,
-        context_df: Optional[pd.DataFrame] = None,
-    ) -> List[Dict[str, Any]]:
+        recorder: Optional[TacticalRecorderPort] = None,
+        *,
+        context_df: pd.DataFrame,
+    ) -> List[DisplayRecord]:
         """Analyzes batting archetypes against bowler styles."""
         raise NotImplementedError
 
@@ -126,10 +144,16 @@ class IPlayerEngine(ABC):
         player_name: str,
         opposition: Optional[str] = None,
         venue_id: Optional[str] = None,
-        years: int = 10,
+        years: Optional[int] = None,
+        raw_balls_df: Optional[pd.DataFrame] = None,
     ) -> Optional[PlayerProfile]:
         """
         Fetches the complete 360-degree profile of a player.
+
+        Dual-path contract (ARCH-DEC-01):
+        - Primary path: uses self.player_df (constructor data) for career stats
+        - Enrichment path: uses raw_balls_df if provided for milestone calculation
+        Returns None if player_name is not found.
         """
         raise NotImplementedError
 
@@ -137,11 +161,18 @@ class IPlayerEngine(ABC):
     def get_matchups(
         self,
         batter: str,
-        bowlers: List[str],
-        context_df: Optional[pd.DataFrame] = None,
-    ) -> List[Dict[str, Any]]:
+        bowlers: Optional[List[str]] = None,
+        *,
+        home_team: Optional[str] = None,
+        opp_team: Optional[str] = None,
+        home_xi: Optional[List[str]] = None,
+        away_xi: Optional[List[str]] = None,
+        context_df: pd.DataFrame,
+    ) -> List[DisplayRecord]:
         """
         Returns Head-to-Head stats for a batter against a specific list of bowlers.
+        Bowlers may be inferred from home_xi/away_xi if not provided directly.
+        context_df is required (ARCH-DEC-02).
         """
         raise NotImplementedError
 
@@ -152,7 +183,8 @@ class IPlayerEngine(ABC):
         opposition: Optional[str] = None,
         venue_id: Optional[str] = None,
         active_bowlers: Optional[List[str]] = None,
-        years: int = 10,
+        years: Optional[int] = None,
+        raw_balls_df: Optional[pd.DataFrame] = None,
     ) -> Optional[PlayerProfile]:
         """
         Context-aware player profile retrieval.
