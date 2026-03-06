@@ -6,74 +6,23 @@ These dataclasses are used as type hints and return types.
 The ITeamEngine ABC defines the minimum API any format's
 TeamEngine must implement.
 """
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, TypedDict
 from dataclasses import dataclass, field
 import pandas as pd
 
-
-@dataclass
-class VenueStats:
-    """Stats for a specific venue."""
-    venue_id: str
-    matches_played: int
-    home_win_pct: float
-    bat_first_win_pct: float
-    avg_first_inns_score: int
-    avg_wickets_lost: float
-
-
-@dataclass
-class TeamMatchup:
-    """Head-to-head record between two teams."""
-    team: str
-    opponent: str
-    matches: int
-    wins: int
-    losses: int
-    win_pct: float
-    last_5_results: List[str]  # ["W", "L", "W", "NR", "W"]
-
-
-@dataclass
-class FormGuide:
-    """Recent form summary for a team."""
-    team: str
-    total: int
-    wins: int
-    losses: int
-    win_pct: float
-    sequence: List[str]
-    form_string: str  # "W W L W L"
-
-
-@dataclass
-class TeamVenueStats:
-    """Detailed batting/chasing stats for a team at a specific venue."""
-    wins: int
-    defended: int
-    chased: int
-    bat1: Dict[str, Any]      # {avg, high, low, avg_win, low_def}
-    chase: Dict[str, Any]     # {avg, high, succ, fail}
-    team_color: Optional[str] = None
-    team_tone: Optional[str] = None
-    low_sample_warnings: List[str] = field(default_factory=list)
-    highlight_flags: Dict[str, bool] = field(default_factory=dict)
-    derived_badges: List[str] = field(default_factory=list)
-
-
-@dataclass
-class MatchIntelligenceData:
-    """Structured data for the dual-card Match Intelligence UI."""
-    summary: Dict[str, Any]   # {matches, win_pct, tie_nr}
-    team_a: Dict[str, Any]    # {name, stats: TeamVenueStats}
-    team_b: Dict[str, Any]    # {name, stats: TeamVenueStats}
-    venue_avg: Dict[str, Any] # {avg_1st, avg_2nd, avg_win_score}
-    MATCH_IDS: Optional[str] = None
-    low_sample_warnings: List[str] = field(default_factory=list)
-    highlight_flags: Dict[str, bool] = field(default_factory=dict)
-    derived_badges: List[str] = field(default_factory=list)
-
+from core.interfaces.team_types import (
+    ComparisonReportRows,
+    MatrixReportRows,
+    RecorderPort,
+    TeamFormRows,
+    TeamMatchContext,
+    VenueBiasReport,
+    VenueMatchupReport,
+    VenuePhasesReport,
+)
 
 class MatchContext(TypedDict, total=False):
     """Request-scoped context for stateless TeamEngine execution."""
@@ -102,10 +51,10 @@ class ITeamEngine(ABC):
         stadium_name: str,
         home_team: str,
         opp_team: str = 'All',
-        years_back: int = 10,
-        recorder: Any = None,
-        match_context: Optional[MatchContext] = None,
-    ) -> List[Dict[str, Any]]:
+        years_back: int = 0,
+        recorder: Optional[RecorderPort] = None,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> ComparisonReportRows:
         """Analyzes a team's performance at a specific stadium."""
         raise NotImplementedError
 
@@ -115,9 +64,9 @@ class ITeamEngine(ABC):
         stadium_name: str,
         home_team: str,
         opp_team: str,
-        years_back: int = 5,
-        match_context: Optional[MatchContext] = None,
-    ) -> MatchIntelligenceData:
+        years_back: int = 0,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> VenueMatchupReport:
         """Returns structured venue matchup intelligence payload."""
         raise NotImplementedError
 
@@ -127,10 +76,10 @@ class ITeamEngine(ABC):
         stadium_id: str,
         home_team: Optional[str] = None,
         away_team: Optional[str] = None,
-        years: int = 5,
-        recorder: Any = None,
-        match_context: Optional[MatchContext] = None,
-    ) -> Dict[str, Any]:
+        years: int = 0,
+        recorder: Optional[RecorderPort] = None,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> VenuePhasesReport:
         """Analyzes phase-level venue behavior."""
         raise NotImplementedError
 
@@ -138,10 +87,10 @@ class ITeamEngine(ABC):
     def analyze_venue_bias(
         self,
         stadium_name: str,
-        years_back: int = 10,
-        recorder: Any = None,
-        match_context: Optional[MatchContext] = None,
-    ) -> Optional[Dict[str, Any]]:
+        years_back: int = 0,
+        recorder: Optional[RecorderPort] = None,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> Optional[VenueBiasReport]:
         """Determines bat-first vs chase bias at a venue."""
         raise NotImplementedError
 
@@ -150,9 +99,9 @@ class ITeamEngine(ABC):
         self,
         home_team: str,
         opp_team: str,
-        years_back: int = 5,
-        match_context: Optional[MatchContext] = None,
-    ) -> Dict[str, Any]:
+        years_back: int = 0,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> ComparisonReportRows:
         """Analyzes Head-to-Head performance between two teams globally."""
         raise NotImplementedError
 
@@ -162,10 +111,10 @@ class ITeamEngine(ABC):
         home_team: str,
         opp_team: str = "All",
         country_name: Optional[str] = None,
-        years_back: int = 10,
-        recorder: Optional[Any] = None,
-        match_context: Optional[MatchContext] = None,
-    ) -> List[Dict[str, Any]]:
+        years_back: int = 0,
+        recorder: Optional[RecorderPort] = None,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> ComparisonReportRows:
         """Analyzes team performance by host country."""
         raise NotImplementedError
 
@@ -173,10 +122,10 @@ class ITeamEngine(ABC):
     def analyze_home_dominance(
         self,
         home_team: str,
-        years_back: int = 10,
-        recorder: Optional[Any] = None,
-        match_context: Optional[MatchContext] = None,
-    ) -> List[Dict[str, Any]]:
+        years_back: int = 0,
+        recorder: Optional[RecorderPort] = None,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> MatrixReportRows:
         """Analyzes home dominance matrix."""
         raise NotImplementedError
 
@@ -184,10 +133,10 @@ class ITeamEngine(ABC):
     def analyze_away_performance(
         self,
         team_name: str,
-        years_back: int = 5,
-        recorder: Optional[Any] = None,
-        match_context: Optional[MatchContext] = None,
-    ) -> List[Dict[str, Any]]:
+        years_back: int = 0,
+        recorder: Optional[RecorderPort] = None,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> MatrixReportRows:
         """Analyzes away performance matrix."""
         raise NotImplementedError
 
@@ -195,9 +144,9 @@ class ITeamEngine(ABC):
     def analyze_global_performance(
         self,
         team_name: str,
-        years_back: int = 5,
-        match_context: Optional[MatchContext] = None,
-    ) -> List[Dict[str, Any]]:
+        years_back: int = 0,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> MatrixReportRows:
         """Analyzes global performance matrix."""
         raise NotImplementedError
 
@@ -207,9 +156,9 @@ class ITeamEngine(ABC):
         team_name: str,
         continent: str,
         opp_team: str = "All",
-        years_back: int = 5,
-        match_context: Optional[MatchContext] = None,
-    ) -> List[Dict[str, Any]]:
+        years_back: int = 0,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> MatrixReportRows | ComparisonReportRows:
         """Analyzes regional/continent performance."""
         raise NotImplementedError
 
@@ -219,9 +168,9 @@ class ITeamEngine(ABC):
         team_name: str,
         opp_team: str = 'All',
         continent: str = 'All',
-        limit: int = 5,
-        recorder: Any = None,
-        match_context: Optional[MatchContext] = None,
-    ) -> List[Dict[str, Any]]:
+        limit: int = 0,
+        recorder: Optional[RecorderPort] = None,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> TeamFormRows:
         """Retrieves recent team form."""
         raise NotImplementedError
