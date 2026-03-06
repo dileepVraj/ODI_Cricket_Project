@@ -51,8 +51,14 @@ PLAYER_RULES = {
     "profile_years_default": 10,
     "milestone_century": 100,
     "milestone_half_century": 50,
-    "min_innings_threshold": 2,
     "profile_sr_min_balls": 60,
+    # ARCH-DEC-03: rounding precision
+    "stat_precision_avg": 0,
+    "stat_precision_rate": 1,
+    # ARCH-DEC-03: innings thresholds (replaces min_innings_threshold)
+    "min_innings_career": 20,
+    "min_innings_context": 5,
+    "min_innings_form": 3,
 }
 
 PLAYER_CONTEXT_TYPES = {
@@ -488,11 +494,26 @@ ENGINE_LITERAL_REGISTRY += [
     "profile_years_default",
     "milestone_century",
     "milestone_half_century",
-    "min_innings_threshold",
     "profile_sr_min_balls",
+    "stat_precision_avg",
+    "stat_precision_rate",
+    "min_innings_career",
+    "min_innings_context",
+    "min_innings_form",
     # PLAYER_CONTEXT_TYPES values absent from the original engine registry
     "all",
     "All",
+    0,
+    20,
+    5,
+    3,
+    "Invalid ",
+    " '",
+    "tactical threshold",
+    "Invalid format rule '",
+    "Format rule '",
+    "' must be > 0.",
+    "engine default",
 ]
 
 # Phase 11.2: Service literal registry for compliance-bouncer

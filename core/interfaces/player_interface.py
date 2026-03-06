@@ -20,7 +20,7 @@ class BowlingStats:
     wickets: int
     average: float
     economy: float
-    best_figures: str  # "5/24"
+    best_figures: Optional[str]  # "5/24"
     form_last_10: List[str]  # ["2/30", "0/45", "-"]
 
 @dataclass
@@ -38,17 +38,6 @@ class PlayerProfile:
     vs_opponent_stats: Optional[ContextStats]
 
 @dataclass
-class MatchupStats:
-    batter: str
-    bowler: str
-    balls: int
-    runs: int
-    outs: int
-    avg: float
-    sr: float
-    is_bunny: bool  # True if Outs >= 3
-
-@dataclass
 class SquadMetrics:
     caps: int
     runs: int
@@ -57,12 +46,6 @@ class SquadMetrics:
     fifties: int
     five_wkt_hauls: int
     avg_caps: int
-
-@dataclass
-class TacticalMatrixRow:
-    player: str
-    role: str
-    stats_per_style: Dict[str, Dict[str, Any]] # {Style: {avg, sr, raw_avg}}
 
 @dataclass
 class SquadComparisonData:

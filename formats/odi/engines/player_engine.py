@@ -54,10 +54,16 @@ class PlayerEngine(IPlayerEngine):
         
         self.player_df = player_df
         self.meta_df = meta_df
-        self.squads_df = squads_df if squads_df is not None else pd.DataFrame(columns=['match_id', 'player', 'date', 'team'])
-        
-        if not self.squads_df.empty:
-            self.squads_df['match_id'] = self.squads_df['match_id'].astype(str)
+        self.squads_df = self._normalise_squads_df(squads_df)
+
+    def _normalise_squads_df(self, squads_df: Optional[pd.DataFrame]) -> pd.DataFrame:
+        """Normalise squads_df: apply default columns and coerce match_id dtype."""
+        df = squads_df if squads_df is not None else pd.DataFrame(
+            columns=['match_id', 'player', 'date', 'team']
+        )
+        if not df.empty:
+            df['match_id'] = df['match_id'].astype(str)
+        return df
 
     def _require_nonempty_dict_rule(self, key: str) -> ManifestFunctionDef:
         raw_value = self.rules.get(key)
@@ -68,17 +74,25 @@ class PlayerEngine(IPlayerEngine):
             )
         return raw_value
 
-    def _require_tactical_thresholds(self) -> Dict[str, int]:
-        thresholds = self._require_nonempty_dict_rule("tactical_thresholds")
+    def _coerce_dict_values_to_int(
+        self,
+        raw: Dict[str, int | str],
+        context_key: str,
+    ) -> Dict[str, int]:
+        """Coerce all values in a string-keyed dict to int."""
         normalized: Dict[str, int] = {}
-        for key, value in thresholds.items():
+        for key, value in raw.items():
             try:
                 normalized[str(key)] = int(value)
             except (TypeError, ValueError) as exc:
                 raise ConfigurationError(
-                    f"Invalid tactical threshold '{key}': {value!r}. Expected integer."
+                    f"Invalid {context_key} '{key}': {value!r}. Expected integer."
                 ) from exc
         return normalized
+
+    def _require_tactical_thresholds(self) -> Dict[str, int]:
+        thresholds = self._require_nonempty_dict_rule("tactical_thresholds")
+        return self._coerce_dict_values_to_int(thresholds, "tactical threshold")
 
     def _require_style_map(self) -> Dict[str, str]:
         style_map = self._require_nonempty_dict_rule("style_map")
@@ -97,6 +111,18 @@ class PlayerEngine(IPlayerEngine):
             )
         return raw_value.strip()
 
+    def _coerce_positive_int_rule(self, raw_value: int | str, rule_name: str) -> int:
+        """Coerce a raw rule value to a positive integer."""
+        try:
+            coerced = int(raw_value)
+        except (TypeError, ValueError) as exc:
+            raise ConfigurationError(
+                f"Invalid format rule '{rule_name}': {raw_value!r}"
+            ) from exc
+        if coerced <= 0:
+            raise ConfigurationError(f"Format rule '{rule_name}' must be > 0.")
+        return coerced
+
     def _require_default_years_window(self) -> int:
         raw_value = self.rules.get("default_years_window")
         if raw_value is None:
@@ -104,27 +130,11 @@ class PlayerEngine(IPlayerEngine):
                 "Missing required format rule 'default_years_window'. "
                 "Define it in manifest FORMAT_RULES and pass it into PlayerEngine."
             )
-        try:
-            years_window = int(raw_value)
-        except (TypeError, ValueError) as exc:
-            raise ConfigurationError(
-                f"Invalid format rule 'default_years_window': {raw_value!r}"
-            ) from exc
-        if years_window <= 0:
-            raise ConfigurationError("Format rule 'default_years_window' must be > 0.")
-        return years_window
+        return self._coerce_positive_int_rule(raw_value, "default_years_window")
 
     def _require_engine_defaults(self) -> Dict[str, int]:
         defaults = self._require_nonempty_dict_rule("engine_defaults")
-        normalized: Dict[str, int] = {}
-        for key, value in defaults.items():
-            try:
-                normalized[str(key)] = int(value)
-            except (TypeError, ValueError) as exc:
-                raise ConfigurationError(
-                    f"Invalid engine default '{key}': {value!r}. Expected integer."
-                ) from exc
-        return normalized
+        return self._coerce_dict_values_to_int(defaults, "engine default")
 
     def _get_player_role(self, player_name: str) -> str:
         """Returns the role of a player from config or default."""
@@ -143,9 +153,12 @@ class PlayerEngine(IPlayerEngine):
         return pd.Timestamp.now().floor('D')
 
     def _get_reference_date(self) -> pd.Timestamp:
-        if getattr(self, '_reference_date', None) is None:
+        if not self._is_reference_date_cached():
             self._reference_date = self._compute_reference_date()
         return self._reference_date
+
+    def _is_reference_date_cached(self) -> bool:
+        return getattr(self, '_reference_date', None) is not None
 
     def _get_years_back(self, years: Optional[int]) -> int:
         if years is None:
@@ -242,6 +255,19 @@ class PlayerEngine(IPlayerEngine):
             
         return sorted(list(squad))
 
+    def _build_squad_context_df(
+        self,
+        context_df: Optional[pd.DataFrame],
+        cutoff_date: pd.Timestamp,
+    ) -> pd.DataFrame:
+        squad_context_df = context_df.copy() if isinstance(context_df, pd.DataFrame) else pd.DataFrame()
+        if not squad_context_df.empty and 'start_date' in squad_context_df.columns:
+            squad_context_df['start_date'] = pd.to_datetime(
+                squad_context_df['start_date'], errors='coerce'
+            )
+            squad_context_df = squad_context_df[squad_context_df['start_date'] >= cutoff_date]
+        return squad_context_df
+
     def get_squad_comparison_data(
         self,
         team_a_name: str,
@@ -260,10 +286,7 @@ class PlayerEngine(IPlayerEngine):
         # 1. OPTIMIZATION: Create Squad Context Subset
         years_back = self._get_years_back(years)
         cutoff_date = self._get_reference_date() - pd.DateOffset(years=years_back)
-        squad_context_df = context_df.copy()
-        if not squad_context_df.empty and 'start_date' in squad_context_df.columns:
-            squad_context_df['start_date'] = pd.to_datetime(squad_context_df['start_date'], errors='coerce')
-            squad_context_df = squad_context_df[squad_context_df['start_date'] >= cutoff_date]
+        squad_context_df = self._build_squad_context_df(context_df, cutoff_date)
         
         # 2. VENUE PATTERN
         aliases = get_venue_aliases(venue_id)
@@ -495,7 +518,7 @@ class PlayerEngine(IPlayerEngine):
         }).reset_index()
         
         matchup_stats.rename(columns={'match_id': 'Balls', 'runs_off_bat': 'Runs', 'player_dismissed': 'Outs'}, inplace=True)
-        matchup_stats['Style'] = matchup_stats['bowler'].map(self.style_map).fillna('Unknown')
+        matchup_stats['Style'] = matchup_stats['bowler'].map(self.style_map)
         outs = matchup_stats['Outs'].astype(float)
         balls = matchup_stats['Balls'].astype(float)
         matchup_stats['IsBunny'] = (
@@ -540,10 +563,7 @@ class PlayerEngine(IPlayerEngine):
         aliases = get_venue_aliases(venue_id)
         venue_pattern = '|'.join([re.escape(v) for v in aliases if v])
         cutoff_date = self._get_reference_date() - pd.DateOffset(years=years_back)
-        squad_context_df = context_df.copy() if isinstance(context_df, pd.DataFrame) else pd.DataFrame()
-        if not squad_context_df.empty and 'start_date' in squad_context_df.columns:
-            squad_context_df['start_date'] = pd.to_datetime(squad_context_df['start_date'], errors='coerce')
-            squad_context_df = squad_context_df[squad_context_df['start_date'] >= cutoff_date]
+        squad_context_df = self._build_squad_context_df(context_df, cutoff_date)
         team_a_bundle = self.squad_service.get_bulk_metrics(
             base_df=squad_context_df,
             player_ids=team_a_players,
@@ -601,6 +621,9 @@ class PlayerEngine(IPlayerEngine):
         hs = match_sums.max() if not match_sums.empty else 0
         return centuries, fifties, hs
 
+    def _player_exists(self, player_name: str) -> bool:
+        return player_name in self.player_df['player'].values
+
     def get_player_profile(
         self,
         player_name: str,
@@ -612,7 +635,7 @@ class PlayerEngine(IPlayerEngine):
         """
         Headless API: Fetches player profile data.
         """
-        if player_name not in self.player_df['player'].values:
+        if not self._player_exists(player_name):
             return None
         
         years_back = self._get_years_back(years)
@@ -630,7 +653,7 @@ class PlayerEngine(IPlayerEngine):
             inns = int(career_bat['innings'].sum())
             outs = int(career_bat['dismissals'].sum())
             balls = int(career_bat['balls'].sum())
-            avg = round(runs / outs, 2) if outs > 0 else runs
+            avg = round(runs / outs, self.rules["player_rules"]["stat_precision_avg"]) if outs > 0 else runs
             sr = round((runs / balls) * self.rules["SPORT_CONSTANTS"]["percent_scale"], 1) if balls > 0 else 0.0
             
             raw_bat = pd.DataFrame()
@@ -655,9 +678,9 @@ class PlayerEngine(IPlayerEngine):
             b_balls = int(career_bowl['balls'].sum())
             b_wkts = int(career_bowl['dismissals'].sum())
             if b_balls > self.rules["player_rules"]["profile_sr_min_balls"]:
-                b_avg = round(b_runs / b_wkts, 2) if b_wkts > 0 else 0.0
-                b_econ = round((b_runs / b_balls) * self.rules["SPORT_CONSTANTS"]["balls_per_over"], 2) if b_balls > 0 else 0.0
-                bowl_stats = BowlingStats(0, b_wkts, b_avg, b_econ, "N/A", [])
+                b_avg = round(b_runs / b_wkts, self.rules["player_rules"]["stat_precision_avg"]) if b_wkts > 0 else 0.0
+                b_econ = round((b_runs / b_balls) * self.rules["SPORT_CONSTANTS"]["balls_per_over"], self.rules["player_rules"]["stat_precision_rate"]) if b_balls > 0 else 0.0
+                bowl_stats = BowlingStats(0, b_wkts, b_avg, b_econ, None, [])
 
         # CONTEXT
         vs_opponent_context = None
@@ -670,7 +693,7 @@ class PlayerEngine(IPlayerEngine):
             ]
             if not opp_bat.empty:
                 r = int(opp_bat['runs'].sum()); i = int(opp_bat['innings'].sum()); o = int(opp_bat['dismissals'].sum()); b = int(opp_bat['balls'].sum())
-                av = round(r / o, 2) if o > 0 else r; sr = round((r / b) * self.rules["SPORT_CONSTANTS"]["percent_scale"], 1) if b > 0 else 0.0
+                av = round(r / o, self.rules["player_rules"]["stat_precision_avg"]) if o > 0 else r; sr = round((r / b) * self.rules["SPORT_CONSTANTS"]["percent_scale"], 1) if b > 0 else 0.0
                 vs_opponent_context = ContextStats(batting=BattingStats(i, r, av, sr, 0, 0, 0, []), bowling=None)
 
         venue_context = None
@@ -684,7 +707,7 @@ class PlayerEngine(IPlayerEngine):
             ]
             if not ven_bat.empty:
                 r = int(ven_bat['runs'].sum()); i = int(ven_bat['innings'].sum()); o = int(ven_bat['dismissals'].sum()); b = int(ven_bat['balls'].sum())
-                av = round(r / o, 2) if o > 0 else r; sr = round((r / b) * self.rules["SPORT_CONSTANTS"]["percent_scale"], 1) if b > 0 else 0.0
+                av = round(r / o, self.rules["player_rules"]["stat_precision_avg"]) if o > 0 else r; sr = round((r / b) * self.rules["SPORT_CONSTANTS"]["percent_scale"], 1) if b > 0 else 0.0
                 venue_context = ContextStats(batting=BattingStats(i, r, av, sr, 0, 0, 0, []), bowling=None)
 
         return PlayerProfile(
@@ -708,7 +731,7 @@ class PlayerEngine(IPlayerEngine):
         """
         Headless API: Context-Aware Player Profile retrieval.
         """
-        if player_name not in self.player_df['player'].values:
+        if not self._player_exists(player_name):
             return None
 
         _ = active_bowlers
