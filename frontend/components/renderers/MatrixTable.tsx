@@ -43,6 +43,27 @@ export default function MatrixTable({ data }: MatrixTableProps) {
         }
     }
 
+    function navigateToOpponent(opponent: string): void {
+        if (!activeFormat || !opponent) {
+            return;
+        }
+
+        const target = `/${encodeURIComponent(activeFormat)}/rivalry/global_h2h?team_b=${encodeURIComponent(opponent)}`;
+        router.push(target);
+    }
+
+    function handleActivationKey(
+        event: React.KeyboardEvent<HTMLElement>,
+        action: () => void
+    ): void {
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        event.preventDefault();
+        action();
+    }
+
     const sortedRows = useMemo(() => {
         if (!sortCol) return regularRows;
         return [...regularRows].sort((a, b) => {
@@ -98,6 +119,16 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                             <th
                                 key={col}
                                 onClick={() => handleSort(col)}
+                                onKeyDown={(event) => handleActivationKey(event, () => handleSort(col))}
+                                role="button"
+                                tabIndex={0}
+                                aria-sort={
+                                    sortCol === col
+                                        ? sortDir === "asc"
+                                            ? "ascending"
+                                            : "descending"
+                                        : "none"
+                                }
                                 className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] ${col === "Opponent" || col === "form_guide" ? "[text-align:left]" : "[text-align:right]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
                             >
                                 <span className="[display:inline-flex] [align-items:center] [gap:4px]">
@@ -124,12 +155,18 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                                         key={col}
                                         className={`[padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || col === "form_guide" ? "[text-align:left]" : "[text-align:right]"} ${isNum ? "font-numeric" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
                                         onClick={() => {
-                                            if (isOpponent && activeFormat) {
-                                                const opp = String(val);
-                                                const target = `/${encodeURIComponent(activeFormat)}/rivalry/global_h2h?team_b=${encodeURIComponent(opp)}`;
-                                                router.push(target);
+                                            if (isOpponent) {
+                                                navigateToOpponent(String(val ?? ""));
                                             }
                                         }}
+                                        onKeyDown={(event) => {
+                                            if (isOpponent) {
+                                                handleActivationKey(event, () => navigateToOpponent(String(val ?? "")));
+                                            }
+                                        }}
+                                        role={isOpponent ? "button" : undefined}
+                                        tabIndex={isOpponent ? 0 : undefined}
+                                        aria-label={isOpponent ? `Open rivalry view for ${String(val ?? "")}` : undefined}
                                     >
                                         {col === "form_guide" ? <FormGuide value={String(val ?? "")} /> : formatVal(val)}
                                     </td>

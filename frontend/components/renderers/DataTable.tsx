@@ -45,6 +45,18 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
         setPage(0);
     }
 
+    function handleHeaderKeyDown(
+        event: React.KeyboardEvent<HTMLTableCellElement>,
+        col: string
+    ): void {
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        event.preventDefault();
+        handleSort(col);
+    }
+
     const sorted = useMemo(() => {
         if (!sortCol) return rows;
         return [...rows].sort((a, b) => {
@@ -81,6 +93,16 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
                                 <th
                                     key={col}
                                     onClick={() => handleSort(col)}
+                                    onKeyDown={(event) => handleHeaderKeyDown(event, col)}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-sort={
+                                        sortCol === col
+                                            ? sortDir === "asc"
+                                                ? "ascending"
+                                                : "descending"
+                                            : "none"
+                                    }
                                     className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] [transition:color_var(--transition-fast)] ${isNumericColumn(data, col) ? "[text-align:right]" : "[text-align:left]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
                                 >
                                     <span className="[display:inline-flex] [align-items:center] [gap:4px]">

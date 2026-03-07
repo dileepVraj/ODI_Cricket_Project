@@ -6,6 +6,16 @@ function isRecord(value: unknown): value is UnknownRecord {
     return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+/** @schema runtime-guard:event-target-node */
+export function isNodeTarget(value: EventTarget | null): value is Node {
+    return value instanceof Node;
+}
+
+/** @schema runtime-guard:event-target-html-element */
+export function isHTMLElementTarget(value: EventTarget | null): value is HTMLElement {
+    return value instanceof HTMLElement;
+}
+
 function toRecord(value: unknown): UnknownRecord | null {
     if (!isRecord(value)) {
         return null;
