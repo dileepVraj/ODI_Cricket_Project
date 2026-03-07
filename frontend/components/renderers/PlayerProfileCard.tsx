@@ -4,6 +4,7 @@ import { Award, Target, User } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
 import QuickLinks from "@/components/navigation/QuickLinks";
 import { useAppContext } from "@/lib/context";
+import { PlayerPayloadFragment, toPlayerPayloadFragment } from "@/lib/types";
 
 interface PlayerProfileCardProps {
     data: Record<string, unknown>;
@@ -28,15 +29,12 @@ export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
     const team = String(data["team"] ?? data["Team"] ?? "");
     const role = String(data["role"] ?? data["Role"] ?? "");
 
-    const toObj = (v: unknown): Record<string, unknown> | null =>
-        v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : null;
+    const battingObj = toPlayerPayloadFragment(data["batting"]);
+    const bowlingObj = toPlayerPayloadFragment(data["bowling"]);
+    const venueCtx = toPlayerPayloadFragment(data["venue_stats"]);
+    const opponentCtx = toPlayerPayloadFragment(data["vs_opponent_stats"]);
 
-    const battingObj = toObj(data["batting"]);
-    const bowlingObj = toObj(data["bowling"]);
-    const venueCtx = toObj(data["venue_stats"]);
-    const opponentCtx = toObj(data["vs_opponent_stats"]);
-
-    const pickStats = (obj: Record<string, unknown> | null, keys: string[]): [string, unknown][] => {
+    const pickStats = (obj: PlayerPayloadFragment | null, keys: string[]): [string, unknown][] => {
         if (!obj) return [];
         const out: [string, unknown][] = [];
         for (const key of keys) {
@@ -56,10 +54,10 @@ export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
     ]);
     const bowlingStatsNested = pickStats(bowlingObj, ["innings", "wickets", "average", "economy", "best_figures"]);
 
-    const contextToStats = (ctx: Record<string, unknown> | null): [string, unknown][] => {
+    const contextToStats = (ctx: PlayerPayloadFragment | null): [string, unknown][] => {
         if (!ctx) return [];
-        const bat = toObj(ctx["batting"]);
-        const bowl = toObj(ctx["bowling"]);
+        const bat = toPlayerPayloadFragment(ctx["batting"]);
+        const bowl = toPlayerPayloadFragment(ctx["bowling"]);
         return [
             ...pickStats(bat, ["innings", "runs", "average", "strike_rate", "highest_score", "centuries", "fifties"]),
             ...pickStats(bowl, ["innings", "wickets", "average", "economy", "best_figures"]),
@@ -137,7 +135,7 @@ export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
         <div className="[display:flex] [flex-direction:column] [gap:20px]">
             <div className="glass-card [padding:24px] [display:flex] [align-items:center] [gap:20px] [border:1px_solid_var(--border-accent)]">
                 <div className="[width:56px] [height:56px] [border-radius:50%] [background:linear-gradient(135deg,_var(--accent-primary),_var(--accent-secondary))] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0]">
-                    <User size={28} className="[color:white]" />
+                    <User size={28} className="[color:var(--text-primary)]" />
                 </div>
 
                 <div className="[flex:1]">

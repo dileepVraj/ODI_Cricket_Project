@@ -2,6 +2,7 @@
 
 import { Gauge, Info, TrendingDown, TrendingUp } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
+import { getPredictionGauge, getPredictionNotes } from "@/lib/types";
 
 interface PredictionCardProps {
     data: Record<string, unknown>;
@@ -43,8 +44,8 @@ export default function PredictionCard({ data }: PredictionCardProps) {
     const batTeam = String(data["batting_team"] ?? "Batting Team");
     const bowlTeam = String(data["bowling_team"] ?? "Bowling Team");
     const venue = String(data["venue"] ?? data["venue_id"] ?? "");
-    const notes = (data["Adjustment_Notes"] ?? data["adjustment_notes"] ?? data["adjustment_msg"] ?? []) as string[];
-    const gauge = (data["gauge_positions"] ?? {}) as Record<string, unknown>;
+    const notes = getPredictionNotes(data["Adjustment_Notes"] ?? data["adjustment_notes"] ?? data["adjustment_msg"]);
+    const gauge = getPredictionGauge(data["gauge_positions"]);
     const aboveParText = String(data["above_par_text"] ?? "At par");
     const aboveParTone = String(data["above_par_tone"] ?? "muted");
     const parMarkerLeft = `${Number(gauge["par_marker_pct"] ?? 50)}%`;

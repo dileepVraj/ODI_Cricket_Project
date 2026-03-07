@@ -2,20 +2,10 @@
 
 import { Calendar, MapPin, Swords } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
+import { FormRow, toFormRows } from "@/lib/types";
 
 interface FormTableProps {
     data: Record<string, unknown>[];
-}
-
-interface FormRow extends Record<string, unknown> {
-    ResultTone?: string;
-    ResultSymbol?: string;
-    form_summary?: {
-        wins: number;
-        losses: number;
-        ties_or_nr: number;
-        total: number;
-    };
 }
 
 function resultClasses(resultTone: string | undefined): {
@@ -27,28 +17,28 @@ function resultClasses(resultTone: string | undefined): {
 } {
     if (resultTone === "elite") {
         return {
-            dotBg: "bg-emerald-500/15 border-2 border-emerald-400/40",
-            dotText: "text-emerald-300",
-            borderLeft: "border-l-4 border-l-emerald-400",
+            dotBg: "[background:var(--glass-bg)] [border:2px_solid_var(--tier-elite)]",
+            dotText: "[color:var(--tier-elite)]",
+            borderLeft: "[border-left:4px_solid_var(--tier-elite)]",
             badge: "badge-elite",
-            score: "text-emerald-300",
+            score: "[color:var(--tier-elite)]",
         };
     }
     if (resultTone === "danger") {
         return {
-            dotBg: "bg-rose-500/15 border-2 border-rose-400/40",
-            dotText: "text-rose-300",
-            borderLeft: "border-l-4 border-l-rose-400",
+            dotBg: "[background:var(--glass-bg)] [border:2px_solid_var(--tier-danger)]",
+            dotText: "[color:var(--tier-danger)]",
+            borderLeft: "[border-left:4px_solid_var(--tier-danger)]",
             badge: "badge-danger",
-            score: "text-slate-100",
+            score: "[color:var(--text-primary)]",
         };
     }
     return {
-        dotBg: "bg-amber-500/15 border-2 border-amber-400/40",
-        dotText: "text-amber-300",
-        borderLeft: "border-l-4 border-l-amber-400",
+        dotBg: "[background:var(--glass-bg)] [border:2px_solid_var(--tier-caution)]",
+        dotText: "[color:var(--tier-caution)]",
+        borderLeft: "[border-left:4px_solid_var(--tier-caution)]",
         badge: "badge-caution",
-        score: "text-slate-100",
+        score: "[color:var(--text-primary)]",
     };
 }
 
@@ -57,7 +47,7 @@ export default function FormTable({ data }: FormTableProps) {
         return <EmptyState message="No recent form data available." />;
     }
 
-    const rows = data as FormRow[];
+    const rows = toFormRows(data);
     const summary = rows[0]?.form_summary;
     const wins = summary?.wins ?? 0;
     const losses = summary?.losses ?? 0;

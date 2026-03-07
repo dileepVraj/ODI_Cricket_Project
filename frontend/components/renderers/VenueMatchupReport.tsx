@@ -3,53 +3,7 @@
 import React from "react";
 import { AlertCircle, BarChart3, Dna, MapPin, ShieldCheck, Target, Trophy } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
-
-interface TeamStats {
-    wins: number;
-    defended: number;
-    chased: number;
-    bat1: {
-        avg: string;
-        high: string;
-        low: string;
-        avg_win: string;
-        low_def: string;
-    };
-    chase: {
-        avg: string;
-        high: string;
-        succ: string;
-        fail: string;
-    };
-    team_color: string;
-    team_tone?: TeamTone;
-}
-
-interface VenueMatchupData {
-    summary: {
-        matches: number;
-        win_pct: number;
-        tie_nr: number;
-        last_5_home?: string;
-        last_5_away?: string;
-    };
-    team_a: {
-        name: string;
-        stats: TeamStats;
-    };
-    team_b: {
-        name: string;
-        stats: TeamStats;
-    };
-    venue_avg: {
-        avg_1st: string;
-        avg_2nd: string;
-        avg_win_score: string;
-    };
-    low_sample_warnings?: string[];
-    highlight_flags?: Record<string, boolean>;
-    derived_badges?: string[];
-}
+import { TeamTone, VenueMatchupData, getTeamTone, getVenueMatchupData } from "@/lib/types";
 
 interface SummaryItemProps {
     label: string;
@@ -61,7 +15,7 @@ interface SummaryItemProps {
 interface TeamCardProps {
     team: {
         name: string;
-        stats: TeamStats;
+        stats: VenueMatchupData["team_a"]["stats"];
     };
 }
 
@@ -72,79 +26,77 @@ interface StatBadgeProps {
 }
 
 interface VenueMatchupReportProps {
-    data: VenueMatchupData;
+    data: Record<string, unknown>;
     averagesTitle?: string;
 }
-
-type TeamTone = "blue" | "emerald" | "amber" | "rose" | "violet" | "slate";
-
 function toneClasses(tone: TeamTone): { border: string; overlay: string; title: string } {
     if (tone === "blue") {
         return {
-            border: "border-sky-400/35",
-            overlay: "[background:linear-gradient(180deg,rgba(56,189,248,0.18),transparent)]",
-            title: "text-sky-300",
+            border: "[border-color:var(--border-accent)]",
+            overlay: "[background:linear-gradient(180deg,_var(--accent-primary),_transparent)] [opacity:0.18]",
+            title: "[color:var(--accent-primary)]",
         };
     }
     if (tone === "emerald") {
         return {
-            border: "border-emerald-400/35",
-            overlay: "[background:linear-gradient(180deg,rgba(52,211,153,0.18),transparent)]",
-            title: "text-emerald-300",
+            border: "[border-color:var(--tier-elite)]",
+            overlay: "[background:linear-gradient(180deg,_var(--tier-elite),_transparent)] [opacity:0.18]",
+            title: "[color:var(--tier-elite)]",
         };
     }
     if (tone === "amber") {
         return {
-            border: "border-amber-400/35",
-            overlay: "[background:linear-gradient(180deg,rgba(251,191,36,0.2),transparent)]",
-            title: "text-amber-300",
+            border: "[border-color:var(--tier-caution)]",
+            overlay: "[background:linear-gradient(180deg,_var(--tier-caution),_transparent)] [opacity:0.2]",
+            title: "[color:var(--tier-caution)]",
         };
     }
     if (tone === "rose") {
         return {
-            border: "border-rose-400/35",
-            overlay: "[background:linear-gradient(180deg,rgba(251,113,133,0.18),transparent)]",
-            title: "text-rose-300",
+            border: "[border-color:var(--tier-danger)]",
+            overlay: "[background:linear-gradient(180deg,_var(--tier-danger),_transparent)] [opacity:0.18]",
+            title: "[color:var(--tier-danger)]",
         };
     }
     if (tone === "violet") {
         return {
-            border: "border-violet-400/35",
-            overlay: "[background:linear-gradient(180deg,rgba(167,139,250,0.2),transparent)]",
-            title: "text-violet-300",
+            border: "[border-color:var(--accent-secondary)]",
+            overlay: "[background:linear-gradient(180deg,_var(--accent-secondary),_transparent)] [opacity:0.2]",
+            title: "[color:var(--accent-secondary)]",
         };
     }
     return {
-        border: "border-slate-400/30",
-        overlay: "[background:linear-gradient(180deg,rgba(148,163,184,0.16),transparent)]",
-        title: "text-slate-200",
+        border: "[border-color:var(--glass-border)]",
+        overlay: "[background:linear-gradient(180deg,_var(--text-secondary),_transparent)] [opacity:0.16]",
+        title: "[color:var(--text-secondary)]",
     };
 }
 
 export default function VenueMatchupReport({ data, averagesTitle = "VENUE AVERAGES" }: VenueMatchupReportProps) {
-    if (!data || !data.team_a || !data.team_b) {
+    const payload = getVenueMatchupData(data);
+    if (!payload) {
         return <EmptyState message="No venue matchup data available." />;
     }
 
-    const { summary, team_a, team_b, venue_avg } = data;
-    const hasFormGuide = Boolean(data.highlight_flags?.has_form_guide);
-    const lowSampleWarnings = Array.isArray(data.low_sample_warnings) ? data.low_sample_warnings : [];
+    const { summary, team_a, team_b, venue_avg } = payload;
+    const hasFormGuide = Boolean(payload.highlight_flags?.has_form_guide);
+    const lowSampleWarnings = payload.low_sample_warnings ?? [];
 
     return (
         <div className="flex flex-col gap-7 w-full max-w-5xl mx-auto p-2 animate-fade-in">
-            <div className="grid grid-cols-3 bg-slate-800/35 border border-white/10 rounded-xl overflow-hidden backdrop-blur-sm shadow-[0_10px_28px_rgba(2,8,23,0.28)]">
+            <div className="grid grid-cols-3 [background:var(--glass-bg)] [border:1px_solid_var(--glass-border)] rounded-xl overflow-hidden backdrop-blur-sm [box-shadow:var(--shadow-md)]">
                 <SummaryItem label="MATCHES" value={summary.matches} icon={<BarChart3 size={16} />} />
                 <SummaryItem
                     label={`${team_a.name} WIN %`}
                     value={`${summary.win_pct}%`}
                     highlight
-                    icon={<Trophy size={16} className="text-amber-400" />}
+                    icon={<Trophy size={16} className="[color:var(--tier-caution)]" />}
                 />
                 <SummaryItem label="TIE/NR" value={summary.tie_nr} icon={<Dna size={16} />} />
             </div>
 
             {hasFormGuide && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-800/25 border border-white/10 rounded-xl p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 [background:var(--glass-bg)] [border:1px_solid_var(--glass-border)] rounded-xl p-4">
                     <FooterItem label={`${team_a.name} Last 5`} value={summary.last_5_home || "-"} />
                     <FooterItem label={`${team_b.name} Last 5`} value={summary.last_5_away || "-"} />
                 </div>
@@ -156,9 +108,9 @@ export default function VenueMatchupReport({ data, averagesTitle = "VENUE AVERAG
             </div>
 
             <div className="flex flex-col gap-4">
-                <div className="bg-slate-800/35 border border-white/10 rounded-xl p-5 flex flex-wrap justify-center items-center gap-x-12 gap-y-4 backdrop-blur-sm shadow-[0_8px_24px_rgba(2,8,23,0.22)]">
-                    <div className="flex items-center gap-2 text-slate-300 text-sm font-bold tracking-tight">
-                        <MapPin size={16} className="text-blue-400" /> {averagesTitle}
+                <div className="[background:var(--glass-bg)] [border:1px_solid_var(--glass-border)] rounded-xl p-5 flex flex-wrap justify-center items-center gap-x-12 gap-y-4 backdrop-blur-sm [box-shadow:var(--shadow-md)]">
+                    <div className="flex items-center gap-2 [color:var(--text-secondary)] text-sm font-bold tracking-tight">
+                        <MapPin size={16} className="[color:var(--accent-primary)]" /> {averagesTitle}
                     </div>
                     <FooterItem label="1st Inn Avg" value={venue_avg.avg_1st} />
                     <FooterItem label="2nd Inn Avg" value={venue_avg.avg_2nd} />
@@ -166,14 +118,14 @@ export default function VenueMatchupReport({ data, averagesTitle = "VENUE AVERAG
                 </div>
 
                 {lowSampleWarnings.length > 0 && (
-                    <div className="flex items-start justify-center gap-3 px-6 py-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl">
-                        <AlertCircle size={16} className="text-amber-500 mt-0.5 shrink-0" />
+                    <div className="flex items-start justify-center gap-3 px-6 py-3.5 [background:var(--glass-bg)] [border:1px_solid_var(--tier-caution)] rounded-xl">
+                        <AlertCircle size={16} className="[color:var(--tier-caution)] mt-0.5 shrink-0" />
                         <div className="flex flex-col gap-1">
-                            <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest">
+                            <p className="text-[11px] font-bold [color:var(--tier-caution)] uppercase tracking-widest">
                                 Accuracy Notice: Sparse Data Detected
                             </p>
-                            <p className="text-[12px] text-amber-200/70 italic leading-relaxed">
-                                The statistical sample is currently low for: <span className="text-amber-100 font-semibold">{lowSampleWarnings.join(", ")}</span>. Averages
+                            <p className="text-[12px] [color:var(--text-secondary)] italic leading-relaxed">
+                                The statistical sample is currently low for: <span className="[color:var(--text-primary)] font-semibold">{lowSampleWarnings.join(", ")}</span>. Averages
                                 derived from fewer than 3 matches may not represent long-term trends.
                             </p>
                         </div>
@@ -186,13 +138,13 @@ export default function VenueMatchupReport({ data, averagesTitle = "VENUE AVERAG
 
 function SummaryItem({ label, value, highlight = false, icon }: SummaryItemProps) {
     return (
-        <div className="flex flex-col items-center justify-center p-5 border-r border-white/10 last:border-0">
-            <span className={`text-[2rem] leading-none font-black font-numeric ${highlight ? "text-blue-400" : "text-white"}`}>
+        <div className="flex flex-col items-center justify-center p-5 border-r [border-color:var(--glass-border)] last:border-0">
+            <span className={`text-[2rem] leading-none font-black font-numeric ${highlight ? "[color:var(--accent-primary)]" : "[color:var(--text-primary)]"}`}>
                 {value}
             </span>
             <div className="flex items-center gap-1.5 mt-1.5">
                 {icon}
-                <span className="text-[10px] font-semibold tracking-[0.14em] text-slate-400 uppercase">{label}</span>
+                <span className="text-[10px] font-semibold tracking-[0.14em] [color:var(--text-secondary)] uppercase">{label}</span>
             </div>
         </div>
     );
@@ -202,46 +154,46 @@ function TeamCard({ team }: TeamCardProps) {
     const s = team.stats;
     if (!s) {
         return (
-            <div className="p-10 text-center text-slate-500 bg-slate-800/20 rounded-xl border border-dashed border-slate-700">
+            <div className="p-10 text-center [color:var(--text-muted)] [background:var(--bg-surface)] rounded-xl [border:1px_dashed_var(--border-default)]">
                 No data for {team.name}
             </div>
         );
     }
 
-    const tone = toneClasses((s.team_tone as TeamTone) ?? "slate");
+    const tone = toneClasses(getTeamTone(s.team_tone));
 
     return (
-        <div className={`relative bg-slate-900/78 border rounded-2xl overflow-hidden backdrop-blur-sm shadow-[0_14px_34px_rgba(2,8,23,0.42)] ${tone.border}`}>
+        <div className={`relative [background:var(--bg-surface)] border rounded-2xl overflow-hidden backdrop-blur-sm [box-shadow:var(--shadow-lg)] ${tone.border}`}>
             <div className={`pointer-events-none absolute inset-x-0 top-0 h-20 opacity-25 ${tone.overlay}`} />
 
-            <div className="p-6 border-b border-white/10 flex flex-col items-center gap-5">
+            <div className="p-6 border-b [border-color:var(--glass-border)] flex flex-col items-center gap-5">
                 <h3 className={`text-2xl font-black tracking-tight uppercase text-center ${tone.title}`}>{team.name}</h3>
 
                 <div className="flex justify-center gap-2.5">
-                    <StatBadge icon={<Trophy size={12} className="text-amber-400" />} label="Wins" value={s.wins} />
-                    <StatBadge icon={<ShieldCheck size={12} className="text-blue-400" />} label="Def" value={s.defended} />
-                    <StatBadge icon={<Target size={12} className="text-rose-400" />} label="Chs" value={s.chased} />
+                    <StatBadge icon={<Trophy size={12} className="[color:var(--tier-caution)]" />} label="Wins" value={s.wins} />
+                    <StatBadge icon={<ShieldCheck size={12} className="[color:var(--accent-primary)]" />} label="Def" value={s.defended} />
+                    <StatBadge icon={<Target size={12} className="[color:var(--tier-danger)]" />} label="Chs" value={s.chased} />
                 </div>
             </div>
 
             <div className="p-7 flex flex-col gap-10">
                 <div>
-                    <SectionHeader label="BATTING 1ST" activeColor="text-emerald-400" />
+                    <SectionHeader label="BATTING 1ST" activeColor="[color:var(--tier-elite)]" />
                     <div className="flex flex-col gap-1.5 mt-3">
-                        <DataRow label="Avg Score:" value={s.bat1.avg} labelColor="text-emerald-100/70" />
-                        <DataRow label="High / Low:" value={`${s.bat1.high} / ${s.bat1.low}`} labelColor="text-emerald-100/70" />
-                        <DataRow label="Avg Win Score:" value={s.bat1.avg_win} labelColor="text-emerald-100/70" />
-                        <DataRow label="Lowest Defended:" value={s.bat1.low_def} labelColor="text-emerald-100/70" />
+                        <DataRow label="Avg Score:" value={s.bat1.avg} labelColor="[color:var(--text-secondary)]" />
+                        <DataRow label="High / Low:" value={`${s.bat1.high} / ${s.bat1.low}`} labelColor="[color:var(--text-secondary)]" />
+                        <DataRow label="Avg Win Score:" value={s.bat1.avg_win} labelColor="[color:var(--text-secondary)]" />
+                        <DataRow label="Lowest Defended:" value={s.bat1.low_def} labelColor="[color:var(--text-secondary)]" />
                     </div>
                 </div>
 
                 <div>
-                    <SectionHeader label="CHASING" activeColor="text-sky-400" />
+                    <SectionHeader label="CHASING" activeColor="[color:var(--accent-primary)]" />
                     <div className="flex flex-col gap-1.5 mt-3">
-                        <DataRow label="Avg Score:" value={s.chase.avg} labelColor="text-sky-100/70" />
-                        <DataRow label="Highest Chased:" value={s.chase.high} labelColor="text-sky-100/70" />
-                        <DataRow label="Avg Succ. Chase:" value={s.chase.succ} labelColor="text-sky-100/70" />
-                        <DataRow label="Avg Fail Chase:" value={s.chase.fail} labelColor="text-sky-100/70" />
+                        <DataRow label="Avg Score:" value={s.chase.avg} labelColor="[color:var(--text-secondary)]" />
+                        <DataRow label="Highest Chased:" value={s.chase.high} labelColor="[color:var(--text-secondary)]" />
+                        <DataRow label="Avg Succ. Chase:" value={s.chase.succ} labelColor="[color:var(--text-secondary)]" />
+                        <DataRow label="Avg Fail Chase:" value={s.chase.fail} labelColor="[color:var(--text-secondary)]" />
                     </div>
                 </div>
             </div>
@@ -251,17 +203,17 @@ function TeamCard({ team }: TeamCardProps) {
 
 function StatBadge({ icon, label, value }: StatBadgeProps) {
     return (
-        <div className="flex items-center gap-2 bg-slate-800/45 px-3.5 py-1.5 rounded-full border border-white/10">
+        <div className="flex items-center gap-2 [background:var(--glass-bg)] px-3.5 py-1.5 rounded-full [border:1px_solid_var(--glass-border)]">
             {icon}
-            <span className="text-xs font-extrabold text-slate-100 font-numeric">{value}</span>
-            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.1em]">{label}</span>
+            <span className="text-xs font-extrabold [color:var(--text-primary)] font-numeric">{value}</span>
+            <span className="text-[10px] font-semibold [color:var(--text-secondary)] uppercase tracking-[0.1em]">{label}</span>
         </div>
     );
 }
 
 function SectionHeader({ label, activeColor }: { label: string; activeColor: string }) {
     return (
-        <div className="border-b border-white/10 pb-1.5">
+        <div className="border-b [border-color:var(--glass-border)] pb-1.5">
             <span className={`text-[11px] font-black tracking-[0.18em] uppercase ${activeColor}`}>{label}</span>
         </div>
     );
@@ -269,11 +221,11 @@ function SectionHeader({ label, activeColor }: { label: string; activeColor: str
 
 function DataRow({ label, value, labelColor }: { label: string; value: string; labelColor: string }) {
     return (
-        <div className="flex items-center justify-between group py-1.5 border-b border-white/[0.05] last:border-0">
-            <span className={`pl-1.5 text-[12px] font-semibold tracking-tight ${labelColor} group-hover:text-white transition-colors`}>
+        <div className="flex items-center justify-between group py-1.5 border-b [border-color:var(--border-subtle)] last:border-0">
+            <span className={`pl-1.5 text-[12px] font-semibold tracking-tight ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>
                 {label}
             </span>
-            <span className="pr-1 text-[15px] leading-none font-extrabold text-white font-numeric tracking-tight text-right">
+            <span className="pr-1 text-[15px] leading-none font-extrabold [color:var(--text-primary)] font-numeric tracking-tight text-right">
                 {value === null || value === undefined || value === "" || value === "-" ? "-" : value}
             </span>
         </div>
@@ -283,8 +235,8 @@ function DataRow({ label, value, labelColor }: { label: string; value: string; l
 function FooterItem({ label, value }: { label: string; value: string }) {
     return (
         <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-slate-400 whitespace-nowrap">{label}:</span>
-            <span className="text-sm font-black text-white font-numeric tracking-tight">{value}</span>
+            <span className="text-xs font-semibold [color:var(--text-secondary)] whitespace-nowrap">{label}:</span>
+            <span className="text-sm font-black [color:var(--text-primary)] font-numeric tracking-tight">{value}</span>
         </div>
     );
 }

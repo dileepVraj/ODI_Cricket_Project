@@ -8,6 +8,12 @@
 "use client";
 
 import EmptyState from "@/components/common/EmptyState";
+import {
+    ComparisonRow,
+    ComparisonSectionTone,
+    ComparisonValueTone,
+    toComparisonRows,
+} from "@/lib/types";
 
 interface ComparisonTableProps {
     data: Record<string, unknown>[];
@@ -15,32 +21,20 @@ interface ComparisonTableProps {
 
 const HIDDEN_METRICS = new Set(["MATCH_IDS"]);
 
-type SectionTone = "primary" | "secondary" | "tertiary" | "muted" | "default";
-type ValueTone = "elite" | "strong" | "caution" | "danger" | "muted" | "default";
-
-interface ComparisonRow extends Record<string, unknown> {
-    row_kind?: "section" | "metric" | "meta";
-    section_label?: string;
-    section_tone?: SectionTone;
-    value_tone?: ValueTone;
-    is_zero_or_empty?: boolean;
-    display_metric?: string;
-}
-
 export default function ComparisonTable({ data }: ComparisonTableProps) {
     if (!data || data.length === 0) {
         return <EmptyState message="No comparison data available." />;
     }
 
-    const sections: { header: string; tone: SectionTone; rows: ComparisonRow[] }[] = [];
-    let currentSection: { header: string; tone: SectionTone; rows: ComparisonRow[] } = {
+    const rows = toComparisonRows(data);
+    const sections: { header: string; tone: ComparisonSectionTone; rows: ComparisonRow[] }[] = [];
+    let currentSection: { header: string; tone: ComparisonSectionTone; rows: ComparisonRow[] } = {
         header: "Overview",
         tone: "muted",
         rows: [],
     };
 
-    for (const rawRow of data) {
-        const row = rawRow as ComparisonRow;
+    for (const row of rows) {
         const metric = String(row["Metric"] ?? "");
         if (HIDDEN_METRICS.has(metric)) continue;
 
@@ -50,7 +44,7 @@ export default function ComparisonTable({ data }: ComparisonTableProps) {
             }
             currentSection = {
                 header: String(row.display_metric ?? row.section_label ?? "Section"),
-                tone: (row.section_tone as SectionTone) ?? "muted",
+                tone: row.section_tone ?? "muted",
                 rows: [],
             };
         } else {
@@ -80,7 +74,7 @@ export default function ComparisonTable({ data }: ComparisonTableProps) {
                             const metric = String(row.display_metric ?? row["Metric"] ?? "");
                             const value = row["Value"];
                             const isZeroOrEmpty = Boolean(row.is_zero_or_empty);
-                            const valueTone = (row.value_tone as ValueTone) ?? "default";
+                            const valueTone = row.value_tone ?? "default";
 
                             return (
                                 <div
@@ -112,7 +106,7 @@ export default function ComparisonTable({ data }: ComparisonTableProps) {
     );
 }
 
-function sectionToneToCss(tone: SectionTone): string {
+function sectionToneToCss(tone: ComparisonSectionTone): string {
     if (tone === "primary") return "var(--accent-primary)";
     if (tone === "secondary") return "var(--accent-secondary)";
     if (tone === "tertiary") return "var(--accent-tertiary)";
@@ -120,7 +114,7 @@ function sectionToneToCss(tone: SectionTone): string {
     return "var(--text-muted)";
 }
 
-function resolveValueColor(tone: ValueTone, isZeroOrEmpty: boolean): string {
+function resolveValueColor(tone: ComparisonValueTone, isZeroOrEmpty: boolean): string {
     if (isZeroOrEmpty || tone === "muted") return "var(--text-disabled)";
     if (tone === "elite") return "var(--tier-elite)";
     if (tone === "strong") return "var(--tier-strong)";

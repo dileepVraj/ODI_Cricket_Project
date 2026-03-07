@@ -8,17 +8,12 @@
 import { useState, useMemo } from "react";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
+import { DataRow, toDataRows } from "@/lib/types";
 
 interface DataTableProps {
     data: Record<string, unknown>[];
     pageSize?: number;
     title?: string;
-}
-
-type ToneToken = "elite" | "strong" | "caution" | "danger" | "muted" | "default";
-
-interface DataRow extends Record<string, unknown> {
-    cell_tones?: Record<string, ToneToken>;
 }
 
 const HIDDEN_COLS = new Set([
@@ -36,7 +31,7 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
     const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
     const [page, setPage] = useState(0);
     const hasRows = Array.isArray(data) && data.length > 0;
-    const rows = useMemo(() => (hasRows ? (data as DataRow[]) : []), [data, hasRows]);
+    const rows = useMemo(() => (hasRows ? toDataRows(data) : []), [data, hasRows]);
     const allColumns = useMemo(() => (hasRows ? Object.keys(data[0]) : []), [data, hasRows]);
     const columns = allColumns.filter((c) => !HIDDEN_COLS.has(c));
 
@@ -120,7 +115,7 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
                                         return (
                                             <td
                                                 key={col}
-                                                className={`[padding:10px_12px] [white-space:nowrap] ${isNum ? "[text-align:right] font-numeric" : "[text-align:left]"} ${isOverallRow ? "[font-weight:700]" : "[font-weight:400]"} [color:${getCellColor(row as DataRow, col, val)}]`}
+                                                className={`[padding:10px_12px] [white-space:nowrap] ${isNum ? "[text-align:right] font-numeric" : "[text-align:left]"} ${isOverallRow ? "[font-weight:700]" : "[font-weight:400]"} [color:${getCellColor(row, col, val)}]`}
                                             >
                                                 {formatCell(col, val)}
                                             </td>

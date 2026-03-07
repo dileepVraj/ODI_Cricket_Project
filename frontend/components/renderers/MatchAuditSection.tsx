@@ -3,16 +3,11 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight, ClipboardList } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
+import { toMatchAuditRow } from "@/lib/types";
 
 interface MatchAuditSectionProps {
     records: Record<string, unknown>[];
 }
-type StatusTone = "elite" | "caution" | "danger" | "muted";
-
-interface MatchAuditRow extends Record<string, unknown> {
-    status_tone?: StatusTone;
-}
-
 const COL_LABELS: Record<string, string> = {
     start_date: "Date",
     venue: "Venue",
@@ -104,7 +99,8 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                         const val = row[col];
                                         const isStatus = col === "status";
                                         const right = col === "score_inn1" || col === "score_inn2";
-                                        const statusTone = isStatus ? resolveStatusTone((row as MatchAuditRow).status_tone) : "[color:var(--text-primary)]";
+                                        const typedRow = toMatchAuditRow(row);
+                                        const statusTone = isStatus ? resolveStatusTone(typedRow.status_tone) : "[color:var(--text-primary)]";
                                         return (
                                             <td
                                                 key={col}
@@ -124,7 +120,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
     );
 }
 
-function resolveStatusTone(tone?: StatusTone): string {
+function resolveStatusTone(tone?: "elite" | "caution" | "danger" | "muted"): string {
     if (tone === "elite") return "[color:var(--tier-elite)]";
     if (tone === "caution") return "[color:var(--tier-caution)]";
     if (tone === "danger") return "[color:var(--tier-danger)]";

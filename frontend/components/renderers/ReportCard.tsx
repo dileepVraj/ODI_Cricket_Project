@@ -3,6 +3,7 @@
 import { Shield, Target, TrendingUp } from "lucide-react";
 import CountUp from "@/components/animations/CountUp";
 import EmptyState from "@/components/common/EmptyState";
+import { getPercentBreakdown } from "@/lib/types";
 
 interface ReportCardProps {
     data: Record<string, unknown>;
@@ -32,7 +33,7 @@ export default function ReportCard({ data }: ReportCardProps) {
 
     const verdict = String(data["bias_verdict"] ?? data["verdict"] ?? "");
     const venueId = String(data["venue_id"] ?? data["venue"] ?? "Unknown");
-    const breakdown = (data["percent_breakdown"] as Record<string, unknown> | undefined) ?? {};
+    const breakdown = getPercentBreakdown(data["percent_breakdown"]);
     const bat1Pct = Number(breakdown["bat_first"] ?? data["bat1_win_pct"] ?? data["bat1_pct"] ?? 0);
     const chasePct = Number(breakdown["chase"] ?? data["chase_win_pct"] ?? data["chase_pct"] ?? 0);
     const tieNrPct = Number(breakdown["tie_nr"] ?? 0);
@@ -64,7 +65,7 @@ export default function ReportCard({ data }: ReportCardProps) {
                 <VerdictBadge verdict={verdict} tone={verdictTone} />
             </div>
 
-            <div className="[background:var(--bg-elevated)] [border-radius:var(--radius-lg)] [padding:18px_22px] [border:1px_solid_var(--border-subtle)] [box-shadow:0_10px_26px_rgba(2,_8,_23,_0.26)]">
+            <div className="[background:var(--bg-elevated)] [border-radius:var(--radius-lg)] [padding:18px_22px] [border:1px_solid_var(--border-subtle)] [box-shadow:var(--shadow-md)]">
                 <div className="[display:flex] [justify-content:space-between] [margin-bottom:10px] [font-size:0.8rem] [font-weight:600]">
                     <span className="[color:var(--accent-primary)]">
                         <Shield size={14} className="[vertical-align:middle] [margin-right:4px]" />
@@ -81,7 +82,7 @@ export default function ReportCard({ data }: ReportCardProps) {
 
                 <div className="[display:flex] [height:12px] [border-radius:6px] [overflow:hidden] [background:var(--bg-active)]">
                     <div
-                        className="[background:linear-gradient(90deg,_var(--accent-primary),_#60A5FA)] [transition:width_0.5s_ease-out]"
+                        className="[background:linear-gradient(90deg,_var(--accent-primary),_var(--accent-tertiary))] [transition:width_0.5s_ease-out]"
                         style={{ width: `${bat1Pct}%` }}
                     />
                     <div
@@ -89,7 +90,7 @@ export default function ReportCard({ data }: ReportCardProps) {
                         style={{ width: `${tieNrPct}%` }}
                     />
                     <div
-                        className="[background:linear-gradient(90deg,_#A78BFA,_var(--accent-secondary))] [transition:width_0.5s_ease-out]"
+                        className="[background:linear-gradient(90deg,_var(--accent-secondary),_var(--accent-primary))] [transition:width_0.5s_ease-out]"
                         style={{ width: `${chasePct}%` }}
                     />
                 </div>
@@ -99,7 +100,7 @@ export default function ReportCard({ data }: ReportCardProps) {
                 {statEntries.map(([key, val]) => (
                     <div
                         key={key}
-                        className="[padding:16px_18px] [background:var(--bg-elevated)] [border-radius:var(--radius-md)] [border:1px_solid_var(--border-subtle)] [transition:border-color_var(--transition-fast),_transform_var(--transition-fast)] [box-shadow:0_8px_20px_rgba(2,_8,_23,_0.18)] hover:[border-color:var(--border-strong)] hover:[transform:translateY(-1px)]"
+                        className="[padding:16px_18px] [background:var(--bg-elevated)] [border-radius:var(--radius-md)] [border:1px_solid_var(--border-subtle)] [transition:border-color_var(--transition-fast),_transform_var(--transition-fast)] [box-shadow:var(--shadow-sm)] hover:[border-color:var(--border-strong)] hover:[transform:translateY(-1px)]"
                     >
                         <div className="[font-size:0.72rem] [letter-spacing:0.02em] [color:var(--text-disabled)] [font-weight:600] [margin-bottom:6px]">
                             {formatLabel(key)}
@@ -123,7 +124,7 @@ export default function ReportCard({ data }: ReportCardProps) {
 function VerdictBadge({ verdict, tone }: { verdict: string; tone: string }) {
     if (tone === "primary") {
         return (
-            <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:rgba(59,_130,_246,_0.14)] [border:1px_solid_rgba(59,_130,_246,_0.3)] [color:var(--accent-primary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
+            <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:var(--accent-glow)] [border:1px_solid_var(--border-accent)] [color:var(--accent-primary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
                 <Shield size={16} />
                 {verdict || "UNKNOWN"}
             </div>
@@ -132,7 +133,7 @@ function VerdictBadge({ verdict, tone }: { verdict: string; tone: string }) {
 
     if (tone === "secondary") {
         return (
-            <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:rgba(139,_92,_246,_0.14)] [border:1px_solid_rgba(139,_92,_246,_0.3)] [color:var(--accent-secondary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
+            <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:var(--bg-active)] [border:1px_solid_var(--accent-secondary)] [color:var(--accent-secondary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
                 <Target size={16} />
                 {verdict || "UNKNOWN"}
             </div>
@@ -140,7 +141,7 @@ function VerdictBadge({ verdict, tone }: { verdict: string; tone: string }) {
     }
 
     return (
-        <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:rgba(148,_163,_184,_0.1)] [border:1px_solid_rgba(148,_163,_184,_0.3)] [color:var(--text-secondary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
+        <div className="[display:inline-flex] [align-items:center] [gap:8px] [padding:8px_16px] [border-radius:var(--radius-lg)] [background:var(--glass-bg)] [border:1px_solid_var(--glass-border)] [color:var(--text-secondary)] [font-weight:700] [font-size:0.85rem] [letter-spacing:0.04em]">
             <TrendingUp size={16} />
             {verdict || "UNKNOWN"}
         </div>

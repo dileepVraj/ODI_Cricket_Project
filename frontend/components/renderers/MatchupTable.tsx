@@ -7,16 +7,10 @@
 
 import { Crosshair, AlertTriangle } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
+import { MatchupRow, toMatchupRows } from "@/lib/types";
 
 interface MatchupTableProps {
     data: Record<string, unknown>[];
-}
-
-type ToneToken = "elite" | "strong" | "caution" | "danger" | "muted" | "default";
-
-interface MatchupRow extends Record<string, unknown> {
-    highlight_flags?: Record<string, boolean>;
-    cell_tones?: Record<string, ToneToken>;
 }
 
 const HIDDEN_COLS = new Set([
@@ -33,7 +27,7 @@ export default function MatchupTable({ data }: MatchupTableProps) {
         return <EmptyState message="No matchup data available." />;
     }
 
-    const rows = data as MatchupRow[];
+    const rows = toMatchupRows(data);
     const columns = Object.keys(rows[0]).filter((c) => !HIDDEN_COLS.has(c));
     const hasBunnyAlert = rows.some(rowHasBunnyAlert);
 
@@ -66,15 +60,15 @@ export default function MatchupTable({ data }: MatchupTableProps) {
                             return (
                                 <tr
                                     key={i}
-                                    className={`[border-bottom:1px_solid_var(--border-subtle)] [transition:background_var(--transition-fast)] ${isBunny ? "[background:rgba(239,_68,_68,_0.06)]" : "[background:transparent]"}`}
+                                    className={`[border-bottom:1px_solid_var(--border-subtle)] [transition:background_var(--transition-fast)] ${isBunny ? "[background:var(--bg-elevated)] [box-shadow:inset_3px_0_0_var(--tier-danger)]" : "[background:transparent]"}`}
                                     onMouseEnter={(e) => {
                                         e.currentTarget.style.background = isBunny
-                                            ? "rgba(239, 68, 68, 0.10)"
+                                            ? "var(--bg-hover)"
                                             : "var(--bg-hover)";
                                     }}
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.background = isBunny
-                                            ? "rgba(239, 68, 68, 0.06)"
+                                            ? "var(--bg-elevated)"
                                             : "transparent";
                                     }}
                                 >

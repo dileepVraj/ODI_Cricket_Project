@@ -44,7 +44,7 @@ export default function DownloadPanel({ data }: DownloadPanelProps) {
             <div className="glass-card [padding:20px_24px] [display:flex] [justify-content:space-between] [align-items:center] [flex-wrap:wrap] [gap:12px] [border:1px_solid_var(--border-accent)]">
                 <div className="[display:flex] [align-items:center] [gap:14px]">
                     <div className="[width:44px] [height:44px] [border-radius:var(--radius-md)] [background:linear-gradient(135deg,_var(--accent-primary),_var(--accent-secondary))] [display:flex] [align-items:center] [justify-content:center]">
-                        <FileText size={22} className="[color:white]" />
+                        <FileText size={22} className="[color:var(--text-primary)]" />
                     </div>
                     <div>
                         <div className="[font-size:1rem] [font-weight:700] [color:var(--text-primary)]">Match Intelligence Report</div>
@@ -83,7 +83,7 @@ export default function DownloadPanel({ data }: DownloadPanelProps) {
                                 className="[display:flex] [align-items:center] [gap:10px] [padding:6px_8px] [border-radius:var(--radius-sm)] [transition:background_var(--transition-fast)] hover:[background:var(--bg-hover)]"
                             >
                                 <div className={`[width:20px] [height:20px] [border-radius:4px] [display:flex] [align-items:center] [justify-content:center] ${hasData ? "[background:var(--tier-elite)]" : "[background:var(--bg-active)]"}`}>
-                                    {hasData && <Check size={12} className="[color:white]" />}
+                                    {hasData && <Check size={12} className="[color:var(--text-primary)]" />}
                                 </div>
                                 <span className={`[font-size:0.84rem] ${hasData ? "[color:var(--text-primary)] [font-weight:500]" : "[color:var(--text-disabled)] [font-weight:400]"}`}>
                                     {ch.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}

@@ -5,18 +5,13 @@ import { ChevronDown, ChevronUp, ChevronsUpDown, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import EmptyState from "@/components/common/EmptyState";
 import { useAppContext } from "@/lib/context";
+import { MatrixRow, toMatrixRows } from "@/lib/types";
 
 interface MatrixTableProps {
     data: Record<string, unknown>[];
 }
 
 const HIDDEN_COLS = new Set(["MATCH_IDS", "match_ids", "cell_tones", "highlight_flags", "derived_badges"]);
-type ToneToken = "elite" | "strong" | "caution" | "danger" | "muted" | "default";
-
-interface MatrixRow extends Record<string, unknown> {
-    cell_tones?: Record<string, ToneToken>;
-    highlight_flags?: Record<string, boolean>;
-}
 
 export default function MatrixTable({ data }: MatrixTableProps) {
     const [sortCol, setSortCol] = useState<string | null>(null);
@@ -24,18 +19,19 @@ export default function MatrixTable({ data }: MatrixTableProps) {
     const { activeFormat } = useAppContext();
     const router = useRouter();
     const hasRows = Array.isArray(data) && data.length > 0;
+    const rows = useMemo(() => (hasRows ? toMatrixRows(data) : []), [data, hasRows]);
 
     const overallRow = useMemo(
-        () => (hasRows ? (data.find((r) => String(r["Opponent"] ?? "").includes("OVERALL")) as MatrixRow | undefined) : undefined),
-        [data, hasRows]
+        () => rows.find((r) => String(r["Opponent"] ?? "").includes("OVERALL")),
+        [rows]
     );
     const regularRows = useMemo(
-        () => (hasRows ? (data.filter((r) => !String(r["Opponent"] ?? "").includes("OVERALL")) as MatrixRow[]) : []),
-        [data, hasRows]
+        () => rows.filter((r) => !String(r["Opponent"] ?? "").includes("OVERALL")),
+        [rows]
     );
     const allColumns = useMemo(
-        () => (hasRows ? Object.keys(data[0]).filter((c) => !HIDDEN_COLS.has(c)) : []),
-        [data, hasRows]
+        () => (rows.length > 0 ? Object.keys(rows[0]).filter((c) => !HIDDEN_COLS.has(c)) : []),
+        [rows]
     );
 
     function handleSort(col: string) {
