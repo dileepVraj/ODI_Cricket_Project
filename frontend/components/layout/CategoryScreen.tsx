@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AlertCircle, Loader2, Users, Zap } from "lucide-react";
 import { executeFunction, type ExecuteResponse } from "@/lib/api";
 import { useAppContext } from "@/lib/context";
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import ExtraInputRenderer from "@/components/inputs/ExtraInputRenderer";
 import SquadBuilder from "@/components/inputs/SquadBuilder";
 import FunctionRenderer from "@/components/renderers/FunctionRenderer";
@@ -446,6 +447,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
 
         {error && (
           <div
+            role="alert"
             className="animate-fade-in [padding:14px] [background:rgba(239,_68,_68,_0.08)] [border:1px_solid_rgba(239,_68,_68,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px]"
           >
             <div className="[display:flex] [gap:10px] [align-items:flex-start]">
@@ -479,11 +481,13 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         )}
 
         {result && !isLoading && (
-          <div className="animate-fade-in">
-            <FunctionRenderer
-              outputType={result.output_type}
-              data={result.data}
-            />
+          <div aria-live="polite" className="animate-fade-in">
+            <ErrorBoundary>
+              <FunctionRenderer
+                outputType={result.output_type}
+                data={result.data}
+              />
+            </ErrorBoundary>
           </div>
         )}
       </div>
