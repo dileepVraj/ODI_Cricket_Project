@@ -1,7 +1,7 @@
 "use client";
 
 import { Shield, Target, TrendingUp } from "lucide-react";
-import CountUp from "@/components/animations/CountUp";
+import CountUp from "@/components/common/CountUp";
 import EmptyState from "@/components/common/EmptyState";
 import { getPercentBreakdown } from "@/lib/types";
 

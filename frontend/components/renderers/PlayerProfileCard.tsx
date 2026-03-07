@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { Award, Target, User } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
-import QuickLinks from "@/components/navigation/QuickLinks";
+import QuickLinks from "@/components/layout/QuickLinks";
 import { useAppContext } from "@/lib/context";
 import { PlayerPayloadFragment, toPlayerPayloadFragment } from "@/lib/types";
 
