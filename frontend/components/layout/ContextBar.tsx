@@ -1,9 +1,8 @@
 "use client";
 
+import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
 import { useAppContext } from "@/lib/context";
 import { SlidersHorizontal } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
 
 export default function ContextBar() {
     const {
@@ -30,6 +29,32 @@ export default function ContextBar() {
     }
 
     const fields = manifest.context_fields;
+    const fieldEntries = Object.entries(fields);
+    const teamFieldKeys = new Set(
+        fieldEntries
+            .filter(([, field]) => field.type === "dropdown" && field.source === "teams")
+            .map(([key]) => key)
+    );
+    const venueOptions = venues.map((venue) => ({
+        label: venue.label,
+        value: venue.id,
+    }));
+
+    const getFieldPlaceholder = (field: (typeof fields)[string]): string | undefined => {
+        const placeholder = (field as (typeof field) & { placeholder?: unknown }).placeholder;
+        return typeof placeholder === "string" ? placeholder : undefined;
+    };
+
+    const getComboboxOptions = (field: (typeof fields)[string]) => {
+        if (field.source === "venues") {
+            return venueOptions;
+        }
+
+        return (field.options || []).map((option) => ({
+            label: option,
+            value: option,
+        }));
+    };
 
     return (
         <div
@@ -38,8 +63,15 @@ export default function ContextBar() {
         >
             <SlidersHorizontal size={16} className="[color:var(--text-disabled)] [flex-shrink:0]" />
 
-            {Object.entries(fields).map(([key, field]) => {
+            {fieldEntries.map(([key, field]) => {
                 if (field.type === "dropdown") {
+                    let dropdownOptions = field.options || [];
+
+                    if (teamFieldKeys.has(key)) {
+                        // TODO: drive entirely from manifest when team selector primitive is available.
+                        dropdownOptions = ["All", ...teams];
+                    }
+
                     return (
                         <DropdownField
                             key={key}
@@ -47,7 +79,7 @@ export default function ContextBar() {
                             label={field.label}
                             value={String(contextValues[key] || "")}
                             onChange={(val) => setContextValue(key, val)}
-                            options={key === "team_a" || key === "team_b" ? ["All", ...teams] : field.options || []}
+                            options={dropdownOptions}
                             isLoading={isLoadingContext}
                         />
                     );
@@ -57,11 +89,14 @@ export default function ContextBar() {
                     return (
                         <ComboboxField
                             key={key}
-                            fieldKey={key}
                             label={field.label}
                             value={String(contextValues[key] || "")}
                             onChange={(val) => setContextValue(key, val)}
-                            options={venues}
+                            options={getComboboxOptions(field)}
+                            placeholder={
+                                getFieldPlaceholder(field) ||
+                                `Select ${field.label.toLowerCase()}...`
+                            }
                             isLoading={isLoadingContext}
                         />
                     );
@@ -129,113 +164,33 @@ function DropdownField({
 }
 
 function ComboboxField({
-    fieldKey,
     label,
     value,
     onChange,
     options,
+    placeholder,
     isLoading,
 }: {
-    fieldKey: string;
     label: string;
     value: string;
     onChange: (val: string) => void;
-    options: { id: string; label: string }[];
+    options: { label: string; value: string }[];
+    placeholder: string;
     isLoading: boolean;
 }) {
-    const [search, setSearch] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-    const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
-
-    useEffect(() => {
-        function handleClick(e: MouseEvent) {
-            const target = e.target as Node;
-            const insideContainer = containerRef.current?.contains(target);
-            const insideDropdown = dropdownRef.current?.contains(target);
-            if (!insideContainer && !insideDropdown) {
-                setIsOpen(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClick);
-        return () => document.removeEventListener("mousedown", handleClick);
-    }, []);
-
-    useEffect(() => {
-        if (isOpen && inputRef.current) {
-            const rect = inputRef.current.getBoundingClientRect();
-            setDropdownPos({
-                top: rect.bottom + 4,
-                left: rect.left,
-                width: rect.width,
-            });
-        }
-    }, [isOpen, search]);
-
-    const filtered = options.filter(
-        (v) => v.label.toLowerCase().includes(search.toLowerCase()) || v.id.toLowerCase().includes(search.toLowerCase())
-    );
-
-    const displayValue = options.find((v) => v.id === value)?.label || "";
-
-    const dropdownPortal =
-        isOpen && filtered.length > 0
-            ? ReactDOM.createPortal(
-                  <div
-                      ref={dropdownRef}
-                      className="[position:fixed] [max-height:300px] [overflow-y:auto] [background:var(--bg-elevated)] [border:1px_solid_var(--border-strong)] [border-radius:var(--radius-md)] [z-index:99999] [box-shadow:0_8px_32px_rgba(0,_0,_0,_0.6)]"
-                      style={{ top: dropdownPos.top, left: dropdownPos.left, width: dropdownPos.width }}
-                  >
-                      <div className="[padding:6px_12px] [font-size:0.7rem] [color:var(--text-disabled)] [border-bottom:1px_solid_var(--border-subtle)] [font-weight:500] [background:var(--bg-elevated)] [border-radius:var(--radius-md)_var(--radius-md)_0_0]">
-                          {filtered.length} venue{filtered.length !== 1 ? "s" : ""} found
-                      </div>
-                      {filtered.slice(0, 50).map((v) => (
-                          <button
-                              key={v.id}
-                              className={`[display:block] [width:100%] [padding:8px_12px] [text-align:left] [border:none] [cursor:pointer] [font-size:0.825rem] [font-family:inherit] [transition:background_150ms] hover:[background:var(--bg-hover)] ${v.id === value ? "[background:var(--accent-glow)] [color:var(--accent-primary)]" : "[background:transparent] [color:var(--text-secondary)]"}`}
-                              onClick={() => {
-                                  onChange(v.id);
-                                  setIsOpen(false);
-                                  setSearch("");
-                              }}
-                          >
-                              {v.label}
-                          </button>
-                      ))}
-                  </div>,
-                  document.body
-              )
-            : null;
-
     return (
-        <div ref={containerRef} className="[display:flex] [flex-direction:column] [gap:2px] [min-width:170px] [position:relative]">
-            <label
-                htmlFor={`context-${fieldKey}`}
-                className="[font-size:0.65rem] [font-weight:600] [color:var(--text-disabled)] [text-transform:uppercase] [letter-spacing:0.05em]"
-            >
-                {label}
+        <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:170px]">
+            <label className="[display:flex] [flex-direction:column] [gap:2px]">
+                <span className="[font-size:0.65rem] [font-weight:600] [color:var(--text-disabled)] [text-transform:uppercase] [letter-spacing:0.05em]">
+                    {label}
+                </span>
+                <AccessibleCombobox
+                    value={value}
+                    onChange={onChange}
+                    options={isLoading ? [] : options}
+                    placeholder={isLoading ? "Loading..." : placeholder}
+                />
             </label>
-            <input
-                ref={inputRef}
-                id={`context-${fieldKey}`}
-                className="context-input"
-                type="text"
-                value={isOpen ? search : displayValue}
-                onChange={(e) => {
-                    setSearch(e.target.value);
-                    if (!isOpen) setIsOpen(true);
-                }}
-                onFocus={() => {
-                    setIsOpen(true);
-                    setSearch("");
-                }}
-                placeholder={isLoading ? "Loading..." : "Search venue..."}
-                disabled={isLoading}
-                autoComplete="off"
-            />
-            {dropdownPortal}
         </div>
     );
 }
