@@ -16,6 +16,11 @@ export function isHTMLElementTarget(value: EventTarget | null): value is HTMLEle
     return value instanceof HTMLElement;
 }
 
+/** @schema runtime-guard:json-record-array — guards unknown API payload arrays before renderer dispatch */
+export function isJsonRecordArray(value: unknown): value is Array<Record<string, unknown>> {
+    return Array.isArray(value) && value.every((item) => isRecord(item));
+}
+
 function toRecord(value: unknown): UnknownRecord | null {
     if (!isRecord(value)) {
         return null;

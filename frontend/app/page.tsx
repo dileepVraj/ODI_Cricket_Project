@@ -186,6 +186,13 @@ function DashboardScreen() {
   );
 }
 
+const STAT_CARD_VARIANT: Record<string, string> = {
+  "var(--accent-primary)": "stat-card-primary",
+  "var(--accent-secondary)": "stat-card-secondary",
+  "var(--accent-tertiary)": "stat-card-tertiary",
+  "var(--tier-elite)": "stat-card-elite",
+};
+
 function StatCard({
   icon,
   label,
@@ -197,10 +204,11 @@ function StatCard({
   value: string;
   color: string;
 }) {
+  const variantClass = STAT_CARD_VARIANT[color] ?? "stat-card-primary";
   return (
     <div className="glass-card [padding:18px_20px] [display:flex] [gap:14px] [align-items:center]">
       <div
-        className={`[width:42px] [height:42px] [border-radius:var(--radius-md)] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] [background:${color}15] [color:${color}]`}
+        className={`[width:42px] [height:42px] [border-radius:var(--radius-md)] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] ${variantClass}`}
       >
         {icon}
       </div>

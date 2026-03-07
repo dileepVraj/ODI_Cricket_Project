@@ -41,8 +41,7 @@ export default function ContextBar() {
     }));
 
     const getFieldPlaceholder = (field: (typeof fields)[string]): string | undefined => {
-        const placeholder = (field as (typeof field) & { placeholder?: unknown }).placeholder;
-        return typeof placeholder === "string" ? placeholder : undefined;
+        return typeof field.placeholder === "string" ? field.placeholder : undefined;
     };
 
     const getComboboxOptions = (field: (typeof fields)[string]) => {

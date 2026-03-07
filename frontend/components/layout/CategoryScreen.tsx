@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertCircle, Loader2, Users, Zap } from "lucide-react";
+import { AlertCircle, Loader2, Zap } from "lucide-react";
 import { executeFunction, type ExecuteResponse } from "@/lib/api";
 import { useAppContext } from "@/lib/context";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
@@ -9,18 +9,19 @@ import ExtraInputRenderer from "@/components/inputs/ExtraInputRenderer";
 import SquadBuilder from "@/components/inputs/SquadBuilder";
 import FunctionRenderer from "@/components/renderers/FunctionRenderer";
 import SkeletonLoader from "@/components/renderers/SkeletonLoader";
-
-type ExtraInputFieldConfig = {
-  type: string;
-  label: string;
-  required?: boolean;
-  source?: string;
-};
-
-type SquadBuilderConfig = {
-  enabled: boolean;
-  maxPlayers: number;
-};
+import {
+  resolveSquadBuilderConfig,
+  getExtraInputFields,
+  getMissingContext,
+  buildExecuteParams,
+  formatExecuteError,
+} from "@/lib/executeHelpers";
+import {
+  MissingContextBanner,
+  SquadHintBanner,
+  MissingInputsBanner,
+  ExecuteErrorPanel,
+} from "@/components/layout/CategoryBanners";
 
 const CONTEXT_BADGE_CLASS_BY_COMPLETION: Record<"complete" | "incomplete", string> = {
   complete: "badge-elite",
@@ -29,138 +30,6 @@ const CONTEXT_BADGE_CLASS_BY_COMPLETION: Record<"complete" | "incomplete", strin
 
 function resolveContextBadgeClass(isContextComplete: boolean): string {
   return CONTEXT_BADGE_CLASS_BY_COMPLETION[isContextComplete ? "complete" : "incomplete"];
-}
-
-function parsePositiveInteger(value: unknown): number | null {
-  if (typeof value === "number" && Number.isInteger(value) && value > 0) return value;
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    if (!trimmed) return null;
-    const parsed = Number(trimmed);
-    if (Number.isInteger(parsed) && parsed > 0) return parsed;
-  }
-  return null;
-}
-
-function resolveSquadBuilderConfig(extraInputs: unknown): SquadBuilderConfig {
-  const defaultConfig: SquadBuilderConfig = { enabled: false, maxPlayers: 11 };
-  if (!extraInputs || typeof extraInputs !== "object") return defaultConfig;
-
-  const inputs = extraInputs as Record<string, unknown>;
-  const rawSquadBuilder = inputs.squad_builder;
-  if (rawSquadBuilder === undefined || rawSquadBuilder === null || rawSquadBuilder === false) {
-    return defaultConfig;
-  }
-
-  const fallbackMaxPlayers =
-    parsePositiveInteger(inputs.squad_max_players) ??
-    parsePositiveInteger(inputs.max_players) ??
-    parsePositiveInteger(inputs.max_xi) ??
-    defaultConfig.maxPlayers;
-
-  if (rawSquadBuilder === true) {
-    return { enabled: true, maxPlayers: fallbackMaxPlayers };
-  }
-
-  if (typeof rawSquadBuilder === "object") {
-    const cfg = rawSquadBuilder as Record<string, unknown>;
-    const enabled = typeof cfg.enabled === "boolean" ? cfg.enabled : true;
-    const maxPlayers =
-      parsePositiveInteger(cfg.max_players) ??
-      parsePositiveInteger(cfg.squad_max_players) ??
-      parsePositiveInteger(cfg.max_xi) ??
-      fallbackMaxPlayers;
-    return { enabled, maxPlayers };
-  }
-
-  return { enabled: Boolean(rawSquadBuilder), maxPlayers: fallbackMaxPlayers };
-}
-
-function isExtraInputFieldConfig(value: unknown): value is ExtraInputFieldConfig {
-  if (!value || typeof value !== "object") return false;
-  const obj = value as Record<string, unknown>;
-  return typeof obj.type === "string" && typeof obj.label === "string";
-}
-
-function getExtraInputFields(extraInputs: unknown): Record<string, ExtraInputFieldConfig> {
-  if (!extraInputs || typeof extraInputs !== "object") return {};
-  const fields: Record<string, ExtraInputFieldConfig> = {};
-
-  for (const [key, raw] of Object.entries(extraInputs as Record<string, unknown>)) {
-    if (key === "squad_builder") continue;
-    if (isExtraInputFieldConfig(raw)) {
-      fields[key] = raw;
-    }
-  }
-
-  return fields;
-}
-
-function getMissingContext(
-  requiredContext: string[],
-  contextValues: Record<string, string | number>
-): string[] {
-  return requiredContext.filter((key) => {
-    const val = contextValues[key];
-    return !val || val === "" || val === "All";
-  });
-}
-
-function buildExecuteParams(args: {
-  requiredContext: string[];
-  contextValues: Record<string, string | number>;
-  needsSquadBuilder: boolean;
-  homeXI: string[];
-  awayXI: string[];
-  extraInputValues: Record<string, string>;
-}): Record<string, unknown> {
-  const {
-    requiredContext,
-    contextValues,
-    needsSquadBuilder,
-    homeXI,
-    awayXI,
-    extraInputValues,
-  } = args;
-
-  const params: Record<string, unknown> = {};
-
-  for (const key of requiredContext) {
-    const val = contextValues[key];
-    if (val && val !== "" && val !== "All") {
-      params[key] = val;
-    }
-  }
-
-  if (needsSquadBuilder) {
-    params.home_xi = homeXI;
-    params.away_xi = awayXI;
-  }
-
-  Object.entries(extraInputValues).forEach(([key, val]) => {
-    if (val) params[key] = val;
-  });
-
-  return params;
-}
-
-function formatExecuteError(err: unknown): string {
-  const fallback = "Execution failed. Please try again.";
-  if (!(err instanceof Error)) return fallback;
-
-  const maybeStatus = (err as Error & { status?: number }).status;
-  const message = err.message?.trim();
-  if (message && !message.startsWith("[") && !message.startsWith("{")) {
-    return message;
-  }
-
-  if (maybeStatus === 422) {
-    return "Validation Error: Please verify the selected context and required inputs.";
-  }
-  if (typeof maybeStatus === "number" && maybeStatus >= 500) {
-    return "Server Error: Backend execution failed. Please retry in a moment.";
-  }
-  return fallback;
 }
 
 export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
@@ -345,27 +214,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         </div>
 
         {!canExecute && missingContext.length > 0 && (
-          <div
-            className="animate-fade-in [padding:16px] [background:rgba(245,_158,_11,_0.08)] [border:1px_solid_rgba(245,_158,_11,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px] [display:flex] [gap:12px] [align-items:flex-start]"
-          >
-            <AlertCircle
-              size={20}
-              className="[color:var(--tier-caution)] [flex-shrink:0] [margin-top:2px]"
-            />
-            <div>
-              <p
-                className="[color:var(--tier-caution)] [font-size:0.9rem] [font-weight:600] [margin-bottom:6px]"
-              >
-                Missing Required Context
-              </p>
-              <p className="[color:var(--text-secondary)] [font-size:0.82rem] [line-height:1.5]">
-                Please fill in the following fields in the Context Bar above:{" "}
-                <strong className="[color:var(--text-primary)]">
-                  {missingContext.map((k) => getContextLabel(k)).join(", ")}
-                </strong>
-              </p>
-            </div>
-          </div>
+          <MissingContextBanner missingContextLabels={missingContext.map(getContextLabel)} />
         )}
 
         {Object.keys(extraInputFields).length > 0 && activeFormat && (
@@ -393,28 +242,10 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
           />
         )}
 
-        {needsSquadBuilder && canExecute && !squadReady && (
-          <div
-            className="animate-fade-in [padding:14px] [background:rgba(59,_130,_246,_0.08)] [border:1px_solid_rgba(59,_130,_246,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px] [display:flex] [gap:12px] [align-items:center]"
-          >
-            <Users size={18} className="[color:var(--accent-blue)] [flex-shrink:0]" />
-            <p className="[color:var(--text-secondary)] [font-size:0.82rem]">
-              Select players for <strong className="[color:var(--text-primary)]">Home XI</strong> and{" "}
-              <strong className="[color:var(--text-primary)]">Away XI</strong> above, or click{" "}
-              <strong className="[color:var(--accent-blue)]">Load Squad</strong> to auto-fill.
-            </p>
-          </div>
-        )}
+        {needsSquadBuilder && canExecute && !squadReady && <SquadHintBanner />}
 
         {canExecute && squadReady && missingExtraInputs.length > 0 && (
-          <div
-            className="animate-fade-in [padding:14px] [background:rgba(59,_130,_246,_0.08)] [border:1px_solid_rgba(59,_130,_246,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px] [display:flex] [gap:12px] [align-items:center]"
-          >
-            <AlertCircle size={18} className="[color:var(--accent-blue)] [flex-shrink:0]" />
-            <p className="[color:var(--text-secondary)] [font-size:0.82rem]">
-              Please select <strong className="[color:var(--text-primary)]">{missingExtraInputs.join(", ")}</strong> to proceed.
-            </p>
-          </div>
+          <MissingInputsBanner missingInputLabels={missingExtraInputs} />
         )}
 
         <button
@@ -445,37 +276,10 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
           )}
         </button>
 
-        {error && (
-          <div
-            role="alert"
-            className="animate-fade-in [padding:14px] [background:rgba(239,_68,_68,_0.08)] [border:1px_solid_rgba(239,_68,_68,_0.25)] [border-radius:var(--radius-md)] [margin-bottom:16px]"
-          >
-            <div className="[display:flex] [gap:10px] [align-items:flex-start]">
-              <AlertCircle
-                size={18}
-                className="[color:var(--tier-danger)] [flex-shrink:0] [margin-top:2px]"
-              />
-              <div className="[flex:1]">
-                <p className="[color:var(--tier-danger)] [font-size:0.9rem] [font-weight:600] [margin-bottom:4px]">
-                  Execution Failed
-                </p>
-                <p className="[color:var(--text-secondary)] [font-size:0.82rem] [line-height:1.5]">
-                  {error}
-                </p>
-              </div>
-            </div>
-            <button
-              className="btn-ghost [margin-top:10px] [font-size:0.8rem] [display:flex] [align-items:center] [gap:6px]"
-              onClick={runExecute}
-            >
-              <Zap size={14} />
-              Retry
-            </button>
-          </div>
-        )}
+        {error && <ExecuteErrorPanel error={error} onRetry={runExecute} />}
 
         {isLoading && (
-          <div className="animate-fade-in">
+          <div className="animate-fade-in" aria-busy="true" aria-label="Loading analysis...">
             <SkeletonLoader outputType={activeFn.output_type} />
           </div>
         )}

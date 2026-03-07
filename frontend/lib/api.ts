@@ -41,6 +41,7 @@ export interface ContextField {
     min?: number;
     max?: number;
     default?: number;
+    placeholder?: string;
 }
 
 export interface ManifestFunction {

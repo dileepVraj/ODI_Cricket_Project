@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Search, X } from "lucide-react";
 import { fetchPlayers } from "@/lib/api";
 import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
@@ -50,6 +50,7 @@ export default function ExtraInputCombobox({
     value,
     onChange,
 }: ExtraInputComboboxProps) {
+    const filterId = useId();
     const [options, setOptions] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -105,7 +106,7 @@ export default function ExtraInputCombobox({
 
     return (
         <div className="[display:flex] [flex-direction:column] [gap:6px]">
-            <label className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
+            <label htmlFor={filterId} className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
                 {field.label}
                 {field.required ? (
                     <span className="[color:var(--tier-danger)] [margin-left:4px]">*</span>
@@ -115,6 +116,7 @@ export default function ExtraInputCombobox({
             <div className="[display:flex] [align-items:center] [gap:8px]">
                 <Search size={14} className="[color:var(--text-muted)] [flex-shrink:0]" />
                 <input
+                    id={filterId}
                     type="text"
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}

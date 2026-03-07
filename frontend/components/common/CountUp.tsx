@@ -79,7 +79,7 @@ export default function CountUp({
 
     return (
         <span
-            className={`${className} [font-family:var(--font-numeric)] [font-variant-numeric:tabular-nums]`}
+            className={`${className} font-numeric`}
             data-numeric="true"
         >
             {prefix}{formatted}{suffix}

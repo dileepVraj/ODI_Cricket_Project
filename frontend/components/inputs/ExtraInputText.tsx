@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 interface ExtraInputFieldDefinition {
     type: string;
     label: string;
@@ -21,11 +23,12 @@ export default function ExtraInputText({
     value,
     onChange,
 }: ExtraInputTextProps) {
+    const inputId = useId();
     const label = sanitizeLabel(field.label);
 
     return (
         <div className="[display:flex] [flex-direction:column] [gap:6px]">
-            <label className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
+            <label htmlFor={inputId} className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
                 {field.label}
                 {field.required ? (
                     <span className="[color:var(--tier-danger)] [margin-left:4px]">*</span>
@@ -34,6 +37,7 @@ export default function ExtraInputText({
 
             {field.type === "textarea" ? (
                 <textarea
+                    id={inputId}
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
                     placeholder={`Enter ${label}`}
@@ -42,6 +46,7 @@ export default function ExtraInputText({
                 />
             ) : (
                 <input
+                    id={inputId}
                     type="text"
                     value={value}
                     onChange={(event) => onChange(event.target.value)}

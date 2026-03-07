@@ -1,36 +1,61 @@
 # Session State
-**Last Updated:** 2026-03-04
-**Current Phase:** Post Phase 11.3 — calculators fully refactored and compliant.
-Pre-engine housekeeping in progress. Engine refactoring (TASK-010) not yet started.
+**Last Updated:** 2026-03-07
+**Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
+Team engine COMPLIANT 2026-03-05.
+Player engine COMPLIANT 2026-03-06.
+Frontend audit COMPLETE 2026-03-07 (TASK-029). Sprint 1 remediation COMPLETE 2026-03-07.
+Post-sprint compliance review COMPLETE 2026-03-07. Sprint 2 remediation COMPLETE 2026-03-07.
 
 ---
 
 ## Active Sprint
-- TASK-019 — Rename compliance_bouncer.py to compliance_bouncer.py (last, atomic)
-
-## Execution Order
-TASK-019 → TASK-010
+Backend sprint — predictor engine refactor.
+Frontend sprint 2 COMPLETE 2026-03-07 (TASK-042 through TASK-045).
 
 ## In Progress
-- Nothing actively half-done — clean handoff point
+- TASK-010 — Engine Layer Refactoring — predictor engine next
 
 ## Last Completed
-- TASK-018 — Extracted startup/lifespan DB loading into api/lifespan.py. PASS. 2026-03-04
-- TASK-017 — Extracted context_builder.py from api/main.py. PASS. 2026-03-04
-- TASK-016 — Aligned requirements.txt and pyproject.toml. Added python-dotenv==1.2.2. PASS. 2026-03-04
-- TASK-015 — Introduced python-dotenv, moved hardcoded config to .env. PASS. 2026-03-04
-
-
-## Known Blockers
-- TASK-010 blocked until TASK-014 through TASK-019 complete
-- TASK-011 blocked until TASK-010 complete
-- TASK-013 blocked until Claude CLI pro subscription activated
+- TASK-045 — Mechanical Cleanup Pass — CLOSED 2026-03-07
+  Files: CountUp.tsx, page.tsx, globals.css, CategoryScreen.tsx, ContextBar.tsx, lib/api.ts
+- TASK-044 — CategoryScreen Structural Remediation — CLOSED 2026-03-07
+  Files: CategoryScreen.tsx, CategoryBanners.tsx (new), executeHelpers.ts (new), globals.css
+- TASK-043 — FunctionRenderer Type Migration — CLOSED 2026-03-07
+  Files: lib/types.ts, FunctionRenderer.tsx
+- TASK-042 — Input Label Accessibility Fix — CLOSED 2026-03-07
+  Files: ExtraInputText.tsx, ExtraInputSelect.tsx, ExtraInputCombobox.tsx
 
 ## Active Task
-Scope: Backend housekeeping
-Files likely touched: `core/utils/compliance_bouncer.py` (renamed), `.githooks/pre-commit`, any script referencing the old filename
-Attach: `ENGINEERING_STANDARDS_BACKEND.md`
+ID: TASK-010
+Name: Engine Layer Refactoring — Predictor Engine
+Scope: Backend
+Next action: Audit predictor engine (repeat TASK-026 pattern)
+
+## Queue (in order)
+1. TASK-010 — Predictor engine refactor (now)
+2. TASK-039 — Backend pre-compute renderer fields (unblocks after TASK-010)
+3. TASK-011 — Update TECHNICAL_AUDIT_REPORT.md (unblocks after TASK-010)
+
+## Known Blockers
+- TASK-039 blocked by TASK-010 (predictor engine must complete first)
+- TASK-011 blocked by TASK-010 (all engines must complete first)
+- TASK-013 blocked by Claude CLI pro subscription
+- TASK-046 blocked on manifest schema extensions (navigation root, source registry)
+- F06-V08 blocked on manifest navigation config slot — TODO logged in QuickLinks.tsx
+- F08-V03 fetchPlayers() still UI-triggered — needs context pre-load,
+  same family as TASK-039, blocked behind TASK-010
+- next build spawn EPERM — environment permission issue on build
+  runner, not a code problem, needs CI environment check
+- paradigm-sentinel/SKILL.md references stale boundary-sentinel path —
+  logged, not blocking, no action until maintenance window
+- B8 (return null) and F05-V02 (FunctionRenderer fallback) — unscheduled,
+  architect decision pending (see AUDIT-compliance-fix-plan.md notes)
+
+## Gate 5 Known False Positive
+formats/odi/predictor.py lines 36, 71, 73 — pre-existing DAL violations.
+Will trigger paradigm-sentinel on every frontend task. Do not block on these.
+Log in report Observations. Cleared when TASK-010 predictor audit runs.
 
 ## Do Not Touch (Active)
 Full registry in ENGINEERING_STANDARDS_CORE.md Part 6.
-Short list: `core/data_access.py`, `core/interfaces/team_types.py`, `api/serializers.py`
+Short list: core/data_access.py, core/interfaces/team_types.py, api/serializers.py

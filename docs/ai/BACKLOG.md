@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-04
+**Last Updated:** 2026-03-07
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -35,64 +35,28 @@ and remove from this file.
 
 ## BACKLOG
 
-### [TASK-008] Filesystem Integrity Rules
-**Status:** Closed — 2026-03-04
-**Priority:** High
-**Scope:** AI Tooling
-**Blocked by:** Nothing
-**Why:** Codex deleted core/ contents during worktree task on 2026-03-03.
-Hard rules prevent repeat.
-**Subtasks:**
-- [X] Add Filesystem Integrity Rules block to AGENTS.md Part 5
-- [X] Add Filesystem Integrity Rules block to GEMINI.md Part 5
-- [X] Verify both files committed clean
-- [X] Update PROJECT_CONTEXT.md Section 5.2 to reflect rules added
-
-**Rules added (copied into both files):**
-- MUST NOT delete, move, or rename any file not explicitly listed in task prompt
-- MUST NOT run: git clean, git reset --hard, git rm, git checkout -- .
-- If any required reference file is missing from worktree — hard stop.
-  Output: CRITICAL BLOCKER: [file] missing. Task halted. Do not improvise.
-- MUST NOT run recursive filesystem scans to locate missing files
-- Run git status on target directory BEFORE and AFTER every file operation
-- If unexpected deletions appear in git status — stop immediately.
-  Report as CRITICAL DEVIATION before any further action.
-
----
-
-### [TASK-009] Core/ file audit — delete confirmed dead files
-**Status:** Closed — 2026-03-04
-**Priority:** High
-**Scope:** Backend housekeeping
-**Blocked by:** Nothing — confirmed safe to delete
-**Why:** backtester.py and base_engine.py confirmed dead scaffolding.
-No imports found anywhere. Confirmed via grep on 2026-03-03.
-**Note:** Both files were never git-tracked. Already absent from disk.
-No commit required — git had no record of them.
-**Subtasks:**
-- [X] Remove-Item core/backtester.py
-- [X] Remove-Item core/base_engine.py
-- [X] Run compliance bouncer — confirm still passes
-- [X] Commit: chore: remove confirmed dead scaffold files
-
----
-
-### [TASK-010] Engine refactoring
-**Status:** Open
+### [TASK-010] Engine Layer Refactoring
+**Status:** In Progress — Phase 10
 **Priority:** Critical
 **Scope:** Backend
-**Blocked by:** TASK-014, TASK-015, TASK-016, TASK-017, TASK-018, TASK-019 — pre-engine housekeeping must complete first
-**Why:** Primary active work. Engine files in formats/ need refactoring
-to meet Phase 11.3 compliance standards.
-**Subtasks:**
-- [ ] Run tree formats/ /F /A — map full engine file structure
-- [ ] Run compliance bouncer on formats/ — identify violations per file
-- [ ] Triage violations by severity — list per engine file
-- [ ] Refactor engine files one at a time (never batch)
-- [ ] Per engine: run full six-gate sentinel sequence
-- [ ] Per engine: bouncer must pass before moving to next file
-- [ ] Final bouncer pass across full codebase
-- [ ] Update TECHNICAL_AUDIT_REPORT.md on completion
+**Blocked by:** Nothing
+**Why:** Primary active work. Engine files in formats/
+  need full Part 0 and Part 1 compliance verification
+  and refactoring.
+  **Note**: "Pre-existing DAL usage flagged at formats/odi/predictor.py lines 36, 71, 73 — confirmed in scope for predictor engine audit"
+**Progress:**
+  - [x] Team engine — COMPLIANT 2026-03-05
+  - [x] Player engine — COMPLIANT 2026-03-06
+        (audit: TASK-026, refactor: TASK-027, review: TASK-028)
+  - [ ] Predictor engine — not started
+  - [ ] Any additional engines in formats/
+**Subtasks remaining:**
+  - [ ] Audit predictor engine (repeat TASK-026 pattern)
+  - [ ] Refactor predictor engine (repeat TASK-027 pattern)
+  - [ ] Architect review predictor engine (repeat TASK-028 pattern)
+  - [ ] Repeat for any remaining engines in formats/
+  - [ ] Final bouncer pass across full codebase
+  - [ ] Update TECHNICAL_AUDIT_REPORT.md on completion
 
 ---
 
@@ -100,15 +64,15 @@ to meet Phase 11.3 compliance standards.
 **Status:** Blocked
 **Priority:** Medium
 **Scope:** Documentation
-**Blocked by:** TASK-010 must complete first — audit reflects engine state
-**Why:** Stale since 2026-02-27, predates Phase 11.3 completion
-and engine refactoring.
+**Blocked by:** TASK-010 must complete first
+**Why:** Stale since 2026-02-27, predates Phase 11.3
+  completion and engine refactoring.
 **Subtasks:**
-- [ ] Review current report sections
-- [ ] Update phase status to reflect Phase 11.3 complete
-- [ ] Update engine compliance status after TASK-010
-- [ ] Increment version to v3.2.0
-- [ ] Update audit date
+  - [ ] Review current report sections
+  - [ ] Update phase status to reflect Phase 11.3 complete
+  - [ ] Update engine compliance status after TASK-010
+  - [ ] Increment version to v3.2.0
+  - [ ] Update audit date
 
 ---
 
@@ -129,130 +93,135 @@ Read Discipline added as quick fix — monitor before building section-splitting
 
 ---
 
-### [TASK-013] Create CLAUDE.md
+### [TASK-042] Input Label Accessibility Fix
+**Status:** Closed - 2026-03-07
+**Priority:** P0 — Blocking (regressions introduced in TASK-040)
+**Scope:** Frontend
+**Blocked by:** Nothing
+**Why:** Three components from the TASK-040 decomposition sprint have `<label>` elements
+  not programmatically associated with their controls. Screen readers will not announce
+  field labels on focus. Direct accessibility regression introduced by the sprint.
+**Findings addressed:** NEW-03, NEW-04, NEW-05
+**Files:**
+- `frontend/components/inputs/ExtraInputText.tsx`
+- `frontend/components/inputs/ExtraInputSelect.tsx`
+- `frontend/components/inputs/ExtraInputCombobox.tsx`
+**Subtasks:**
+- [ ] Add `useId()` + `id` on `<textarea>`/`<input>` + `htmlFor` in ExtraInputText.tsx
+- [ ] Add `useId()` + `id` on `<select>` + `htmlFor` in ExtraInputSelect.tsx
+- [ ] Add `useId()` for filter input + `htmlFor` on `<label>` in ExtraInputCombobox.tsx
+- [ ] Verify no `htmlFor` targets a non-existent `id`
+- [ ] Bouncer pass
+
+---
+
+### [TASK-043] FunctionRenderer Type Migration
+**Status:** Closed - 2026-03-07
+**Priority:** P1 — Immediate (unblocked TODO from TASK-038, not executed)
+**Scope:** Frontend
+**Blocked by:** Nothing
+**Why:** `FunctionRenderer.tsx:38–41` defines `isJsonRecordArray()` locally with a
+  `// TODO TASK-038: move to lib/types.ts` comment. TASK-038 is complete. The unblock
+  condition has passed. Function belongs in `lib/types.ts` alongside all other narrowing utilities.
+**Findings addressed:** NEW-08
+**Files:**
+- `frontend/lib/types.ts`
+- `frontend/components/renderers/FunctionRenderer.tsx`
+**Subtasks:**
+- [ ] Add `isJsonRecordArray` to `lib/types.ts` as exported function after `isJsonRecord`
+- [ ] Add `@schema` JSDoc comment consistent with existing pattern
+- [ ] In FunctionRenderer.tsx replace local definition with import from `@/lib/types`
+- [ ] Remove the `// TODO TASK-038` comment
+- [ ] Bouncer pass
+
+---
+
+### [TASK-044] CategoryScreen Structural Remediation
+**Status:** Closed - 2026-03-07
+**Priority:** P2 — Scheduled
+**Scope:** Frontend
+**Blocked by:** Nothing
+**Why:** CategoryScreen.tsx has four distinct violations to fix in one pass to avoid
+  partial states: 497 lines (limit 300), domain logic in component, inline as casts,
+  and raw rgba() literals.
+**Findings addressed:** NEW-01, NEW-06, A4, A5, A6 (CategoryScreen casts), B1
+**Files:**
+- `frontend/components/layout/CategoryScreen.tsx`
+- `frontend/lib/executeHelpers.ts` (new file)
+- `frontend/app/globals.css` (if tokens missing)
+**Subtasks:**
+- [ ] Create `frontend/lib/executeHelpers.ts` — move pure helpers out of CategoryScreen:
+      `parsePositiveInteger`, `resolveSquadBuilderConfig`, `getExtraInputFields`,
+      `getMissingContext`, `buildExecuteParams`, `formatExecuteError`
+- [ ] Replace inline `as` casts at lines 49, 66, 81 with narrowing checks using `isRecord`
+- [ ] Replace four `rgba()` literals (lines 349, 398, 411, 451) with CSS token equivalents
+- [ ] Verify tokens exist in globals.css — add semantic tokens if missing
+- [ ] Verify CategoryScreen.tsx is under 300 lines after extraction
+- [ ] Bouncer pass
+
+---
+
+### [TASK-045] Mechanical Cleanup Pass
+**Status:** Closed - 2026-03-07
+**Priority:** P2 — Scheduled (can run alongside TASK-044 — no shared files)
+**Scope:** Frontend
+**Blocked by:** Nothing
+**Why:** Four small isolated violations — each a one-to-two line change in a known location.
+**Findings addressed:** NEW-02, NEW-07, F09-V05, A6 (ContextBar cast), B5
+**Files:**
+- `frontend/components/common/CountUp.tsx`
+- `frontend/app/page.tsx`
+- `frontend/app/globals.css` (if StatCard tokens needed)
+- `frontend/components/layout/CategoryScreen.tsx` (loading announcement only)
+- `frontend/components/layout/ContextBar.tsx`
+**Subtasks:**
+- [ ] CountUp.tsx:82 — replace `[font-variant-numeric:tabular-nums]` with `font-numeric`
+- [ ] Verify `font-numeric` exists in tailwind.config.js — add if missing
+- [ ] page.tsx:203 (StatCard) — replace `[background:${color}15]` with a valid CSS token
+      pattern (variant class map or explicit opacity token in globals.css)
+- [ ] CategoryScreen.tsx:477 — add `aria-busy="true"` + `aria-label="Loading analysis..."`
+      to loading container, or add `role="status"` to `<SkeletonLoader>`
+- [ ] ContextBar.tsx:44 — remove inline `as` cast; extend `ContextField` type with
+      optional `placeholder?: string` or use direct `Record<string, unknown>` narrowing
+- [ ] Bouncer pass
+
+---
+
+### [TASK-039] Backend: pre-compute renderer fields
 **Status:** Blocked
-**Priority:** Low
-**Scope:** AI Tooling
-**Blocked by:** Claude CLI pro subscription not yet activated
-**Why:** Claude CLI requires its own agent config file at project root.
-**Subtasks:**
-- [ ] Activate Claude CLI pro subscription
-- [ ] Copy AGENTS.md to CLAUDE.md at project root
-- [ ] Verify all paths and references are correct
-- [ ] Commit: feat: add CLAUDE.md for Claude CLI
-- [ ] Update PROJECT_CONTEXT.md Section 5
-
----
-
-### [TASK-014] Fix stale test — test_api_integration.py
-**Status:** Closed - 2026-03-04
 **Priority:** High
-**Scope:** Backend housekeeping
-**Blocked by:** Nothing
-**Why:** /predict endpoint no longer exists. Passing test testing a dead endpoint
-is active misinformation — violates Stale Test Law. Do this first.
-**Estimate:** 30 mins
+**Scope:** Backend
+**Blocked by:** TASK-010 (predictor engine must complete first)
+**Why:** Three renderers perform domain logic on payload data — violates Paradigm 5.
+  Backend must pre-compute these values before frontend can be fixed.
+**Items:**
+- F07-V21: PhaseAnalysisCard — phase labels and threshold indicators
+- F07-V26: PredictionCard — prediction range defaults and gauge boundaries
+- F07-V30: PlayerProfileCard — field category classifications
 **Subtasks:**
-- [x] Locate all /predict references in tests/test_api_integration.py
-- [x] Disable or rewrite each with correct comment explaining why
-- [x] Run compliance bouncer — confirm still passes
-- [x] Commit: fix(tests): disable stale predict endpoint test [TASK-014]
+- [ ] Audit what PhaseAnalysisCard currently derives — define pre-computed schema fields
+- [ ] Audit what PredictionCard derives — define pre-computed schema fields
+- [ ] Audit what PlayerProfileCard derives — define pre-computed schema fields
+- [ ] Update backend Pydantic schemas and engine return values accordingly
+- [ ] Update corresponding frontend types in lib/types.ts
+- [ ] Remove domain logic from the three renderer components
+- [ ] Bouncer pass (backend gates 1–6)
 
 ---
 
-### [TASK-015] Introduce python-dotenv — move hardcoded config to .env
-**Status:** Closed - 2026-03-04
-**Priority:** High
-**Scope:** Backend housekeeping
-**Blocked by:** Nothing
-**Why:** Hardcoded CORS origin and database paths in api/main.py — not portable,
-not production-safe. Single most impactful housekeeping change.
-**Estimate:** Half day
-**Subtasks:**
-- [ x] Add python-dotenv to requirements.txt and pyproject.toml
-- [ x] Create .env file at project root with CORS origin and DB paths
-- [ x] Add .env to .gitignore
-- [ x] Create .env.example with placeholder values — commit this, not .env
-- [ x] Update api/main.py to load config via dotenv
-- [ x] Run compliance bouncer — confirm still passes
-- [ x] Commit: feat(config): introduce python-dotenv, move hardcoded config to .env [TASK-015]
-
----
-
-### [TASK-016] Align requirements.txt and pyproject.toml
-**Status:** Closed - 2026-03-04
-**Priority:** High
-**Scope:** Backend housekeeping
-**Blocked by:** Nothing
-**Why:** FastAPI version discrepancy between the two files — silent time bomb
-on fresh installs and CI.
-**Estimate:** 15 mins
-**Subtasks:**
-- [ x] Compare FastAPI version in requirements.txt vs pyproject.toml
-- [ x] Align both to the same pinned version currently running
-- [ x] Check for any other version discrepancies while in there
-- [ x] Commit: chore(deps): align requirements.txt and pyproject.toml versions [TASK-016]
-
----
-
-### [TASK-017] Extract context_builder.py from api/main.py
-**Status:** Closed - 2026-03-04
-**Priority:** High
-**Scope:** Backend refactor
-**Blocked by:** Nothing
-**Why:** Context injection logic inline in main.py (~120 lines that don't belong there).
-Extraction improves testability and reduces agent collision risk during TASK-010.
-**Estimate:** Half day
-**Subtasks:**
-- [ x] Identify all context building logic in api/main.py
-- [ x] Create core/services/context_builder.py with extracted logic — fully typed
-- [ x] Update api/main.py to call context_builder
-- [ x] Run compliance bouncer — confirm still passes
-- [ x] Commit: refactor(services): extract context_builder from main.py [TASK-017]
-
----
-
-### [TASK-018] Extract startup/lifespan DB loading from api/main.py
-**Status:** Closed - 2026-03-04
-**Priority:** High
-**Scope:** Backend refactor
-**Blocked by:** Nothing
-**Why:** Inline DB loading logic in main.py causes agents to accidentally touch
-data loading when working on routing. Clean separation protects TASK-010.
-**Estimate:** 2 hours
-**Subtasks:**
-- [ x] Identify lifespan/startup DB loading logic in api/main.py
-- [ x] Create core/services/startup.py with extracted logic — fully typed
-- [ x] Update api/main.py lifespan to delegate to startup.py
-- [ x] Run compliance bouncer — confirm still passes
-- [ x] Commit: refactor(services): extract DB startup logic into startup.py [TASK-018]
-
----
-
-### [TASK-019] Rename compliance_bouncer.py to compliance_bouncer.py
-**Status:** Closed - 2026-03-04
-**Priority:** Medium
-**Scope:** Backend housekeeping
-**Blocked by:** Nothing
-**Why:** Hyphen violates Module Naming standard. Causes ergonomic friction
-everywhere it is referenced. Must be done atomically — many files reference it.
-**Estimate:** 1 hour
-**Subtasks:**
-- [x] Rename core/utils/compliance_bouncer.py → core/utils/compliance_bouncer.py
-- [x] Update .githooks/pre-commit
-- [x] Update AGENTS.md and GEMINI.md
-- [x] Update ENGINEERING_STANDARDS_BACKEND.md, ENGINEERING_STANDARDS_CORE.md, ENGINEERING_STANDARDS_FRONTEND.md
-- [x] Update PROJECT_CONTEXT.md — all references
-- [x] Update SESSION_STATE.md
-- [x] Run renamed bouncer — confirm still passes
-- [x] Commit: chore(utils): rename compliance_bouncer.py to compliance_bouncer.py [TASK-019]
-
----
-
-## Execution Order (pre-engine housekeeping)
+## Execution Order
 
 ```
-TASK-014 → TASK-015 → TASK-016 → TASK-017 → TASK-018 → TASK-019 → TASK-010
+Frontend sprint 2 — COMPLETE 2026-03-07:
+  TASK-042 — Input label accessibility        CLOSED
+  TASK-043 — FunctionRenderer type migration  CLOSED
+  TASK-044 — CategoryScreen remediation       CLOSED
+  TASK-045 — Mechanical cleanup pass          CLOSED
+
+Next (backend):
+  TASK-010 — Predictor engine refactor        IN PROGRESS
+  TASK-039 — Backend pre-compute renderer fields (unblocks after TASK-010)
+  TASK-011 — Update TECHNICAL_AUDIT_REPORT.md (unblocks after TASK-010)
 ```
 
 ---
@@ -293,8 +262,35 @@ Extracting before refactor means doing it twice.
 **Why parked:** Low priority, not blocking anything.
 **Revisit trigger:** TASK-018 and TASK-010 complete
 
+### [ICE-004] Enhance context-loader to output correct guide skill path based on task type
+**Status:** Icebox
+**Why parked:** Guide skills just built — context-loader enhancement is a quality-of-life
+improvement, not a blocker. TASK-010 takes priority.
+**What it does:**
+- Reads task type from SESSION_STATE.md Active Task section
+- Outputs the correct guide skill path alongside the standards file attach list
+**Revisit trigger:** After TASK-010 engine refactoring completes
+
+### [TASK-046] Manifest-Gated Deferred Items
+**Status:** Icebox — Blocked on manifest schema extensions
+**Priority:** P3
+**Scope:** Frontend
+**Blocked by:** Manifest schema extensions (team selector slot, source registry slot,
+  navigation config slot) — none currently available
+**Why parked:** Five violations from AUDIT-F10 and the compliance review are genuinely
+  blocked on manifest features that do not exist yet.
+**Items:**
+- F04-V03: `"dashboard"` hardcoded in page.tsx:52, 53, 75 — needs manifest navigation root config
+- F06-V03: `"teams"`/`"venues"` source strings in ContextBar.tsx:36, 49 — needs manifest source registry
+- F06-V05: `"dashboard"` key in Sidebar.tsx DASHBOARD_ITEM — needs manifest nav root entry
+- F06-V08: QuickLinks link definitions — TODO already logged, blocked on manifest navigation config
+- ExtraInputSelect/ExtraInputCombobox — hardcoded API path strings — needs manifest source registry
+**Action required before unblocking:** Manifest must declare navigation root config,
+  team source, and venue source identifiers.
+**Revisit trigger:** Manifest schema extended with navigation and source registry slots
+
 ---
 
-*End of BACKLOG.md — Last Updated 2026-03-04*
+*End of BACKLOG.md — Last Updated 2026-03-07*
 *For current session state, see docs/ai/SESSION_STATE.md*
 *For permanent project knowledge, see docs/ai/PROJECT_CONTEXT.md*

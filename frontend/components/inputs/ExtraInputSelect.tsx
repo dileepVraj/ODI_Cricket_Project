@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { fetchHostCountries } from "@/lib/api";
 
 interface ExtraInputFieldDefinition {
@@ -65,11 +65,12 @@ export default function ExtraInputSelect({
     }, [field.options, field.source, formatKey, usesHostCountrySource]);
 
     // TODO: Drive remote select sources from a manifest source registry when that config slot exists.
+    const selectId = useId();
     const placeholder = `Select ${sanitizeLabel(field.label)}`;
 
     return (
         <div className="[display:flex] [flex-direction:column] [gap:6px]">
-            <label className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
+            <label htmlFor={selectId} className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
                 {field.label}
                 {field.required ? (
                     <span className="[color:var(--tier-danger)] [margin-left:4px]">*</span>
@@ -77,6 +78,7 @@ export default function ExtraInputSelect({
             </label>
 
             <select
+                id={selectId}
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
                 disabled={isLoading}

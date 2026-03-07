@@ -4,6 +4,7 @@ import { lazy, Suspense, type ReactNode } from "react";
 import EmptyState from "@/components/common/EmptyState";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import FallbackBanner from "@/components/common/FallbackBanner";
+import { isJsonRecordArray } from "@/lib/types";
 
 const DataTable = lazy(() => import("./DataTable"));
 const ComparisonTable = lazy(() => import("./ComparisonTable"));
@@ -35,10 +36,6 @@ function isJsonRecord(value: unknown): value is JsonRecord {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-// TODO TASK-038: move to lib/types.ts narrowing
-function isJsonRecordArray(value: unknown): value is JsonRecordArray {
-    return Array.isArray(value) && value.every((item) => isJsonRecord(item));
-}
 
 function extractEnrichedData(data: unknown): EnrichedDataResult {
     if (isJsonRecord(data)) {
