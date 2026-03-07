@@ -2,6 +2,7 @@
 
 import { Shield, Target, TrendingUp } from "lucide-react";
 import CountUp from "@/components/animations/CountUp";
+import EmptyState from "@/components/common/EmptyState";
 
 interface ReportCardProps {
     data: Record<string, unknown>;
@@ -26,11 +27,7 @@ function formatLabel(key: string): string {
 
 export default function ReportCard({ data }: ReportCardProps) {
     if (!data || typeof data !== "object") {
-        return (
-            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
-                No report data available.
-            </div>
-        );
+        return <EmptyState message="No report data available." />;
     }
 
     const verdict = String(data["bias_verdict"] ?? data["verdict"] ?? "");
@@ -107,7 +104,7 @@ export default function ReportCard({ data }: ReportCardProps) {
                         <div className="[font-size:0.72rem] [letter-spacing:0.02em] [color:var(--text-disabled)] [font-weight:600] [margin-bottom:6px]">
                             {formatLabel(key)}
                         </div>
-                        <div className="[font-size:1.2rem] [font-weight:800] [color:var(--text-primary)] [font-family:var(--font-numeric)] [font-variant-numeric:tabular-nums]">
+                        <div className="[font-size:1.2rem] [font-weight:800] [color:var(--text-primary)] [font-family:var(--font-numeric)] font-numeric">
                             {typeof val === "number" ? (
                                 <CountUp end={val} decimals={Number.isInteger(val) ? 0 : 2} duration={1.2} />
                             ) : val === null || val === undefined ? (

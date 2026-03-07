@@ -2,6 +2,7 @@
 
 import React from "react";
 import { AlertCircle, BarChart3, Dna, MapPin, ShieldCheck, Target, Trophy } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 
 interface TeamStats {
     wins: number;
@@ -121,7 +122,9 @@ function toneClasses(tone: TeamTone): { border: string; overlay: string; title: 
 }
 
 export default function VenueMatchupReport({ data, averagesTitle = "VENUE AVERAGES" }: VenueMatchupReportProps) {
-    if (!data || !data.team_a || !data.team_b) return null;
+    if (!data || !data.team_a || !data.team_b) {
+        return <EmptyState message="No venue matchup data available." />;
+    }
 
     const { summary, team_a, team_b, venue_avg } = data;
     const hasFormGuide = Boolean(data.highlight_flags?.has_form_guide);

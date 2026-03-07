@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronRight, ClipboardList } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 
 interface MatchAuditSectionProps {
     records: Record<string, unknown>[];
@@ -26,7 +27,9 @@ const COL_LABELS: Record<string, string> = {
 export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
     const [isOpen, setIsOpen] = useState(true);
 
-    if (!records || records.length === 0) return null;
+    if (!records || records.length === 0) {
+        return <EmptyState message="No audit data available." />;
+    }
 
     const sortedRecords = [...records].sort((a, b) => {
         const aTs = Date.parse(String(a["start_date"] ?? ""));
@@ -105,7 +108,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                         return (
                                             <td
                                                 key={col}
-                                                className={`[padding:11px_14px] [font-size:0.8rem] [white-space:nowrap] ${right ? "[text-align:right] [font-family:var(--font-numeric)] [font-variant-numeric:tabular-nums]" : "[text-align:left] [font-family:inherit]"} ${statusTone}`}
+                                                className={`[padding:11px_14px] [font-size:0.8rem] [white-space:nowrap] ${right ? "[text-align:right] [font-family:var(--font-numeric)] font-numeric" : "[text-align:left] [font-family:inherit]"} ${statusTone}`}
                                             >
                                                 {val === null || val === undefined ? "-" : String(val)}
                                             </td>

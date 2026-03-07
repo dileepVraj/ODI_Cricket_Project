@@ -1,6 +1,7 @@
 "use client";
 
 import { Activity, BarChart3, Clock, Target, Zap } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 import MatchAuditSection from "./MatchAuditSection";
 
 interface PhaseData {
@@ -93,7 +94,7 @@ const baseThClass =
     "[padding:11px_14px] [border-bottom:1px_solid_var(--border-default)] [color:var(--text-muted)] [font-weight:600] [font-size:0.72rem] [letter-spacing:0.02em] [white-space:nowrap]";
 const thClass = (align: "left" | "right") => `${baseThClass} ${align === "left" ? "[text-align:left]" : "[text-align:right]"}`;
 const baseTdClass =
-    "[padding:11px_14px] [font-variant-numeric:tabular-nums] [color:var(--text-primary)]";
+    "[padding:11px_14px] font-numeric [color:var(--text-primary)]";
 const tdClass = (align: "left" | "right") =>
     `${baseTdClass} ${align === "left" ? "[text-align:left]" : "[text-align:right] [font-family:var(--font-numeric)]"}`;
 
@@ -106,11 +107,7 @@ function accentBarClass(accentColor: string): string {
 
 export default function PhaseAnalysisCard({ data }: PhaseAnalysisCardProps) {
     if (!data || typeof data !== "object") {
-        return (
-            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
-                No phase analysis data available.
-            </div>
-        );
+        return <EmptyState message="No phase analysis data available." />;
     }
 
     const stadiumId = String(data.stadium_id ?? "Unknown");
@@ -173,7 +170,7 @@ export default function PhaseAnalysisCard({ data }: PhaseAnalysisCardProps) {
                 />
             )}
 
-            {data.match_audit && data.match_audit.length > 0 && <MatchAuditSection records={data.match_audit} />}
+            {data.match_audit && <MatchAuditSection records={data.match_audit} />}
         </div>
     );
 }
@@ -208,7 +205,7 @@ function StatPill({ label, value }: { label: string; value: string }) {
     return (
         <div className="[text-align:center] [min-width:50px]">
             <div className="[font-size:0.6rem] [text-transform:uppercase] [color:var(--text-disabled)] [font-weight:600]">{label}</div>
-            <div className="[font-size:1rem] [font-weight:700] [color:var(--text-primary)] [font-variant-numeric:tabular-nums]">{value}</div>
+            <div className="[font-size:1rem] [font-weight:700] [color:var(--text-primary)] font-numeric">{value}</div>
         </div>
     );
 }
@@ -320,7 +317,9 @@ function GlobalHabitsCard({
     const chasingRows = (scenarioRows?.chasing && scenarioRows.chasing.length > 0) ? scenarioRows.chasing : fallbackChasingRows;
     const hasScenarioView = batFirstRows.length > 0 || chasingRows.length > 0;
 
-    if (!hasScenarioView && !home && !away) return null;
+    if (!hasScenarioView && !home && !away) {
+        return <EmptyState message="No global habits data available." />;
+    }
 
     const renderScenarioTable = ({
         title,

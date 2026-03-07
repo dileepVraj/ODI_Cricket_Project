@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar, MapPin, Swords } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 
 interface FormTableProps {
     data: Record<string, unknown>[];
@@ -53,7 +54,7 @@ function resultClasses(resultTone: string | undefined): {
 
 export default function FormTable({ data }: FormTableProps) {
     if (!data || data.length === 0) {
-        return <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">No recent form data available.</div>;
+        return <EmptyState message="No recent form data available." />;
     }
 
     const rows = data as FormRow[];
@@ -120,11 +121,11 @@ export default function FormTable({ data }: FormTableProps) {
 
                         <div className="[text-align:right] [flex-shrink:0]">
                             <div className="[display:flex] [align-items:center] [gap:8px] [justify-content:flex-end]">
-                                <span className={`[font-size:0.9rem] [font-weight:700] [font-variant-numeric:tabular-nums] ${tone.score}`}>
+                                <span className={`[font-size:0.9rem] [font-weight:700] font-numeric ${tone.score}`}>
                                     {String(row["TeamScore"] ?? "-")}
                                 </span>
                                 <Swords size={12} className="[color:var(--text-disabled)]" />
-                                <span className="[font-size:0.9rem] [font-weight:500] [color:var(--text-secondary)] [font-variant-numeric:tabular-nums]">
+                                <span className="[font-size:0.9rem] [font-weight:500] [color:var(--text-secondary)] font-numeric">
                                     {String(row["OppScore"] ?? "-")}
                                 </span>
                             </div>

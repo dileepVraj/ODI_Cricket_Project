@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp, ChevronsUpDown, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
+import EmptyState from "@/components/common/EmptyState";
 import { useAppContext } from "@/lib/context";
 
 interface MatrixTableProps {
@@ -61,7 +62,7 @@ export default function MatrixTable({ data }: MatrixTableProps) {
     }, [regularRows, sortCol, sortDir]);
 
     if (!hasRows) {
-        return <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">No matrix data available.</div>;
+        return <EmptyState message="No matrix data available." />;
     }
 
     return (
@@ -125,7 +126,7 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                                 return (
                                     <td
                                         key={col}
-                                        className={`[padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || col === "form_guide" ? "[text-align:left]" : "[text-align:right]"} ${isNum ? "[font-variant-numeric:tabular-nums]" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
+                                        className={`[padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || col === "form_guide" ? "[text-align:left]" : "[text-align:right]"} ${isNum ? "font-numeric" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
                                         onClick={() => {
                                             if (isOpponent && activeFormat) {
                                                 const opp = String(val);

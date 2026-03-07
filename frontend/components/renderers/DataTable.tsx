@@ -7,6 +7,7 @@
 
 import { useState, useMemo } from "react";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 
 interface DataTableProps {
     data: Record<string, unknown>[];
@@ -64,11 +65,7 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
     }, [rows, sortCol, sortDir]);
 
     if (!hasRows) {
-        return (
-            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
-                No data available.
-            </div>
-        );
+        return <EmptyState message="No table data available." />;
     }
 
     const totalPages = Math.ceil(sorted.length / pageSize);
@@ -123,7 +120,7 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
                                         return (
                                             <td
                                                 key={col}
-                                                className={`[padding:10px_12px] [white-space:nowrap] ${isNum ? "[text-align:right] [font-variant-numeric:tabular-nums]" : "[text-align:left]"} ${isOverallRow ? "[font-weight:700]" : "[font-weight:400]"} [color:${getCellColor(row as DataRow, col, val)}]`}
+                                                className={`[padding:10px_12px] [white-space:nowrap] ${isNum ? "[text-align:right] font-numeric" : "[text-align:left]"} ${isOverallRow ? "[font-weight:700]" : "[font-weight:400]"} [color:${getCellColor(row as DataRow, col, val)}]`}
                                             >
                                                 {formatCell(col, val)}
                                             </td>

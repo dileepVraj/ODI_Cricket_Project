@@ -6,6 +6,7 @@
 "use client";
 
 import { Crosshair, AlertTriangle } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 
 interface MatchupTableProps {
     data: Record<string, unknown>[];
@@ -29,11 +30,7 @@ const HIDDEN_COLS = new Set([
 
 export default function MatchupTable({ data }: MatchupTableProps) {
     if (!data || data.length === 0) {
-        return (
-            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
-                No matchup data available.
-            </div>
-        );
+        return <EmptyState message="No matchup data available." />;
     }
 
     const rows = data as MatchupRow[];
@@ -86,7 +83,7 @@ export default function MatchupTable({ data }: MatchupTableProps) {
                                         return (
                                             <td
                                                 key={col}
-                                                className={`[padding:10px_12px] [white-space:nowrap] ${isTextCol(col) ? "[text-align:left] [font-weight:600]" : "[text-align:right] [font-weight:400] [font-variant-numeric:tabular-nums]"} ${resolveCellColor(row, col, val)}`}
+                                                className={`[padding:10px_12px] [white-space:nowrap] ${isTextCol(col) ? "[text-align:left] [font-weight:600]" : "[text-align:right] [font-weight:400] font-numeric"} ${resolveCellColor(row, col, val)}`}
                                             >
                                                 <span className="[display:inline-flex] [align-items:center] [gap:4px]">
                                                     {val === null || val === undefined ? "-" : String(val)}

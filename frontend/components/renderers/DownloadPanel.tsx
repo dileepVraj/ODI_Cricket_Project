@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, ChevronDown, ChevronUp, Copy, Download, FileText } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 
 interface DownloadPanelProps {
     data: Record<string, unknown>;
@@ -12,7 +13,7 @@ export default function DownloadPanel({ data }: DownloadPanelProps) {
     const [copied, setCopied] = useState(false);
 
     if (!data || typeof data !== "object") {
-        return <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">No data to download.</div>;
+        return <EmptyState message="No download data available." />;
     }
 
     const jsonStr = JSON.stringify(data, null, 2);

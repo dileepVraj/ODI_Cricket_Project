@@ -7,6 +7,8 @@
  */
 "use client";
 
+import EmptyState from "@/components/common/EmptyState";
+
 interface ComparisonTableProps {
     data: Record<string, unknown>[];
 }
@@ -27,11 +29,7 @@ interface ComparisonRow extends Record<string, unknown> {
 
 export default function ComparisonTable({ data }: ComparisonTableProps) {
     if (!data || data.length === 0) {
-        return (
-            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
-                No comparison data available.
-            </div>
-        );
+        return <EmptyState message="No comparison data available." />;
     }
 
     const sections: { header: string; tone: SectionTone; rows: ComparisonRow[] }[] = [];
@@ -100,7 +98,7 @@ export default function ComparisonTable({ data }: ComparisonTableProps) {
                                     </span>
 
                                     <span
-                                        className={`[font-size:0.9rem] [font-weight:700] [font-variant-numeric:tabular-nums] [text-align:right] [min-width:60px] [color:${resolveValueColor(valueTone, isZeroOrEmpty)}]`}
+                                        className={`[font-size:0.9rem] [font-weight:700] font-numeric [text-align:right] [min-width:60px] [color:${resolveValueColor(valueTone, isZeroOrEmpty)}]`}
                                     >
                                         {value === null || value === undefined ? "-" : String(value)}
                                     </span>

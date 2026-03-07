@@ -1,6 +1,7 @@
 "use client";
 
 import { Award, Target, User } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 import QuickLinks from "@/components/navigation/QuickLinks";
 import { useAppContext } from "@/lib/context";
 
@@ -20,11 +21,7 @@ export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
     const { activeFormat } = useAppContext();
 
     if (!data || typeof data !== "object") {
-        return (
-            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
-                No player data available.
-            </div>
-        );
+        return <EmptyState message="No player data available." />;
     }
 
     const name = String(data["player_name"] ?? data["name"] ?? data["Player"] ?? "Unknown");
@@ -214,7 +211,7 @@ function StatSection({
                         <div className="[font-size:0.65rem] [text-transform:uppercase] [letter-spacing:0.05em] [color:var(--text-disabled)] [font-weight:600] [margin-bottom:3px]">
                             {key.replace(/_/g, " ")}
                         </div>
-                        <div className="[font-size:1.1rem] [font-weight:700] [color:var(--text-primary)] [font-variant-numeric:tabular-nums]">
+                        <div className="[font-size:1.1rem] [font-weight:700] [color:var(--text-primary)] font-numeric">
                             {val === null || val === undefined ? "-" : String(val)}
                         </div>
                     </div>

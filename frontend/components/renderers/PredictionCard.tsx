@@ -1,6 +1,7 @@
 "use client";
 
 import { Gauge, Info, TrendingDown, TrendingUp } from "lucide-react";
+import EmptyState from "@/components/common/EmptyState";
 
 interface PredictionCardProps {
     data: Record<string, unknown>;
@@ -29,11 +30,7 @@ function toneClasses(tone: Tone): { chip: string; icon: string } {
 
 export default function PredictionCard({ data }: PredictionCardProps) {
     if (!data || typeof data !== "object") {
-        return (
-            <div className="[padding:20px] [text-align:center] [color:var(--text-muted)]">
-                No prediction data available.
-            </div>
-        );
+        return <EmptyState message="No prediction data available." />;
     }
 
     const predicted = Number(data["Predicted_Total"] ?? data["predicted_total"] ?? 0);
@@ -66,7 +63,7 @@ export default function PredictionCard({ data }: PredictionCardProps) {
                     <div className="[font-size:0.7rem] [text-transform:uppercase] [letter-spacing:0.08em] [color:var(--text-disabled)] [font-weight:600] [margin-bottom:8px]">
                         Predicted 1st Innings Total
                     </div>
-                    <div className="[font-size:3.2rem] [font-weight:900] [background:linear-gradient(135deg,_var(--accent-primary),_var(--accent-secondary))] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [line-height:1] [margin-bottom:8px] [font-variant-numeric:tabular-nums]">
+                    <div className="[font-size:3.2rem] [font-weight:900] [background:linear-gradient(135deg,_var(--accent-primary),_var(--accent-secondary))] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [line-height:1] [margin-bottom:8px] font-numeric">
                         {predicted}
                     </div>
                     <div className="[font-size:0.9rem] [color:var(--text-muted)] [font-weight:500]">
@@ -187,7 +184,7 @@ function BreakdownCard({
                     {label}
                 </span>
             </div>
-            <div className="[font-size:1.3rem] [font-weight:800] [color:var(--text-primary)] [font-variant-numeric:tabular-nums]">{value}</div>
+            <div className="[font-size:1.3rem] [font-weight:800] [color:var(--text-primary)] font-numeric">{value}</div>
             <div className="[font-size:0.72rem] [color:var(--text-disabled)] [margin-top:2px]">{subLabel}</div>
         </div>
     );
