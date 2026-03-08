@@ -5,6 +5,7 @@ import { Award, Target, User } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
 import QuickLinks from "@/components/layout/QuickLinks";
 import { useAppContext } from "@/lib/context";
+import type { QuickLink } from "@/lib/api";
 import { PlayerPayloadFragment, toPlayerPayloadFragment } from "@/lib/types";
 
 interface PlayerProfileCardProps {
@@ -13,32 +14,6 @@ interface PlayerProfileCardProps {
 
 type SectionTone = "primary" | "secondary" | "tertiary";
 
-interface QuickLinkItem {
-    label: string;
-    href: string;
-}
-
-const PLAYER_PROFILE_LINK_TEMPLATES: ReadonlyArray<{
-    label: string;
-    buildHref: (team: string) => string;
-}> = [
-    {
-        label: "View H2H",
-        buildHref: (team: string) => `/:format/rivalry/global_h2h?team_b=${encodeURIComponent(team)}`,
-    },
-    {
-        label: "Add to Squad",
-        buildHref: () => "/:format/squad_battle/compare_squads",
-    },
-];
-
-function buildPlayerProfileLinks(team: string): QuickLinkItem[] {
-    return PLAYER_PROFILE_LINK_TEMPLATES.map((link) => ({
-        label: link.label,
-        href: link.buildHref(team),
-    }));
-}
-
 function toneBarClass(tone: SectionTone): string {
     if (tone === "primary") return "[background:var(--accent-primary)]";
     if (tone === "secondary") return "[background:var(--accent-secondary)]";
@@ -46,7 +21,13 @@ function toneBarClass(tone: SectionTone): string {
 }
 
 export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
-    const { activeFormat } = useAppContext();
+    const { activeFormat, manifest } = useAppContext();
+
+    const playerScoutLinks: QuickLink[] = (() => {
+        if (!manifest) return [];
+        const cat = manifest.categories.find((c) => c.key === "player_scout");
+        return cat?.quick_links ?? [];
+    })();
 
     if (!data || typeof data !== "object") {
         return <EmptyState message="No player data available." />;
@@ -198,8 +179,8 @@ export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
                 <StatSection title="Details" icon={<User size={14} />} stats={otherStats} tone="tertiary" />
             )}
 
-            {activeFormat && (
-                <QuickLinks links={buildPlayerProfileLinks(team)} />
+            {activeFormat && playerScoutLinks.length > 0 && (
+                <QuickLinks links={playerScoutLinks} />
             )}
         </div>
     );

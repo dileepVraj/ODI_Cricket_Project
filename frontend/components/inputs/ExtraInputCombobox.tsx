@@ -10,6 +10,7 @@ interface ExtraInputFieldDefinition {
     label: string;
     required?: boolean;
     source?: string;
+    source_params?: Record<string, string | number>;
 }
 
 interface ExtraInputComboboxProps {
@@ -26,21 +27,26 @@ function sanitizeLabel(label: string): string {
 
 function resolveSourceTeam(
     source: string | undefined,
+    sourceParams: Record<string, string | number> | undefined,
     contextValues: Record<string, string | number>
 ): string {
-    if (!source || !source.includes("/context/players/")) {
+    if (source !== "players") {
         return "";
     }
 
-    if (source.includes("{team}")) {
+    const teamParam = sourceParams?.team;
+    if (teamParam === undefined || teamParam === null) {
+        return "";
+    }
+
+    const teamStr = String(teamParam);
+    if (teamStr === "{team}") {
         const teamA = contextValues.team_a;
         const teamB = contextValues.team_b;
         return String(teamA || teamB || "");
     }
 
-    const marker = "/context/players/";
-    const tail = source.split(marker)[1] ?? "";
-    return decodeURIComponent(tail.split("?")[0] ?? "").trim();
+    return teamStr;
 }
 
 export default function ExtraInputCombobox({
@@ -54,7 +60,7 @@ export default function ExtraInputCombobox({
     const [options, setOptions] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const sourceTeam = resolveSourceTeam(field.source, contextValues);
+    const sourceTeam = resolveSourceTeam(field.source, field.source_params, contextValues);
 
     useEffect(() => {
         if (!sourceTeam) {

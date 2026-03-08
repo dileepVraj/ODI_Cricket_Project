@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-04
+**Last Updated:** 2026-03-08
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -67,13 +67,12 @@ They are NOT legacy. Do not delete them.
 
 ## 2. CURRENT PROJECT PHASE
 
-**Phase:** Post Phase 11.3 — calculators fully refactored and compliant.
-**Next phase:** Engine-layer refactoring (active work area).
-**Phase 12 (live layer / Numba AOT): NOT started — do not push agents toward it.**
-### 5.2 Filesystem Integrity Rules (added 2026-03-03, committed 2026-03-04)
-
-Added to Part 5 of AGENTS.md and GEMINI.md after Codex deleted `core/` contents
-during a worktree task.
+Team engine signed off COMPLIANT 2026-03-05.
+Player engine signed off COMPLIANT 2026-03-06.
+Frontend compliance audit COMPLETE 2026-03-06 (TASK-029).
+Predictor engine signed off COMPLIANT 2026-03-07 (TASK-010 CLOSED).
+Frontend sprint 2 COMPLETE 2026-03-07 (TASK-042 through TASK-045).
+Manifest schema extensions COMPLETE 2026-03-08 (TASK-046 — all 6/6 frontend violations resolved).
 
 ---
 
@@ -133,14 +132,16 @@ Dormant: `event-state-linter` — activates when `core/live/` is created in Phas
 
 ### 3.5 Skills Structure
 
-```
 core/gen_ai/skills/
     .system/      — skill-creator, skill-installer (DO NOT TOUCH)
-    guides/       — duckdb-lint-ops, context-loader
+    guides/       — duckdb-lint-ops, context-loader,
+                    bug-fix-guide, new-feature-guide,
+                    refactor-guide, modification-guide
     validators/   — boundary-sentinel, manifest-contract-verifier,
                     event-state-linter (dormant), serialization-guard,
                     executive-auditor, paradigm-sentinel
-```
+
+IMPORTANT: Gate 2 (duckdb-lint-ops) is in guides/ not validators/.
 
 **IMPORTANT:** Gate 2 (duckdb-lint-ops) is in `guides/` not `validators/`.
 
@@ -206,6 +207,7 @@ Short list: core/data_access.py, core/interfaces/team_types.py, api/serializers.
 
 Path: `core/gen_ai/skills/guides/context-loader/`
 Status: **BUILT** — committed 2026-03-03
+Pending enhancement: ICE-004 — output correct guide skill path based on task type
 
 What it does:
 1. Reads `SESSION_STATE.md`, extracts Active Task scope
@@ -294,6 +296,11 @@ Rules are documented in `AGENTS.md Part 5` and `GEMINI.md Part 5`. Both files ar
 - Base URL: empty string (same-origin, proxied by Next.js rewrites)
 - Key endpoints: `/api/v1/formats`, `/api/v1/{format}/manifest`, `/api/v1/{format}/execute/{functionKey}`
 - Key types: `FormatInfo`, `Manifest`, `ManifestFunction`, `ExecuteResponse`, `ApiClientError`
+- Manifest-driven types (TASK-046): `SourceRegistryEntry`, `NavigationRoot`, `QuickLink`
+- `ContextField` extended with `source_params` for parameterised source resolution
+- `ManifestCategory` extended with `quick_links` for category-level navigation
+- `Manifest` extended with `source_registry` and `navigation_root`
+- All source fields use semantic keys (e.g., `"teams"`, `"venues"`) not API paths
 
 ### 6.2 lib/context.tsx — Key Patterns
 
@@ -309,6 +316,7 @@ Rules are documented in `AGENTS.md Part 5` and `GEMINI.md Part 5`. Both files ar
 - 3-layer layout: FormatSelector (top) → ContextBar → Sidebar + Main
 - Hash-based deep-linking: `/#category_key` syncs to active category state
 - `AppShell` composes layout — `DashboardScreen` and `CategoryScreen` are content renderers
+- Navigation root derived from `manifest.navigation_root?.key` — never hardcoded (TASK-046)
 - `CategoryScreen` manages: activeTab, result, isLoading, error, homeXI, awayXI, extraInputValues
 - Execute params built via `buildExecuteParams()` — never inline in event handlers
 - Error formatted via `formatExecuteError()` — never raw `err.message`
@@ -368,15 +376,52 @@ Rules are documented in `AGENTS.md Part 5` and `GEMINI.md Part 5`. Both files ar
 
 **Total: 38 frontend rules. All grounded in actual codebase patterns.**
 
-### 7.1 Frontend Compliance Debt (tracked — not yet actioned)
+### 7.1 Frontend Compliance Debt — Post TASK-029 Audit
 
-| Item | File | Action needed |
-|------|------|---------------|
-| Eager renderer imports | `FunctionRenderer.tsx` | Refactor to `React.lazy()` + Suspense |
-| No Error Boundary | `page.tsx` CategoryScreen | Wrap renderer output in Error Boundary |
-| Types in api.ts not types.ts | `frontend/lib/api.ts` | Create `lib/types.ts`, migrate types |
-| Missing aria-live/role | `page.tsx` | Add to result container and error display |
-| No test stack | `package.json` | Add Vitest + React Testing Library |
+Full violation register: docs/audits/frontend/AUDIT-F10-violation-summary.md
+
+Statistics:
+  Total violations: 90
+  HIGH: 24 | MEDIUM: 54 | LOW: 12
+  Pre-existing confirmed: 8
+  New violations found: 82
+
+Systemic patterns (require single fix strategy across multiple files):
+  - Empty state: 12/13 renderers use inline fallback instead of EmptyState
+  - Inline as casts: FunctionRenderer + 9 renderers
+  - Font system: 7 renderers use font-variant-numeric not font-numeric
+  - Raw colours outside CSS token system: 7 files
+  - Mouse-only comboboxes: ContextBar, SquadBuilder, ExtraInputRenderer
+  - Hardcoded domain taxonomy: PARTIALLY RESOLVED (TASK-046 fixed 6/6 violations —
+    page.tsx, ContextBar, Sidebar, QuickLinks, ExtraInputSelect, ExtraInputCombobox
+    now all manifest-driven)
+  - Missing role="alert": page.tsx, SquadBuilder
+  - Missing loading state announcements: page.tsx, SkeletonLoader
+
+Tier 1 blockers (must be created first):
+  - ErrorBoundary component in components/common/ — unblocks F04-V05, F05-V04, F09-V01
+  - Shared accessible combobox primitive — unblocks F06-V04, F08-V05, F08-V10
+
+Architect exceptions recommended:
+  - CountUp.tsx animation — KIP candidate, no CSS keyframe equivalent for JS counter
+
+Standards doc updates recommended:
+  - ENGINEERING_STANDARDS_FRONTEND.md 2.2B Rule 1 — token names out of sync with globals.css
+    (--bg-base vs --bg-deep, --accent-primary vs --accent-blue)
+
+Backend pre-computation required before frontend fix possible:
+  - F07-V21: PhaseAnalysisCard — labels/thresholds must be pre-computed
+  - F07-V26: PredictionCard — prediction ranges/gauge defaults must be pre-computed
+  - F07-V30: PlayerProfileCard — field classifications must be pre-computed
+  Flag for TASK-030 planning.
+
+Resolved by TASK-046 (2026-03-08):
+  - F04-V03: page.tsx hardcoded "dashboard" — RESOLVED (manifest.navigation_root)
+  - F06-V03: ContextBar hardcoded source keys — RESOLVED (semantic keys match naturally)
+  - F06-V05: Sidebar hardcoded DASHBOARD_ITEM — RESOLVED (derived from manifest)
+  - F06-V08: QuickLinks hardcoded link definitions — RESOLVED (manifest quick_links)
+  - ExtraInputSelect hardcoded API path matching — RESOLVED (semantic key comparison)
+  - ExtraInputCombobox hardcoded API path parsing — RESOLVED (source_params)
 
 ---
 
@@ -384,11 +429,15 @@ Rules are documented in `AGENTS.md Part 5` and `GEMINI.md Part 5`. Both files ar
 
 In priority order:
 
-1. **Engine refactoring** — primary active work (TASK-010)
-2. **Update TECHNICAL_AUDIT_REPORT.md** — blocked until TASK-010 completes (TASK-011)
-3. **Create CLAUDE.md** — when Claude CLI pro sub is activated, copy from AGENTS.md
-4. **Frontend compliance debt** — 5 items in Section 7.1, after engine queue clears
+1. **Frontend remediation sprint** — TASK-030 (not yet created)
+   Scope: 90 violations from TASK-029 audit (6 resolved by TASK-046, ~84 remaining)
+   Start with Tier 1 blockers (ErrorBoundary, accessible combobox)
+   Full scope in docs/audits/frontend/AUDIT-F10-violation-summary.md
+2. **Update TECHNICAL_AUDIT_REPORT.md** — TASK-011 (UNBLOCKED)
+3. **Token optimisation** — section-aware context loading (TASK-012) — monitor first
+4. **Frontend compliance debt** — remaining items, after engine queue clears
 5. **MCP Integration** — ICEBOX, revisit when Phase 12 scoping begins
+
 
 ---
 
@@ -441,8 +490,79 @@ SKILL.md + context-loader.md — all spec items passed human review |
 | TASK-009 closed | backtester.py + base_engine.py confirmed never git-tracked, already absent | 2026-03-04 |
 | BACKLOG.md Status field adopted | All tasks now carry Status: Open / In Progress / Blocked / Closed — YYYY-MM-DD | 2026-03-04 |
 | MCP Integration icebox'd | ICE-001 created — revisit at Phase 12 scoping | 2026-03-04 |
+| AGENTS.md + GEMINI.md Part 5 consolidated | Single unified filesystem rules block | Two overlapping duplicate blocks removed — Rules 1–7 replacing old prose+bullet format |
+| docs/ai/ declared human-write-only | Rule 5 in Part 5 | Codex modified SESSION_STATE.md outside task scope on 2026-03-04 |
+| git status --short . banned | Rule 3 in Part 5 + Part 8 prohibition | Codex repeatedly ran root-scoped git status causing noise and audit drift |
+| Report format hardened | Part 7 + Part 8 prohibition | TASK-017 Codex submitted prose summary instead of required template |
+| compliance-bouncer.py renamed | compliance_bouncer.py — snake_case | Module Naming standard (Engineering Standard 8) — hyphens break Python imports |
+| python-dotenv introduced | config/settings.py — all hardcoded config moved to .env | TASK-015 — environment-specific literals removed from source |
+| api/ layer extracted | context_builder.py + lifespan.py split from main.py | TASK-017 + TASK-018 — single responsibility principle applied to api/main.py |
+| requirements.txt + pyproject.toml aligned | 13 mismatches resolved, python-dotenv added | TASK-016 — single source of truth for dependencies |
+| ipywidgets removed | Not a project dependency — Jupyter legacy | Removed from requirements.txt and pyproject.toml |
+| TASK-014 through TASK-019 closed | Pre-engine housekeeping complete | Path clear for TASK-010 engine refactoring |
+| bug-fix-guide SKILL.md built | TASK-020 COMPLETE 2026-03-04 | Enforcing guide skill — 4 phases, 7 pre-condition checkpoints, single-file discipline, incremental gating, PART 0 mandate enforcement, hard stops, escalation reporting |
+| new-feature-guide SKILL.md built | TASK-021 COMPLETE 2026-03-04 | Enforcing guide — 7 phases, outside-in sequence, contract confirmation hard stop, Truth Bridge, UI mandates, 15 hard stop triggers |
+| refactor-guide SKILL.md built | TASK-022 COMPLETE 2026-03-04 | Enforcing guide — 6 phases, 9 pre-condition checkpoints, layer reclassification hard stop, no-behaviour-change constraint, parity verification phase, deletion zero-reference rule, 17 hard stop triggers |
+| modification-guide SKILL.md built | TASK-023 COMPLETE 2026-03-04 | Enforcing guide — 5 phases, 10 pre-condition checkpoints, delta scoping, entrenchment rule, Golden Master regeneration, downstream verification, 17 hard stop triggers |
+| Task-type guide skill system agreed and built | 2026-03-04 | Four enforcing guides: bug-fix, new-feature, refactor, modification. Enforcing not instructional. Single-file discipline. Incremental gating. PART 0 mandatory. ICE-004 for context-loader enhancement. |
+| Player engine audit series introduced | docs/audits/player_engine/ AUDIT-P01 to P10 | 10-step methodology — more granular than team engine 5-step |
+| ARCH-DEC-01 signed off | Group A dual-path standardised — get_last_match_xi, get_player_profile | Constructor-data primary, injection is enrichment — document in ABC |
+| ARCH-DEC-02 signed off | Group B dead paths removed — analyze_squad_types, get_matchups, get_squad_comparison_data | All 19 caller files verified safe — context_df made required |
+| ABC stale — player engine ahead | player_interface.py has 8 fixes required | TASK-027f — update ABC to match engine, not reverse |
+| TASK-026 complete | Player engine audit series — 62 violations, 0 bouncer violations throughout | 2026-03-05 |
+| ARCH-DEC-03 signed off | Rounding precision + innings threshold split | stat_precision_avg=0, stat_precision_rate=1, min_innings_career/context/form replacing min_innings_threshold | 2026-03-06 |
+| TASK-027 complete | Player engine refactor series — 62 violations resolved across 027a–027f | player_engine.py, player_interface.py, manifest.py — all compliant | 2026-03-06 |
+| TASK-028 complete | Architect review — player engine signed off COMPLIANT | 62/62 violations confirmed resolved, ARCH-DEC-01/02/03 verified | 2026-03-06 |
+| TASK-010 progress | Player engine now COMPLIANT | Two of N engines done — predictor engine next | 2026-03-06 |
+| team_interface.py cleaned | Removed unused VenueStats and TeamMatchup dataclasses | Confirmed zero usages via grep before removal | 2026-03-06 |
+| ARCH-DEC-01 signed off | Group A dual-path standardised — get_last_match_xi, get_player_profile | Constructor-data primary, injection is enrichment — documented in ABC |
+| ARCH-DEC-02 signed off | Group B dead paths removed — analyze_squad_types, get_matchups, get_squad_comparison_data | All 19 caller files verified safe — context_df made required |
+| ARCH-DEC-03 signed off | Rounding precision + innings threshold split | stat_precision_avg=0, stat_precision_rate=1, min_innings_career/context/form |
+| TASK-026 complete | Player engine audit series — 62 violations, 0 bouncer violations throughout | 2026-03-05 |
+| TASK-027 complete | Player engine refactor — all 62 violations resolved, 027a through 027f | 2026-03-06 |
+| TASK-028 complete | Architect review — player engine COMPLIANT, 62/62 confirmed | 2026-03-06 |
+| TASK-010 progress | Player engine COMPLIANT — predictor engine is next | 2026-03-06 |
+| TASK-029 complete | Frontend compliance audit — 90 violations found across 27 files | 2026-03-06 |
+| Frontend compliance debt documented | Full register in AUDIT-F10-violation-summary.md — 82 new, 8 pre-existing | 2026-03-06 |
+| CountUp KIP candidate | Bespoke requestAnimationFrame loop — no CSS keyframe equivalent — recommend KIP not rewrite | 2026-03-06 |
+| Token naming drift identified | globals.css uses --bg-base/--accent-primary not --bg-deep/--accent-blue as per standards doc — standards doc needs update not codebase | 2026-03-06 |
+| 3 backend pre-computation items | PredictionCard, PhaseAnalysisCard, PlayerProfileCard renderers require backend changes before frontend fix — flag for TASK-030 | 2026-03-06 |
 
+
+```
+
+Also update the skills registry in PROJECT_CONTEXT.md Section 3.5 and ENGINEERING_STANDARDS_CORE.md to reflect all four new guides:
+```
+core/gen_ai/skills/
+    guides/
+        duckdb-lint-ops/
+        context-loader/
+        bug-fix-guide/        ← NEW
+        new-feature-guide/    ← NEW
+        refactor-guide/       ← NEW
+        modification-guide/   ← NEW
+```
+
+| Phase 10 named | Engine Layer Refactoring | Formalised 2026-03-05 — team engine first |
+| ABC stale — engine is source of truth | team_interface.py updated to match engine | TASK-024 — 11 HIGH violations resolved |
+| Stale dataclasses removed | 5 removed from team_interface.py | TASK-024 + TASK-024b — zero-reference confirmed |
+| KIP-001 documented | Constructor discard pattern intentional | Stateless engine design — do not fix |
+| KIP-002 documented | _context_match_df defined in lower file section | File layout choice — not missing method |
+| Known Intentional Patterns registry | ENGINEERING_STANDARDS_BACKEND.md Part 7 | Protects intentional patterns from agent tampering |
+| Audit series introduced | docs/audits/team_engine/ — AUDIT-01 to 05 | Structured compliance audit methodology for Phase 10 |
+| TASK-029 initiated | Frontend compliance audit series — F01–F10 planned | Audit only, zero code changes, new chat session | 2026-03-06 |
+| Frontend sprint 2 complete | TASK-042 through TASK-045 closed | Input accessibility, type migration, category screen remediation, mechanical cleanup | 2026-03-07 |
+| TASK-010 closed | Engine Layer Refactoring — all 3 engines COMPLIANT | Team, Player, Predictor engines all pass bouncer + all gates | 2026-03-07 |
+| TASK-039 closed | Backend pre-compute renderer fields — no changes needed | Existing pre-computation covers active items. PredictionCard blocked on Phase 12 | 2026-03-07 |
+| Manifest schema extensions designed | TASK-046 design doc — 5 frontend violations required manifest infrastructure | source_registry, navigation_root, quick_links architecture agreed | 2026-03-07 |
+| Source registry introduced | `source_registry` maps semantic keys to API path templates | Frontend resolves `{format_key}` and `{team}` at runtime — no hardcoded API paths | 2026-03-08 |
+| Navigation root introduced | `navigation_root` declares default screen (key, label, icon) | Frontend never hardcodes "dashboard" — reads from manifest | 2026-03-08 |
+| Quick links introduced | `quick_links` on manifest categories link to related categories | Hash-based navigation via `category_key` — no URL path construction | 2026-03-08 |
+| Semantic source keys adopted | context_fields and extra_inputs use `"teams"` not `/api/v1/odi/context/teams` | API path template resolution centralised in source_registry | 2026-03-08 |
+| source_params introduced | Extra inputs can pass `{team: "{team}"}` or `{team: "All"}` to parameterise source | Replaces URL segment parsing in ExtraInputCombobox.tsx | 2026-03-08 |
+| api/schemas/manifest.py extended | SourceRegistryEntry, NavigationRoot, QuickLinkDesc Pydantic models added | All new fields Optional — backward compatible, zero breakage | 2026-03-08 |
+| TASK-046 closed | Manifest Schema Extensions — all 6/6 frontend violations resolved | 9 files modified across backend + frontend, all gates PASS | 2026-03-08 |
 ---
 
-*End of PROJECT_CONTEXT.md — Generated 2026-03-03*
+*End of PROJECT_CONTEXT.md — Updated 2026-03-08*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*

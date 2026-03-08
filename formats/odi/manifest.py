@@ -94,7 +94,41 @@ MANIFEST = {
     "format_key": "odi",
     "format_label": "Men's ODI",
     "format_icon": "🏏",
-    "version": "1.0",
+    "version": "1.1",
+
+    # ── Source Registry (TASK-046) ───────────────────────────────────────
+    # Maps semantic source identifiers to API path templates.
+    # Frontend resolves {format_key} and {team} at runtime.
+    "source_registry": {
+        "teams": {
+            "path": "/api/v1/{format_key}/context/teams",
+            "preload": True,
+        },
+        "venues": {
+            "path": "/api/v1/{format_key}/context/venues",
+            "preload": True,
+        },
+        "players": {
+            "path": "/api/v1/{format_key}/context/players/{team}",
+            "preload": False,
+        },
+        "host_countries": {
+            "path": "/api/v1/{format_key}/context/host_countries",
+            "preload": False,
+        },
+        "regions": {
+            "path": "/api/v1/{format_key}/context/regions",
+            "preload": False,
+        },
+    },
+
+    # ── Navigation Root (TASK-046) ───────────────────────────────────────
+    # Declares the default/home screen so frontend never hardcodes "dashboard".
+    "navigation_root": {
+        "key": "dashboard",
+        "label": "Dashboard",
+        "icon": "home",
+    },
 
     # ── Context Fields ───────────────────────────────────────────────────
     # These define the global filter bar at the top of the UI.
@@ -104,19 +138,19 @@ MANIFEST = {
             "type": "combobox",
             "label": "🏟️ Venue",
             "required": False,
-            "source": "/api/v1/odi/context/venues",
+            "source": "venues",
         },
         "team_a": {
             "type": "dropdown",
             "label": "🏠 Home Team",
             "required": True,
-            "source": "/api/v1/odi/context/teams",
+            "source": "teams",
         },
         "team_b": {
             "type": "dropdown",
             "label": "✈️ Away Team",
             "required": True,
-            "source": "/api/v1/odi/context/teams",
+            "source": "teams",
         },
         "years": {
             "type": "slider",
@@ -163,6 +197,10 @@ MANIFEST = {
             "icon": "stadium",
             "group": "intelligence",
             "description": "Stadium-centric analysis: bias, phases, matchups",
+            "quick_links": [
+                {"label": "Compare Rivals", "category_key": "rivalry"},
+                {"label": "Check Form", "category_key": "team_command"},
+            ],
             "functions": [
                 {
                     "key": "venue_bias",
@@ -231,6 +269,10 @@ MANIFEST = {
             "icon": "handshake",
             "group": "intelligence",
             "description": "Head-to-head analysis between two teams",
+            "quick_links": [
+                {"label": "Venue Deep-Dive", "category_key": "venue_intel"},
+                {"label": "Scout Players", "category_key": "player_scout"},
+            ],
             "functions": [
                 {
                     "key": "global_h2h",
@@ -254,7 +296,7 @@ MANIFEST = {
                             "type": "dropdown",
                             "label": "Host Country",
                             "required": False,
-                            "source": "/api/v1/odi/context/host_countries",
+                            "source": "host_countries",
                         },
                     },
                     "output_type": "comparison_table",
@@ -337,6 +379,10 @@ MANIFEST = {
             "icon": "user",
             "group": "players",
             "description": "Individual player deep-dive profiles",
+            "quick_links": [
+                {"label": "View H2H", "category_key": "rivalry"},
+                {"label": "Build Squad", "category_key": "squad_battle"},
+            ],
             "functions": [
                 {
                     "key": "player_profile",
@@ -350,7 +396,8 @@ MANIFEST = {
                             "type": "combobox",
                             "label": "👤 Player",
                             "required": True,
-                            "source": "/api/v1/odi/context/players/All",
+                            "source": "players",
+                            "source_params": {"team": "All"},
                         },
                     },
                     "output_type": "profile_card",
@@ -401,7 +448,8 @@ MANIFEST = {
                             "type": "combobox",
                             "label": "🏏 Batter",
                             "required": True,
-                            "source": "/api/v1/odi/context/players/{team}",
+                            "source": "players",
+                            "source_params": {"team": "{team}"},
                         },
                     },
                     "output_type": "matchup_table",

@@ -32,11 +32,28 @@ export interface FormatInfo {
     has_manifest: boolean;
 }
 
+export interface SourceRegistryEntry {
+    path: string;
+    preload: boolean;
+}
+
+export interface NavigationRoot {
+    key: string;
+    label: string;
+    icon: string;
+}
+
+export interface QuickLink {
+    label: string;
+    category_key: string;
+}
+
 export interface ContextField {
     type: "combobox" | "dropdown" | "slider" | "text" | "textarea";
     label: string;
     required: boolean;
     source?: string;
+    source_params?: Record<string, string | number>;
     options?: string[];
     min?: number;
     max?: number;
@@ -64,6 +81,7 @@ export interface ManifestCategory {
     group: string;
     description: string;
     functions: ManifestFunction[];
+    quick_links?: QuickLink[];
 }
 
 export interface Manifest {
@@ -73,6 +91,8 @@ export interface Manifest {
     context_fields: Record<string, ContextField>;
     categories: ManifestCategory[];
     output_types: string[];
+    source_registry?: Record<string, SourceRegistryEntry>;
+    navigation_root?: NavigationRoot;
 }
 
 export interface HealthStatus {

@@ -10,7 +10,7 @@
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppContext } from "@/lib/context";
 import ContextBar from "@/components/layout/ContextBar";
 import FormatSelector from "@/components/layout/FormatSelector";
@@ -24,32 +24,40 @@ import {
   Zap,
 } from "lucide-react";
 
+const NAV_ROOT_FALLBACK = "dashboard";
+
 export default function Page() {
   return <AppShell />;
 }
 
 function AppShell() {
+  const { manifest } = useAppContext();
+  const navRootKey = useMemo(
+    () => manifest?.navigation_root?.key ?? NAV_ROOT_FALLBACK,
+    [manifest?.navigation_root?.key]
+  );
+
   const [activeCategory, setActiveCategory] = useState(() => {
     if (typeof window !== "undefined") {
       const hash = window.location.hash.replace("#", "");
-      return hash || "dashboard";
+      return hash || navRootKey;
     }
-    return "dashboard";
+    return navRootKey;
   });
 
   useEffect(() => {
     function onHashChange() {
       const hash = window.location.hash.replace("#", "");
       if (hash) setActiveCategory(hash);
-      else setActiveCategory("dashboard");
+      else setActiveCategory(navRootKey);
     }
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
+  }, [navRootKey]);
 
   const handleCategorySelect = (cat: string) => {
     setActiveCategory(cat);
-    if (cat === "dashboard") {
+    if (cat === navRootKey) {
       window.history.replaceState(null, "", window.location.pathname);
     } else {
       window.history.replaceState(null, "", `#${cat}`);
@@ -71,7 +79,7 @@ function AppShell() {
           id="main-content"
           className="[flex:1] [overflow:auto] [padding:24px] [background:var(--bg-deepest)]"
         >
-          {activeCategory === "dashboard" ? (
+          {activeCategory === navRootKey ? (
             <DashboardScreen />
           ) : (
             <CategoryScreen categoryKey={activeCategory} />

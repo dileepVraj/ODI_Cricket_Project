@@ -21,9 +21,9 @@ import {
     User,
     type LucideIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-const DASHBOARD_ITEM: { key: string; label: string; Icon: LucideIcon } = {
+const DASHBOARD_FALLBACK: { key: string; label: string; Icon: LucideIcon } = {
     key: "dashboard",
     label: "Dashboard",
     Icon: Home,
@@ -77,6 +77,16 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
     const [isCollapsed, setIsCollapsed] = useState(false);
     const toggleSidebar = () => setIsCollapsed((prev) => !prev);
 
+    const dashboardItem = useMemo(() => {
+        const navRoot = manifest?.navigation_root;
+        if (!navRoot) return DASHBOARD_FALLBACK;
+        return {
+            key: navRoot.key,
+            label: navRoot.label,
+            Icon: CATEGORY_ICON_MAP[navRoot.icon] || Home,
+        };
+    }, [manifest?.navigation_root]);
+
     if (isLoadingManifest || !manifest) {
         return (
             <aside
@@ -103,13 +113,13 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
             <div className="[padding:12px_8px] [flex:1]">
                 <button
                     id="sidebar-dashboard"
-                    className={`sidebar-item ${activeCategory === DASHBOARD_ITEM.key ? "active" : ""} [width:100%] [border:none] [font-family:inherit] ${isCollapsed ? "[justify-content:center]" : ""}`}
-                    onClick={() => onCategorySelect(DASHBOARD_ITEM.key)}
-                    title={isCollapsed ? DASHBOARD_ITEM.label : undefined}
-                    aria-label={DASHBOARD_ITEM.label}
+                    className={`sidebar-item ${activeCategory === dashboardItem.key ? "active" : ""} [width:100%] [border:none] [font-family:inherit] ${isCollapsed ? "[justify-content:center]" : ""}`}
+                    onClick={() => onCategorySelect(dashboardItem.key)}
+                    title={isCollapsed ? dashboardItem.label : undefined}
+                    aria-label={dashboardItem.label}
                 >
-                    <DASHBOARD_ITEM.Icon size={18} className="[flex-shrink:0]" />
-                    {!isCollapsed && <span>{DASHBOARD_ITEM.label}</span>}
+                    <dashboardItem.Icon size={18} className="[flex-shrink:0]" />
+                    {!isCollapsed && <span>{dashboardItem.label}</span>}
                 </button>
 
                 {isCollapsed && (

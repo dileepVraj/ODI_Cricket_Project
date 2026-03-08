@@ -30,7 +30,7 @@ export default function ExtraInputSelect({
 }: ExtraInputSelectProps) {
     const [options, setOptions] = useState<string[]>(Array.isArray(field.options) ? field.options : []);
     const [isLoading, setIsLoading] = useState(false);
-    const usesHostCountrySource = Boolean(field.source?.includes("/context/host_countries"));
+    const usesHostCountrySource = field.source === "host_countries";
 
     useEffect(() => {
         if (!usesHostCountrySource) {
@@ -63,8 +63,6 @@ export default function ExtraInputSelect({
             cancelled = true;
         };
     }, [field.options, field.source, formatKey, usesHostCountrySource]);
-
-    // TODO: Drive remote select sources from a manifest source registry when that config slot exists.
     const selectId = useId();
     const placeholder = `Select ${sanitizeLabel(field.label)}`;
 
