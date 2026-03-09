@@ -20,7 +20,7 @@ export default function FilterCriteriaNotice({
     const dropShortNoResultOnly = criteria.drop_short_no_result_only !== false;
 
     return (
-        <div className="[background:var(--bg-elevated)] [border:1px_solid_var(--border-subtle)] [border-left:3px_solid_var(--warning)] [border-radius:var(--radius-md)] [padding:10px_12px]">
+        <div className="[background:var(--bg-elevated)] [border:1px_solid_var(--border-subtle)] [border-left:3px_solid_var(--tier-caution)] [border-radius:var(--radius-md)] [padding:10px_12px]">
             <div className="[font-size:0.72rem] [font-weight:700] [letter-spacing:0.05em] [text-transform:uppercase] [color:var(--text-secondary)] [margin-bottom:4px]">
                 Filter Criteria
             </div>

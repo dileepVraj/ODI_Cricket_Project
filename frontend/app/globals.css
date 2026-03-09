@@ -79,12 +79,15 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-sidebar: 1px 0 12px rgba(0, 0, 0, 0.2);
+  --shadow-card-deep: 0 8px 22px rgba(2, 8, 23, 0.2);
   --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
 
   /* Spacing / sizing */
   --sidebar-width: 260px;
   --sidebar-collapsed-width: 64px;
   --topbar-height: 56px;
+  --format-selector-height: 56px;
   --context-bar-height: 64px;
 
   /* Transitions */

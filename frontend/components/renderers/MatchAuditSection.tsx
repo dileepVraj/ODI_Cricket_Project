@@ -63,7 +63,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
 
             {isOpen && (
                 <div
-                    className="[background:var(--bg-elevated)] [border-radius:var(--radius-md)] [border:1px_solid_var(--border-subtle)] [overflow-x:auto] [box-shadow:0_8px_22px_rgba(2,_8,_23,_0.2)]"
+                    className="[background:var(--bg-elevated)] [border-radius:var(--radius-md)] [border:1px_solid_var(--border-subtle)] [overflow-x:auto] [box-shadow:var(--shadow-card-deep)]"
                 >
                     <table
                         className="[width:100%] [border-collapse:collapse] [font-size:0.8rem]"

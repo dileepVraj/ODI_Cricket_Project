@@ -122,9 +122,9 @@ export default function GlobalHabitsCard({
                     {rows.map((row, i) => {
                         const diffText = row.diff_text ?? "-";
                         const diffToneClass = row.diff_tone === "success"
-                            ? "[color:var(--success)]"
+                            ? "[color:var(--tier-elite)]"
                             : row.diff_tone === "danger"
-                                ? "[color:var(--danger)]"
+                                ? "[color:var(--tier-danger)]"
                                 : "[color:var(--text-muted)]";
                         return (
                             <tr

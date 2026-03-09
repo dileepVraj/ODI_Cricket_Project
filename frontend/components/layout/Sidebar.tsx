@@ -108,7 +108,7 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
     return (
         <aside
             id="sidebar"
-            className={`animate-slide-in [width:${sidebarWidth}] [min-width:${sidebarWidth}] [background:var(--bg-surface)] [border-right:1px_solid_var(--border-subtle)] [backdrop-filter:blur(12px)] [display:flex] [flex-direction:column] [flex-shrink:0] [transition:width_var(--transition-normal),_min-width_var(--transition-normal)] [overflow-y:auto] [overflow-x:hidden] [box-shadow:1px_0_12px_rgba(0,_0,_0,_0.2)] [z-index:40]`}
+            className={`animate-slide-in [width:${sidebarWidth}] [min-width:${sidebarWidth}] [background:var(--bg-surface)] [border-right:1px_solid_var(--border-subtle)] [backdrop-filter:blur(12px)] [display:flex] [flex-direction:column] [flex-shrink:0] [transition:width_var(--transition-normal),_min-width_var(--transition-normal)] [overflow-y:auto] [overflow-x:hidden] [box-shadow:var(--shadow-sidebar)] [z-index:40]`}
         >
             <div className="[padding:12px_8px] [flex:1]">
                 <button
