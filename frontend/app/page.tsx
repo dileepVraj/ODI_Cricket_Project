@@ -10,7 +10,7 @@
  */
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppContext } from "@/lib/context";
 import ContextBar from "@/components/layout/ContextBar";
 import FormatSelector from "@/components/layout/FormatSelector";
@@ -32,10 +32,7 @@ export default function Page() {
 
 function AppShell() {
   const { manifest } = useAppContext();
-  const navRootKey = useMemo(
-    () => manifest?.navigation_root?.key ?? NAV_ROOT_FALLBACK,
-    [manifest?.navigation_root?.key]
-  );
+  const navRootKey = manifest?.navigation_root?.key ?? NAV_ROOT_FALLBACK;
 
   const [activeCategory, setActiveCategory] = useState(() => {
     if (typeof window !== "undefined") {

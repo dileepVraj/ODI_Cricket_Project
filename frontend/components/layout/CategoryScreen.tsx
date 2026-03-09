@@ -279,7 +279,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         {error && <ExecuteErrorPanel error={error} onRetry={runExecute} />}
 
         {isLoading && (
-          <div className="animate-fade-in" aria-busy="true" aria-label="Loading analysis...">
+          <div className="animate-fade-in" aria-live="polite" aria-busy="true" aria-label="Loading analysis...">
             <SkeletonLoader outputType={activeFn.output_type} />
           </div>
         )}

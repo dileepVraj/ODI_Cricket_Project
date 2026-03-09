@@ -91,7 +91,7 @@ function getSuspenseFallback(): ReactNode {
 export default function FunctionRenderer({ outputType, data }: FunctionRendererProps) {
     if (data === null || data === undefined) {
         return (
-            <Suspense fallback={<div className="animate-pulse h-8 w-full" />}>
+            <Suspense fallback={<div className="skeleton [height:2rem]" />}>
                 <EmptyState
                     title="No Analysis Data"
                     message="The engine returned no data for this query. This might be due to insufficient matches or missing context."
