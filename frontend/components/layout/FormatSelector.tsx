@@ -13,7 +13,7 @@ export default function FormatSelector() {
         >
             <div className="[display:flex] [align-items:center] [gap:10px]">
                 <div className="[width:32px] [height:32px] [border-radius:var(--radius-md)] [background:linear-gradient(135deg,_var(--accent-primary),_var(--accent-secondary))] [display:flex] [align-items:center] [justify-content:center]">
-                    <Activity size={18} color="white" />
+                    <Activity size={18} className="[color:var(--text-primary)]" />
                 </div>
                 <div>
                     <h1 className="gradient-text [font-size:1rem] [font-weight:800] [letter-spacing:-0.02em]">CricketAlgo</h1>
