@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-08
+**Last Updated:** 2026-03-09 (guide skill audit sprint)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -39,6 +39,9 @@ frontend/                    — Next.js 14 app
 frontend/app/page.tsx        — Main app shell (3-layer layout, hash navigation)
 frontend/app/globals.css     — Design system v1.0 (CSS tokens, named classes)
 frontend/lib/api.ts          — Centralized API client (all fetch calls go here)
+frontend/lib/types.ts        — Core TypeScript interfaces (all @schema / @schema-exempt tags resolved)
+frontend/lib/comparison-types.ts — Comparison-related types (split from types.ts — TASK-065)
+frontend/lib/venue-types.ts  — Venue-related types (split from types.ts — TASK-065)
 frontend/lib/context.tsx     — Global React Context (AppProvider, useAppContext)
 frontend/components/renderers/FunctionRenderer.tsx — Universal output dispatcher
 frontend/components/layout/  — Shell, navigation, bars (FormatSelector, ContextBar, Sidebar)
@@ -73,6 +76,9 @@ Frontend compliance audit COMPLETE 2026-03-06 (TASK-029).
 Predictor engine signed off COMPLIANT 2026-03-07 (TASK-010 CLOSED).
 Frontend sprint 2 COMPLETE 2026-03-07 (TASK-042 through TASK-045).
 Manifest schema extensions COMPLETE 2026-03-08 (TASK-046 — all 6/6 frontend violations resolved).
+Frontend gate remediation sprint COMPLETE 2026-03-09 (TASK-065 through TASK-069).
+Guide skill audit sprint COMPLETE 2026-03-09 — all 9 guide skills corrected, Gate 2 upgraded,
+Gate F3 trigger updated, @schema-exempt documented, TASK_PROTOCOL.md created.
 
 ---
 
@@ -102,18 +108,32 @@ Never recommend attaching AI_MEMORY.md — it is deprecated.
 
 **Mandate 7 (Numba AOT) deliberately REMOVED** — Phase 12 not started.
 
-### 3.3 Six-Gate Sentinel Order
+### 3.3 Gate Sentinel Order
+
+**Backend gates (GATE 1–6):**
 
 | Gate | Skill | Trigger |
 |------|-------|---------|
-| GATE 1 | `validators/boundary-sentinel` | Any modification to `core/` |
-| GATE 2 | `guides/duckdb-lint-ops` | Any modification to `calculators/`, `engines/`, `services/` |
-| GATE 3 | `validators/manifest-contract-verifier` | Any modification to `manifest.py` or engine files |
-| GATE 4 | `validators/serialization-guard` | Any modification to `api/serializers.py` or engine return types |
-| GATE 5 | `validators/paradigm-sentinel` | Always — after all primary gates pass |
+| GATE 1 | `validators/backend/boundary-sentinel` | Any modification to `core/` |
+| GATE 2 | `guides/backend/duckdb-lint-ops` | Any modification to `calculators/`, `engines/`, `services/` |
+| GATE 3 | `validators/backend/manifest-contract-verifier` | Any modification to `manifest.py` or engine files |
+| GATE 4 | `validators/backend/serialization-guard` | Any modification to `api/serializers.py` or engine return types |
+| GATE 5 | `validators/backend/paradigm-sentinel` | Always — after all primary gates pass |
 | GATE 6 | `core/utils/compliance_bouncer.py` | Always — last step before every commit |
 
+**Frontend gates (GATE F1–F3) — run for any frontend/ task:**
+
+| Gate | Skill | Trigger | Current Status |
+|------|-------|---------|----------------|
+| GATE F1 | `validators/frontend/frontend-lint-sentinel` | Any modification to `frontend/` files | PASS — 0 violations |
+| GATE F2 | `validators/frontend/frontend-paradigm-sentinel` | Always — after F1 passes | PASS — 0 violations |
+| GATE F3 | `validators/frontend/frontend-type-sync-guard` | Always-on (not conditional) | PASS — 0 violations |
+
 Dormant: `event-state-linter` — activates when `core/live/` is created in Phase 12.
+
+**Pre-commit hook — fully wired as of TASK-069:**
+Gates 1, 2-warning, 3, 4, F1, F2, F3, 5, 6 active.
+Gate 3.5 dormant (Phase 12). Hook uses LF line endings, staged-file scoping per gate.
 
 ### 3.4 Compliance Bouncer — 10 Rules
 
@@ -132,18 +152,45 @@ Dormant: `event-state-linter` — activates when `core/live/` is created in Phas
 
 ### 3.5 Skills Structure
 
+```
 core/gen_ai/skills/
-    .system/      — skill-creator, skill-installer (DO NOT TOUCH)
-    guides/       — duckdb-lint-ops, context-loader,
-                    bug-fix-guide, new-feature-guide,
-                    refactor-guide, modification-guide
-    validators/   — boundary-sentinel, manifest-contract-verifier,
-                    event-state-linter (dormant), serialization-guard,
-                    executive-auditor, paradigm-sentinel
+    .system/           — skill-creator, skill-installer (DO NOT TOUCH)
+    guides/
+        backend/
+            duckdb-lint-ops/       — Gate 2 guide + scripts/ (run_lint.py, query_duckdb.py)
+                                     Script: core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py
+            context-loader/        — bootstrap context loader
+            bug-fix-guide/         — enforcing 4-phase backend bug-fix workflow
+            new-feature-guide/     — enforcing 7-phase outside-in new-feature workflow
+            refactor-guide/        — enforcing 6-phase refactor (behaviour-identical) workflow
+            modification-guide/    — enforcing 5-phase deliberate-change workflow
+        frontend/
+            frontend-bug-fix-guide/       — 4-phase frontend RCA + F1–F3 gates
+            frontend-modification-guide/   — delta discipline for UI changes + F1–F3 gates
+            frontend-new-component-guide/  — component classification, placement, @schema contract
+    validators/
+        backend/       — boundary-sentinel, manifest-contract-verifier,
+                         event-state-linter (dormant), serialization-guard,
+                         executive-auditor, paradigm-sentinel
+        frontend/      — frontend-lint-sentinel, frontend-paradigm-sentinel,
+                         frontend-type-sync-guard
+```
 
-IMPORTANT: Gate 2 (duckdb-lint-ops) is in guides/ not validators/.
+**IMPORTANT:** Gate 2 (duckdb-lint-ops) is in `guides/backend/` not `validators/`.
+Gate 2 script path: `core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py`
+All four backend guide skills have the explicit `run_lint.py` command — "per SKILL.md" removed.
 
-**IMPORTANT:** Gate 2 (duckdb-lint-ops) is in `guides/` not `validators/`.
+**Gate F3 (frontend-type-sync-guard):** Always-on. Scans all `frontend/lib/*.ts` files.
+Not limited to `lib/types.ts`. Trigger condition updated in all three frontend guide skills.
+
+**@schema-exempt pattern introduced (2026-03-09):**
+TypeScript interfaces that are frontend-only (no Pydantic equivalent) must carry:
+`/** @schema-exempt — frontend-only rendering contract, no Pydantic equivalent */`
+Interfaces that map to a backend Pydantic schema must carry:
+`/** @schema {PydanticClassName} in {python_file_path} */`
+Both tags are accepted by Gate F3. Missing either tag is a Gate F3 violation.
+Documented in: frontend-new-component-guide/SKILL.md Phase 3 check R4,
+all three frontend guide skills Phase 3 Gate F3 trigger, Rule 5.8 in TASK_PROTOCOL.md.
 
 ### 3.6 High-Impact File Registry
 
@@ -221,6 +268,30 @@ the agent config file (AGENTS.md / GEMINI.md / CLAUDE.md) so it fires automatica
 at session start.
 
 **Next step:** Wire bootstrap block into AGENTS.md and GEMINI.md (Priority 2).
+
+### 4.4 Task Protocol — Authoritative Agent Routing Guide
+
+Path: `docs/ai/TASK_PROTOCOL.md`
+Status: **CREATED** — 2026-03-09
+
+This file supersedes all ad-hoc task routing guidance. Any AI agent starting a task
+MUST read `TASK_PROTOCOL.md` before touching any file.
+
+What it contains:
+- Section 1: Task classification table (10 task types)
+- Section 2: Guide skill load order per task type (backend, frontend, tooling)
+- Section 3: Gate sequence by scope (explicit script commands, not "per SKILL.md")
+- Section 4: Mixed-scope rules (new-feature, full-stack modifications)
+- Section 5: Hard rules (apply to every task, every type)
+- Section 6: Quick reference card (cut-to for fast answers)
+- Section 7: Skill registry (all paths, authoritative — single source of truth)
+
+**Rule 5.9 in TASK_PROTOCOL.md:** duckdb-lint-ops script path is
+`core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py`
+The legacy path `core/gen_ai/skills/duckdb-lint-ops/scripts/` does not exist.
+
+**Rule 5.8 in TASK_PROTOCOL.md:** @schema and @schema-exempt contract for
+new TypeScript interfaces in `frontend/lib/*.ts` — both patterns documented.
 
 ---
 
@@ -445,11 +516,14 @@ In priority order:
 
 - **Never attach AI_MEMORY.md to agents** — deprecated, noise
 - **Bouncer must pass before every commit** — `python core/utils/compliance_bouncer.py --root .`
-- **Pre-commit hook enforces compliance** — `.githooks/pre-commit`
+- **Pre-commit hook enforces compliance** — `.githooks/pre-commit` — Gates 1, 2 (script + exit 1), 3, 4, F1, F2, F3, 5, 6 wired (TASK-069/guide sprint). Gate 3.5 dormant (Phase 12).
 - **No `--no-verify` commits** — bouncer is not optional
 - **High-impact files require stop-state-trace-confirm** — Section 3.6
 - **Engine refactoring is the active work** — Phase 12 NOT started
-- **duckdb-lint-ops is in `guides/`** not `validators/` — use correct path in Gate 2
+- **duckdb-lint-ops is in `guides/backend/`** not `validators/` — script path: `core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py`
+- **Gate F3 is always-on** — scans all `frontend/lib/*.ts`, not just `types.ts`
+- **@schema-exempt is a valid Gate F3 tag** — frontend-only interfaces must carry it
+- **TASK_PROTOCOL.md is the agent routing guide** — any agent starting a task MUST read `docs/ai/TASK_PROTOCOL.md` first
 - **Agent report format** — keep under 30 lines, use strict template
 - **Phase state lives in SESSION_STATE.md only** — never hardcode phase in agent config files
 - **Agent config files share a common structure** — diverge only where tool-specific behaviour requires it
@@ -458,6 +532,20 @@ In priority order:
 - **match_pack/ is a legitimate feature** — report generator, not clutter
 - **Codex worktree can delete files** — always run `git status` after Codex tasks,
   restore with `git restore core/` if deletions appear
+
+**Gate State Snapshot (2026-03-09):**
+| Gate | Status |
+|------|--------|
+| Gate 1 — boundary-sentinel | Operational |
+| Gate 2 — duckdb-lint-ops | Operational (script + exit 1 in pre-commit hook) |
+| Gate 3 — manifest-contract-verifier | Operational |
+| Gate 4 — serialization-guard | Operational |
+| Gate F1 — frontend-lint-sentinel | PASS — 0 violations |
+| Gate F2 — frontend-paradigm-sentinel | PASS — 0 violations |
+| Gate F3 — frontend-type-sync-guard | PASS — 0 violations (always-on) |
+| Gate 5 — paradigm-sentinel | Operational |
+| Gate 6 — compliance-bouncer | PASS — 22 files, 100% compliance |
+| Pre-commit hook | Fully wired, exit 0 confirmed |
 
 ---
 
@@ -562,7 +650,45 @@ core/gen_ai/skills/
 | source_params introduced | Extra inputs can pass `{team: "{team}"}` or `{team: "All"}` to parameterise source | Replaces URL segment parsing in ExtraInputCombobox.tsx | 2026-03-08 |
 | api/schemas/manifest.py extended | SourceRegistryEntry, NavigationRoot, QuickLinkDesc Pydantic models added | All new fields Optional — backward compatible, zero breakage | 2026-03-08 |
 | TASK-046 closed | Manifest Schema Extensions — all 6/6 frontend violations resolved | 9 files modified across backend + frontend, all gates PASS | 2026-03-08 |
+| Frontend Skills Initiative — TASK-048 to TASK-057 | Skills directory restructured: backend/ + frontend/ subdirectories under guides/ and validators/ | 10 new skills: 3 frontend validators + 3 frontend guides. GATE F1–F3 registered in ENGINEERING_STANDARDS_FRONTEND.md and all agent config files | 2026-03-08 |
+| TASK-048 closed | Skills directory reorganisation — backend/frontend split | All 6 guide skills → guides/backend/, all 6 validator skills → validators/backend/, frontend/ dirs created | 2026-03-08 |
+| TASK-049 closed | All stale skill path references updated | CLAUDE.md, AGENTS.md, GEMINI.md, 3 ENGINEERING_STANDARDS files, paradigm-sentinel/SKILL.md — zero stale paths | 2026-03-08 |
+| TASK-050 closed | frontend-lint-sentinel built | SKILL.md + run_frontend_lint.py — 12 checks covering 2.2A/2.2B rules | 2026-03-08 |
+| TASK-051 closed | frontend-paradigm-sentinel built | SKILL.md + run_frontend_paradigm.py — 8 architectural checks | 2026-03-08 |
+| TASK-052 closed | frontend-type-sync-guard built | SKILL.md + run_type_sync.py — @schema JSDoc compliance for lib/types.ts | 2026-03-08 |
+| TASK-053 closed | frontend-bug-fix-guide built | SKILL.md — 4-phase workflow with frontend RCA trace and F1–F3 gate sequence | 2026-03-08 |
+| TASK-054 closed | frontend-modification-guide built | SKILL.md — delta discipline for UI changes, 7 delta checks + F1–F3 gates | 2026-03-08 |
+| TASK-055 closed | frontend-new-component-guide built | SKILL.md — component classification, placement contract, renderer/layout specific checks | 2026-03-08 |
+| TASK-056 closed | GATE F1–F3 added to ENGINEERING_STANDARDS_FRONTEND.md | Part 4.3 gate sequence, Part 4 note, Part 5.1 registry, Part 5.2 gate requirement all updated | 2026-03-08 |
+| TASK-057 closed | Report templates updated in CLAUDE.md, AGENTS.md, GEMINI.md | GATE F1/F2/F3 rows added with "frontend scope only" annotation — parity with backend gate rows | 2026-03-08 |
+| TASK-066 closed | Rule 2.2A-R6 calibration — `: unknown` exempt from `any` check | run_frontend_lint.py regex updated; SKILL.md rule description updated; F1 PASS | 2026-03-09 |
+| TASK-067 closed | Gate F3 scan scope extended to all frontend/lib/*.ts | run_type_sync.py updated to scan all .ts files under lib/; SKILL.md updated | 2026-03-09 |
+| TASK-065 closed | lib/types.ts split into three files — types.ts, comparison-types.ts, venue-types.ts | All files under 300-line limit; all import sites updated; @schema/@schema-exempt tags fully resolved across all three files | 2026-03-09 |
+| TASK-068 closed | Rule 2.2B-R5 calibration — CSS files exempt from font-family check | run_frontend_lint.py exempts path.suffix==".css"; SKILL.md updated; 18 false positives eliminated; 11 real .tsx violations identified for follow-up | 2026-03-09 |
+| TASK-069 closed | Pre-commit hook fully wired — all F1/F2/F3 + backend gates active | .githooks/pre-commit updated; Gates 1, 2-warning, 3, 4, F1, F2, F3, 5, 6 wired; LF line endings; staged-file scoping; Gate 3.5 dormant (Phase 12) | 2026-03-09 |
+| : unknown exempt from 2.2A-R6 | Idiomatic TypeScript — type guard parameters and boundary inputs legitimately use : unknown | Rule calibrated — only `: any` flagged | 2026-03-09 |
+| CSS files exempt from 2.2B-R5 | font-family declarations in .css are correct and canonical | Rule calibrated — only .tsx/.ts component files checked | 2026-03-09 |
+| All 15 uncertain @schema interfaces confirmed @schema-exempt | None have standalone Pydantic equivalents in domain.py | frontend-only shapes marked @schema-exempt; F3 always-on | 2026-03-09 |
+| Pre-commit hook wired — exit 0 confirmed | .githooks/pre-commit — LF line endings, staged-file scoping | All 9 gates active; Gate 3.5 dormant | 2026-03-09 |
+| Guide skill audit sprint COMPLETE | All 9 SKILL.md files audited and corrected — duckdb-lint-ops paths, Gate 2 run command, Gate F3 trigger, @schema-exempt R4 | 2026-03-09 |
+| duckdb-lint-ops/SKILL.md paths fixed | query_duckdb.py and run_lint.py paths corrected to include guides/backend/ segment | Legacy short paths did not exist — caused agent failures when following guide | 2026-03-09 |
+| Gate 2 run command made explicit | Four backend guides (bug-fix, modification, refactor, new-feature) now have explicit run_lint.py command | Replaced vague "per SKILL.md" instruction — agents had correct path, no ambiguity | 2026-03-09 |
+| Gate 2 pre-commit upgraded | .githooks/pre-commit Gate 2 block now runs run_lint.py and exits 1 on failure | Was warning-only — now blocks commits on DOD violations, matching all other gates | 2026-03-09 |
+| Gate F3 trigger updated in all frontend guides | frontend-bug-fix-guide, frontend-modification-guide, frontend-new-component-guide — trigger now "always — scans all frontend/lib/*.ts" | Was conditional on lib/types.ts changes only — F3 is always-on per TASK-067 | 2026-03-09 |
+| @schema-exempt R4 updated in frontend-new-component-guide | Phase 3 check R4 now documents both @schema and @schema-exempt patterns with correct JSDoc format | Enables agents to correctly tag frontend-only interfaces — previously only @schema was documented | 2026-03-09 |
+| TASK_PROTOCOL.md created | docs/ai/TASK_PROTOCOL.md — authoritative agent routing guide, 545 lines, 7 sections | Covers task classification, guide load order, gate sequences, mixed-scope rules, hard rules, quick reference, full skill registry | 2026-03-09 |
+| 2026-03-09 | : unknown exempt from Rule 2.2A-R6 — idiomatic TypeScript |
+| 2026-03-09 | CSS files exempt from Rule 2.2B-R5 |
+| 2026-03-09 | @schema-exempt tag introduced for frontend-only interfaces |
+| 2026-03-09 | Gate F3 always-on — scans all frontend/lib/*.ts |
+| 2026-03-09 | value={{}} on Context Provider exempt from Rule 2.2C-R3 |
+| 2026-03-09 | CSS variable substrings exempt from Rule 2.2E-R3 |
+| 2026-03-09 | TASK_PROTOCOL.md created as authoritative agent routing guide |
+| 2026-03-09 | toRecord() and toStringArray() duplicated across lib files — no circular deps |
+| 2026-03-09 | Pre-commit hook blocks on all gates — exit 1 on any failure |
+| 2026-03-09 | Agents must not block on pre-existing dirty files outside task scope |
 ---
 
-*End of PROJECT_CONTEXT.md — Updated 2026-03-08*
+*End of PROJECT_CONTEXT.md — Updated 2026-03-09 (guide skill audit sprint)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
+*For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

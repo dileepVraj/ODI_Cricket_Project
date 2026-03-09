@@ -190,7 +190,7 @@ class ReportBuilder:
 
         wins = int((np.array(raw_results) == "W").sum())
         losses = int((np.array(raw_results) == "L").sum())
-        nrs = int((np.array(raw_results) != "W") & (np.array(raw_results) != "L")).sum()
+        nrs = int(((np.array(raw_results) != "W") & (np.array(raw_results) != "L")).sum())
 
         return {
             "wins": wins,

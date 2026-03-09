@@ -448,9 +448,19 @@ The use of `useAppContext()` and the established `lib/context.tsx` pattern is th
 
 **1. CSS VARIABLE SYSTEM — Mandatory Token Usage:**
 All styling for colours, spacing, radius, shadows, and transitions MUST utilize the CSS custom properties defined in `frontend/app/globals.css`. Raw hex values, hardcoded pixel values for non-intrinsic spacing, and raw `rgba()` colours that duplicate existing design tokens are strictly forbidden. UI components MUST be theme-aware by relying on these tokens.
-- **Available Tokens:** `--bg-*`, `--accent-*`, `--tier-*`, `--text-*`, `--border-*`, `--glass-*`, `--shadow-*`, `--radius-*`, `--transition-*`, `--sidebar-width`, `--topbar-height`, `--context-bar-height`.
+- **Background layers:** `--bg-deepest`, `--bg-base`, `--bg-surface`, `--bg-elevated`, `--bg-hover`, `--bg-active`
+- **Accent palette:** `--accent-primary` (Electric Blue), `--accent-secondary` (Purple), `--accent-tertiary` (Cyan), `--accent-glow`, `--accent-glow-strong`
+- **Semantic tiers:** `--tier-elite` (green), `--tier-strong` (teal), `--tier-caution` (amber), `--tier-danger` (red)
+- **Text hierarchy:** `--text-primary`, `--text-secondary`, `--text-muted`, `--text-disabled`
+- **Borders:** `--border-subtle`, `--border-default`, `--border-strong`, `--border-accent`
+- **Glassmorphism:** `--glass-bg`, `--glass-border`, `--glass-blur`
+- **Shadows:** `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-glow`
+- **Layout dimensions:** `--sidebar-width`, `--sidebar-collapsed-width`, `--topbar-height`, `--context-bar-height`
+- **Transitions:** `--transition-fast`, `--transition-normal`, `--transition-slow`
+- **Border radius:** `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-xl`
 - **Grounded in:** `frontend/app/globals.css` (:root block).
-**Hard Fail:** Any raw hex colour (e.g., `#3B82F6`) or duplicated `rgba()` found in a component that has an equivalent token.
+
+**Hard Fail:** Any raw hex colour (e.g., `#3B82F6`) or `rgba()` value found in a component that has an equivalent token above.
 
 **2. NAMED UTILITY CLASSES — Use Before Inventing:**
 The design system provides a set of high-level named utility classes in `globals.css` that encapsulate complex styles (glassmorphism, gradients, component primitives). These MUST be used as the primary styling mechanism before writing arbitrary Tailwind utility strings or custom CSS.
@@ -803,9 +813,7 @@ Only validation skills appear in this gate sequence.
 **GATE 1 — boundary-sentinel**
 Trigger: any modification to `core/` files.
 ```powershell
-python core/gen_ai/skills/validators/
-boundary-sentinel/scripts/run_sentinel.py
---root . --paths core/
+python core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py --root . --paths core/
 ```
 Pass condition: zero cross-layer import violations, zero `self.dal` usage outside DAL, zero `duckdb.connect()` outside `core/data_access.py`.
 
@@ -814,8 +822,7 @@ Pass condition: zero cross-layer import violations, zero `self.dal` usage outsid
 **GATE 2 — duckdb-lint-ops (DOD lint only)**
 Trigger: any modification to `calculators/`, `engines/`, or `services/`.
 ```powershell
-python core/gen_ai/skills/guides/
-duckdb-lint-ops/scripts/run_lint.py --root .
+python core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py --root .
 ```
 Pass condition: zero `.iterrows()` / `.itertuples()` violations.
 
@@ -824,10 +831,7 @@ Pass condition: zero `.iterrows()` / `.itertuples()` violations.
 **GATE 3 — manifest-contract-verifier**
 Trigger: any modification to `manifest.py` or any engine file in `formats/`.
 ```powershell
-python core/gen_ai/skills/validators/
-manifest-contract-verifier/scripts/
-run_verifier.py --root .
---manifest formats/odi/manifest.py
+python core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py --root . --manifest formats/odi/manifest.py
 ```
 Pass condition: all `engine_class` / `engine_method` contracts verified, all `required_context` fields map to valid engine parameters.
 
@@ -836,20 +840,46 @@ Pass condition: all `engine_class` / `engine_method` contracts verified, all `re
 **GATE 4 — serialization-guard**
 Trigger: any modification to `api/serializers.py` or engine return types.
 ```powershell
-python core/gen_ai/skills/validators/
-serialization-guard/scripts/run_lint.py
---root . --paths api/serializers.py
---max-record-rows 500
+python core/gen_ai/skills/validators/backend/serialization-guard/scripts/run_lint.py --root . --paths api/serializers.py --max-record-rows 500
 ```
 Pass condition: zero memory bombs, zero high-latency recursive serialization patterns.
+
+---
+
+**GATE F1 — frontend-lint-sentinel**
+Trigger: any modification to `frontend/` files.
+Path: `core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/`
+```powershell
+python core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/scripts/run_frontend_lint.py --root .
+```
+Pass condition: zero violations across all 12 lint checks (raw fetch, type safety, CSS tokens, icon library, accessibility, test framework).
+
+---
+
+**GATE F2 — frontend-paradigm-sentinel**
+Trigger: always — after GATE F1 passes.
+Path: `core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/`
+```powershell
+python core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/scripts/run_frontend_paradigm.py --root .
+```
+Pass condition: zero architectural paradigm violations (domain logic, SRP, placement contract, external state libs).
+
+---
+
+**GATE F3 — frontend-type-sync-guard**
+Trigger: any modification to `lib/types.ts` or backend schema types.
+Path: `core/gen_ai/skills/validators/frontend/frontend-type-sync-guard/`
+```powershell
+python core/gen_ai/skills/validators/frontend/frontend-type-sync-guard/scripts/run_type_sync.py --root .
+```
+Pass condition: zero `@schema` JSDoc violations.
 
 ---
 
 **GATE 5 — paradigm-sentinel (meta-gate)**
 Trigger: always — runs after all primary gates pass.
 Follow instructions in:
-`core/gen_ai/skills/validators/
-paradigm-sentinel/SKILL.md`
+`core/gen_ai/skills/validators/backend/paradigm-sentinel/SKILL.md`
 Pass condition: zero violations across all paradigm checks including boundary scan, DAL bypass probe, and bouncer gate.
 
 ---
@@ -892,7 +922,7 @@ print(f"RSS: {process.memory_info().rss / 1024**2:.1f} MB")
 
 Current baseline: ~247 MB. Phase 12 live layer adds approximately 10–30 MB. Both are well within the 4 GB budget — but this MUST be re-verified after any significant feature addition.
 
-Note: The compliance gates in Part 4 are backend-focused. Frontend agents should run GATE 6 (compliance_bouncer) as a minimum for all tasks.
+Note: Frontend tasks MUST run GATE F1, GATE F2 (always), GATE F3 (when lib/types.ts changes), GATE 5, and GATE 6. Backend gates 1–4 apply only when backend files are also modified in the same task.
 
 ---
 
@@ -903,28 +933,42 @@ Note: The compliance gates in Part 4 are backend-focused. Frontend agents should
 All agentic governance skills are internalized in the repository and MUST be referenced from project-local paths only. Global user-profile skill paths (`~/.codex/skills/`) are non-authoritative and MUST NOT be used.
 
 Current project skills:
-**Guide skills** (`core/gen_ai/skills/guides/`):
-- `core/gen_ai/skills/guides/duckdb-lint-ops/`
+**Backend guide skills** (`core/gen_ai/skills/guides/backend/`):
+- `core/gen_ai/skills/guides/backend/duckdb-lint-ops/`
 
-**Validation skills** 
-(`core/gen_ai/skills/validators/`):
-- `core/gen_ai/skills/validators/boundary-sentinel/`
-- `core/gen_ai/skills/validators/event-state-linter/`
-- `core/gen_ai/skills/validators/executive-auditor/`
-- `core/gen_ai/skills/validators/manifest-contract-verifier/`
-- `core/gen_ai/skills/validators/paradigm-sentinel/`
-- `core/gen_ai/skills/validators/serialization-guard/`
+**Backend validation skills**
+(`core/gen_ai/skills/validators/backend/`):
+- `core/gen_ai/skills/validators/backend/boundary-sentinel/`
+- `core/gen_ai/skills/validators/backend/event-state-linter/`
+- `core/gen_ai/skills/validators/backend/executive-auditor/`
+- `core/gen_ai/skills/validators/backend/manifest-contract-verifier/`
+- `core/gen_ai/skills/validators/backend/paradigm-sentinel/`
+- `core/gen_ai/skills/validators/backend/serialization-guard/`
+
+**Frontend guide skills** (`core/gen_ai/skills/guides/frontend/`):
+- `core/gen_ai/skills/guides/frontend/frontend-bug-fix-guide/`
+- `core/gen_ai/skills/guides/frontend/frontend-modification-guide/`
+- `core/gen_ai/skills/guides/frontend/frontend-new-component-guide/`
+
+**Frontend validation skills** (`core/gen_ai/skills/validators/frontend/`):
+- `core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/`
+- `core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/`
+- `core/gen_ai/skills/validators/frontend/frontend-type-sync-guard/`
 
 **System skills** (`core/gen_ai/skills/.system/`):
 - `core/gen_ai/skills/.system/skill-creator/`
 - `core/gen_ai/skills/.system/skill-installer/`
 
-When creating new skills, place them in the 
+When creating new skills, place them in the
 correct typed subdirectory:
-- Guide skills: 
-  `core/gen_ai/skills/guides/[skill-name]/`
-- Validation skills: 
-  `core/gen_ai/skills/validators/[skill-name]/`
+- Backend guide skills:
+  `core/gen_ai/skills/guides/backend/[skill-name]/`
+- Backend validation skills:
+  `core/gen_ai/skills/validators/backend/[skill-name]/`
+- Frontend guide skills:
+  `core/gen_ai/skills/guides/frontend/[skill-name]/`
+- Frontend validation skills:
+  `core/gen_ai/skills/validators/frontend/[skill-name]/`
 
 ---
 
@@ -938,38 +982,47 @@ section 4.3 exactly.
 
 **GATE 1 - boundary-sentinel**
 Trigger: any modification to `core/` files.
-Path: `core/gen_ai/skills/validators/
-boundary-sentinel/`
+Path: `core/gen_ai/skills/validators/backend/boundary-sentinel/`
 
 **GATE 2 - duckdb-lint-ops (DOD lint)**
-Trigger: any modification to `calculators/`, 
+Trigger: any modification to `calculators/`,
 `engines/`, or `services/`.
-Path: `core/gen_ai/skills/guides/duckdb-lint-ops/`
+Path: `core/gen_ai/skills/guides/backend/duckdb-lint-ops/`
 
 **GATE 3 - manifest-contract-verifier**
-Trigger: any modification to `manifest.py` 
+Trigger: any modification to `manifest.py`
 or any engine file in `formats/`.
-Path: `core/gen_ai/skills/validators/
-manifest-contract-verifier/`
+Path: `core/gen_ai/skills/validators/backend/manifest-contract-verifier/`
 
 **GATE 4 - serialization-guard**
-Trigger: any modification to 
+Trigger: any modification to
 `api/serializers.py` or engine return types.
-Path: `core/gen_ai/skills/validators/
-serialization-guard/`
+Path: `core/gen_ai/skills/validators/backend/serialization-guard/`
+
+**GATE F1 - frontend-lint-sentinel**
+Trigger: any modification to `frontend/` files.
+Path: `core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/`
+
+**GATE F2 - frontend-paradigm-sentinel**
+Trigger: always — after GATE F1 passes.
+Path: `core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/`
+
+**GATE F3 - frontend-type-sync-guard**
+Trigger: any modification to `lib/types.ts`
+or backend schema types.
+Path: `core/gen_ai/skills/validators/frontend/frontend-type-sync-guard/`
 
 **GATE 5 - paradigm-sentinel (meta-gate)**
 Trigger: always - after all primary gates pass.
-Path: `core/gen_ai/skills/validators/
-paradigm-sentinel/`
+Path: `core/gen_ai/skills/validators/backend/paradigm-sentinel/`
 
 **GATE 6 - compliance_bouncer (final gate)**
 Trigger: always - last step before every commit.
-Command: `python core/utils/compliance_bouncer.py 
+Command: `python core/utils/compliance_bouncer.py
 --root .`
 
-Dormant: `event-state-linter` activates when 
-`core/live/` is created in Phase 12. Insert 
+Dormant: `event-state-linter` activates when
+`core/live/` is created in Phase 12. Insert
 as GATE 3.5.
 
 `compliance_bouncer.py` is a final gate - 
@@ -986,7 +1039,7 @@ If any required skill gate fails, a stale
 or pre-restructure path is referenced 
 (e.g. `core/gen_ai/skills/boundary-sentinel/` 
 instead of 
-`core/gen_ai/skills/validators/boundary-sentinel/`),
+`core/gen_ai/skills/validators/backend/boundary-sentinel/`),
 or gate results are missing from the task 
 report, compliance status is `FAIL` regardless 
 of bouncer output. The task is not complete.

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
+
+import pandas as pd
 
 
 class IPredictorEngine(ABC):
@@ -8,7 +10,15 @@ class IPredictorEngine(ABC):
     """
 
     @abstractmethod
-    def calculate_smart_projection(self, player: str, role: str, venue_pattern: str) -> Tuple[float, str]:
+    def calculate_smart_projection(
+        self,
+        player: str,
+        role: str,
+        venue_pattern: str,
+        *,
+        player_df: Optional[pd.DataFrame] = None,
+        venue_balls_df: Optional[pd.DataFrame] = None,
+    ) -> Tuple[float, str]:
         """Return projected player impact and status."""
         raise NotImplementedError
 
@@ -20,10 +30,9 @@ class IPredictorEngine(ABC):
         bowling_players: List[str],
         venue_id: str,
         years: int = 5,
-    ) -> Dict[str, Any]:
+    ) -> Dict[str, object]:
         """predict_score() is pending a Phase 12 rebuild. See predictor.py for rebuild requirements."""
         raise NotImplementedError(
             "predict_score() is pending a Phase 12 rebuild. "
             "See formats/odi/predictor.py for rebuild requirements."
         )
-

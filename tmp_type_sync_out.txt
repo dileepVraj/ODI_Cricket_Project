@@ -1,0 +1,36 @@
+﻿FAIL: 17 violation(s) found
+
+[RULE 2.2D-R3] Interface 'PercentBreakdown' missing @schema JSDoc
+  frontend\lib\types.ts:55:1
+[RULE 2.2D-R3] Interface 'ComparisonRow' missing @schema JSDoc
+  frontend\lib\types.ts:93:1
+[RULE 2.2D-R3] Interface 'MatrixRow' missing @schema JSDoc
+  frontend\lib\types.ts:160:1
+[RULE 2.2D-R3] Interface 'FormSummary' missing @schema JSDoc
+  frontend\lib\types.ts:185:1
+[RULE 2.2D-R3] Interface 'FormRow' missing @schema JSDoc
+  frontend\lib\types.ts:216:1
+[RULE 2.2D-R3] Interface 'DataRow' missing @schema JSDoc
+  frontend\lib\types.ts:242:1
+[RULE 2.2D-R3] Interface 'MatchupRow' missing @schema JSDoc
+  frontend\lib\types.ts:258:1
+[RULE 2.2D-R3] Interface 'VenueTeamBattingStats' missing @schema JSDoc
+  frontend\lib\types.ts:281:1
+[RULE 2.2D-R3] Interface 'VenueTeamChaseStats' missing @schema JSDoc
+  frontend\lib\types.ts:290:1
+[RULE 2.2D-R3] Interface 'VenueTeamStats' missing @schema JSDoc
+  frontend\lib\types.ts:298:1
+[RULE 2.2D-R3] Interface 'VenueMatchupSummary' missing @schema JSDoc
+  frontend\lib\types.ts:309:1
+[RULE 2.2D-R3] Interface 'VenueMatchupTeam' missing @schema JSDoc
+  frontend\lib\types.ts:318:1
+[RULE 2.2D-R3] Interface 'VenueMatchupAverages' missing @schema JSDoc
+  frontend\lib\types.ts:324:1
+[RULE 2.2D-R3] Interface 'VenueMatchupData' missing @schema JSDoc
+  frontend\lib\types.ts:331:1
+[RULE 2.2D-R3] Interface 'PredictionGauge' missing @schema JSDoc
+  frontend\lib\types.ts:507:1
+[RULE 2.2D-R3] Interface 'PlayerPayloadFragment' missing @schema JSDoc
+  frontend\lib\types.ts:529:1
+[RULE 2.2D-R3] Interface 'MatchAuditRow' missing @schema JSDoc
+  frontend\lib\types.ts:550:1

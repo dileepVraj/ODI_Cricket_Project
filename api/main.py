@@ -209,10 +209,15 @@ def get_venues(format_type: str = Path(..., description="Format key")) -> Venues
     if hasattr(analyzer, "match_df") and not analyzer.match_df.empty:
         df = analyzer.match_df
         if "venue" in df.columns:
-            unique_ids = df["venue"].dropna().unique()
-            for vid in unique_ids:
-                label = VENUE_MAP.get(vid, vid.replace("_", " ").title())
-                venues_list.append({"id": str(vid), "label": str(label)})
+            unique_raw_names = df["venue"].dropna().unique()
+            seen_codes: set[str] = set()
+            for raw_name in unique_raw_names:
+                venue_code = VENUE_MAP.get(raw_name, raw_name)
+                if venue_code in seen_codes:
+                    continue
+                seen_codes.add(venue_code)
+                display_label = str(raw_name)
+                venues_list.append({"id": str(venue_code), "label": display_label})
 
     return VenuesResponse(
         format_key=format_type,

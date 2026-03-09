@@ -1,8 +1,124 @@
 #!/bin/sh
-python core/utils/compliance_bouncer.py --root .
+# Cricket Algo-Trading Platform — pre-commit gate sequence
+# Gates run in order. Any FAIL blocks the commit.
+# Dormant gates are commented out — activate when their phase ships.
+
+STAGED=$(git diff --cached --name-only)
+
+# ── GATE 1 — boundary-sentinel ─────────────────────────────────────────
+# Trigger: any core/ file staged
+if echo "$STAGED" | grep -q "core/"; then
+    echo "GATE 1 — boundary-sentinel: TRIGGERED"
+    python core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py --root .
+    if [ $? -ne 0 ]; then
+        echo "GATE 1 FAILED — boundary violation. Commit blocked."
+        exit 1
+    fi
+    echo "GATE 1 — PASS"
+fi
+
+# ── GATE 2 — duckdb-lint-ops ───────────────────────────────────────────
+# Trigger: any calculators/ engines/ services/ file staged
+if echo "$STAGED" | grep -qE "calculators/|engines/|services/"; then
+    echo "GATE 2 — duckdb-lint-ops: TRIGGERED"
+    python core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py --root .
+    if [ $? -ne 0 ]; then
+        echo "GATE 2 FAILED — DuckDB lint violation. Commit blocked."
+        exit 1
+    fi
+    echo "GATE 2 — PASS"
+fi
+
+# ── GATE 3 — manifest-contract-verifier ────────────────────────────────
+# Trigger: any manifest or engines/ file staged
+if echo "$STAGED" | grep -qE "manifest|engines/"; then
+    echo "GATE 3 — manifest-contract-verifier: TRIGGERED"
+    python core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py --root .
+    if [ $? -ne 0 ]; then
+        echo "GATE 3 FAILED — manifest contract violation. Commit blocked."
+        exit 1
+    fi
+    echo "GATE 3 — PASS"
+fi
+
+# ── GATE 4 — serialization-guard ───────────────────────────────────────
+# Trigger: any serializers or schemas/ file staged
+if echo "$STAGED" | grep -qE "serializers|schemas/"; then
+    echo "GATE 4 — serialization-guard: TRIGGERED"
+    python core/gen_ai/skills/validators/backend/serialization-guard/scripts/run_lint.py --root .
+    if [ $? -ne 0 ]; then
+        echo "GATE 4 FAILED — serialization violation. Commit blocked."
+        exit 1
+    fi
+    echo "GATE 4 — PASS"
+fi
+
+# ── GATE F1 — frontend-lint-sentinel ───────────────────────────────────
+# Trigger: any frontend/ .tsx or .ts file staged
+if echo "$STAGED" | grep -qE "frontend/.*\.(tsx|ts)$"; then
+    echo "GATE F1 — frontend-lint-sentinel: TRIGGERED"
+    python core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/scripts/run_frontend_lint.py --root .
+    if [ $? -ne 0 ]; then
+        echo "GATE F1 FAILED — frontend lint violation. Commit blocked."
+        exit 1
+    fi
+    echo "GATE F1 — PASS"
+fi
+
+# ── GATE F2 — frontend-paradigm-sentinel ───────────────────────────────
+# Trigger: any frontend/ .tsx or .ts file staged
+if echo "$STAGED" | grep -qE "frontend/.*\.(tsx|ts)$"; then
+    echo "GATE F2 — frontend-paradigm-sentinel: TRIGGERED"
+    python core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/scripts/run_frontend_paradigm.py --root .
+    if [ $? -ne 0 ]; then
+        echo "GATE F2 FAILED — frontend paradigm violation. Commit blocked."
+        exit 1
+    fi
+    echo "GATE F2 — PASS"
+fi
+
+# ── GATE F3 — frontend-type-sync-guard ─────────────────────────────────
+# Trigger: any frontend/ file staged
+if echo "$STAGED" | grep -q "frontend/"; then
+    echo "GATE F3 — frontend-type-sync-guard: TRIGGERED"
+    python core/gen_ai/skills/validators/frontend/frontend-type-sync-guard/scripts/run_type_sync.py --root .
+    if [ $? -ne 0 ]; then
+        echo "GATE F3 FAILED — type sync violation. Commit blocked."
+        exit 1
+    fi
+    echo "GATE F3 — PASS"
+fi
+
+# ── GATE 5 — paradigm-sentinel (meta-gate, always runs) ────────────────
+echo "GATE 5 — paradigm-sentinel: TRIGGERED (always-on)"
+python core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py --root .
 if [ $? -ne 0 ]; then
-    echo "Commit blocked: compliance violations found."
-    echo "Fix all violations then retry."
+    echo "GATE 5 FAILED — paradigm violation. Commit blocked."
     exit 1
 fi
+echo "GATE 5 — PASS"
+
+# ── GATE 6 — compliance_bouncer (always runs) ──────────────────────────
+echo "GATE 6 — compliance_bouncer: TRIGGERED (always-on)"
+python core/utils/compliance_bouncer.py --root .
+if [ $? -ne 0 ]; then
+    echo "GATE 6 FAILED — compliance violation. Commit blocked."
+    exit 1
+fi
+echo "GATE 6 — PASS"
+
+# ── DORMANT GATES ───────────────────────────────────────────────────────
+# GATE 3.5 — event-state-linter (activate Phase 12 when core/live/ ships)
+# Trigger: any core/live/ or api/live/ file staged
+# if echo "$STAGED" | grep -qE "core/live/|api/live/"; then
+#     echo "GATE 3.5 — event-state-linter: TRIGGERED"
+#     python core/gen_ai/skills/validators/backend/event-state-linter/scripts/run_lint.py --root .
+#     if [ $? -ne 0 ]; then
+#         echo "GATE 3.5 FAILED — live event state violation. Commit blocked."
+#         exit 1
+#     fi
+#     echo "GATE 3.5 — PASS"
+# fi
+
+echo "All gates passed. Proceeding with commit."
 exit 0

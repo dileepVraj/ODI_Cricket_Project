@@ -14,7 +14,7 @@
 Execute this sequence before any code change, in this exact order. Do not skip steps.
 
 ### Step 1 — Load Context (context-loader skill)
-Invoke `core/gen_ai/skills/guides/context-loader/context-loader.md` now.
+Invoke `core/gen_ai/skills/guides/backend/context-loader/context-loader.md` now.
 Follow every step in that template before proceeding.
 
 The skill will:
@@ -112,16 +112,16 @@ Gates are not optional. Gates are not substitutes for each other. All triggered 
 
 | Gate | Skill Path | Trigger Condition |
 |------|-----------|-------------------|
-| GATE 1 | `core/gen_ai/skills/validators/boundary-sentinel/` | Any modification to `core/` files |
-| GATE 2 | `core/gen_ai/skills/guides/duckdb-lint-ops/` | Any modification to `calculators/`, `engines/`, `services/` |
-| GATE 3 | `core/gen_ai/skills/validators/manifest-contract-verifier/` | Any modification to `manifest.py` or engine files in `formats/` |
-| GATE 4 | `core/gen_ai/skills/validators/serialization-guard/` | Any modification to `api/serializers.py` or engine return types |
-| GATE 5 | `core/gen_ai/skills/validators/paradigm-sentinel/` | Always — after all primary gates pass |
+| GATE 1 | `core/gen_ai/skills/validators/backend/boundary-sentinel/` | Any modification to `core/` files |
+| GATE 2 | `core/gen_ai/skills/guides/backend/duckdb-lint-ops/` | Any modification to `calculators/`, `engines/`, `services/` |
+| GATE 3 | `core/gen_ai/skills/validators/backend/manifest-contract-verifier/` | Any modification to `manifest.py` or engine files in `formats/` |
+| GATE 4 | `core/gen_ai/skills/validators/backend/serialization-guard/` | Any modification to `api/serializers.py` or engine return types |
+| GATE 5 | `core/gen_ai/skills/validators/backend/paradigm-sentinel/` | Always — after all primary gates pass |
 | GATE 6 | `python core/utils/compliance_bouncer.py --root .` | Always — last step before task complete |
 
 **Critical path rule:** Gate 2 (duckdb-lint-ops) is in `guides/` not `validators/`. Using the wrong path is a hard fail.
 
-**Dormant:** `core/gen_ai/skills/validators/event-state-linter/` — activates when `core/live/` is created in Phase 12. Do not trigger now.
+**Dormant:** `core/gen_ai/skills/validators/backend/event-state-linter/` — activates when `core/live/` is created in Phase 12. Do not trigger now.
 
 **Hard stop condition:** If any gate fails — stop. Do not proceed. Report the failure with the gate name, path used, and exact output. A task with a failed gate is not complete regardless of bouncer output.
 
@@ -205,10 +205,21 @@ If the output shows any file modified or deleted that is NOT in the task prompt'
   Halting. Architect review required before proceeding.
 Do not commit. Do not continue.
 
-**RULE 5 — docs/ai/ is human-write-only**
+**RULE 5 — docs/ai/ is human-write-only by default**
 Never create, modify, or delete any file under `docs/ai/`
-(includes SESSION_STATE.md, PROJECT_CONTEXT.md, BACKLOG.md, and any other file in that directory).
-These files are updated by the human architect only. Agent writes to this directory are a hard violation.
+(includes SESSION_STATE.md, PROJECT_CONTEXT.md, BACKLOG.md, and any
+other file in that directory) unless the current task prompt contains
+an explicit instruction from the human architect to do so.
+
+The instruction must name the specific file and the specific change
+permitted. When explicit permission is given, make only the change
+instructed — do not update any other file in docs/ai/ beyond what
+was explicitly named.
+
+If the task prompt does not contain explicit permission for a specific
+docs/ai/ file — treat it as human-write-only. Agent writes to this
+directory without explicit instruction are a hard architectural
+violation regardless of bouncer output.
 
 **RULE 6 — Missing reference files = hard stop**
 If any file required by the READ FIRST section of the task prompt is absent from the worktree, output:
@@ -260,6 +271,9 @@ Gates Triggered:
 - GATE 2 (duckdb-lint-ops): [TRIGGERED/SKIPPED] — [PASS/FAIL]
 - GATE 3 (manifest-contract-verifier): [TRIGGERED/SKIPPED] — [PASS/FAIL]
 - GATE 4 (serialization-guard): [TRIGGERED/SKIPPED] — [PASS/FAIL]
+- GATE F1 (frontend-lint-sentinel): [TRIGGERED/SKIPPED — frontend scope only] — [PASS/FAIL]
+- GATE F2 (frontend-paradigm-sentinel): [TRIGGERED/SKIPPED — frontend scope only] — [PASS/FAIL]
+- GATE F3 (frontend-type-sync-guard): [TRIGGERED/SKIPPED — frontend scope only] — [PASS/FAIL]
 - GATE 5 (paradigm-sentinel): TRIGGERED — [PASS/FAIL]
 - GATE 6 (compliance_bouncer): TRIGGERED — [PASS/FAIL]
 
@@ -291,7 +305,7 @@ These are sins. Any occurrence is an immediate hard fail.
 - Modifying a registered file without instruction or stop-state-trace-confirm
 - Referencing or building toward Phase 12 (live layer / Numba AOT)
 - Reading or updating `docs/ai/AI_MEMORY.md` — it is deprecated
-- Using `core/gen_ai/skills/validators/duckdb-lint-ops/` — wrong path, Gate 2 is in `guides/`
+- Using `core/gen_ai/skills/validators/backend/duckdb-lint-ops/` — wrong path, Gate 2 is in `guides/backend/`
 - Running `git commit --no-verify` — bouncer is not optional
 - Skipping context-loader invocation at session start — it is mandatory for all task scopes
 - Running `git status --short .` or `git status --short` without an explicit named directory — BANNED. Required form: `git status --short tests/` or `git status --short api/` etc. The `.` argument is not a valid scope.

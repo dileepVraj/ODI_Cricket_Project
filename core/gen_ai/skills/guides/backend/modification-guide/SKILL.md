@@ -136,25 +136,25 @@ After every single file modification, run all applicable gates:
 ```text
 GATE 1 - boundary-sentinel
 Trigger: file is in core/
-Path: core/gen_ai/skills/validators/boundary-sentinel/
-Run: python core/gen_ai/skills/validators/boundary-sentinel/scripts/run_sentinel.py --root . --paths core/
+Path: core/gen_ai/skills/validators/backend/boundary-sentinel/
+Run: python core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py --root . --paths core/
 
 GATE 2 - duckdb-lint-ops
 Trigger: file is in calculators/, engines/, or services/
-Path: core/gen_ai/skills/guides/duckdb-lint-ops/
-Run: per SKILL.md in that directory
+Path: core/gen_ai/skills/guides/backend/duckdb-lint-ops/
+Run: python core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py --root .
 
 GATE 3 - manifest-contract-verifier
 Trigger: file is manifest.py or engine file in formats/
-Path: core/gen_ai/skills/validators/manifest-contract-verifier/
+Path: core/gen_ai/skills/validators/backend/manifest-contract-verifier/
 
 GATE 4 - serialization-guard
 Trigger: file is api/serializers.py or engine return type changed
-Path: core/gen_ai/skills/validators/serialization-guard/
+Path: core/gen_ai/skills/validators/backend/serialization-guard/
 
 GATE 5 - paradigm-sentinel
 Trigger: always, after all primary gates
-Path: core/gen_ai/skills/validators/paradigm-sentinel/
+Path: core/gen_ai/skills/validators/backend/paradigm-sentinel/
 ```
 
 Record each gate result. A FAIL on any gate = hard stop on this file. Fix the violation before moving to the next file.

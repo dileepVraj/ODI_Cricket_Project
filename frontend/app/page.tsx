@@ -151,7 +151,7 @@ function DashboardScreen() {
         {manifest.categories.map((cat, i) => (
           <button
             key={cat.key}
-            className={`glass-card glass-card-hover [padding:16px_20px] [cursor:pointer] [text-align:left] [border:1px_solid_var(--glass-border)] [font-family:inherit] [background:var(--glass-bg)] [animation-delay:${i * 60}ms]`}
+            className={`glass-card glass-card-hover [padding:16px_20px] [cursor:pointer] [text-align:left] [border:1px_solid_var(--glass-border)] [background:var(--glass-bg)] [animation-delay:${i * 60}ms]`}
             onClick={() => {
               const el = document.getElementById(`sidebar-${cat.key}`);
               if (el) el.click();

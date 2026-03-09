@@ -105,7 +105,7 @@ export default function ReportCard({ data }: ReportCardProps) {
                         <div className="[font-size:0.72rem] [letter-spacing:0.02em] [color:var(--text-disabled)] [font-weight:600] [margin-bottom:6px]">
                             {formatLabel(key)}
                         </div>
-                        <div className="[font-size:1.2rem] [font-weight:800] [color:var(--text-primary)] [font-family:var(--font-numeric)] font-numeric">
+                        <div className="[font-size:1.2rem] [font-weight:800] [color:var(--text-primary)] font-numeric">
                             {typeof val === "number" ? (
                                 <CountUp end={val} decimals={Number.isInteger(val) ? 0 : 2} duration={1.2} />
                             ) : val === null || val === undefined ? (

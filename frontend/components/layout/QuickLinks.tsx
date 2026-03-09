@@ -23,7 +23,7 @@ export default function QuickLinks({ links }: { links: QuickLink[] }) {
                     key={link.category_key}
                     type="button"
                     onClick={() => handleClick(link.category_key)}
-                    className="quick-link-chip [display:inline-flex] [align-items:center] [gap:6px] [padding:6px_12px] [font-size:0.75rem] [font-weight:600] [background:var(--bg-elevated)] [color:var(--accent-primary)] [border:1px_solid_var(--border-subtle)] [cursor:pointer] [font-family:inherit] [transition:all_0.2s_ease] hover:[background:var(--bg-hover)] hover:[border-color:var(--accent-primary)]"
+                    className="quick-link-chip [display:inline-flex] [align-items:center] [gap:6px] [padding:6px_12px] [font-size:0.75rem] [font-weight:600] [background:var(--bg-elevated)] [color:var(--accent-primary)] [border:1px_solid_var(--border-subtle)] [cursor:pointer] [transition:all_0.2s_ease] hover:[background:var(--bg-hover)] hover:[border-color:var(--accent-primary)]"
                 >
                     <ArrowRight size={12} />
                     {link.label}

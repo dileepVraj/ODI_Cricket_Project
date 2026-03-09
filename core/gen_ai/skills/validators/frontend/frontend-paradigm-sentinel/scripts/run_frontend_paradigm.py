@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+"""
+Frontend Paradigm Sentinel — run_frontend_paradigm.py
+Deep architectural scan for paradigm violations in frontend/ files.
+Usage: python run_frontend_paradigm.py --root <project_root>
+"""
+
+import re
+import sys
+import argparse
+from pathlib import Path
+
+
+EXCLUDED_DIRS = {"node_modules", ".next", "dist", "build", ".turbo", "coverage"}
+
+
+# ---------------------------------------------------------------------------
+# Placement contract — maps directory names to allowed component categories
+# ---------------------------------------------------------------------------
+
+RENDERER_DIR = "renderers"
+LAYOUT_DIR = "layout"
+COMMON_DIR = "common"
+INPUT_DIR = "inputs"
+
+PLACEMENT_CONTRACT: dict[str, set[str]] = {
+    "renderers": {"Renderer"},    # filenames must contain "Renderer"
+    "layout": set(),              # no filename restriction — checked separately
+    "common": set(),
+    "inputs": {"Input", "Combobox", "Select", "Text"},
+    "navigation": set(),
+    "animations": set(),
+}
+
+# External state management libraries
+EXTERNAL_STATE_LIBS = re.compile(
+    r'''import.*from\s+['"](?:redux|react-redux|@reduxjs/toolkit|zustand|mobx|mobx-react|jotai|recoil|valtio)'''
+)
+
+# Domain arithmetic patterns — operations on API response fields
+DOMAIN_ARITHMETIC = re.compile(
+    r'\b(?:totalRuns|wickets|overs|strikeRate|economy|average)\s*[+\-*/]'
+    r'|\b(?:Math\.(?:round|floor|ceil|pow|sqrt))\s*\(\s*\w*(?:run|wicket|over|rate|economy|average)',
+    re.IGNORECASE
+)
+
+# Polling on execute endpoint
+POLLING_EXECUTE = re.compile(
+    r'''(?:setInterval|setTimeout)\s*\(.*['"]/execute/''',
+    re.DOTALL
+)
+
+# Silent catch — try/catch with empty or comment-only catch body
+SILENT_CATCH = re.compile(
+    r'catch\s*\([^)]*\)\s*\{\s*(?://[^\n]*)?\s*\}',
+    re.DOTALL
+)
+
+
+def check_external_state(path: Path, lines: list[str]) -> list[tuple[int, int, str]]:
+    """2.2A-R3 — external state library imports"""
+    hits = []
+    for i, line in enumerate(lines, 1):
+        m = EXTERNAL_STATE_LIBS.search(line)
+        if m:
+            hits.append((i, m.start() + 1, "[RULE 2.2A-R3] External state management library import"))
+    return hits
+
+
+def check_domain_arithmetic(path: Path, lines: list[str]) -> list[tuple[int, int, str]]:
+    """2.2A-R5 — domain logic / arithmetic on API data in component"""
+    # Skip lib/ files — they are helpers not components
+    if "lib" in path.parts:
+        return []
+    hits = []
+    for i, line in enumerate(lines, 1):
+        stripped = line.lstrip()
+        if stripped.startswith("//") or stripped.startswith("*"):
+            continue
+        m = DOMAIN_ARITHMETIC.search(line)
+        if m:
+            hits.append((i, m.start() + 1, "[RULE 2.2A-R5] Domain arithmetic on API data in component"))
+    return hits
+
+
+def check_file_size(path: Path, lines: list[str]) -> list[tuple[int, int, str]]:
+    """2.2A-R4 — component file exceeds 300 lines"""
+    count = len(lines)
+    if count > 300:
+        return [(1, 1, f"[RULE 2.2A-R4] Component file exceeds 300 lines ({count} lines)")]
+    return []
+
+
+def check_renderer_placement(path: Path, lines: list[str]) -> list[tuple[int, int, str]]:
+    """2.2B-R7 — renderer not in components/renderers/
+
+    Only flags files whose name contains 'Renderer' if they sit outside ALL
+    known legitimate placement directories.  A file already inside inputs/,
+    common/, navigation/, or animations/ is correctly placed — do not flag it.
+    """
+    _EXEMPT_DIRS = {"renderers", "inputs", "common", "navigation", "animations"}
+    if "Renderer" in path.stem and path.stem != "FunctionRenderer":
+        parts = {p.lower() for p in path.parts}
+        if not parts & _EXEMPT_DIRS:
+            return [(1, 1, f"[RULE 2.2B-R7] Renderer '{path.name}' not in components/renderers/")]
+    return []
+
+
+def check_polling_execute(path: Path, content: str) -> list[tuple[int, int, str]]:
+    """2.2A-R14 — setInterval/setTimeout calling /execute/ endpoint"""
+    hits = []
+    for m in POLLING_EXECUTE.finditer(content):
+        line_no = content[:m.start()].count("\n") + 1
+        hits.append((line_no, 1, "[RULE 2.2A-R14] Polling /execute/ endpoint via setInterval/setTimeout"))
+    return hits
+
+
+def check_silent_catch_in_renderer(path: Path, content: str) -> list[tuple[int, int, str]]:
+    """2.2D-R2 — silent try/catch in renderer"""
+    parts = [p.lower() for p in path.parts]
+    if "renderers" not in parts:
+        return []
+    hits = []
+    for m in SILENT_CATCH.finditer(content):
+        line_no = content[:m.start()].count("\n") + 1
+        hits.append((line_no, 1, "[RULE 2.2D-R2] Silent try/catch in renderer component"))
+    return hits
+
+
+def scan_file(path: Path) -> list[tuple[int, int, str]]:
+    try:
+        content = path.read_text(encoding="utf-8", errors="replace")
+        lines = content.splitlines()
+    except Exception as e:
+        return [(0, 0, f"[READ ERROR] {e}")]
+
+    hits: list[tuple[int, int, str]] = []
+    hits.extend(check_external_state(path, lines))
+    hits.extend(check_domain_arithmetic(path, lines))
+    hits.extend(check_file_size(path, lines))
+    hits.extend(check_renderer_placement(path, lines))
+    hits.extend(check_polling_execute(path, content))
+    hits.extend(check_silent_catch_in_renderer(path, content))
+    return hits
+
+
+def collect_files(root: Path) -> list[Path]:
+    frontend_dir = root / "frontend"
+    if not frontend_dir.exists():
+        return []
+    files = []
+    for ext in ("*.tsx", "*.ts"):
+        for f in frontend_dir.rglob(ext):
+            if not any(part in EXCLUDED_DIRS for part in f.parts):
+                files.append(f)
+    return sorted(files)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Frontend Paradigm Sentinel")
+    parser.add_argument("--root", default=".", help="Project root directory")
+    args = parser.parse_args()
+
+    root = Path(args.root).resolve()
+    files = collect_files(root)
+
+    if not files:
+        print("WARN: No frontend files found — verify --root is correct")
+        return 0
+
+    all_violations: dict[Path, list[tuple[int, int, str]]] = {}
+    for f in files:
+        hits = scan_file(f)
+        if hits:
+            all_violations[f] = hits
+
+    if not all_violations:
+        print("PASS: zero violations")
+        return 0
+
+    total = sum(len(v) for v in all_violations.values())
+    print(f"FAIL: {total} violation(s) found\n")
+    for path, hits in sorted(all_violations.items()):
+        for line, col, msg in hits:
+            rel = path.relative_to(root)
+            print(f"{msg}")
+            print(f"  {rel}:{line}:{col}")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

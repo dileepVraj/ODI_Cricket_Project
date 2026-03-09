@@ -113,7 +113,7 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
             <div className="[padding:12px_8px] [flex:1]">
                 <button
                     id="sidebar-dashboard"
-                    className={`sidebar-item ${activeCategory === dashboardItem.key ? "active" : ""} [width:100%] [border:none] [font-family:inherit] ${isCollapsed ? "[justify-content:center]" : ""}`}
+                    className={`sidebar-item ${activeCategory === dashboardItem.key ? "active" : ""} [width:100%] [border:none] ${isCollapsed ? "[justify-content:center]" : ""}`}
                     onClick={() => onCategorySelect(dashboardItem.key)}
                     title={isCollapsed ? dashboardItem.label : undefined}
                     aria-label={dashboardItem.label}
@@ -125,7 +125,7 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
                 {isCollapsed && (
                     <button
                         id="sidebar-expand-toggle-top"
-                        className="sidebar-item [width:100%] [border:none] [font-family:inherit] [justify-content:center] [margin-top:8px] [margin-bottom:6px] [color:var(--accent-primary)] [background:var(--accent-glow)] [border-color:var(--border-accent)]"
+                        className="sidebar-item [width:100%] [border:none] [justify-content:center] [margin-top:8px] [margin-bottom:6px] [color:var(--accent-primary)] [background:var(--accent-glow)] [border-color:var(--border-accent)]"
                         onClick={toggleSidebar}
                         title="Expand sidebar"
                         aria-label="Expand sidebar"
@@ -149,7 +149,7 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
                                     <button
                                         key={cat.key}
                                         id={`sidebar-${cat.key}`}
-                                        className={`sidebar-item ${activeCategory === cat.key ? "active" : ""} [width:100%] [border:none] [font-family:inherit] ${isCollapsed ? "[justify-content:center]" : ""}`}
+                                        className={`sidebar-item ${activeCategory === cat.key ? "active" : ""} [width:100%] [border:none] ${isCollapsed ? "[justify-content:center]" : ""}`}
                                         onClick={() => onCategorySelect(cat.key)}
                                         title={isCollapsed ? cat.label : cat.description}
                                         aria-label={cat.label}
@@ -174,7 +174,7 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
             <div className="[padding:8px] [border-top:1px_solid_var(--border-subtle)] [position:sticky] [bottom:0px] [background:var(--bg-surface)] [z-index:1]">
                 <button
                     id="sidebar-collapse-toggle"
-                    className={`sidebar-item [width:100%] [border:none] [font-family:inherit] ${isCollapsed ? "[justify-content:center]" : "[justify-content:flex-start]"}`}
+                    className={`sidebar-item [width:100%] [border:none] ${isCollapsed ? "[justify-content:center]" : "[justify-content:flex-start]"}`}
                     onClick={toggleSidebar}
                     title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                     aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}

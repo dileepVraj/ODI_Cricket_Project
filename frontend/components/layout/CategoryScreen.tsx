@@ -160,7 +160,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
           <button
             key={fn.key}
             id={`tab-${fn.key}`}
-            className={`format-tab ${i === safeActiveTab ? "active" : ""} [font-family:inherit]`}
+            className={`format-tab ${i === safeActiveTab ? "active" : ""}`}
             onClick={() => {
               setActiveTab(i);
               setResult(null);

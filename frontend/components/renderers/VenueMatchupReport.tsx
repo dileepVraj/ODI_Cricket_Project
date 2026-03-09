@@ -3,7 +3,8 @@
 import React from "react";
 import { AlertCircle, BarChart3, Dna, MapPin, ShieldCheck, Target, Trophy } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
-import { TeamTone, VenueMatchupData, getTeamTone, getVenueMatchupData } from "@/lib/types";
+import { TeamTone, getTeamTone } from "@/lib/comparison-types";
+import { VenueMatchupData, getVenueMatchupData } from "@/lib/venue-types";
 
 interface SummaryItemProps {
     label: string;

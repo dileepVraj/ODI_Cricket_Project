@@ -25,6 +25,10 @@ export class ApiClientError extends Error {
 
 // ── Types ───────────────────────────────────────────────────────────────
 
+/**
+ * @schema FormatInfo
+ * Maps to the FormatInfo Pydantic model in api/schemas/
+ */
 export interface FormatInfo {
     key: string;
     label: string;
@@ -32,22 +36,34 @@ export interface FormatInfo {
     has_manifest: boolean;
 }
 
+/**
+ * @schema-exempt frontend-only — frontend registry config, nested sub-shape of Manifest
+ */
 export interface SourceRegistryEntry {
     path: string;
     preload: boolean;
 }
 
+/**
+ * @schema-exempt frontend-only — frontend nav config, not a direct API endpoint response
+ */
 export interface NavigationRoot {
     key: string;
     label: string;
     icon: string;
 }
 
+/**
+ * @schema-exempt frontend-only — frontend UI config, nested sub-shape of Manifest
+ */
 export interface QuickLink {
     label: string;
     category_key: string;
 }
 
+/**
+ * @schema-exempt frontend-only — frontend form field config, nested sub-shape of Manifest
+ */
 export interface ContextField {
     type: "combobox" | "dropdown" | "slider" | "text" | "textarea";
     label: string;
@@ -61,6 +77,9 @@ export interface ContextField {
     placeholder?: string;
 }
 
+/**
+ * @schema-exempt frontend-only — nested sub-shape of Manifest, not a standalone endpoint
+ */
 export interface ManifestFunction {
     key: string;
     label: string;
@@ -74,6 +93,9 @@ export interface ManifestFunction {
     extra_inputs?: Record<string, unknown>;
 }
 
+/**
+ * @schema-exempt frontend-only — nested sub-shape of Manifest, not a standalone endpoint
+ */
 export interface ManifestCategory {
     key: string;
     label: string;
@@ -84,6 +106,10 @@ export interface ManifestCategory {
     quick_links?: QuickLink[];
 }
 
+/**
+ * @schema Manifest
+ * Maps to the Manifest Pydantic model in api/schemas/
+ */
 export interface Manifest {
     format_key: string;
     format_label: string;
@@ -95,17 +121,29 @@ export interface Manifest {
     navigation_root?: NavigationRoot;
 }
 
+/**
+ * @schema HealthStatus
+ * Maps to the HealthStatus Pydantic model in api/schemas/
+ */
 export interface HealthStatus {
     status: string;
     formats_loaded: string[];
     total_matches: Record<string, number>;
 }
 
+/**
+ * @schema VenueItem
+ * Maps to the VenueItem Pydantic model in api/schemas/
+ */
 export interface VenueItem {
     id: string;
     label: string;
 }
 
+/**
+ * @schema ExecuteResponse
+ * Maps to the ExecuteResponse Pydantic model in api/schemas/
+ */
 export interface ExecuteResponse {
     function_key: string;
     output_type: string;

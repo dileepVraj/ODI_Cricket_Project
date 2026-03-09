@@ -802,9 +802,7 @@ Only validation skills appear in this gate sequence.
 **GATE 1 — boundary-sentinel**
 Trigger: any modification to `core/` files.
 ```powershell
-python core/gen_ai/skills/validators/
-boundary-sentinel/scripts/run_sentinel.py
---root . --paths core/
+python core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py --root . --paths core/
 ```
 Pass condition: zero cross-layer import violations, zero `self.dal` usage outside DAL, zero `duckdb.connect()` outside `core/data_access.py`.
 
@@ -813,8 +811,7 @@ Pass condition: zero cross-layer import violations, zero `self.dal` usage outsid
 **GATE 2 — duckdb-lint-ops (DOD lint only)**
 Trigger: any modification to `calculators/`, `engines/`, or `services/`.
 ```powershell
-python core/gen_ai/skills/guides/
-duckdb-lint-ops/scripts/run_lint.py --root .
+python core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py --root .
 ```
 Pass condition: zero `.iterrows()` / `.itertuples()` violations.
 
@@ -823,10 +820,7 @@ Pass condition: zero `.iterrows()` / `.itertuples()` violations.
 **GATE 3 — manifest-contract-verifier**
 Trigger: any modification to `manifest.py` or any engine file in `formats/`.
 ```powershell
-python core/gen_ai/skills/validators/
-manifest-contract-verifier/scripts/
-run_verifier.py --root .
---manifest formats/odi/manifest.py
+python core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py --root . --manifest formats/odi/manifest.py
 ```
 Pass condition: all `engine_class` / `engine_method` contracts verified, all `required_context` fields map to valid engine parameters.
 
@@ -835,10 +829,7 @@ Pass condition: all `engine_class` / `engine_method` contracts verified, all `re
 **GATE 4 — serialization-guard**
 Trigger: any modification to `api/serializers.py` or engine return types.
 ```powershell
-python core/gen_ai/skills/validators/
-serialization-guard/scripts/run_lint.py
---root . --paths api/serializers.py
---max-record-rows 500
+python core/gen_ai/skills/validators/backend/serialization-guard/scripts/run_lint.py --root . --paths api/serializers.py --max-record-rows 500
 ```
 Pass condition: zero memory bombs, zero high-latency recursive serialization patterns.
 
@@ -847,8 +838,7 @@ Pass condition: zero memory bombs, zero high-latency recursive serialization pat
 **GATE 5 — paradigm-sentinel (meta-gate)**
 Trigger: always — runs after all primary gates pass.
 Follow instructions in:
-`core/gen_ai/skills/validators/
-paradigm-sentinel/SKILL.md`
+`core/gen_ai/skills/validators/backend/paradigm-sentinel/SKILL.md`
 Pass condition: zero violations across all paradigm checks including boundary scan, DAL bypass probe, and bouncer gate.
 
 ---
@@ -900,17 +890,17 @@ Current baseline: ~247 MB. Phase 12 live layer adds approximately 10–30 MB. Bo
 All agentic governance skills are internalized in the repository and MUST be referenced from project-local paths only. Global user-profile skill paths (`~/.codex/skills/`) are non-authoritative and MUST NOT be used.
 
 Current project skills:
-**Guide skills** (`core/gen_ai/skills/guides/`):
-- `core/gen_ai/skills/guides/duckdb-lint-ops/`
+**Backend guide skills** (`core/gen_ai/skills/guides/backend/`):
+- `core/gen_ai/skills/guides/backend/duckdb-lint-ops/`
 
-**Validation skills** 
-(`core/gen_ai/skills/validators/`):
-- `core/gen_ai/skills/validators/boundary-sentinel/`
-- `core/gen_ai/skills/validators/event-state-linter/`
-- `core/gen_ai/skills/validators/executive-auditor/`
-- `core/gen_ai/skills/validators/manifest-contract-verifier/`
-- `core/gen_ai/skills/validators/paradigm-sentinel/`
-- `core/gen_ai/skills/validators/serialization-guard/`
+**Backend validation skills** 
+(`core/gen_ai/skills/validators/backend/`):
+- `core/gen_ai/skills/validators/backend/boundary-sentinel/`
+- `core/gen_ai/skills/validators/backend/event-state-linter/`
+- `core/gen_ai/skills/validators/backend/executive-auditor/`
+- `core/gen_ai/skills/validators/backend/manifest-contract-verifier/`
+- `core/gen_ai/skills/validators/backend/paradigm-sentinel/`
+- `core/gen_ai/skills/validators/backend/serialization-guard/`
 
 **System skills** (`core/gen_ai/skills/.system/`):
 - `core/gen_ai/skills/.system/skill-creator/`
@@ -919,9 +909,9 @@ Current project skills:
 When creating new skills, place them in the 
 correct typed subdirectory:
 - Guide skills: 
-  `core/gen_ai/skills/guides/[skill-name]/`
+  `core/gen_ai/skills/guides/backend/[skill-name]/`
 - Validation skills: 
-  `core/gen_ai/skills/validators/[skill-name]/`
+  `core/gen_ai/skills/validators/backend/[skill-name]/`
 
 ---
 
@@ -941,7 +931,7 @@ boundary-sentinel/`
 **GATE 2 - duckdb-lint-ops (DOD lint)**
 Trigger: any modification to `calculators/`, 
 `engines/`, or `services/`.
-Path: `core/gen_ai/skills/guides/duckdb-lint-ops/`
+Path: `core/gen_ai/skills/guides/backend/duckdb-lint-ops/`
 
 **GATE 3 - manifest-contract-verifier**
 Trigger: any modification to `manifest.py` 
@@ -983,7 +973,7 @@ If any required skill gate fails, a stale
 or pre-restructure path is referenced 
 (e.g. `core/gen_ai/skills/boundary-sentinel/` 
 instead of 
-`core/gen_ai/skills/validators/boundary-sentinel/`),
+`core/gen_ai/skills/validators/backend/boundary-sentinel/`),
 or gate results are missing from the task 
 report, compliance status is `FAIL` regardless 
 of bouncer output. The task is not complete.
@@ -1104,6 +1094,68 @@ architect instruction only — never by agent
 decision.
 
 ---
+
+---
+
+## PART 7: KNOWN INTENTIONAL PATTERNS —
+DO NOT FIX
+
+These are documented behaviours in engine
+files that are architecturally intentional.
+They may look like bugs or oversights to
+a static analyser or an agent reading the
+code for the first time. They are not.
+Do not modify, remove, or work around them.
+
+---
+
+### [KIP-001] Constructor parameter discard
+in TeamEngine
+**File:**
+  `formats/odi/engines/team_engine.py`
+**Line:** 26
+**Code:**
+  `_ = (match_df, phase_df, dal)`
+**What it looks like:** Three constructor
+  parameters accepted then immediately
+  discarded.
+**Why it is correct:** The engine is
+  stateless by design. All data arrives
+  per-request via `match_context`. The
+  parameters exist to maintain a consistent
+  constructor interface across all engine
+  implementations. Discarding them is
+  intentional.
+**Hard Stop:** Do NOT remove the discard
+  pattern. Do NOT assign or store these
+  parameters. Do NOT raise warnings about
+  unused arguments.
+
+---
+
+### [KIP-002] _context_match_df called
+before its visible definition
+**File:**
+  `formats/odi/engines/team_engine.py`
+**Line:** 51
+**Code:**
+  `return self._compute_reference_date(
+    self._context_match_df(match_context))`
+**What it looks like:** Method
+  `_context_match_df` is called in the
+  upper section of the file but its
+  definition is not visible nearby.
+**Why it is correct:** The method is
+  defined in the lower section of the
+  same file. This is a file layout
+  choice — not a missing method. Python
+  resolves instance methods at call time,
+  not at definition order.
+**Hard Stop:** Do NOT add a duplicate
+  definition of `_context_match_df` in
+  the upper section of the file. Do NOT
+  raise a missing method error without
+  first reading the complete file.
 
 *End of Document — BACKEND AGENT FILE — 
 Version 2.2 — Last Updated: 2026-03-02*

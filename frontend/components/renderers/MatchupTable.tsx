@@ -7,7 +7,7 @@
 
 import { Crosshair, AlertTriangle } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
-import { MatchupRow, toMatchupRows } from "@/lib/types";
+import { MatchupRow, toMatchupRows } from "@/lib/comparison-types";
 
 interface MatchupTableProps {
     data: Record<string, unknown>[];

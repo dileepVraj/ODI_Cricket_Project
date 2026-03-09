@@ -16,7 +16,7 @@ Prevent false confidence where one linter passes while fundamental architecture 
 1. Run boundary scan on `core/`:
 
 ```powershell
-python "core/gen_ai/skills/boundary-sentinel/scripts/run_sentinel.py" --root "." --paths core/
+python "core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py" --root "." --paths core/
 ```
 
 2. Run Compliance Bouncer gate:

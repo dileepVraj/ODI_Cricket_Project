@@ -855,9 +855,7 @@ Only validation skills appear in this gate sequence.
 **GATE 1 — boundary-sentinel**
 Trigger: any modification to `core/` files.
 ```powershell
-python core/gen_ai/skills/validators/
-boundary-sentinel/scripts/run_sentinel.py
---root . --paths core/
+python core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py --root . --paths core/
 ```
 Pass condition: zero cross-layer import violations, zero `self.dal` usage outside DAL, zero `duckdb.connect()` outside `core/data_access.py`.
 
@@ -866,8 +864,7 @@ Pass condition: zero cross-layer import violations, zero `self.dal` usage outsid
 **GATE 2 — duckdb-lint-ops (DOD lint only)**
 Trigger: any modification to `calculators/`, `engines/`, or `services/`.
 ```powershell
-python core/gen_ai/skills/guides/
-duckdb-lint-ops/scripts/run_lint.py --root .
+python core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py --root .
 ```
 Pass condition: zero `.iterrows()` / `.itertuples()` violations.
 
@@ -876,10 +873,7 @@ Pass condition: zero `.iterrows()` / `.itertuples()` violations.
 **GATE 3 — manifest-contract-verifier**
 Trigger: any modification to `manifest.py` or any engine file in `formats/`.
 ```powershell
-python core/gen_ai/skills/validators/
-manifest-contract-verifier/scripts/
-run_verifier.py --root .
---manifest formats/odi/manifest.py
+python core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py --root . --manifest formats/odi/manifest.py
 ```
 Pass condition: all `engine_class` / `engine_method` contracts verified, all `required_context` fields map to valid engine parameters.
 
@@ -888,10 +882,7 @@ Pass condition: all `engine_class` / `engine_method` contracts verified, all `re
 **GATE 4 — serialization-guard**
 Trigger: any modification to `api/serializers.py` or engine return types.
 ```powershell
-python core/gen_ai/skills/validators/
-serialization-guard/scripts/run_lint.py
---root . --paths api/serializers.py
---max-record-rows 500
+python core/gen_ai/skills/validators/backend/serialization-guard/scripts/run_lint.py --root . --paths api/serializers.py --max-record-rows 500
 ```
 Pass condition: zero memory bombs, zero high-latency recursive serialization patterns.
 
@@ -900,8 +891,7 @@ Pass condition: zero memory bombs, zero high-latency recursive serialization pat
 **GATE 5 — paradigm-sentinel (meta-gate)**
 Trigger: always — runs after all primary gates pass.
 Follow instructions in:
-`core/gen_ai/skills/validators/
-paradigm-sentinel/SKILL.md`
+`core/gen_ai/skills/validators/backend/paradigm-sentinel/SKILL.md`
 Pass condition: zero violations across all paradigm checks including boundary scan, DAL bypass probe, and bouncer gate.
 
 ---
@@ -953,17 +943,17 @@ Current baseline: ~247 MB. Phase 12 live layer adds approximately 10–30 MB. Bo
 All agentic governance skills are internalized in the repository and MUST be referenced from project-local paths only. Global user-profile skill paths (`~/.codex/skills/`) are non-authoritative and MUST NOT be used.
 
 Current project skills:
-**Guide skills** (`core/gen_ai/skills/guides/`):
-- `core/gen_ai/skills/guides/duckdb-lint-ops/`
+**Backend guide skills** (`core/gen_ai/skills/guides/backend/`):
+- `core/gen_ai/skills/guides/backend/duckdb-lint-ops/`
 
-**Validation skills** 
-(`core/gen_ai/skills/validators/`):
-- `core/gen_ai/skills/validators/boundary-sentinel/`
-- `core/gen_ai/skills/validators/event-state-linter/`
-- `core/gen_ai/skills/validators/executive-auditor/`
-- `core/gen_ai/skills/validators/manifest-contract-verifier/`
-- `core/gen_ai/skills/validators/paradigm-sentinel/`
-- `core/gen_ai/skills/validators/serialization-guard/`
+**Backend validation skills** 
+(`core/gen_ai/skills/validators/backend/`):
+- `core/gen_ai/skills/validators/backend/boundary-sentinel/`
+- `core/gen_ai/skills/validators/backend/event-state-linter/`
+- `core/gen_ai/skills/validators/backend/executive-auditor/`
+- `core/gen_ai/skills/validators/backend/manifest-contract-verifier/`
+- `core/gen_ai/skills/validators/backend/paradigm-sentinel/`
+- `core/gen_ai/skills/validators/backend/serialization-guard/`
 
 **System skills** (`core/gen_ai/skills/.system/`):
 - `core/gen_ai/skills/.system/skill-creator/`
@@ -972,9 +962,9 @@ Current project skills:
 When creating new skills, place them in the 
 correct typed subdirectory:
 - Guide skills: 
-  `core/gen_ai/skills/guides/[skill-name]/`
+  `core/gen_ai/skills/guides/backend/[skill-name]/`
 - Validation skills: 
-  `core/gen_ai/skills/validators/[skill-name]/`
+  `core/gen_ai/skills/validators/backend/[skill-name]/`
 
 ---
 
@@ -994,7 +984,7 @@ boundary-sentinel/`
 **GATE 2 - duckdb-lint-ops (DOD lint)**
 Trigger: any modification to `calculators/`, 
 `engines/`, or `services/`.
-Path: `core/gen_ai/skills/guides/duckdb-lint-ops/`
+Path: `core/gen_ai/skills/guides/backend/duckdb-lint-ops/`
 
 **GATE 3 - manifest-contract-verifier**
 Trigger: any modification to `manifest.py` 
@@ -1036,7 +1026,7 @@ If any required skill gate fails, a stale
 or pre-restructure path is referenced 
 (e.g. `core/gen_ai/skills/boundary-sentinel/` 
 instead of 
-`core/gen_ai/skills/validators/boundary-sentinel/`),
+`core/gen_ai/skills/validators/backend/boundary-sentinel/`),
 or gate results are missing from the task 
 report, compliance status is `FAIL` regardless 
 of bouncer output. The task is not complete.

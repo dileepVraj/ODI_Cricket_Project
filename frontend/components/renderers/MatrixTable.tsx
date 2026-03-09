@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp, ChevronsUpDown, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import EmptyState from "@/components/common/EmptyState";
 import { useAppContext } from "@/lib/context";
-import { MatrixRow, toMatrixRows } from "@/lib/types";
+import { MatrixRow, toMatrixRows } from "@/lib/comparison-types";
 
 interface MatrixTableProps {
     data: Record<string, unknown>[];

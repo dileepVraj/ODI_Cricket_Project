@@ -13,7 +13,7 @@ import {
     ComparisonSectionTone,
     ComparisonValueTone,
     toComparisonRows,
-} from "@/lib/types";
+} from "@/lib/comparison-types";
 
 interface ComparisonTableProps {
     data: Record<string, unknown>[];

@@ -29,7 +29,7 @@ Use this skill for quant-terminal data inspection and lint safety.
 1. Query default ODI database:
 
 ```powershell
-python "core/gen_ai/skills/duckdb-lint-ops/scripts/query_duckdb.py" --sql "SELECT COUNT(*) AS n FROM matches"
+python "core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/query_duckdb.py" --sql "SELECT COUNT(*) AS n FROM matches"
 ```
 
 2. Additional format DBs follow the same pattern: `formats/{fmt}/data/{fmt}.duckdb`
@@ -37,7 +37,7 @@ python "core/gen_ai/skills/duckdb-lint-ops/scripts/query_duckdb.py" --sql "SELEC
 3. Run DOD linter on repository:
 
 ```powershell
-python "core/gen_ai/skills/duckdb-lint-ops/scripts/run_lint.py" --root "."
+python "core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py" --root "."
 ```
 
 ## Execution Rules

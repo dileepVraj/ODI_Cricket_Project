@@ -1,11 +1,11 @@
 "use client";
 
 import { lazy, Suspense, type ReactNode } from "react";
-import EmptyState from "@/components/common/EmptyState";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
-import FallbackBanner from "@/components/common/FallbackBanner";
 import { isJsonRecordArray } from "@/lib/types";
 
+const EmptyState = lazy(() => import("@/components/common/EmptyState"));
+const FallbackBanner = lazy(() => import("@/components/common/FallbackBanner"));
 const DataTable = lazy(() => import("./DataTable"));
 const ComparisonTable = lazy(() => import("./ComparisonTable"));
 const MatrixTable = lazy(() => import("./MatrixTable"));
@@ -91,11 +91,13 @@ function getSuspenseFallback(): ReactNode {
 export default function FunctionRenderer({ outputType, data }: FunctionRendererProps) {
     if (data === null || data === undefined) {
         return (
-            <EmptyState
-                title="No Analysis Data"
-                message="The engine returned no data for this query. This might be due to insufficient matches or missing context."
-                actionLabel="Try adjusting filters"
-            />
+            <Suspense fallback={<div className="animate-pulse h-8 w-full" />}>
+                <EmptyState
+                    title="No Analysis Data"
+                    message="The engine returned no data for this query. This might be due to insufficient matches or missing context."
+                    actionLabel="Try adjusting filters"
+                />
+            </Suspense>
         );
     }
 

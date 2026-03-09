@@ -110,9 +110,9 @@ Run incremental gates after this file:
 
 ```text
 GATE 3 - manifest-contract-verifier
-Path: core/gen_ai/skills/validators/manifest-contract-verifier/
+Path: core/gen_ai/skills/validators/backend/manifest-contract-verifier/
 GATE 5 - paradigm-sentinel
-Path: core/gen_ai/skills/validators/paradigm-sentinel/
+Path: core/gen_ai/skills/validators/backend/paradigm-sentinel/
 GATE 6 - compliance-bouncer (interim check)
 Command: python core/utils/compliance_bouncer.py --root .
 ```
@@ -131,7 +131,7 @@ Run incremental gates after this file:
 
 ```text
 GATE 4 - serialization-guard
-Path: core/gen_ai/skills/validators/serialization-guard/
+Path: core/gen_ai/skills/validators/backend/serialization-guard/
 GATE 5 - paradigm-sentinel
 GATE 6 - compliance-bouncer (interim check)
 ```
@@ -177,9 +177,10 @@ Run incremental gates after this file:
 
 ```text
 GATE 1 - boundary-sentinel
-Path: core/gen_ai/skills/validators/boundary-sentinel/
+Path: core/gen_ai/skills/validators/backend/boundary-sentinel/
 GATE 2 - duckdb-lint-ops
-Path: core/gen_ai/skills/guides/duckdb-lint-ops/
+Path: core/gen_ai/skills/guides/backend/duckdb-lint-ops/
+Run: python core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py --root .
 GATE 5 - paradigm-sentinel
 GATE 6 - compliance-bouncer (interim check)
 ```

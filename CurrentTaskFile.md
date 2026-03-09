@@ -1,69 +1,96 @@
-F01 — Structural Map + Directory Classification
-Read the following files before doing anything else:
+TASK: Add Rule 5.11 (mandatory disk verify) to TASK_PROTOCOL.md
 
-ENGINEERING_STANDARDS_FRONTEND.md (full)
-PROJECT_CONTEXT.md sections 6 and 7
-SESSION_STATE.md
+MANDATORY READS — DO THESE FIRST, IN ORDER:
+1. Read: docs/ai/TASK_PROTOCOL.md — Section 5 (Hard Rules) only
+2. Output: "CONTEXT LOADED — Section 5 read, current rules 5.1 through 5.10 confirmed"
 
-TASK: Produce a structural map of the frontend codebase. This is a read-only classification step. Zero code changes.
-Step 1 — Inventory
-List every file under frontend/ recursively. For each file record:
+Do NOT touch any file until you have output that confirmation.
 
-File path (relative to frontend/)
-Layer role (UI Adapter / ETL Infrastructure / other — classify per Part 0 of the standards)
-Primary responsibility in one sentence
+BASELINE BOUNCER — mandatory:
+Run: python core/utils/compliance_bouncer.py --root .
+Record full output as before-snapshot.
 
-Step 2 — Directory Contract Audit
-The directory contract (2.2B Rule 10) specifies four directories:
+CONTEXT:
+Two incidents this sprint where file writes never landed on disk:
+- TASK-064: agent described the split in chat, reported COMPLETE, file unchanged
+- TASK-064-REDO: agent read stale cached context instead of actual disk state,
+  reported 470 lines when disk had 560
 
-components/layout/ — navigation, shell, bars
-components/renderers/ — output renderers + FunctionRenderer dispatcher
-components/inputs/ — squad builders, extra input fields, forms
-components/common/ — shared primitives used by multiple layers
+Neither incident would have been caught without manual verification.
+The protocol has no rule requiring agents to confirm writes landed on disk.
+Rule 5.11 closes this gap permanently.
 
-For every component file found, record which directory it currently lives in and whether that placement is COMPLIANT or VIOLATION against the contract. Flag any directories that exist but are not in the contract (e.g. navigation/, animations/).
-Step 3 — File Count Summary
-Produce a count table:
+THE FIX — append Rule 5.11 to Section 5 of TASK_PROTOCOL.md:
 
-Total files by directory
-Total components by layer role
-Any file over 300 lines (flag name + line count)
-Any file over 500 lines (flag as WARNING)
-Any file over 800 lines (flag as VIOLATION)
+### Rule 5.11 — Mandatory disk verify after every file write
 
+After writing or modifying any file, the agent MUST immediately verify
+the write landed correctly on disk before proceeding to the next step.
 
-CONSTRAINTS
+Verification is not optional and cannot be skipped.
 
-Zero code changes
-Do not open or read file contents beyond what is needed to classify and count
-Do not run any compliance gates — that is F02 onwards
-Do not infer violations beyond directory placement and file size at this step
+For every file modified, run:
 
+  # Confirm file exists and line count is in expected range
+  wc -l <filepath>
 
-REPORT FORMAT
-Return exactly this structure:
+  # Confirm key markers are present
+  grep -c "<expected_marker>" <filepath>
 
-F01 — STRUCTURAL MAP
-=====================
+  # Confirm absent identifiers are not present (for strip/refactor tasks)
+  grep -l "<stripped_identifier>" <filepath> || echo "ABSENT: confirmed"
 
-INVENTORY TABLE
-[file | layer role | responsibility]
+If any check fails:
+- STOP immediately
+- Do NOT proceed to the next file or next task step
+- Report as BLOCKED with exact mismatch details
+- Await architect instruction before retrying
 
-DIRECTORY CONTRACT AUDIT
-[file | current directory | COMPLIANT / VIOLATION / UNCLASSIFIED]
+A task report MUST include disk verify results for every file modified.
+A task marked COMPLETE without disk verify results is invalid.
 
-ANOMALOUS DIRECTORIES
-[directory | files contained | contract status]
+TASK STEPS:
 
-FILE SIZE FLAGS
-[file | line count | WARNING / VIOLATION]
+Step 1 — Open docs/ai/TASK_PROTOCOL.md.
+  Locate the end of Section 5 — after Rule 5.10.
+  Append Rule 5.11 exactly as specified above.
+  Do not modify any existing rule.
+  Do not modify any other section.
 
-SUMMARY
-Total files: N
-COMPLIANT placements: N
-VIOLATIONS: N
-UNCLASSIFIED: N
-Size warnings: N
-Size violations: N
-F01 STATUS: COMPLETE
+Step 2 — DISK VERIFY — mandatory:
+  Run:
+    grep -n "Rule 5.11" docs/ai/TASK_PROTOCOL.md
+  Expected: 1 hit on the rule header line.
+  If not found — STOP. Report BLOCKED.
 
+  Run:
+    grep -c "wc -l\|grep -c\|ABSENT" docs/ai/TASK_PROTOCOL.md
+  Expected: 3 hits minimum.
+  If fewer — STOP. Report BLOCKED.
+
+Step 3 — Run gates:
+  GATE 5: follow paradigm-sentinel SKILL.md
+  GATE 6:
+    python core/utils/compliance_bouncer.py --root .
+    Must match baseline.
+
+CONSTRAINTS:
+- Modify ONLY docs/ai/TASK_PROTOCOL.md
+- Do NOT modify any existing rule in Section 5
+- Do NOT modify any other section
+- Do NOT touch any source files, validator scripts, or SKILL.md files
+- Do NOT touch core/data_access.py, core/interfaces/team_types.py, api/serializers.py
+- api.ts has pre-existing uncommitted changes — do not stage, commit, or touch it
+- No Phase 12 references
+- Do not update AI_MEMORY.md — it is deprecated
+
+REPORT FORMAT: Use CLAUDE.md Part 7 template exactly.
+Append after Status:
+
+Rule 5.11 Addition Summary:
+  File modified: docs/ai/TASK_PROTOCOL.md
+  Rule added: 5.11 — Mandatory disk verify after every file write
+  Disk verify grep hits on Rule 5.11 header: [N — expected 1]
+  Disk verify grep hits on verify commands: [N — expected 3+]
+  Gate 5: PASS
+  Bouncer before/after: PASS/PASS

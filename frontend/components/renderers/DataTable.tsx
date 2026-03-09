@@ -8,7 +8,7 @@
 import { useState, useMemo } from "react";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
-import { DataRow, toDataRows } from "@/lib/types";
+import { DataRow, toDataRows } from "@/lib/comparison-types";
 
 interface DataTableProps {
     data: Record<string, unknown>[];

@@ -58,7 +58,7 @@ export default function ContextBar() {
     return (
         <div
             id="context-bar"
-            className="animate-fade-in [height:var(--context-bar-height)] [background:var(--bg-surface)] [border-bottom:1px_solid_var(--border-subtle)] [display:flex] [align-items:center] [padding:0_20px] [gap:12px] [overflow-x:auto]"
+            className="animate-fade-in [height:var(--context-bar-height)] [background:var(--bg-surface)] [border-bottom:1px_solid_var(--border-subtle)] [display:flex] [align-items:center] [padding:0_20px] [gap:12px] [overflow:visible] [position:relative] [z-index:45]"
         >
             <SlidersHorizontal size={16} className="[color:var(--text-disabled)] [flex-shrink:0]" />
 

@@ -1,68 +1,106 @@
 # Session State
-**Last Updated:** 2026-03-08
+**Last Updated:** 2026-03-09
 **Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
-Team engine COMPLIANT 2026-03-05.
-Player engine COMPLIANT 2026-03-06.
+Frontend Skills Initiative COMPLETE 2026-03-08 (TASK-048 through TASK-057).
+Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
+Team engine COMPLIANT 2026-03-05. Player engine COMPLIANT 2026-03-06.
 Predictor engine COMPLIANT 2026-03-07.
-Frontend audit COMPLETE 2026-03-07 (TASK-029). Sprint 1 remediation COMPLETE 2026-03-07.
-Post-sprint compliance review COMPLETE 2026-03-07. Sprint 2 remediation COMPLETE 2026-03-07.
-Post-verification fix COMPLETE 2026-03-07 (CategoryBanners.tsx --accent-blue → --accent-primary).
 
 ---
 
 ## Active Sprint
-Backend sprint — engine refactoring COMPLETE. Next: TASK-011 documentation.
-Frontend sprint 2 COMPLETE 2026-03-07 (TASK-042 through TASK-045).
+None — Frontend compliance sprint fully complete (TASK-058 through TASK-072).
+Next logical work: Rule 5.11 addition, Rule 2.2B-R5 violation fixes,
+backend feature tasks or Phase 12 planning.
 
 ## In Progress
 - Nothing currently in progress
 
 ## Last Completed
-- TASK-011 — Update TECHNICAL_AUDIT_REPORT.md — CLOSED 2026-03-08
-  Version 3.1.0 → 3.2.0. All sections updated to reflect engine refactoring,
-  frontend sprints, TASK-046 manifest extensions, skills expansion.
-  File: docs/guides/TECHNICAL_AUDIT_REPORT.md
-- TASK-046 — Manifest Schema Extensions — CLOSED 2026-03-08
-  All 6 frontend violations resolved (F04-V03, F06-V03, F06-V05, F06-V08, ExtraInput paths).
-  Files: api/schemas/manifest.py, formats/odi/manifest.py, lib/api.ts,
-  page.tsx, Sidebar.tsx, ExtraInputSelect.tsx, ExtraInputCombobox.tsx,
-  QuickLinks.tsx, PlayerProfileCard.tsx
-- TASK-039 — Backend pre-compute renderer fields — CLOSED 2026-03-07
-  Audit found: existing backend pre-computation covers all active items. PredictionCard blocked on Phase 12.
-- TASK-010 — Engine Layer Refactoring — CLOSED 2026-03-07
-  Predictor engine refactored: 9 violations fixed, all 6 gates passed, bouncer PASS.
-  Files: formats/odi/predictor.py, core/interfaces/predictor_interface.py
-- Post-verification fix — CategoryBanners.tsx `--accent-blue` → `--accent-primary` — 2026-03-07
-  Files: frontend/components/layout/CategoryBanners.tsx
-- TASK-045 — Mechanical Cleanup Pass — CLOSED 2026-03-07
-  Files: CountUp.tsx, page.tsx, globals.css, CategoryScreen.tsx, ContextBar.tsx, lib/api.ts
-- TASK-044 — CategoryScreen Structural Remediation — CLOSED 2026-03-07
-  Files: CategoryScreen.tsx, CategoryBanners.tsx (new), executeHelpers.ts (new), globals.css
-- TASK-043 — FunctionRenderer Type Migration — CLOSED 2026-03-07
-  Files: lib/types.ts, FunctionRenderer.tsx
-- TASK-042 — Input Label Accessibility Fix — CLOSED 2026-03-07
-  Files: ExtraInputText.tsx, ExtraInputSelect.tsx, ExtraInputCombobox.tsx
+
+- TASK-072 — Add Rule 2.2A-R14 polling guard — CLOSED 2026-03-09
+  check_polling_execute() added to run_frontend_lint.py.
+  Pattern: setInterval/setTimeout on same line as /execute/.
+  Gate F1 PASS — 0 violations.
+
+- TASK-071 — Add Rule 2.2C-R3 inline prop guard — CLOSED 2026-03-09
+  check_inline_object_array_props() added to run_frontend_lint.py.
+  Exemptions: value prop on Context Provider, runtime layout style values
+  (width, height, top, left, right, bottom, transform).
+  Gate F1 PASS — 0 violations after false positive fix (TASK-071B).
+
+- TASK-070 — Add Rules 2.2E-R2 and 2.2E-R3 accessibility rules — CLOSED 2026-03-09
+  check_onclick_non_interactive() — onClick on div/span without role+tabIndex.
+  check_live_region_announcements() — error/result containers missing aria-live/role=alert.
+  False positive fixed (TASK-070B): CSS variable substrings exempt via word boundary regex.
+  Gate F1 PASS — 0 violations.
+
+- TASK-064-REDO — Strip types.ts to correct final state — CLOSED 2026-03-09
+  types.ts reduced from 560 lines to 164 lines (CRLF).
+  Duplicated content confirmed absent. All @schema/@schema-exempt tags correct.
+  comparison-types.ts and venue-types.ts unchanged — already correct on disk.
+  Gates F2, F3 PASS.
+
+- TASK-065-REDO — @schema audit — CLOSED 2026-03-09
+  All interfaces in types.ts confirmed @schema-exempt.
+  Tags baked into TASK-064-REDO file content. Gate F3 PASS.
+
+- TASK_PROTOCOL.md — Created — CLOSED 2026-03-09
+  Location: docs/ai/TASK_PROTOCOL.md
+  Authoritative agent routing guide. 7 sections:
+  task classification, guide skill load order, gate sequences,
+  mixed-scope rules, hard rules (5.1–5.10), quick reference, skill registry.
+  All agents must read this file before starting any task.
+
+- Guide skill audit — CLOSED 2026-03-09
+  All 9 SKILL.md files corrected.
+  duckdb-lint-ops paths fixed in all backend guides.
+  Gate F3 trigger updated in all 3 frontend guides.
+  @schema-exempt pattern documented in frontend-new-component-guide.
+  Pre-commit Gate 2 upgraded from warning to script + exit 1.
 
 ## Active Task
-No active task. Queue is clear except TASK-012 (monitoring period).
+None.
 
 ## Queue (in order)
-1. TASK-012 — Token optimisation (needs 1 week monitoring first, from 2026-03-03)
+1. Add Rule 5.11 (mandatory disk verify) to TASK_PROTOCOL.md
+   — next task, unblocked once SESSION_STATE.md is updated
+2. TASK-012 — Token optimisation
+   (parked — needs 1 week monitoring first, from 2026-03-03)
+3. Follow-up: 11 real Rule 2.2B-R5 violations in .tsx/.ts files
+   Files: page.tsx, CategoryScreen.tsx, QuickLinks.tsx, Sidebar.tsx x4,
+   PhaseTableStyles.ts, MatchAuditSection.tsx x2, ReportCard.tsx
+4. PROJECT_CONTEXT.md update — agent task, use project-context-update prompt
+5. api.ts pre-existing uncommitted @schema tag additions — review and commit
 
-## Known Blockers
-- TASK-013 blocked by Claude CLI pro subscription
-- F08-V03 fetchPlayers() still UI-triggered — needs context pre-load,
-  same family as TASK-039, blocked behind TASK-010
-- next build spawn EPERM — environment permission issue on build
-  runner, not a code problem, needs CI environment check
-- paradigm-sentinel/SKILL.md references stale boundary-sentinel path —
-  logged, not blocking, no action until maintenance window
-- B8 (return null) and F05-V02 (FunctionRenderer fallback) — unscheduled,
-  architect decision pending (see AUDIT-compliance-fix-plan.md notes)
+## Pre-Task Dirty File Notice (standing)
+The following files have pre-existing uncommitted changes unrelated to
+any active task. Agents must NOT block on their presence in git status:
+  frontend/lib/api.ts — @schema tag additions, pre-existing
 
-## Gate 5 Known False Positive
-None active — predictor DAL violations cleared by TASK-010 refactor (2026-03-07).
+## Gate State Snapshot (2026-03-09)
+- GATE F1 (frontend-lint-sentinel):   PASS — 0 violations (15 rules)
+- GATE F2 (frontend-paradigm-sentinel): PASS — 0 violations
+- GATE F3 (frontend-type-sync-guard):  PASS — 0 violations
+- GATE 5  (paradigm-sentinel):         PASS
+- GATE 6  (compliance-bouncer):        PASS — 0 violations (22 files)
+- Pre-commit hook:                     PASS — all gates active, exit 0
 
-## Do Not Touch (Active)
-Full registry in ENGINEERING_STANDARDS_CORE.md Part 6.
-Short list: core/data_access.py, core/interfaces/team_types.py, api/serializers.py
+## Rule Inventory — frontend-lint-sentinel (Gate F1)
+| Rule | Function | Added |
+|---|---|---|
+| 2.2A-R1 | check_raw_fetch | pre-sprint |
+| 2.2A-R6 | check_any_unknown | TASK-066 |
+| 2.2A-R13 | check_hardcoded_format_strings | pre-sprint |
+| 2.2A-R14 | check_polling_execute | TASK-072 |
+| 2.2B-R1 | check_raw_hex_colors | pre-sprint |
+| 2.2B-R4 | check_non_lucide_icons | pre-sprint |
+| 2.2B-R5 | check_inline_font_family | TASK-068 |
+| 2.2B-R6 | check_component_keyframes | pre-sprint |
+| 2.2C-R1 | check_eager_renderer_imports | pre-sprint |
+| 2.2C-R3 | check_inline_object_array_props | TASK-071 |
+| 2.2D-R3 | check_schema_jsdoc | pre-sprint |
+| 2.2E-R1 | check_aria_label_buttons | pre-sprint |
+| 2.2E-R2 | check_onclick_non_interactive | TASK-070 |
+| 2.2E-R3 | check_live_region_announcements | TASK-070 |
+| 2.2F-R1 | check_non_vitest_imports | pre-sprint |

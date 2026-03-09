@@ -24,11 +24,11 @@ export function MissingContextBanner({ missingContextLabels }: { missingContextL
 export function SquadHintBanner() {
     return (
         <div className="animate-fade-in [padding:14px] [background:var(--bg-info)] [border:1px_solid_var(--border-info)] [border-radius:var(--radius-md)] [margin-bottom:16px] [display:flex] [gap:12px] [align-items:center]">
-            <Users size={18} className="[color:var(--accent-blue)] [flex-shrink:0]" />
+            <Users size={18} className="[color:var(--accent-primary)] [flex-shrink:0]" />
             <p className="[color:var(--text-secondary)] [font-size:0.82rem]">
                 Select players for <strong className="[color:var(--text-primary)]">Home XI</strong> and{" "}
                 <strong className="[color:var(--text-primary)]">Away XI</strong> above, or click{" "}
-                <strong className="[color:var(--accent-blue)]">Load Squad</strong> to auto-fill.
+                <strong className="[color:var(--accent-primary)]">Load Squad</strong> to auto-fill.
             </p>
         </div>
     );
@@ -37,7 +37,7 @@ export function SquadHintBanner() {
 export function MissingInputsBanner({ missingInputLabels }: { missingInputLabels: string[] }) {
     return (
         <div className="animate-fade-in [padding:14px] [background:var(--bg-info)] [border:1px_solid_var(--border-info)] [border-radius:var(--radius-md)] [margin-bottom:16px] [display:flex] [gap:12px] [align-items:center]">
-            <AlertCircle size={18} className="[color:var(--accent-blue)] [flex-shrink:0]" />
+            <AlertCircle size={18} className="[color:var(--accent-primary)] [flex-shrink:0]" />
             <p className="[color:var(--text-secondary)] [font-size:0.82rem]">
                 Please select{" "}
                 <strong className="[color:var(--text-primary)]">{missingInputLabels.join(", ")}</strong>{" "}

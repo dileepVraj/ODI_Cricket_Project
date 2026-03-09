@@ -104,7 +104,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                         return (
                                             <td
                                                 key={col}
-                                                className={`[padding:11px_14px] [font-size:0.8rem] [white-space:nowrap] ${right ? "[text-align:right] [font-family:var(--font-numeric)] font-numeric" : "[text-align:left] [font-family:inherit]"} ${statusTone}`}
+                                                className={`[padding:11px_14px] [font-size:0.8rem] [white-space:nowrap] ${right ? "[text-align:right] font-numeric" : "[text-align:left]"} ${statusTone}`}
                                             >
                                                 {val === null || val === undefined ? "-" : String(val)}
                                             </td>

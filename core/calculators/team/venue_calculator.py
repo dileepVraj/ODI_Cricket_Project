@@ -339,8 +339,8 @@ def _build_match_intel(summary_df: pd.DataFrame, context: VenueMatchupContext) -
     summary = _summary_payload(summary_df, context["home_team"], context["percent_scale"])
     team_a_stats = _team_intel(summary_df, context["home_team"], context["competitive_chase_threshold"], context["low_sample_min_matches"])
     team_b_stats = _team_intel(summary_df, context["opp_team"], context["competitive_chase_threshold"], context["low_sample_min_matches"])
-    last_5_home = ReportFormatter._none_if_placeholder(ReportFormatter._get_form_guide(summary_df, context["home_team"]))
-    last_5_away = ReportFormatter._none_if_placeholder(ReportFormatter._get_form_guide(summary_df, context["opp_team"]))
+    last_5_home = ReportFormatter._none_if_placeholder(ReportFormatter.format_form_guide(ReportBuilder._build_form_data_payload(summary_df, context["home_team"])))
+    last_5_away = ReportFormatter._none_if_placeholder(ReportFormatter.format_form_guide(ReportBuilder._build_form_data_payload(summary_df, context["opp_team"])))
     low_sample_warnings = [*team_a_stats["low_sample_warnings"], *team_b_stats["low_sample_warnings"]]
     summary["last_5_home"] = last_5_home
     summary["last_5_away"] = last_5_away
