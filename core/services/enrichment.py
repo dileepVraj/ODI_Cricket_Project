@@ -14,6 +14,7 @@ import logging
 
 from core.services.match_filter_service import STATUS_COLUMN, apply_smart_filters
 from core.services.report_formatter import ReportFormatter
+from config.shared.venues import resolve_venue_id
 
 
 logger = logging.getLogger("CricketAnalyzer")
@@ -77,6 +78,18 @@ class EnrichmentService:
                 return parsed.strftime("%Y-%m-%d")
             return _normalize_text(value)
 
+        def _resolve_audit_venue(record: ComparisonReportRow | MatrixReportRow | MatchAuditRecord) -> str:
+            raw_venue = _normalize_text(_obj_get(record, "venue"))
+            venue_id = _normalize_text(_obj_get(record, "venue_id"), default="")
+            if venue_id:
+                return venue_id
+
+            resolved_venue_id = resolve_venue_id(raw_venue if raw_venue != "-" else "")
+            if resolved_venue_id:
+                return resolved_venue_id
+
+            return raw_venue
+
         def _resolve_alt_key(keys: List[str], primary: str, token: str, inn_num: int) -> Optional[str]:
             if primary in keys:
                 return primary
@@ -133,7 +146,7 @@ class EnrichmentService:
             status_value = ReportFormatter.format_match_status(status_code)
             return {
                 "start_date": _normalize_date(_obj_get(record, "start_date")),
-                "venue": _normalize_text(_obj_get(record, "venue")),
+                "venue": _resolve_audit_venue(record),
                 "winner": _normalize_text(_obj_get(record, "winner")),
                 "team_bat_1": _normalize_text(_obj_get(record, "team_bat_1")),
                 "score_inn1": _format_score(record, 1),
