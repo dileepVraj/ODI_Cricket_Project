@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-09 (guide skill audit sprint)
+**Last Updated:** 2026-03-09 (frontend compliance sprint + gate calibration)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -76,9 +76,9 @@ Frontend compliance audit COMPLETE 2026-03-06 (TASK-029).
 Predictor engine signed off COMPLIANT 2026-03-07 (TASK-010 CLOSED).
 Frontend sprint 2 COMPLETE 2026-03-07 (TASK-042 through TASK-045).
 Manifest schema extensions COMPLETE 2026-03-08 (TASK-046 — all 6/6 frontend violations resolved).
-Frontend gate remediation sprint COMPLETE 2026-03-09 (TASK-065 through TASK-069).
-Guide skill audit sprint COMPLETE 2026-03-09 — all 9 guide skills corrected, Gate 2 upgraded,
-Gate F3 trigger updated, @schema-exempt documented, TASK_PROTOCOL.md created.
+Frontend compliance sprint 2 COMPLETE 2026-03-09 (TASK-070 through TASK-072).
+Gate F1 expanded to 15 rules. Pre-commit hook Gate 3 fixed (--manifest argument).
+TASK_PROTOCOL.md Rules 5.11 and 5.12 added. pre-commit.ps1 removed.
 
 ---
 
@@ -653,7 +653,7 @@ core/gen_ai/skills/
 | Frontend Skills Initiative — TASK-048 to TASK-057 | Skills directory restructured: backend/ + frontend/ subdirectories under guides/ and validators/ | 10 new skills: 3 frontend validators + 3 frontend guides. GATE F1–F3 registered in ENGINEERING_STANDARDS_FRONTEND.md and all agent config files | 2026-03-08 |
 | TASK-048 closed | Skills directory reorganisation — backend/frontend split | All 6 guide skills → guides/backend/, all 6 validator skills → validators/backend/, frontend/ dirs created | 2026-03-08 |
 | TASK-049 closed | All stale skill path references updated | CLAUDE.md, AGENTS.md, GEMINI.md, 3 ENGINEERING_STANDARDS files, paradigm-sentinel/SKILL.md — zero stale paths | 2026-03-08 |
-| TASK-050 closed | frontend-lint-sentinel built | SKILL.md + run_frontend_lint.py — 12 checks covering 2.2A/2.2B rules | 2026-03-08 |
+| TASK-050 closed | frontend-lint-sentinel built | SKILL.md + run_frontend_lint.py — 15 checks covering 2.2A/2.2B/2.2C/2.2E/2.2F rules | 2026-03-09 |
 | TASK-051 closed | frontend-paradigm-sentinel built | SKILL.md + run_frontend_paradigm.py — 8 architectural checks | 2026-03-08 |
 | TASK-052 closed | frontend-type-sync-guard built | SKILL.md + run_type_sync.py — @schema JSDoc compliance for lib/types.ts | 2026-03-08 |
 | TASK-053 closed | frontend-bug-fix-guide built | SKILL.md — 4-phase workflow with frontend RCA trace and F1–F3 gate sequence | 2026-03-08 |
@@ -677,18 +677,18 @@ core/gen_ai/skills/
 | Gate F3 trigger updated in all frontend guides | frontend-bug-fix-guide, frontend-modification-guide, frontend-new-component-guide — trigger now "always — scans all frontend/lib/*.ts" | Was conditional on lib/types.ts changes only — F3 is always-on per TASK-067 | 2026-03-09 |
 | @schema-exempt R4 updated in frontend-new-component-guide | Phase 3 check R4 now documents both @schema and @schema-exempt patterns with correct JSDoc format | Enables agents to correctly tag frontend-only interfaces — previously only @schema was documented | 2026-03-09 |
 | TASK_PROTOCOL.md created | docs/ai/TASK_PROTOCOL.md — authoritative agent routing guide, 545 lines, 7 sections | Covers task classification, guide load order, gate sequences, mixed-scope rules, hard rules, quick reference, full skill registry | 2026-03-09 |
-| 2026-03-09 | : unknown exempt from Rule 2.2A-R6 — idiomatic TypeScript |
-| 2026-03-09 | CSS files exempt from Rule 2.2B-R5 |
-| 2026-03-09 | @schema-exempt tag introduced for frontend-only interfaces |
-| 2026-03-09 | Gate F3 always-on — scans all frontend/lib/*.ts |
-| 2026-03-09 | value={{}} on Context Provider exempt from Rule 2.2C-R3 |
-| 2026-03-09 | CSS variable substrings exempt from Rule 2.2E-R3 |
-| 2026-03-09 | TASK_PROTOCOL.md created as authoritative agent routing guide |
-| 2026-03-09 | toRecord() and toStringArray() duplicated across lib files — no circular deps |
-| 2026-03-09 | Pre-commit hook blocks on all gates — exit 1 on any failure |
-| 2026-03-09 | Agents must not block on pre-existing dirty files outside task scope |
+| TASK-070 closed | Rules 2.2E-R2 + 2.2E-R3 added to frontend-lint-sentinel | check_onclick_non_interactive, check_live_region_announcements — false positives fixed for Context Provider and CSS variable substrings | 2026-03-09 |
+| TASK-071 closed | Rule 2.2C-R3 added to frontend-lint-sentinel | check_inline_object_array_props — value prop on Context Provider exempt | 2026-03-09 |
+| TASK-072 closed | Rule 2.2A-R14 added to frontend-lint-sentinel | check_polling_execute — setInterval/setTimeout calling /execute/ | 2026-03-09 |
+| Gate F1 expanded to 15 rules | 4 new rules added: 2.2A-R14, 2.2C-R3, 2.2E-R2, 2.2E-R3 | Full rule inventory in SESSION_STATE.md | 2026-03-09 |
+| value={{}} exempt from 2.2C-R3 | React Context Provider value prop — required JSX syntax, no alternative | Negative lookahead added to object_prop regex | 2026-03-09 |
+| CSS variable substrings exempt from 2.2E-R3 | --tier-danger matched danger as substring — false positive | Word boundary regex via negative lookbehind/lookahead | 2026-03-09 |
+| Rule 5.11 added to TASK_PROTOCOL.md | Mandatory disk verify after every file write — wc -l + grep checks required | Task marked invalid without disk verify results | 2026-03-09 |
+| Rule 5.12 added to TASK_PROTOCOL.md | Pre-existing dirty files do not constitute a block — use git diff --name-only | Fixes recurring false block pattern | 2026-03-09 |
+| Gate 3 pre-commit hook fixed | run_verifier.py requires --manifest argument — hook now loops over formats/*/manifest.py | Was failing on every commit attempt | 2026-03-09 |
+| pre-commit.ps1 removed | Redundant PowerShell hook — Git never calls it, caused confusion | Only pre-commit (no extension) is active | 2026-03-09 |
 ---
 
-*End of PROJECT_CONTEXT.md — Updated 2026-03-09 (guide skill audit sprint)*
+*End of PROJECT_CONTEXT.md — Updated 2026-03-09 (frontend compliance sprint + gate calibration)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

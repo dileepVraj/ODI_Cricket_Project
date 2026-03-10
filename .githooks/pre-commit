@@ -33,8 +33,14 @@ fi
 # Trigger: any manifest or engines/ file staged
 if echo "$STAGED" | grep -qE "manifest|engines/"; then
     echo "GATE 3 — manifest-contract-verifier: TRIGGERED"
-    python core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py --root .
-    if [ $? -ne 0 ]; then
+    GATE3_FAIL=0
+    for manifest in $(find formats -name "manifest.py" 2>/dev/null); do
+        python core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py --root . --manifest "$manifest"
+        if [ $? -ne 0 ]; then
+            GATE3_FAIL=1
+        fi
+    done
+    if [ $GATE3_FAIL -ne 0 ]; then
         echo "GATE 3 FAILED — manifest contract violation. Commit blocked."
         exit 1
     fi

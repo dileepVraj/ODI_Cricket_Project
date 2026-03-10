@@ -5,18 +5,31 @@ Frontend Skills Initiative COMPLETE 2026-03-08 (TASK-048 through TASK-057).
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Team engine COMPLIANT 2026-03-05. Player engine COMPLIANT 2026-03-06.
 Predictor engine COMPLIANT 2026-03-07.
+Frontend compliance audit COMPLETE 2026-03-09 (ComplianceAuditReport.md).
+Remediation backlog logged 2026-03-09 (TASK-073 through TASK-085).
 
 ---
 
 ## Active Sprint
-None — Frontend compliance sprint fully complete (TASK-058 through TASK-072).
-Next logical work: Rule 5.11 addition, Rule 2.2B-R5 violation fixes,
-backend feature tasks or Phase 12 planning.
+None — remediation backlog logged, awaiting execution start.
+Next: TASK-073 through TASK-076 can be batched in a single agent session (all surgical, different files).
 
 ## In Progress
 - Nothing currently in progress
 
 ## Last Completed
+
+- BACKLOG append — TASK-073 through TASK-085 logged — COMPLETE 2026-03-09
+  13 tasks appended to docs/ai/BACKLOG.md.
+  Tier 1 (5 Hard Fails), Tier 2 (3 Advisory), Tier 3 (5 Gate improvements).
+  TASK-079 Status: Blocked — architect decision on box-shadow tokenisation pending.
+  TASK-084 dependency on TASK-077 locked in.
+
+- Compliance audit 2026-03-09 — COMPLETE
+  Full frontend compliance audit run. All gates PASS at baseline.
+  10 Hard Fail violations found across 4 source files + missing test suite.
+  4 Advisory warnings. 5 gate coverage gaps identified.
+  Full findings: ComplianceAuditReport.md
 
 - TASK-072 — Add Rule 2.2A-R14 polling guard — CLOSED 2026-03-09
   check_polling_execute() added to run_frontend_lint.py.
@@ -59,19 +72,46 @@ backend feature tasks or Phase 12 planning.
   @schema-exempt pattern documented in frontend-new-component-guide.
   Pre-commit Gate 2 upgraded from warning to script + exit 1.
 
+  - TASK-080 — Fix FormatSelector icon color literal — CLOSED 2026-03-09
+  color="white" on Activity icon replaced with className="[color:var(--text-primary)]".
+  All gates PASS.
+
+  - TASK-081 + TASK-082 + TASK-083 — Gate F1 improvements — CLOSED 2026-03-09
+  check_suspense_fallback_class() added — Rule 2.2C-R1 Suspense fallback enforcement
+  check_usememo_primitive_wrap() added — Rule 2.2C-R2 primitive useMemo detection
+  check_live_region_announcements() extended — Rule 2.2E-R3 aria-busy without aria-live
+  run_frontend_lint.py now 537 lines — 18 checks total.
+  All gates PASS.
+
+  - TASK-086 + TASK-087 — Undefined CSS token fixes — CLOSED 2026-03-09
+  --format-selector-height added to globals.css layout dimensions section.
+  --warning → --tier-caution in FilterCriteriaNotice.tsx.
+  --success → --tier-elite, --danger → --tier-danger in GlobalHabitsCard.tsx.
+  All gates PASS. TASK-085 also closes — check_undefined_css_tokens() confirmed working.
+
+- TASK-085 — Gate F1: Add check_undefined_css_tokens() — CLOSED 2026-03-09
+  check_undefined_css_tokens() added to run_frontend_lint.py.
+  Found 4 real violations on first run — all resolved by TASK-086 + TASK-087.
+  Gate F1 now 19 checks. All gates PASS.
+
+  - TASK-079 — Tokenize box-shadow values — CLOSED 2026-03-09
+  --shadow-sidebar and --shadow-card-deep added to globals.css.
+  Sidebar.tsx and MatchAuditSection.tsx updated to reference new tokens.
+  All gates PASS.
+
 ## Active Task
 None.
 
 ## Queue (in order)
-1. Add Rule 5.11 (mandatory disk verify) to TASK_PROTOCOL.md
-   — next task, unblocked once SESSION_STATE.md is updated
-2. TASK-012 — Token optimisation
-   (parked — needs 1 week monitoring first, from 2026-03-03)
-3. Follow-up: 11 real Rule 2.2B-R5 violations in .tsx/.ts files
-   Files: page.tsx, CategoryScreen.tsx, QuickLinks.tsx, Sidebar.tsx x4,
-   PhaseTableStyles.ts, MatchAuditSection.tsx x2, ReportCard.tsx
-4. PROJECT_CONTEXT.md update — agent task, use project-context-update prompt
-5. api.ts pre-existing uncommitted @schema tag additions — review and commit
+1. TASK-084 — Gate F1: Add check_required_test_files()
+   DEPENDS ON: ICE-002 (TASK-077) un-iced first
+2. TASK-079 — Tokenize box-shadow values
+   BLOCKED — architect decision on Option A vs B pending
+3. TASK-012 — Token optimisation (parked — monitor first, from 2026-03-03)
+
+## Architect Decision Required
+- TASK-079: box-shadow tokenization — Option A (add --shadow-sidebar + --shadow-card-deep
+  to globals.css) or Option B (standardise to var(--shadow-lg))? Confirm before executing.
 
 ## Pre-Task Dirty File Notice (standing)
 The following files have pre-existing uncommitted changes unrelated to

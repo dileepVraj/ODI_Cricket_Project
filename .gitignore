@@ -18,10 +18,7 @@ venv/
 .idea/
 
 # Data Files (Large — not tracked in Git)
-data/FINAL_ODI_MASTER.csv
-data/RAW_BACKUP_MASTER.csv
-data/json_source/
-data/FINAL_ODI_MASTER.pkl
+data/
 formats/*/data/*.csv
 formats/*/data/*.pkl
 formats/*/data/*.duckdb

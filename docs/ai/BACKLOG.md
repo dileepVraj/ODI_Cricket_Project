@@ -52,6 +52,8 @@ Read Discipline added as quick fix — monitor before building section-splitting
 
 ---
 
+
+
 ## Execution Order
 
 
@@ -103,6 +105,94 @@ previously included as Mandate 7 in ENGINEERING_STANDARDS_BACKEND.md v2.2,
 it was actively harmful — agents interpreted its presence as permission to
 start building Phase 12 infrastructure. It was deliberately removed on 2026-03-03.
 **Revisit trigger:** Phase 12 scoping begins AND Monte Carlo simulation is designed.
+
+### [TASK-077] Create frontend test suite (Vitest + React Testing Library)
+**Status:** Open â€” 2026-03-09
+**Priority:** Tier 1 â€” Hard Fail (full sprint)
+**Type:** frontend-new-component
+**Audit ref:** Rule 2.2F-R2 (zero test files exist)
+**Files (new):**
+- `frontend/lib/executeHelpers.test.ts`
+- `frontend/components/renderers/FunctionRenderer.test.tsx`
+- `frontend/lib/api.test.ts`
+- `frontend/lib/context.test.tsx`
+**Description:**
+No `.test.tsx` or `.test.ts` files exist anywhere under `frontend/`. Systemic Hard Fail
+for Rule 2.2F-R2. Required coverage completely absent:
+1. `resolveSquadBuilderConfig()`, `isExtraInputFieldConfig()`, `extractEnrichedData()` â€” all branches
+2. `FunctionRenderer.tsx` â€” one test per output_type (11 registered: report, comparison_table,
+   matrix_table, form_table, table, phase_analysis, venue_matchup_report, prediction_card,
+   profile_card, matchup_table, download_json)
+3. `lib/api.ts` â€” error code paths: 422, 5xx, network failure
+4. `lib/context.tsx` â€” format switch clears contextValues, manifest load sets years default
+**Implementation order:**
+1. `executeHelpers.test.ts` â€” type guards + helper branches
+2. `FunctionRenderer.test.tsx` â€” 11 routing tests
+3. `api.test.ts` â€” error code paths
+4. `context.test.tsx` â€” format switch + years default
+**Acceptance Criteria:**
+- All 4 test files exist under `frontend/`
+- Vitest + RTL only â€” no Jest/Mocha/Enzyme (Rule 2.2F-R1)
+- Tests assert behaviour, not CSS class presence or implementation detail
+- No hardcoded format keys "odi"/"t20i" in any test file (Rule 2.2F-R4)
+- All 11 output_type routing paths covered
+- All error code paths (422, 5xx, network) covered
+- Gate F1 PASS, Bouncer PASS
+**Guide:** `core/gen_ai/skills/guides/frontend/frontend-new-component-guide/SKILL.md`
+**Gates:** F1, F2, F3, Gate 5, Gate 6
+**Note:** TASK-084 (check_required_test_files gate) depends on this task being CLOSED first.
+
+### [TASK-084] Gate F1: Add check_required_test_files()
+**Status:** Open â€” 2026-03-09
+**Priority:** Tier 3 â€” Gate improvement
+**Type:** validator-fix
+**Audit ref:** Gate coverage gap â€” Rule 2.2F-R2
+**Files:**
+- `core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/scripts/run_frontend_lint.py`
+**Description:**
+No gate verifies that required test files exist. The missing test suite (TASK-077) was
+invisible to all gates. Add `check_required_test_files()` that verifies the following
+test files exist under `frontend/`:
+- `frontend/lib/executeHelpers.test.ts`
+- `frontend/components/renderers/FunctionRenderer.test.tsx`
+- `frontend/lib/api.test.ts`
+- `frontend/lib/context.test.tsx`
+**DEPENDS ON:** TASK-077 must be CLOSED before this task is executed.
+Running this gate before the test files exist will immediately Hard Fail.
+**Acceptance Criteria:**
+- `check_required_test_files()` added to run_frontend_lint.py
+- Absence of any required test file â†’ Hard Fail
+- Gate F1 PASS â€” 0 violations (only run after TASK-077 CLOSED)
+- Bouncer PASS
+**Guide:** N/A â€” validator-fix, no guide skill required
+**Gates:** Gate F1 (self-test), Gate 5, Gate 6
+
+---
+
+## TASK-086 — Add --format-selector-height token to globals.css and fix FormatSelector reference
+**Status:** Open — 2026-03-09
+**Priority:** Tier 1 — Hard Fail (gate violation)
+**Type:** frontend-modification
+**Audit ref:** Rule 2.2B-R1 — undefined CSS token --format-selector-height
+**Files:**
+- `frontend/app/globals.css`
+- `frontend/components/layout/FormatSelector.tsx`
+
+**Description:**
+`var(--format-selector-height)` referenced in FormatSelector.tsx:12 but not defined
+in globals.css. Add the token to globals.css alongside existing layout dimension tokens
+(`--sidebar-width`, `--topbar-height`, `--context-bar-height`), then confirm the
+reference in FormatSelector.tsx resolves correctly.
+
+**Acceptance Criteria:**
+- `--format-selector-height` defined in globals.css layout dimensions section
+- FormatSelector.tsx:12 reference resolves to defined token
+- Gate F1 PASS, Bouncer PASS
+
+**Guide:** `core/gen_ai/skills/guides/frontend/frontend-modification-guide/SKILL.md`
+**Gates:** F1, F2, F3, Gate 5, Gate 6
+
+Add **GitHub** (@modelcontextprotocol/server-github) MCP server
 
 ---
 
