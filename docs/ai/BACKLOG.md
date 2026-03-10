@@ -32,6 +32,32 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-095 - Refine Venue Matchup Report styling and contrast
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-094
+**Created:** 2026-03-10
+**Status:** CLOSED - 2026-03-10
+
+### Description
+Refine the "Venue Matchup / Fortress Report" screen with a dark theme polish pass to improve readability and aesthetics. Focus on team panel color coding, typography hierarchy, subordinated sample counts, de-emphasized accuracy notice, and improved table distinction.
+
+### Acceptance Criteria
+- AC-1: Home team panel has a visible blue left border or accent; Away team panel has a visible red left border or accent.
+- AC-2: Typography hierarchy improved: section headers (e.g. BATTING 1ST) are more distinct from stat labels (e.g. Avg Score).
+- AC-3: Sample counts in brackets (e.g. [3], [2]) are visually subordinate to the main value (muted color or smaller font).
+- AC-4: Wins/Def/Chs badges in team panels are more readable (improved contrast or padding).
+- AC-5: Accuracy Notice banner is de-emphasized (subtler border/background) but remains visible.
+- AC-6: Match Audit table header row is visually distinct from data rows (e.g. different background/border).
+- AC-7: Status column in Match Audit uses pill/badge styling for "Included"/"Excluded" labels.
+- AC-8: Overall contrast ratios improved while retaining dark theme depth.
+- AC-9: No logic or backend changes.
+- AC-10: Post-task bouncer matches baseline.
+
+### Files In Scope
+- `frontend/components/renderers/VenueMatchupReport.tsx`
+- `frontend/components/renderers/MatchAuditSection.tsx`
 
 ## TASK-094 - Fix venue matchup panel and match audit layout regressions
 **Type:** frontend-bug-fix

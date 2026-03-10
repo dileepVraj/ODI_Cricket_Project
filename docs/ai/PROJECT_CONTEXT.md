@@ -693,7 +693,8 @@ core/gen_ai/skills/
 | TASK-092 closed | Match audit exclusion-label regression traced to enrichment rebuilding MATCH_IDS audit rows from raw match_df | Confirmed the 2018-10-23 Colombo match carried STATUS_SHORT_SECOND_DROP and the calculator counts remained 4 matches / 3 valid / 1 short-second | 2026-03-10 |
 | TASK-093 closed | Enrichment now status-tags fortress Match Audit rows before formatting | Preserves Excluded (Short 2nd) labels for excluded matches while keeping included matches and aggregate counts unchanged | 2026-03-10 |
 | TASK-094 closed | Venue matchup frontend renderers now wrap long chase values and add audit-table column dividers | Fixes Avg Fail Chase truncation, removes the visible placeholder-gap effect in the chasing block, and restores Match Audit readability without backend changes | 2026-03-10 |
+| TASK-095 closed | Refined Venue Matchup Report styling and contrast with team color coding, improved hierarchy, and pill-styled status badges | Applied dark theme polish pass across renderers and section components; all gates PASS | 2026-03-10 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-10 (TASK-094 venue matchup frontend layout fix)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-10 (TASK-095 venue matchup styling polish)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

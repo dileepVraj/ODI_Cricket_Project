@@ -19,6 +19,12 @@ None.
 
 ## Last Completed
 
+- TASK-095 - Refine Venue Matchup Report styling and contrast - CLOSED 2026-03-10
+  Applied dark theme polish pass with home/away color coding (blue/red),
+  improved typography hierarchy, subordinated sample counts in brackets ([n]),
+  and pill/badge styling for Match Audit status column. Accuracy Notice 
+  banner de-emphasized. Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-094 - Fix venue matchup panel and match audit layout regressions - CLOSED 2026-03-10
   Venue matchup stat rows now wrap long chase values and use tighter section spacing,
   removing the visible empty gap when chase placeholders render. Match Audit table
