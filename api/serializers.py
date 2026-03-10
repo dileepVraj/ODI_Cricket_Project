@@ -82,7 +82,18 @@ def serialize_engine_output(data: Any) -> Any:
 
     # dict → recursively serialize values
     if isinstance(data, dict):
-        return {str(k): serialize_engine_output(v) for k, v in data.items()}
+        serialized_dict = {str(k): serialize_engine_output(v) for k, v in data.items()}
+        if {"wins", "defended", "chased", "bat1", "chase"}.issubset(serialized_dict):
+            bat1 = serialized_dict.get("bat1")
+            chase = serialized_dict.get("chase")
+            if isinstance(bat1, dict):
+                if bat1.get("high") is not None:
+                    bat1["high"] = str(bat1["high"])
+                if bat1.get("low") is not None:
+                    bat1["low"] = str(bat1["low"])
+            if isinstance(chase, dict) and chase.get("high") is not None:
+                chase["high"] = str(chase["high"])
+        return serialized_dict
 
     # list/tuple → recursively serialize elements
     if isinstance(data, (list, tuple)):

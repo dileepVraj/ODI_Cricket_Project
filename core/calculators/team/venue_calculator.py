@@ -283,14 +283,14 @@ def _team_intel(
         "chased": int((team_wins["team_bat_2"] == team_name).sum()),
         "bat1": {
             "avg": stats["avg_1st"],
-            "high": _normalize_text_metric(stats["high_1st"]),
-            "low": _normalize_text_metric(stats["low_1st"]),
+            "high": stats["high_1st"],
+            "low": stats["low_1st"],
             "avg_win": stats["avg_1st_win"],
             "low_def": _normalize_text_metric(stats["low_defended"]),
         },
         "chase": {
             "avg": stats["avg_2nd"],
-            "high": _normalize_text_metric(stats["high_chased"]),
+            "high": stats["high_chased"],
             "succ": stats["avg_succ"],
             "fail": stats["avg_fail"],
         },
