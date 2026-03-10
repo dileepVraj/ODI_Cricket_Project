@@ -13,6 +13,21 @@
 
 Execute this sequence before any code change, in this exact order. Do not skip steps.
 
+### Step 0 — Check for taskFile.md
+Before any other step, check if `taskFile.md` exists in the project root.
+```bash
+cat taskFile.md
+```
+
+If it exists and is non-empty:
+- Stop all other bootstrap steps
+- Read `docs/ai/TASK_RUNNER.md`
+- Execute the task in `taskFile.md`
+- Do not proceed with Steps 1–4 below — TASK_RUNNER handles everything
+
+If it does not exist or is empty:
+- Continue with Step 1 below as normal
+
 ### Step 1 — Load Context (context-loader skill)
 Invoke `core/gen_ai/skills/guides/backend/context-loader/context-loader.md` now.
 Follow every step in that template before proceeding.

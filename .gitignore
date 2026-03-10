@@ -30,3 +30,12 @@ old_backups/
 # OS
 .DS_Store
 Thumbs.db
+
+# Frontend files
+frontend/.next/
+frontend/tsconfig.tsbuildinfo
+
+# Task files
+taskFile.md
+taskFileTemplate.md
+run_task.py

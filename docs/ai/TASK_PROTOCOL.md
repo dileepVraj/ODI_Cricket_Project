@@ -9,6 +9,8 @@
 # sequence. This file is a hard protocol — not a suggestion.
 #
 # HOW TO USE THIS FILE:
+# 0. If invoked via TASK_RUNNER — skip this file's manual steps.
+#    TASK_RUNNER reads this file automatically in Phase 4.
 # 1. Read Section 1 — classify your task type
 # 2. Read Section 2 — load the guide skill(s) for that task type
 # 3. Read Section 3 — confirm the gate sequence for your scope
@@ -526,7 +528,7 @@ ALWAYS                     → Gate 5, Gate 6
 
 HARD STOPS — NO EXCEPTIONS
 ───────────────────────────
-Task not in SESSION_STATE?          → Stop at start
+Task not in SESSION_STATE?          → Stop at start (TASK_RUNNER handles this in Phase 1)
 Touching core/data_access.py etc    → Stop — need explicit authorisation
 Scope touches core/live/ or api/live/ → Stop — Phase 12 not started
 Any gate FAIL?                      → Stop on that file — fix before continuing
@@ -565,6 +567,21 @@ Final bouncer FAIL?                 → Task is BLOCKED — do not mark complete
 | Gate 3.5 — event-state-linter (DORMANT) | `core/gen_ai/skills/validators/backend/event-state-linter/scripts/run_lint.py` |
 | Gate 5 — paradigm-sentinel | `core/gen_ai/skills/validators/backend/paradigm-sentinel/SKILL.md` |
 | Gate 6 — compliance-bouncer | `core/utils/compliance_bouncer.py` |
+
+### Orchestration
+
+| Skill | Path |
+|---|---|
+| task-runner | `docs/ai/TASK_RUNNER.md` |
+| task-input  | `taskFile.md` (project root — not committed) |
+
+### Doc Management
+
+| File | Path |
+|---|---|
+| Post-Task Checklist | `docs/ai/POST_TASK_CHECKLIST.md` |
+| Task Runner | `docs/ai/TASK_RUNNER.md` |
+| Backlog | `docs/ai/BACKLOG.md` |
 
 ### DuckDB Query Tool
 

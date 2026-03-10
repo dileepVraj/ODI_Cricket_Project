@@ -50,6 +50,7 @@ Read Discipline added as quick fix — monitor before building section-splitting
 - [ ] Update context-loader.md with section-aware attach logic
 - [ ] Test with Codex and Gemini — verify token reduction
 
+
 ---
 
 
@@ -193,6 +194,15 @@ reference in FormatSelector.tsx resolves correctly.
 **Gates:** F1, F2, F3, Gate 5, Gate 6
 
 Add **GitHub** (@modelcontextprotocol/server-github) MCP server
+
+## TASK-088 — Refinery memory optimisation
+Chunked pandas or DuckDB-native aggregations in refinery_script.py
+Priority: Medium — pre-Phase 12 requirement
+
+## TASK-089 — ETL atomic swap connection guard
+Add open-connection check before os.replace in ingest_to_db.py
+Priority: High — will cause crashes when API runs continuously in Phase 12
+
 
 ---
 
