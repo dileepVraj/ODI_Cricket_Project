@@ -33,6 +33,88 @@ and remove from this file.
 
 ## BACKLOG
 
+## TASK-093 - Fix venue matchup match audit status propagation
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-092
+**Created:** 2026-03-10
+**Status:** CLOSED - 2026-03-10
+
+### Description
+The Match Audit table in the Venue Matchup / Fortress Report function displays
+"Included" for matches that were correctly excluded from averages due to a short
+2nd innings (< 45 overs, batting team not all-out, target not chased). Root cause
+was diagnosed in the preceding task: EnrichmentService.enrich_with_match_audit()
+in core/services/enrichment.py rebuilds audit rows from raw match_df using only
+MATCH_IDS, discarding the computed status values from the calculator payload.
+_build_audit_record() then defaults missing status to STATUS_OK and emits
+"Included". The fix must pass the computed per-match status values from the
+calculator payload into enrich_with_match_audit() so _build_audit_record()
+receives the correct status for each match and emits the correct label.
+Additionally, the preceding diagnosis task left doc updates incomplete and this
+task must clean those up as part of its doc update step.
+
+### Acceptance Criteria
+- AC-1: enrich_with_match_audit() receives and uses the computed per-match
+  status values from the calculator payload - it no longer rebuilds status
+  from raw match_df alone.
+- AC-2: _build_audit_record() receives the correct status value for the
+  2018-10-23 match (status=4 / STATUS_SHORT_SECOND_DROP) and emits the
+  correct exclusion label - not "Included".
+- AC-3: Matches correctly included in averages continue to display "Included".
+  No regression on status labels for valid included matches.
+- AC-4: Data integrity is preserved - the excluded match remains excluded
+  from all average calculations. Counts remain: SUMMARY_MATCHES=4,
+  VALID_MATCHES=3, SHORT_SECOND_MATCHES=1.
+- AC-5: All modified functions retain complete type annotations.
+- AC-6: Post-task bouncer output matches or improves on baseline.
+- AC-7: Doc cleanup complete - preceding diagnosis task BACKLOG entry
+  is present and closed, SESSION_STATE reflects both the diagnosis task
+  and this fix task as completed.
+
+### Files In Scope
+- `core/services/enrichment.py` - primary fix target
+- READ ONLY - `core/data_access.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `api/serializers.py`
+- READ ONLY - `core/calculators/team/venue_calculator.py`
+- READ ONLY - `core/services/match_filter_service.py`
+- READ ONLY - `frontend/components/renderers/MatchAuditSection.tsx`
+
+## TASK-092 - Diagnose venue matchup match audit status loss
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-10
+**Status:** CLOSED - 2026-03-10
+
+### Description
+Diagnose why the Match Audit table in the Venue Matchup / Fortress Report path
+shows "Included" for a match that the calculator correctly excludes from
+averages. Confirm the affected match, verify the calculator-side status code and
+summary counts, and isolate the exact handoff point where the status value is
+lost before the audit rows are formatted for the frontend.
+
+### Acceptance Criteria
+- AC-1: Reproduce the incorrect Match Audit label for the excluded
+  2018-10-23 Sri Lanka vs England match at Colombo.
+- AC-2: Confirm the calculator path produces status=4
+  (STATUS_SHORT_SECOND_DROP) for that match and preserves counts:
+  SUMMARY_MATCHES=4, VALID_MATCHES=3, SHORT_SECOND_MATCHES=1.
+- AC-3: Isolate the defect to `EnrichmentService.enrich_with_match_audit()`
+  rebuilding audit rows from raw `match_df` via `MATCH_IDS`, which causes
+  `_build_audit_record()` to default missing status to STATUS_OK.
+- AC-4: Leave a fix-ready diagnosis without changing calculator, serializer,
+  or frontend logic.
+
+### Files In Scope
+- `core/services/enrichment.py` - READ ONLY for diagnosis
+- READ ONLY - `core/calculators/team/venue_calculator.py`
+- READ ONLY - `core/services/match_filter_service.py`
+- READ ONLY - `frontend/components/renderers/MatchAuditSection.tsx`
+
 ## TASK-091 - Restore venue matchup score-extreme layer ownership
 **Type:** refactor
 **Scope:** backend

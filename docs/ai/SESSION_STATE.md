@@ -5,6 +5,7 @@ Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
 Team engine COMPLIANT 2026-03-05. Player engine COMPLIANT 2026-03-06.
 Predictor engine COMPLIANT 2026-03-07.
+Venue matchup match-audit diagnosis + fix COMPLETE 2026-03-10 (TASK-092 + TASK-093).
 Project cleanup COMPLETE 2026-03-10 (commit 4bba4a6).
 Claude Code MCPs installed 2026-03-10 (6 servers).
 
@@ -17,6 +18,16 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+
+- TASK-093 - Fix venue matchup match audit status propagation - CLOSED 2026-03-10
+  Enrichment now status-tags MATCH_IDS audit rows with the canonical smart-filter
+  service before formatting, so excluded fortress matches keep their calculator
+  status labels. Gates 1/2/5/6 PASS, bouncer PASS.
+
+- TASK-092 - Diagnose venue matchup match audit status loss - CLOSED 2026-03-10
+  Root cause confirmed: enrichment rebuilt fortress audit rows from raw `match_df`
+  and defaulted missing status to Included. Confirmed 2018-10-23 carried
+  STATUS_SHORT_SECOND_DROP with counts 4/3/1 before formatting.
 
 - TASK-091 - Restore venue matchup score-extreme layer ownership - CLOSED 2026-03-10
   Venue matchup calculator now returns raw int score extremes again for

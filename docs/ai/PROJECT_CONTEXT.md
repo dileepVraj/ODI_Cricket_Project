@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-10 (TASK-091 venue matchup layer ownership fix)
+**Last Updated:** 2026-03-10 (TASK-093 match audit status propagation fix)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -690,7 +690,9 @@ core/gen_ai/skills/
 ---
 | TASK-090 closed | Venue matchup structured payload now normalizes scalar score extremes to string values | Frontend venue adapter reads these fields as strings; raw ints rendered as "-" despite valid backend data | 2026-03-10 |
 | TASK-091 closed | Venue matchup calculator returns raw int score extremes again while serializer stringifies only high/low/highest-chased | Restores Visual Silence layer ownership without regressing the TASK-090 frontend fix | 2026-03-10 |
+| TASK-092 closed | Match audit exclusion-label regression traced to enrichment rebuilding MATCH_IDS audit rows from raw match_df | Confirmed the 2018-10-23 Colombo match carried STATUS_SHORT_SECOND_DROP and the calculator counts remained 4 matches / 3 valid / 1 short-second | 2026-03-10 |
+| TASK-093 closed | Enrichment now status-tags fortress Match Audit rows before formatting | Preserves Excluded (Short 2nd) labels for excluded matches while keeping included matches and aggregate counts unchanged | 2026-03-10 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-10 (TASK-091 venue matchup layer ownership fix)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-10 (TASK-093 match audit status propagation fix)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*
