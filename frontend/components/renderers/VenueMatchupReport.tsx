@@ -18,6 +18,7 @@ interface TeamCardProps {
         name: string;
         stats: VenueMatchupData["team_a"]["stats"];
     };
+    isHome?: boolean;
 }
 
 interface StatBadgeProps {
@@ -30,6 +31,7 @@ interface VenueMatchupReportProps {
     data: Record<string, unknown>;
     averagesTitle?: string;
 }
+
 function toneClasses(tone: TeamTone): { border: string; overlay: string; title: string } {
     if (tone === "blue") {
         return {
@@ -104,8 +106,8 @@ export default function VenueMatchupReport({ data, averagesTitle = "VENUE AVERAG
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-                <TeamCard team={team_a} />
-                <TeamCard team={team_b} />
+                <TeamCard team={team_a} isHome={true} />
+                <TeamCard team={team_b} isHome={false} />
             </div>
 
             <div className="flex flex-col gap-4">
@@ -119,15 +121,14 @@ export default function VenueMatchupReport({ data, averagesTitle = "VENUE AVERAG
                 </div>
 
                 {lowSampleWarnings.length > 0 && (
-                    <div className="flex items-start justify-center gap-3 px-6 py-3.5 [background:var(--glass-bg)] [border:1px_solid_var(--tier-caution)] rounded-xl">
-                        <AlertCircle size={16} className="[color:var(--tier-caution)] mt-0.5 shrink-0" />
-                        <div className="flex flex-col gap-1">
-                            <p className="text-[11px] font-bold [color:var(--tier-caution)] uppercase tracking-widest">
+                    <div className="flex items-start justify-center gap-3 px-6 py-3 [background:var(--bg-active)] [opacity:0.85] [border:1px_solid_var(--border-subtle)] rounded-xl">
+                        <AlertCircle size={14} className="[color:var(--tier-caution)] mt-0.5 shrink-0 opacity-70" />
+                        <div className="flex flex-col gap-0.5">
+                            <p className="text-[10px] font-bold [color:var(--text-secondary)] uppercase tracking-[0.15em]">
                                 Accuracy Notice: Sparse Data Detected
                             </p>
-                            <p className="text-[12px] [color:var(--text-secondary)] italic leading-relaxed">
-                                The statistical sample is currently low for: <span className="[color:var(--text-primary)] font-semibold">{lowSampleWarnings.join(", ")}</span>. Averages
-                                derived from fewer than 3 matches may not represent long-term trends.
+                            <p className="text-[12px] [color:var(--text-muted)] italic leading-tight">
+                                Low sample for: <span className="[color:var(--text-secondary)] font-medium">{lowSampleWarnings.join(", ")}</span>. Use with caution.
                             </p>
                         </div>
                     </div>
@@ -151,7 +152,7 @@ function SummaryItem({ label, value, highlight = false, icon }: SummaryItemProps
     );
 }
 
-function TeamCard({ team }: TeamCardProps) {
+function TeamCard({ team, isHome }: TeamCardProps) {
     const s = team.stats;
     if (!s) {
         return (
@@ -162,9 +163,12 @@ function TeamCard({ team }: TeamCardProps) {
     }
 
     const tone = toneClasses(getTeamTone(s.team_tone));
+    const teamAccentClass = isHome
+        ? "border-l-4 [border-left-color:var(--accent-primary)]"
+        : "border-l-4 [border-left-color:var(--tier-danger)]";
 
     return (
-        <div className={`relative [background:var(--bg-surface)] border rounded-2xl overflow-hidden backdrop-blur-sm [box-shadow:var(--shadow-lg)] ${tone.border}`}>
+        <div className={`relative [background:var(--bg-surface)] border rounded-2xl overflow-hidden backdrop-blur-sm [box-shadow:var(--shadow-lg)] ${tone.border} ${teamAccentClass}`}>
             <div className={`pointer-events-none absolute inset-x-0 top-0 h-20 opacity-25 ${tone.overlay}`} />
 
             <div className="p-6 border-b [border-color:var(--glass-border)] flex flex-col items-center gap-5">
@@ -180,7 +184,7 @@ function TeamCard({ team }: TeamCardProps) {
             <div className="p-7 flex flex-col gap-7">
                 <div>
                     <SectionHeader label="BATTING 1ST" activeColor="[color:var(--tier-elite)]" />
-                    <div className="flex flex-col gap-1.5 mt-2.5">
+                    <div className="flex flex-col gap-1 mt-3">
                         <DataRow label="Avg Score:" value={s.bat1.avg} labelColor="[color:var(--text-secondary)]" />
                         <DataRow label="High / Low:" value={`${s.bat1.high} / ${s.bat1.low}`} labelColor="[color:var(--text-secondary)]" />
                         <DataRow label="Avg Win Score:" value={s.bat1.avg_win} labelColor="[color:var(--text-secondary)]" />
@@ -190,7 +194,7 @@ function TeamCard({ team }: TeamCardProps) {
 
                 <div>
                     <SectionHeader label="CHASING" activeColor="[color:var(--accent-primary)]" />
-                    <div className="flex flex-col gap-1.5 mt-2.5">
+                    <div className="flex flex-col gap-1 mt-3">
                         <DataRow label="Avg Score:" value={s.chase.avg} labelColor="[color:var(--text-secondary)]" />
                         <DataRow label="Highest Chased:" value={s.chase.high} labelColor="[color:var(--text-secondary)]" />
                         <DataRow label="Avg Succ. Chase:" value={s.chase.succ} labelColor="[color:var(--text-secondary)]" />
@@ -204,30 +208,48 @@ function TeamCard({ team }: TeamCardProps) {
 
 function StatBadge({ icon, label, value }: StatBadgeProps) {
     return (
-        <div className="flex items-center gap-2 [background:var(--glass-bg)] px-3.5 py-1.5 rounded-full [border:1px_solid_var(--glass-border)]">
+        <div className="flex items-center gap-2 [background:var(--glass-bg)] px-4 py-2 rounded-full [border:1px_solid_var(--glass-border)] [box-shadow:var(--shadow-sm)] hover:[background:var(--bg-hover)] transition-colors">
             {icon}
-            <span className="text-xs font-extrabold [color:var(--text-primary)] font-numeric">{value}</span>
-            <span className="text-[10px] font-semibold [color:var(--text-secondary)] uppercase tracking-[0.1em]">{label}</span>
+            <span className="text-sm font-black [color:var(--text-primary)] font-numeric leading-none">{value}</span>
+            <span className="text-[10px] font-bold [color:var(--text-secondary)] uppercase tracking-[0.12em] leading-none mb-[-1px]">{label}</span>
         </div>
     );
 }
 
 function SectionHeader({ label, activeColor }: { label: string; activeColor: string }) {
     return (
-        <div className="border-b [border-color:var(--glass-border)] pb-1.5">
-            <span className={`text-[11px] font-black tracking-[0.18em] uppercase ${activeColor}`}>{label}</span>
+        <div className="border-b-2 [border-color:var(--glass-border)] pb-2 mb-1">
+            <span className={`text-xs font-black tracking-[0.2em] uppercase ${activeColor}`}>{label}</span>
         </div>
     );
 }
 
 function DataRow({ label, value, labelColor }: { label: string; value: string; labelColor: string }) {
+    const renderValue = (val: string) => {
+        if (val === null || val === undefined || val === "" || val === "-") return "-";
+
+        const parts = val.split(/(\[.*?\])/);
+        if (parts.length === 1) return val;
+
+        return parts.map((part, i) => {
+            if (part.startsWith("[") && part.endsWith("]")) {
+                return (
+                    <span key={i} className="text-[0.8em] [color:var(--text-muted)] ml-1.5 font-medium">
+                        {part}
+                    </span>
+                );
+            }
+            return part;
+        });
+    };
+
     return (
-        <div className="grid grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] items-start gap-x-3 py-1.5 border-b [border-color:var(--border-subtle)] last:border-0">
-            <span className={`min-w-0 pl-1.5 text-[12px] font-semibold tracking-tight leading-[1.25] ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>
+        <div className="grid grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] items-start gap-x-3 py-1.5 border-b [border-color:var(--border-subtle)] last:border-0 group">
+            <span className={`min-w-0 pl-1 text-[12px] font-bold tracking-tight leading-[1.3] ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>
                 {label}
             </span>
-            <span className="min-w-0 pr-1 text-[15px] leading-[1.25] font-extrabold [color:var(--text-primary)] font-numeric tracking-tight text-right whitespace-normal break-words">
-                {value === null || value === undefined || value === "" || value === "-" ? "-" : value}
+            <span className="min-w-0 pr-1 text-[16px] leading-[1.2] font-black [color:var(--text-primary)] font-numeric tracking-tight text-right whitespace-normal break-words">
+                {renderValue(value)}
             </span>
         </div>
     );
@@ -241,3 +263,4 @@ function FooterItem({ label, value }: { label: string; value: string }) {
         </div>
     );
 }
+

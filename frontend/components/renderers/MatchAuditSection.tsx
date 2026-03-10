@@ -76,7 +76,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                     return (
                                         <th
                                             key={col}
-                                            className={`[padding:11px_16px] [border-bottom:1px_solid_var(--border-default)] [color:var(--text-muted)] [font-weight:600] [font-size:0.7rem] [letter-spacing:0.02em] [white-space:nowrap] ${right ? "[text-align:right]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
+                                            className={`[padding:14px_16px] [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] [color:var(--text-secondary)] [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] ${right ? "[text-align:right]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
                                         >
                                             {COL_LABELS[col] ?? col}
                                         </th>
@@ -102,13 +102,21 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                         const right = col === "score_inn1" || col === "score_inn2";
                                         const withDivider = index > 0;
                                         const typedRow = toMatchAuditRow(row);
-                                        const statusTone = isStatus ? resolveStatusTone(typedRow.status_tone) : "[color:var(--text-primary)]";
+                                        const statusBadgeClass = isStatus ? resolveStatusTone(typedRow.status_tone) : "";
                                         return (
                                             <td
                                                 key={col}
-                                                className={`[padding:11px_16px] [font-size:0.8rem] [white-space:nowrap] ${right ? "[text-align:right] font-numeric" : "[text-align:left]"} ${statusTone} ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
+                                                className={`[padding:12px_16px] [font-size:0.85rem] [white-space:nowrap] ${right ? "[text-align:right] font-numeric [color:var(--text-primary)]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
                                             >
-                                                {val === null || val === undefined ? "-" : String(val)}
+                                                {isStatus ? (
+                                                    <span className={`badge ${statusBadgeClass} text-[10px] px-2.5 py-0.5 rounded-full uppercase font-black tracking-wider`}>
+                                                        {val === null || val === undefined ? "-" : String(val)}
+                                                    </span>
+                                                ) : (
+                                                    <span className="[color:var(--text-primary)]">
+                                                        {val === null || val === undefined ? "-" : String(val)}
+                                                    </span>
+                                                )}
                                             </td>
                                         );
                                     })}
@@ -123,8 +131,8 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
 }
 
 function resolveStatusTone(tone?: "elite" | "caution" | "danger" | "muted"): string {
-    if (tone === "elite") return "[color:var(--tier-elite)]";
-    if (tone === "caution") return "[color:var(--tier-caution)]";
-    if (tone === "danger") return "[color:var(--tier-danger)]";
-    return "[color:var(--text-muted)]";
+    if (tone === "elite") return "badge-elite";
+    if (tone === "caution") return "badge-caution";
+    if (tone === "danger") return "badge-danger";
+    return "[background:var(--bg-active)] [color:var(--text-muted)] [border-color:var(--border-subtle)]";
 }
