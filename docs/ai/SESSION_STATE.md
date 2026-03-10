@@ -6,6 +6,7 @@ Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
 Team engine COMPLIANT 2026-03-05. Player engine COMPLIANT 2026-03-06.
 Predictor engine COMPLIANT 2026-03-07.
 Venue matchup match-audit diagnosis + fix COMPLETE 2026-03-10 (TASK-092 + TASK-093).
+Venue matchup match-audit venue canonicalization COMPLETE 2026-03-10 (TASK-097).
 Project cleanup COMPLETE 2026-03-10 (commit 4bba4a6).
 Claude Code MCPs installed 2026-03-10 (6 servers).
 
@@ -18,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+
+- TASK-097 - Canonicalize venue IDs in match audit enrichment - CLOSED 2026-03-10
+  Match Audit venue rows now prefer DAL-provided `venue_id` and fall back to
+  `resolve_venue_id(raw venue)` before using raw text. Gates 1/2/5/6 PASS,
+  bouncer PASS.
 
 - TASK-096 - Venue Matchup Report jersey colours and layout refinements - CLOSED 2026-03-10
   Venue matchup team headers now use config-sourced jersey colours via the

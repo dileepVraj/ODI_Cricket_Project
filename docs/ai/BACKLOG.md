@@ -32,6 +32,49 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-097 - Canonicalize venue IDs in match audit enrichment
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-093
+**Created:** 2026-03-10
+**Status:** CLOSED - 2026-03-10
+
+### Description
+The Match Audit table in the Venue Matchup / Fortress Report screen displays
+raw inconsistent venue name strings (e.g. "R Premadasa Stadium, Colombo" and
+"R.Premadasa Stadium, Khettarama" for the same physical ground). A diagnosis
+task confirmed the fix belongs in core/services/enrichment.py, specifically
+where _build_audit_record() constructs the venue field. The DAL already
+returns canonical venue_id alongside the raw venue string. The fix must update
+enrichment.py to prefer the DAL-provided venue_id when building audit rows,
+falling back to resolving the raw venue string via config/shared/venues.py only
+when venue_id is absent. The serializer, frontend, and DAL must not be touched.
+
+### Acceptance Criteria
+- AC-1: _build_audit_record() in enrichment.py prefers the DAL-provided
+  venue_id field when constructing the venue field in audit rows.
+- AC-2: When venue_id is absent from the DAL row, the enrichment service
+  falls back to resolving the raw venue string via venues.py to obtain the
+  canonical ID.
+- AC-3: When neither venue_id nor a resolvable raw venue string is available,
+  the raw venue string is used as-is; no crash, no empty field.
+- AC-4: All Match Audit rows for the same physical ground display the same
+  canonical venue identifier regardless of what raw string variant the DAL
+  row carries.
+- AC-5: No other enrichment.py logic is altered; only the venue field
+  construction in _build_audit_record() changes.
+- AC-6: All modified functions retain complete type annotations.
+- AC-7: Post-task bouncer output matches or improves on baseline.
+- AC-8: Doc cleanup for the preceding diagnosis task is complete.
+
+### Files In Scope
+- `core/services/enrichment.py`
+- READ ONLY - `config/shared/venues.py`
+- READ ONLY - `core/data_access.py`
+- READ ONLY - `api/serializers.py`
+- READ ONLY - `core/interfaces/team_types.py`
+
 ## TASK-096 - Venue Matchup Report jersey colours and layout refinements
 **Type:** frontend-modification
 **Scope:** frontend

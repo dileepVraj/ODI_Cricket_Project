@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-10 (TASK-094 venue matchup frontend layout fix)
+**Last Updated:** 2026-03-10 (TASK-097 audit venue canonicalization)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -695,7 +695,8 @@ core/gen_ai/skills/
 | TASK-094 closed | Venue matchup frontend renderers now wrap long chase values and add audit-table column dividers | Fixes Avg Fail Chase truncation, removes the visible placeholder-gap effect in the chasing block, and restores Match Audit readability without backend changes | 2026-03-10 |
 | TASK-095 closed | Refined Venue Matchup Report styling and contrast with team color coding, improved hierarchy, and pill-styled status badges | Applied dark theme polish pass across renderers and section components; all gates PASS | 2026-03-10 |
 | TASK-096 closed | Venue matchup team headings and Match Audit team-name cells now resolve config-sourced jersey colours, with softer metric styling and wider layout spacing | Uses the existing team_color payload plus runtime CSS variables to keep exact team colours without raw hex literals in frontend source; panel padding and table column sizing remove clipping and jammed columns | 2026-03-10 |
+| TASK-097 closed | Match Audit venue rows now prefer DAL `venue_id` and otherwise resolve raw venue text to a canonical venue ID before falling back to raw text | Normalizes venue-name variants such as the two R Premadasa strings to one audit identifier without touching DAL, serializer, or frontend layers | 2026-03-10 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-10 (TASK-096 venue matchup jersey colours and layout refinements)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-10 (TASK-097 audit venue canonicalization)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*
