@@ -129,6 +129,13 @@ def _normalize_none_marker(value: str | int | None) -> str | int | None:
     return ReportFormatter._none_if_placeholder(value)
 
 
+def _normalize_text_metric(value: str | int | None) -> str | None:
+    normalized = ReportFormatter._none_if_placeholder(value)
+    if normalized is None:
+        return None
+    return str(normalized)
+
+
 def _comparison_rows(
     match_df: pd.DataFrame,
     home_team: str,
@@ -276,14 +283,14 @@ def _team_intel(
         "chased": int((team_wins["team_bat_2"] == team_name).sum()),
         "bat1": {
             "avg": stats["avg_1st"],
-            "high": stats["high_1st"],
-            "low": stats["low_1st"],
+            "high": _normalize_text_metric(stats["high_1st"]),
+            "low": _normalize_text_metric(stats["low_1st"]),
             "avg_win": stats["avg_1st_win"],
-            "low_def": stats["low_defended"],
+            "low_def": _normalize_text_metric(stats["low_defended"]),
         },
         "chase": {
             "avg": stats["avg_2nd"],
-            "high": stats["high_chased"],
+            "high": _normalize_text_metric(stats["high_chased"]),
             "succ": stats["avg_succ"],
             "fail": stats["avg_fail"],
         },
