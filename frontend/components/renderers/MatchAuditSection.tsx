@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { ChevronDown, ChevronRight, ClipboardList } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
 import { toMatchAuditRow } from "@/lib/types";
@@ -18,6 +18,28 @@ const COL_LABELS: Record<string, string> = {
     score_inn2: "2nd Inn",
     status: "Status",
 };
+const TEAM_NAME_COLUMNS = new Set(["winner", "team_bat_1", "team_bat_2"]);
+
+function toTeamColorVarName(teamName: string): string {
+    return `--venue-team-${teamName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-color`;
+}
+
+function getColumnWidthClass(column: string): string {
+    if (column === "start_date") return "min-w-[7rem]";
+    if (column === "venue") return "min-w-[13rem]";
+    if (column === "winner" || column === "team_bat_1" || column === "team_bat_2") return "min-w-[8.5rem]";
+    if (column === "score_inn1" || column === "score_inn2") return "min-w-[7rem]";
+    if (column === "status") return "min-w-[8rem]";
+    return "min-w-[7rem]";
+}
+
+function resolveTeamNameStyle(value: unknown): CSSProperties | undefined {
+    if (typeof value !== "string" || value.trim() === "") {
+        return undefined;
+    }
+
+    return { color: `var(${toTeamColorVarName(value)})` };
+}
 
 export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
     const [isOpen, setIsOpen] = useState(true);
@@ -66,7 +88,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                     className="[background:var(--bg-elevated)] [border-radius:var(--radius-md)] [border:1px_solid_var(--border-subtle)] [overflow-x:auto] [box-shadow:var(--shadow-card-deep)]"
                 >
                     <table
-                        className="[width:100%] [border-collapse:collapse] [font-size:0.8rem]"
+                        className="[width:max-content] [min-width:100%] [border-collapse:separate] [border-spacing:0] [font-size:0.8rem]"
                     >
                         <thead>
                             <tr>
@@ -76,7 +98,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                     return (
                                         <th
                                             key={col}
-                                            className={`[padding:14px_16px] [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] [color:var(--text-secondary)] [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] ${right ? "[text-align:right]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
+                                            className={`${getColumnWidthClass(col)} [padding:14px_18px] [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] [color:var(--text-secondary)] [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] ${right ? "[text-align:right]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
                                         >
                                             {COL_LABELS[col] ?? col}
                                         </th>
@@ -85,43 +107,49 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                             </tr>
                         </thead>
                         <tbody>
-                            {sortedRecords.map((row, ri) => (
-                                <tr
-                                    key={ri}
-                                    className={`[transition:background_var(--transition-fast)] ${ri < sortedRecords.length - 1 ? "[border-bottom:1px_solid_var(--border-subtle)]" : "[border-bottom:none]"}`}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.background = "var(--bg-hover)";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = "transparent";
-                                    }}
-                                >
-                                    {columns.map((col, index) => {
-                                        const val = row[col];
-                                        const isStatus = col === "status";
-                                        const right = col === "score_inn1" || col === "score_inn2";
-                                        const withDivider = index > 0;
-                                        const typedRow = toMatchAuditRow(row);
-                                        const statusBadgeClass = isStatus ? resolveStatusTone(typedRow.status_tone) : "";
-                                        return (
-                                            <td
-                                                key={col}
-                                                className={`[padding:12px_16px] [font-size:0.85rem] [white-space:nowrap] ${right ? "[text-align:right] font-numeric [color:var(--text-primary)]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
-                                            >
-                                                {isStatus ? (
-                                                    <span className={`badge ${statusBadgeClass} text-[10px] px-2.5 py-0.5 rounded-full uppercase font-black tracking-wider`}>
-                                                        {val === null || val === undefined ? "-" : String(val)}
-                                                    </span>
-                                                ) : (
-                                                    <span className="[color:var(--text-primary)]">
-                                                        {val === null || val === undefined ? "-" : String(val)}
-                                                    </span>
-                                                )}
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            ))}
+                            {sortedRecords.map((row, ri) => {
+                                const typedRow = toMatchAuditRow(row);
+
+                                return (
+                                    <tr
+                                        key={ri}
+                                        className={`[transition:background_var(--transition-fast)] ${ri < sortedRecords.length - 1 ? "[border-bottom:1px_solid_var(--border-subtle)]" : "[border-bottom:none]"}`}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = "var(--bg-hover)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = "transparent";
+                                        }}
+                                    >
+                                        {columns.map((col, index) => {
+                                            const val = row[col];
+                                            const isStatus = col === "status";
+                                            const isTeamName = TEAM_NAME_COLUMNS.has(col);
+                                            const right = col === "score_inn1" || col === "score_inn2";
+                                            const withDivider = index > 0;
+                                            const statusBadgeClass = isStatus ? resolveStatusTone(typedRow.status_tone) : "";
+                                            const teamNameStyle = isTeamName ? resolveTeamNameStyle(val) : undefined;
+
+                                            return (
+                                                <td
+                                                    key={col}
+                                                    className={`${getColumnWidthClass(col)} [padding:12px_18px] [font-size:0.85rem] [white-space:nowrap] ${right ? "[text-align:right] font-numeric [color:var(--text-primary)]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
+                                                >
+                                                    {isStatus ? (
+                                                        <span className={`badge ${statusBadgeClass} text-[10px] px-2.5 py-0.5 rounded-full uppercase font-black tracking-wider`}>
+                                                            {val === null || val === undefined ? "-" : String(val)}
+                                                        </span>
+                                                    ) : (
+                                                        <span className={isTeamName ? "font-semibold" : "[color:var(--text-primary)]"} style={teamNameStyle}>
+                                                            {val === null || val === undefined ? "-" : String(val)}
+                                                        </span>
+                                                    )}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
