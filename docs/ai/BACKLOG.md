@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-09
+**Last Updated:** 2026-03-10
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,44 @@ and remove from this file.
 
 
 ## BACKLOG
+
+## TASK-090 - Venue Matchup null High/Low and Highest Chased metrics
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-10
+**Status:** CLOSED - 2026-03-10
+
+### Description
+The Venue Matchup function (Venue Intelligence section) is returning null/None
+for two metrics: "High / Low" score in the Batting First block, and "Highest
+Chased" in the Chasing block. Both fields render as "-" in the frontend despite
+valid match data existing for the queried combination. All other metrics in the
+same function return correct values. The reference (ipywidgets) app returns
+correct values for the same inputs. Agent must diagnose the root cause
+independently, fix it, and confirm no regression on surrounding metrics.
+
+### Acceptance Criteria
+- AC-1: "High / Low" in the Batting First block returns correct max and min
+  innings scores for a valid team/venue/years query.
+- AC-2: "Highest Chased" in the Chasing block returns the correct max
+  successfully chased score for the queried team at the queried venue.
+- AC-3: All other Venue Matchup metrics that were returning correct values
+  before this fix continue to return identical values (no regression).
+- AC-4: Fix uses vectorized Pandas/NumPy operations only - no row-level
+  iteration introduced.
+- AC-5: All modified functions retain complete type annotations.
+- AC-6: Post-task bouncer output matches or improves on baseline.
+
+### Files In Scope
+- `formats/odi/engines/venue_engine.py` (or equivalent venue matchup engine)
+- `core/calculators/<venue_calculator>.py` (whichever calculator computes
+  high_score, low_score, highest_chased - follow the call chain)
+- READ ONLY - `core/data_access.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `api/serializers.py`
+- READ ONLY - `formats/odi/manifest.py`
 
 
 
@@ -206,6 +244,7 @@ Priority: High — will cause crashes when API runs continuously in Phase 12
 
 ---
 
-*End of BACKLOG.md — Last Updated 2026-03-09*
+*End of BACKLOG.md — Last Updated 2026-03-10*
 *For current session state, see docs/ai/SESSION_STATE.md*
 *For permanent project knowledge, see docs/ai/PROJECT_CONTEXT.md*
+

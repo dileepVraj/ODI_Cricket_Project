@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-09 (frontend compliance sprint + gate calibration)
+**Last Updated:** 2026-03-10 (TASK-090 venue matchup payload fix)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -688,7 +688,8 @@ core/gen_ai/skills/
 | Gate 3 pre-commit hook fixed | run_verifier.py requires --manifest argument — hook now loops over formats/*/manifest.py | Was failing on every commit attempt | 2026-03-09 |
 | pre-commit.ps1 removed | Redundant PowerShell hook — Git never calls it, caused confusion | Only pre-commit (no extension) is active | 2026-03-09 |
 ---
+| TASK-090 closed | Venue matchup structured payload now normalizes scalar score extremes to string values | Frontend venue adapter reads these fields as strings; raw ints rendered as "-" despite valid backend data | 2026-03-10 |
 
-*End of PROJECT_CONTEXT.md — Updated 2026-03-09 (frontend compliance sprint + gate calibration)*
+*End of PROJECT_CONTEXT.md — Updated 2026-03-10 (TASK-090 venue matchup payload fix)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

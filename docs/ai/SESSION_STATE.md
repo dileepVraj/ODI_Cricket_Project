@@ -18,6 +18,11 @@ None.
 
 ## Last Completed
 
+- TASK-090 - Venue Matchup null High/Low and Highest Chased metrics - CLOSED 2026-03-10
+  Structured venue matchup payload now normalizes scalar score extremes to
+  string values in the backend payload contract. Sample query verified against
+  raw calculator output. Gates 1/2/3/5/6 PASS, bouncer PASS.
+
 - Project cleanup — COMPLETE 2026-03-10
   ~18.5MB removed: stale ETL backup, test outputs, orphaned scripts,
   dead audit docs, dev artifacts, renderers dead code.
