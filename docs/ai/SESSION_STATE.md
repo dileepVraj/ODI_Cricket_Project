@@ -19,6 +19,11 @@ None.
 
 ## Last Completed
 
+- TASK-094 - Fix venue matchup panel and match audit layout regressions - CLOSED 2026-03-10
+  Venue matchup stat rows now wrap long chase values and use tighter section spacing,
+  removing the visible empty gap when chase placeholders render. Match Audit table
+  now adds clear column dividers. Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-093 - Fix venue matchup match audit status propagation - CLOSED 2026-03-10
   Enrichment now status-tags MATCH_IDS audit rows with the canonical smart-filter
   service before formatting, so excluded fortress matches keep their calculator

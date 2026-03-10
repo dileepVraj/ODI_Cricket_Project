@@ -33,6 +33,39 @@ and remove from this file.
 
 ## BACKLOG
 
+## TASK-094 - Fix venue matchup panel and match audit layout regressions
+**Type:** frontend-bug-fix
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-093
+**Created:** 2026-03-10
+**Status:** CLOSED - 2026-03-10
+
+### Description
+Three UI/layout bugs exist in the Venue Matchup / Fortress Report screen that
+make the display unreadable in specific conditions. First, the Avg Fail Chase
+value is truncated in both team panels and the bracketed sample count is cut
+off due to container overflow. Second, the Sri Lanka chasing block has a large
+visible empty gap above it caused by conditional renders leaving empty elements
+when Highest Chased and Avg Succ. Chase are null/dash. Third, the Match Audit
+table has no visual separation between the 1st Inn and Bat 2nd columns, making
+row data unreadable.
+
+### Acceptance Criteria
+- AC-1: Avg Fail Chase displays in full in both team panels and the bracketed
+  sample count is not truncated at supported viewport widths.
+- AC-2: The home-team chasing block has no visible empty gap above it when
+  Highest Chased and Avg Succ. Chase are null or "-".
+- AC-3: The Match Audit table has clear visual separation between all columns,
+  especially 1st Inn and Bat 2nd.
+- AC-4: All other Venue Matchup screen elements render identically to before.
+- AC-5: Post-task bouncer output matches or improves on baseline.
+
+### Files In Scope
+- `frontend/components/renderers/VenueMatchupPanel.tsx`
+- `frontend/components/renderers/MatchAuditSection.tsx`
+- `frontend/styles/` (read-only inspection for existing styling patterns)
+
 ## TASK-093 - Fix venue matchup match audit status propagation
 **Type:** bug-fix
 **Scope:** backend
