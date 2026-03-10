@@ -19,6 +19,13 @@ None.
 
 ## Last Completed
 
+- TASK-096 - Venue Matchup Report jersey colours and layout refinements - CLOSED 2026-03-10
+  Venue matchup team headers now use config-sourced jersey colours via the
+  existing `team_color` payload, and Match Audit team-name cells resolve the
+  same colours through runtime CSS variables. Panel spacing, metric readability,
+  accuracy notice visibility, and audit-table column sizing were tightened.
+  Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-095 - Refine Venue Matchup Report styling and contrast - CLOSED 2026-03-10
   Applied dark theme polish pass with home/away color coding (blue/red),
   improved typography hierarchy, subordinated sample counts in brackets ([n]),

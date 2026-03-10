@@ -32,6 +32,38 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-096 - Venue Matchup Report jersey colours and layout refinements
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-095
+**Created:** 2026-03-10
+**Status:** CLOSED - 2026-03-10
+
+### Description
+Following the TASK-095 visual polish pass, the Venue Matchup / Fortress Report
+screen still needs jersey-colour team headings, softer metric values, clearer
+panel spacing, a more visible accuracy notice, and better Match Audit table
+separation without changing any data or backend behaviour.
+
+### Acceptance Criteria
+- AC-1: Team name headings in both panel headers use jersey colours from `config/shared/team_colors.py`.
+- AC-2: Team names in the Match Audit table Winner, Bat 1st, and Bat 2nd columns use jersey colours from `config/shared/team_colors.py`.
+- AC-3: Team panels have at least 16px horizontal margin from screen edges.
+- AC-4: Panel rounded corners do not clip right-edge metric values.
+- AC-5: Metric result values are visually softer while remaining distinct from labels.
+- AC-6: Accuracy Notice banner uses a subtle but visible informational colour.
+- AC-7: Match Audit table columns are clearly separated with no jammed adjacent values.
+- AC-8: Avg Fail Chase displays fully in both panels without truncation.
+- AC-9: Data, labels, values, and behaviour remain unchanged.
+- AC-10: Post-task bouncer output matches or improves on baseline.
+
+### Files In Scope
+- `frontend/components/renderers/VenueMatchupReport.tsx`
+- `frontend/components/renderers/MatchAuditSection.tsx`
+- `frontend/components/ui/AccuracyNotice.tsx`
+- `config/shared/team_colors.py` (read only)
+
 ## TASK-095 - Refine Venue Matchup Report styling and contrast
 **Type:** frontend-modification
 **Scope:** frontend
@@ -421,4 +453,3 @@ Priority: High — will cause crashes when API runs continuously in Phase 12
 *End of BACKLOG.md — Last Updated 2026-03-10*
 *For current session state, see docs/ai/SESSION_STATE.md*
 *For permanent project knowledge, see docs/ai/PROJECT_CONTEXT.md*
-
