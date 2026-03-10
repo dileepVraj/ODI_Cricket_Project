@@ -33,6 +33,39 @@ and remove from this file.
 
 ## BACKLOG
 
+## TASK-091 - Restore venue matchup score-extreme layer ownership
+**Type:** refactor
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-090
+**Created:** 2026-03-10
+**Status:** CLOSED - 2026-03-10
+
+### Description
+TASK-090 introduced a layer violation in `core/calculators/team/venue_calculator.py`
+by coercing high/low score extremes to strings inside the calculator. This task
+restores `high_1st`, `low_1st`, and `high_chased` to raw `int | None` values in
+the calculator and moves the required display coercion into `api/serializers.py`
+so the frontend keeps the correct user-visible values without a Visual Silence
+violation in Domain Core.
+
+### Acceptance Criteria
+- AC-1: `_normalize_text_metric()` is removed from the three affected calculator
+  fields.
+- AC-2: `high_1st`, `low_1st`, and `high_chased` return `int | None` from the
+  calculator.
+- AC-3: String coercion for those three fields is handled in `api/serializers.py`.
+- AC-4: The frontend still receives correctly formatted High/Low and Highest
+  Chased values.
+- AC-5: All modified functions retain complete type annotations.
+- AC-6: Post-task bouncer output matches or improves on baseline.
+
+### Files In Scope
+- `core/calculators/team/venue_calculator.py`
+- `api/serializers.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `core/data_access.py`
+
 ## TASK-090 - Venue Matchup null High/Low and Highest Chased metrics
 **Type:** bug-fix
 **Scope:** backend

@@ -18,6 +18,11 @@ None.
 
 ## Last Completed
 
+- TASK-091 - Restore venue matchup score-extreme layer ownership - CLOSED 2026-03-10
+  Venue matchup calculator now returns raw int score extremes again for
+  high_1st, low_1st, and high_chased. Serializer now stringifies only those
+  three fields, preserving frontend rendering. Gates 1/2/4/5/6 PASS, bouncer PASS.
+
 - TASK-090 - Venue Matchup null High/Low and Highest Chased metrics - CLOSED 2026-03-10
   Structured venue matchup payload now normalizes scalar score extremes to
   string values in the backend payload contract. Sample query verified against

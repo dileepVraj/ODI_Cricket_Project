@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-10 (TASK-090 venue matchup payload fix)
+**Last Updated:** 2026-03-10 (TASK-091 venue matchup layer ownership fix)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -689,7 +689,8 @@ core/gen_ai/skills/
 | pre-commit.ps1 removed | Redundant PowerShell hook — Git never calls it, caused confusion | Only pre-commit (no extension) is active | 2026-03-09 |
 ---
 | TASK-090 closed | Venue matchup structured payload now normalizes scalar score extremes to string values | Frontend venue adapter reads these fields as strings; raw ints rendered as "-" despite valid backend data | 2026-03-10 |
+| TASK-091 closed | Venue matchup calculator returns raw int score extremes again while serializer stringifies only high/low/highest-chased | Restores Visual Silence layer ownership without regressing the TASK-090 frontend fix | 2026-03-10 |
 
-*End of PROJECT_CONTEXT.md — Updated 2026-03-10 (TASK-090 venue matchup payload fix)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-10 (TASK-091 venue matchup layer ownership fix)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*
