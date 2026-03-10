@@ -177,10 +177,10 @@ function TeamCard({ team }: TeamCardProps) {
                 </div>
             </div>
 
-            <div className="p-7 flex flex-col gap-10">
+            <div className="p-7 flex flex-col gap-7">
                 <div>
                     <SectionHeader label="BATTING 1ST" activeColor="[color:var(--tier-elite)]" />
-                    <div className="flex flex-col gap-1.5 mt-3">
+                    <div className="flex flex-col gap-1.5 mt-2.5">
                         <DataRow label="Avg Score:" value={s.bat1.avg} labelColor="[color:var(--text-secondary)]" />
                         <DataRow label="High / Low:" value={`${s.bat1.high} / ${s.bat1.low}`} labelColor="[color:var(--text-secondary)]" />
                         <DataRow label="Avg Win Score:" value={s.bat1.avg_win} labelColor="[color:var(--text-secondary)]" />
@@ -190,7 +190,7 @@ function TeamCard({ team }: TeamCardProps) {
 
                 <div>
                     <SectionHeader label="CHASING" activeColor="[color:var(--accent-primary)]" />
-                    <div className="flex flex-col gap-1.5 mt-3">
+                    <div className="flex flex-col gap-1.5 mt-2.5">
                         <DataRow label="Avg Score:" value={s.chase.avg} labelColor="[color:var(--text-secondary)]" />
                         <DataRow label="Highest Chased:" value={s.chase.high} labelColor="[color:var(--text-secondary)]" />
                         <DataRow label="Avg Succ. Chase:" value={s.chase.succ} labelColor="[color:var(--text-secondary)]" />
@@ -222,11 +222,11 @@ function SectionHeader({ label, activeColor }: { label: string; activeColor: str
 
 function DataRow({ label, value, labelColor }: { label: string; value: string; labelColor: string }) {
     return (
-        <div className="flex items-center justify-between group py-1.5 border-b [border-color:var(--border-subtle)] last:border-0">
-            <span className={`pl-1.5 text-[12px] font-semibold tracking-tight ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>
+        <div className="grid grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] items-start gap-x-3 py-1.5 border-b [border-color:var(--border-subtle)] last:border-0">
+            <span className={`min-w-0 pl-1.5 text-[12px] font-semibold tracking-tight leading-[1.25] ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>
                 {label}
             </span>
-            <span className="pr-1 text-[15px] leading-none font-extrabold [color:var(--text-primary)] font-numeric tracking-tight text-right">
+            <span className="min-w-0 pr-1 text-[15px] leading-[1.25] font-extrabold [color:var(--text-primary)] font-numeric tracking-tight text-right whitespace-normal break-words">
                 {value === null || value === undefined || value === "" || value === "-" ? "-" : value}
             </span>
         </div>

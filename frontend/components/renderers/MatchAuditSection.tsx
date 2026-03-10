@@ -70,12 +70,13 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                     >
                         <thead>
                             <tr>
-                                {columns.map((col) => {
+                                {columns.map((col, index) => {
                                     const right = col === "score_inn1" || col === "score_inn2";
+                                    const withDivider = index > 0;
                                     return (
                                         <th
                                             key={col}
-                                            className={`[padding:11px_14px] [border-bottom:1px_solid_var(--border-default)] [color:var(--text-muted)] [font-weight:600] [font-size:0.7rem] [letter-spacing:0.02em] [white-space:nowrap] ${right ? "[text-align:right]" : "[text-align:left]"}`}
+                                            className={`[padding:11px_16px] [border-bottom:1px_solid_var(--border-default)] [color:var(--text-muted)] [font-weight:600] [font-size:0.7rem] [letter-spacing:0.02em] [white-space:nowrap] ${right ? "[text-align:right]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
                                         >
                                             {COL_LABELS[col] ?? col}
                                         </th>
@@ -95,16 +96,17 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                         e.currentTarget.style.background = "transparent";
                                     }}
                                 >
-                                    {columns.map((col) => {
+                                    {columns.map((col, index) => {
                                         const val = row[col];
                                         const isStatus = col === "status";
                                         const right = col === "score_inn1" || col === "score_inn2";
+                                        const withDivider = index > 0;
                                         const typedRow = toMatchAuditRow(row);
                                         const statusTone = isStatus ? resolveStatusTone(typedRow.status_tone) : "[color:var(--text-primary)]";
                                         return (
                                             <td
                                                 key={col}
-                                                className={`[padding:11px_14px] [font-size:0.8rem] [white-space:nowrap] ${right ? "[text-align:right] font-numeric" : "[text-align:left]"} ${statusTone}`}
+                                                className={`[padding:11px_16px] [font-size:0.8rem] [white-space:nowrap] ${right ? "[text-align:right] font-numeric" : "[text-align:left]"} ${statusTone} ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
                                             >
                                                 {val === null || val === undefined ? "-" : String(val)}
                                             </td>
