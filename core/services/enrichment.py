@@ -12,6 +12,7 @@ import json
 import pandas as pd
 import logging
 
+from core.services.match_filter_service import STATUS_COLUMN, apply_smart_filters
 from core.services.report_formatter import ReportFormatter
 
 
@@ -142,6 +143,30 @@ class EnrichmentService:
                 "status_tone": ReportFormatter.match_status_tone(status_code),
             }
 
+        def _min_balls_for_completed_innings() -> Optional[int]:
+            try:
+                format_rules = analyzer.format_rules
+            except AttributeError:
+                return None
+            if not isinstance(format_rules, dict):
+                return None
+            raw_value = format_rules.get("min_balls_for_completed_innings")
+            try:
+                min_balls = int(raw_value)
+            except (TypeError, ValueError):
+                return None
+            return min_balls if min_balls > 0 else None
+
+        def _status_tagged_match_df() -> pd.DataFrame:
+            base_df = match_df.copy()
+            if base_df.empty or STATUS_COLUMN in base_df.columns:
+                return base_df
+            min_balls = _min_balls_for_completed_innings()
+            if min_balls is None:
+                return base_df
+            # Keep audit labels aligned with the calculator's canonical filter status.
+            return apply_smart_filters(base_df, min_balls=min_balls)
+
         def _fetch_records(match_ids_str: str, limit: int | None = None) -> list[MatchAuditRecord]:
             if not match_ids_str or match_ids_str.strip() == "":
                 return []
@@ -150,10 +175,7 @@ class EnrichmentService:
             if not ids:
                 return []
 
-            df = match_df.copy()
-
-            if hasattr(analyzer, "team_engine") and hasattr(analyzer.team_engine, "apply_smart_filters"):
-                df = analyzer.team_engine.apply_smart_filters(df)
+            df = _status_tagged_match_df()
 
             df["_mid_str"] = df["match_id"].astype(str).str.split(".").str[0].str.strip()
             clean_ids = [mid.split(".")[0].strip() for mid in ids]
