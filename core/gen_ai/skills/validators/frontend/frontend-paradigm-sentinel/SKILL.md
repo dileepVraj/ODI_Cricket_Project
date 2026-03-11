@@ -29,12 +29,13 @@ Pass condition: zero violations reported.
 |---|------|-------------|
 | 1 | 2.2A-R5 | Domain logic (arithmetic on API data) in component files |
 | 2 | 2.2A-R4 | Component file exceeds 300 lines |
-| 3 | 2.2B-R7 | Renderer component not located in `components/renderers/` |
-| 4 | 2.2B-R9 | Layout component receives data as props instead of using context |
-| 5 | 2.2B-R10 | Component file in wrong directory per placement contract |
-| 6 | 2.2A-R3 | External state management library imports (Redux, Zustand, MobX, Jotai) |
-| 7 | 2.2A-R14 | `setInterval`/`setTimeout` making `/execute/` endpoint calls |
-| 8 | 2.2D-R2 | `try/catch` in renderer component swallowing errors silently |
+| 3 | 2.2A-R6 | Payload extraction function (accepts `unknown`, returns domain type) in renderer — belongs in `lib/` |
+| 4 | 2.2B-R7 | Renderer component not located in `components/renderers/` |
+| 5 | 2.2B-R9 | Layout component receives data as props instead of using context |
+| 6 | 2.2B-R10 | Component file in wrong directory per placement contract |
+| 7 | 2.2A-R3 | External state management library imports (Redux, Zustand, MobX, Jotai) |
+| 8 | 2.2A-R14 | `setInterval`/`setTimeout` making `/execute/` endpoint calls |
+| 9 | 2.2D-R2 | `try/catch` in renderer component swallowing errors silently |
 
 ## Output Format
 

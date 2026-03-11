@@ -56,6 +56,33 @@ SILENT_CATCH = re.compile(
     re.DOTALL
 )
 
+# Safe return types — functions returning these are display helpers, not extractors.
+DISPLAY_SAFE_RETURN_TYPES = re.compile(
+    r':\s*(?:'
+    r'string'
+    r'|boolean'
+    r'|number'
+    r'|void'
+    r'|never'
+    r'|CSSProperties'
+    r'|ReactNode'
+    r'|JSX\.Element'
+    r'|React\.ReactNode'
+    r'|React\.ReactElement'
+    r'|EnrichedDataResult'
+    r')(?:\s*\|?\s*undefined|\s*\|?\s*null)?\s*[{;]'
+)
+
+# Type predicates returning display-safe or lib-owned types are exempt.
+DISPLAY_SAFE_TYPE_PREDICATE = re.compile(
+    r'value is (?:JsonRecord|string|boolean|number)'
+)
+
+# Payload extractor pattern — function with unknown as first/sole param.
+UNKNOWN_FIRST_PARAM = re.compile(
+    r'function\s+\w+\s*\(\s*\w+\s*:\s*unknown'
+)
+
 
 def check_external_state(path: Path, lines: list[str]) -> list[tuple[int, int, str]]:
     """2.2A-R3 — external state library imports"""
@@ -127,6 +154,48 @@ def check_silent_catch_in_renderer(path: Path, content: str) -> list[tuple[int, 
     return hits
 
 
+def check_payload_extractor_in_renderer(
+    path: Path, lines: list[str]
+) -> list[tuple[int, int, str]]:
+    """
+    2.2A-R6 — payload extraction function in renderer component.
+
+    Detects functions in components/renderers/ that accept `unknown`
+    as their first/sole parameter and return a domain object type.
+    These functions belong in lib/, not in renderer components.
+
+    Exempt (return display-safe types):
+      string, boolean, number, void, CSSProperties, ReactNode,
+      JSX.Element, and their nullable variants.
+    Also exempt: type predicates for lib/ types (value is JsonRecord).
+    """
+    parts = [p.lower() for p in path.parts]
+    if "renderers" not in parts:
+        return []
+
+    hits = []
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if not stripped.startswith("function"):
+            continue
+        if not UNKNOWN_FIRST_PARAM.search(line):
+            continue
+        if "):" not in line:
+            continue
+        if DISPLAY_SAFE_RETURN_TYPES.search(line):
+            continue
+        if DISPLAY_SAFE_TYPE_PREDICATE.search(line):
+            continue
+        hits.append((
+            i, 1,
+            f"[RULE 2.2A-R6] Payload extraction function in renderer — "
+            f"'{stripped[:60].rstrip()}' accepts `unknown` and returns a domain type. "
+            f"Move to lib/ (e.g. lib/fortress-types.ts). "
+            f"Renderers must not contain data extraction or type coercion logic."
+        ))
+    return hits
+
+
 def scan_file(path: Path) -> list[tuple[int, int, str]]:
     try:
         content = path.read_text(encoding="utf-8", errors="replace")
@@ -141,6 +210,7 @@ def scan_file(path: Path) -> list[tuple[int, int, str]]:
     hits.extend(check_renderer_placement(path, lines))
     hits.extend(check_polling_execute(path, content))
     hits.extend(check_silent_catch_in_renderer(path, content))
+    hits.extend(check_payload_extractor_in_renderer(path, lines))
     return hits
 
 
