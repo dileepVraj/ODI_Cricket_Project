@@ -20,11 +20,17 @@ None.
 
 ## Last Completed
 
+- TASK-106 - Extract fortress-types.ts, fix R6 violations, restore FortressReport formatting - CLOSED 2026-03-11
+  FortressReport payload types and extraction helpers now live in
+  `frontend/lib/fortress-types.ts`, and the renderer imports the adapter
+  instead of coercing unknown payloads inline. Gates F1/F2/F3/5/6 PASS,
+  bouncer PASS, FortressReport now 294 lines with zero R6 violations.
+
 - TASK-105 - Add payload extractor detection rule R6 to frontend-paradigm-sentinel - CLOSED 2026-03-11
   Frontend paradigm sentinel now flags renderer-local payload extraction
   helpers whose first input is `unknown` and whose typed return is a domain
   object, while exempting display-safe helpers. GATE F2 now FAILS on the
-  seven FortressReport extractors only (KNOWN VIOLATION - TASK-106 pending),
+  seven FortressReport extractors only (resolved by TASK-106),
   and bouncer PASS remains unchanged.
 
 - TASK-104 - Inject team jersey colours for all audit table teams in FortressReport - CLOSED 2026-03-11

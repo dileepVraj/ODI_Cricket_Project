@@ -32,6 +32,46 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-106 - Extract fortress-types.ts, fix R6 violations, restore FortressReport formatting
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-105
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+FortressReport.tsx contains payload extraction and type coercion
+functions that belong in lib/, not in a renderer. TASK-105 hardened
+GATE F2 to flag these as Rule 2.2A-R6 violations. This task fixes
+the violation by extracting the offending functions into a new file
+frontend/lib/fortress-types.ts, mirroring exactly how VenueMatchupReport
+imports from lib/venue-types.ts.
+
+FortressReport.tsx imports from the new lib file and is cleaned up.
+After extraction, FortressReport.tsx will be well under 300 lines with
+proper multi-line formatting fully restored.
+
+### Acceptance Criteria
+AC-1: `frontend/lib/fortress-types.ts` created, exports all types and
+      functions listed in WHAT TO EXTRACT.
+AC-2: `FortressReport.tsx` imports from `@/lib/fortress-types`.
+AC-3: `FortressReport.tsx` contains zero functions that accept `unknown`
+      as first/sole parameter.
+AC-4: `FortressReport.tsx` raw line count is under 300 with proper
+      multi-line JSX formatting fully restored.
+AC-5: GATE F2 runs clean with zero violations across the full frontend tree.
+AC-6: `FortressReport.tsx` behaviour is unchanged.
+AC-7: `frontend/lib/fortress-types.ts` has no React imports.
+AC-8: GATE F3 triggered and passed after creating the new `lib/` file.
+AC-9: Post-task compliance bouncer PASS, violation count matches baseline.
+
+### Files In Scope
+- `frontend/lib/fortress-types.ts`
+- `frontend/components/renderers/FortressReport.tsx`
+- READ ONLY - `frontend/lib/venue-types.ts`
+- READ ONLY - `frontend/lib/comparison-types.ts`
+
 ## TASK-105 - Add payload extractor detection rule R6 to frontend-paradigm-sentinel
 **Type:** validator-fix
 **Scope:** tooling

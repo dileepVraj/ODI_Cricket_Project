@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-11 (TASK-104 fortress audit team colour injection)
+**Last Updated:** 2026-03-11 (TASK-106 fortress type extraction)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -707,6 +707,8 @@ core/gen_ai/skills/
 
 | TASK-105 closed | Frontend paradigm sentinel now detects renderer payload extractors whose first parameter is `unknown` and whose typed return is a domain object | Captures the FortressReport SRP leak at the validator layer while preserving display-safe helpers and local type predicates | 2026-03-11 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-105 payload extractor validator rule)*
+| TASK-106 closed | FortressReport payload types and extraction helpers now live in `frontend/lib/fortress-types.ts`, and FortressReport imports that adapter instead of parsing unknown payloads inline | Removes the Gate F2 renderer-SRP violation while preserving fortress UI output and restoring the renderer to a formatted sub-300-line file | 2026-03-11 |
+
+*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-106 fortress type extraction)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*
