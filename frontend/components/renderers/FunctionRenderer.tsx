@@ -17,6 +17,7 @@ const MatchupTable = lazy(() => import("./MatchupTable"));
 const DownloadPanel = lazy(() => import("./DownloadPanel"));
 const PhaseAnalysisCard = lazy(() => import("./PhaseAnalysisCard"));
 const VenueMatchupReport = lazy(() => import("./VenueMatchupReport"));
+const FortressReport = lazy(() => import("./FortressReport"));
 const MatchAuditSection = lazy(() => import("./MatchAuditSection"));
 
 interface FunctionRendererProps {
@@ -196,6 +197,20 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                         {wrapRenderer(
                             <VenueMatchupReport data={mainData} />,
                             "Unable to render venue matchup report."
+                        )}
+                        {renderMatchAudit(matchAudit)}
+                    </>
+                );
+            }
+            break;
+
+        case "home_fortress":
+            if (isJsonRecord(mainData)) {
+                renderedOutput = (
+                    <>
+                        {wrapRenderer(
+                            <FortressReport data={mainData} />,
+                            "Unable to render fortress report."
                         )}
                         {renderMatchAudit(matchAudit)}
                     </>
