@@ -32,6 +32,44 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-100A - Add HomeFortressReport structured payload and register home_fortress output type
+**Type:** backend - new-feature
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-099
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+Add a parallel structured Home Fortress path so the calculator and engine can
+return typed venue context instead of only flat comparison rows. The new path
+must add `HomeFortressReport`, build a structured payload from the existing
+fortress filter pipeline, expose `analyze_home_fortress_structured()`, and
+register a new `home_fortress` manifest output type without changing the
+existing flat fortress method.
+
+### Acceptance Criteria
+AC-1: `core/interfaces/team_types.py` exports `HomeFortressReport`.
+AC-2: `HomeFortressReport` mirrors the venue-matchup structure with
+      summary/home/visitor/venue_avg/low_sample_warnings.
+AC-3: `HomeFortressStructuredPayload` is added to venue_calculator.
+AC-4: `calculate_home_fortress_structured_payload()` uses the existing
+      fortress filter pipeline and returns `{"payload": {}}` on empty data.
+AC-5: `analyze_home_fortress_structured()` mirrors the structured
+      venue-matchup engine signature and return cast pattern.
+AC-6: `formats/odi/manifest.py` registers a new `home_fortress` output type
+      and a separate function entry pointing at the structured engine method.
+AC-7: Existing flat fortress methods remain unchanged.
+AC-8: All new functions have complete type hints with no `Any`/`object`.
+AC-9: KIP-001 and KIP-002 in `team_engine.py` remain untouched.
+AC-10: Post-task compliance bouncer matches the baseline PASS.
+
+### Files In Scope
+- `core/interfaces/team_types.py`
+- `core/calculators/team/venue_calculator.py`
+- `formats/odi/engines/team_engine.py`
+- `formats/odi/manifest.py`
+
 ## TASK-099 - Tighten Match Audit cell contrast, widths, and status labels
 **Type:** frontend-modification
 **Scope:** frontend

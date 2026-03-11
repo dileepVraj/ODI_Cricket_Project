@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-100A - Add HomeFortressReport structured payload and register home_fortress output type - CLOSED 2026-03-11
+  Added `HomeFortressReport`, a structured fortress calculator payload, and
+  `analyze_home_fortress_structured()` so fortress analysis can return typed
+  venue context alongside the legacy flat comparison-table path. Gates
+  1/2/3/4/5/6 PASS, bouncer PASS.
+
 - TASK-099 - Tighten Match Audit cell contrast, widths, and status labels - CLOSED 2026-03-11
   Match Audit team-name spans now reuse the existing token-based heading
   outline, status badges render compact icon labels, and column widths/padding
@@ -130,6 +136,10 @@ any active task. Agents must NOT block on their presence in git status:
   frontend/lib/api.ts — @schema tag additions, pre-existing
 
 ## Gate State Snapshot (2026-03-11)
+- GATE 1  (boundary-sentinel):           PASS
+- GATE 2  (duckdb-lint-ops):             PASS - 0 violations
+- GATE 3  (manifest-contract-verifier):  PASS
+- GATE 4  (serialization-guard):         PASS
 - GATE F1 (frontend-lint-sentinel):   PASS — 0 violations (19 checks)
 - GATE F2 (frontend-paradigm-sentinel): PASS — 0 violations
 - GATE F3 (frontend-type-sync-guard):  PASS — 0 violations
