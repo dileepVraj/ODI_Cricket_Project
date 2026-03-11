@@ -227,17 +227,28 @@ def calculate_home_fortress_structured_payload(
         context["competitive_chase_threshold"],
         low_sample_min_matches,
     )
-    visitor_name = context["opp_team"]
-    visitor_stats = (
-        _team_intel(
+    if context["opp_team"] == "All":
+        visitor_display_name = "Visitors".upper()
+        visitor_stats = _empty_team_stats(visitor_display_name)
+        home_team_norm = context["home_team"].lower().strip()
+        winner_series = summary_df["winner"].fillna("").astype(str).str.lower().str.strip()
+        visitor_wins_df = summary_df[
+            (winner_series != home_team_norm)
+            & (~winner_series.isin(["tie", "no result", "nan", "none", ""]))
+        ].copy()
+        team_bat_1_series = visitor_wins_df["team_bat_1"].fillna("").astype(str).str.lower().str.strip()
+        team_bat_2_series = visitor_wins_df["team_bat_2"].fillna("").astype(str).str.lower().str.strip()
+        visitor_stats["wins"] = len(visitor_wins_df)
+        visitor_stats["defended"] = int((team_bat_1_series != home_team_norm).sum())
+        visitor_stats["chased"] = int((team_bat_2_series != home_team_norm).sum())
+    else:
+        visitor_display_name = context["opp_team"]
+        visitor_stats = _team_intel(
             summary_df,
-            visitor_name,
+            visitor_display_name,
             context["competitive_chase_threshold"],
             low_sample_min_matches,
         )
-        if visitor_name != "All"
-        else _empty_team_stats(visitor_name)
-    )
     low_sample_warnings = [
         *home_stats["low_sample_warnings"],
         *visitor_stats["low_sample_warnings"],
@@ -249,11 +260,12 @@ def calculate_home_fortress_structured_payload(
             percent_scale,
         ),
         "home": {"name": context["home_team"], "stats": home_stats},
-        "visitor": {"name": visitor_name, "stats": visitor_stats},
+        "visitor": {"name": visitor_display_name, "stats": visitor_stats},
         "venue_avg": _venue_avg_payload(
             summary_df,
             context["competitive_chase_threshold"],
         ),
+        "MATCH_IDS": ",".join(clean_df["match_id"].astype(str).unique().tolist()) or None,
         "low_sample_warnings": low_sample_warnings,
     }
     return {"payload": report}
