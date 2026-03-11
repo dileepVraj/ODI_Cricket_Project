@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-10 (TASK-097 audit venue canonicalization)
+**Last Updated:** 2026-03-11 (TASK-098 venue matchup frontend display refinement)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -559,6 +559,7 @@ In priority order:
 | `duckdb-lint-ops` stays in `guides/` | Dual classification | Guides DuckDB usage AND validates DOD compliance |
 | AI_MEMORY.md → deprecate | Replaced with SESSION_STATE.md | Memory file became git-log noise |
 | Standards split CORE/BACKEND/FRONTEND | Reduces context load per agent | Frontend agent does not need WebSocket-first mandate |
+| Venue Matchup frontend display merge | TASK-098 complete 2026-03-11 | Tightened team-card geometry and merged innings scores into batting columns without backend payload changes |
 | URL bidirectional sync in context | `window.history.replaceState` only | Back-stack pollution from slider drags would break UX |
 | CORE updated to v2.3 | Part 2.2 and Part 5.4 rewritten | Frontend rules expanded to 38, 3-tier pipeline formalised |
 | Frontend rules expanded 6 → 38 | 2.2A through 2.2F | Grounded in page.tsx, globals.css, FunctionRenderer.tsx, FormatSelector.tsx |

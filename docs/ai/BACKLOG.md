@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-10
+**Last Updated:** 2026-03-11
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,54 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-098 - Tighten Venue Matchup Report panel styling and merge innings display columns
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-096
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+The Venue Matchup / Fortress Report screen has several remaining visual issues
+after the TASK-096 polish pass. The team panel boxes have excessively rounded
+corners and are too large - they should use subtle corners matching the old
+reference application. Metric result values are rendered in a different font
+size and weight to their labels - they must match exactly. Team name headings
+need a thin white text outline/border so jersey colours that are close to the
+dark background remain legible. The Match Audit table is restructured: the
+separate 1ST INN and 2ND INN columns are removed and their scores are merged
+into the BAT 1ST and BAT 2ND columns respectively, formatted as
+"TeamName Score (Overs)" in a single cell. This is a frontend-only display
+change - the API payload is not modified.
+
+### Acceptance Criteria
+- AC-1: Panel border-radius is reduced to match the subtle corner style of
+  the reference ipywidgets application - not heavily rounded.
+- AC-2: Panel internal padding and sizing is reduced so metrics fit snugly
+  with consistent, compact spacing - no excessive whitespace inside the panel.
+- AC-3: Metric result values use the exact same font family and font size
+  as their row labels. No bold. No size difference between label and value.
+- AC-4: Team name headings (SRI LANKA, ENGLAND) have a thin white
+  text outline or border so jersey colours that are close to the
+  dark theme background remain clearly visible.
+- AC-5: Match Audit table has no separate 1ST INN or 2ND INN columns.
+- AC-6: BAT 1ST column displays team name and innings score combined in
+  one cell - format: "TeamName Score (Overs)"
+  e.g. "England 357/3 (50.0)". Team name rendered in jersey colour.
+- AC-7: BAT 2ND column displays team name and innings score combined in
+  one cell - same format as BAT 1ST.
+  e.g. "Sri Lanka 304/10 (46.4)". Team name rendered in jersey colour.
+- AC-8: Match Audit table columns are evenly spaced and readable after
+  the restructure - no jammed columns, no truncation.
+- AC-9: All data values (scores, overs, team names, status) remain
+  correct - no data regression from the display restructure.
+- AC-10: Post-task bouncer output matches or improves on baseline.
+
+### Files In Scope
+- `frontend/components/renderers/VenueMatchupReport.tsx`
+- `frontend/components/renderers/MatchAuditSection.tsx`
+
 ## TASK-097 - Canonicalize venue IDs in match audit enrichment
 **Type:** bug-fix
 **Scope:** backend

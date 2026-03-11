@@ -1,5 +1,5 @@
 # Session State
-**Last Updated:** 2026-03-10
+**Last Updated:** 2026-03-11
 **Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+
+- TASK-098 - Tighten Venue Matchup Report panel styling and merge innings display columns - CLOSED 2026-03-11
+  Venue matchup team cards now use subtler corners, tighter padding, uniform
+  metric typography, and token-based heading outlines for jersey-colour contrast.
+  Match Audit now merges innings scores into Bat 1st/Bat 2nd cells without
+  changing the backend payload. Gates F1/F2/F3/5/6 PASS, bouncer PASS.
 
 - TASK-097 - Canonicalize venue IDs in match audit enrichment - CLOSED 2026-03-10
   Match Audit venue rows now prefer DAL-provided `venue_id` and fall back to
@@ -117,7 +123,7 @@ The following files have pre-existing uncommitted changes unrelated to
 any active task. Agents must NOT block on their presence in git status:
   frontend/lib/api.ts — @schema tag additions, pre-existing
 
-## Gate State Snapshot (2026-03-10)
+## Gate State Snapshot (2026-03-11)
 - GATE F1 (frontend-lint-sentinel):   PASS — 0 violations (19 checks)
 - GATE F2 (frontend-paradigm-sentinel): PASS — 0 violations
 - GATE F3 (frontend-type-sync-guard):  PASS — 0 violations
