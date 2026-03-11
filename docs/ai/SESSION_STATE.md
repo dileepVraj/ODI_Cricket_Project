@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-103 - Use Visitors sentinel for aggregate visitor batting stats in fortress calculator - CLOSED 2026-03-11
+  Home Fortress structured payload now passes aggregate visitors through the
+  existing `"Visitors"` metrics branch via a `visitor_df` copy with
+  `home_team_ref`, while preserving VISITORS display text and TASK-102 counts.
+  Gates 1/2/3/4/5/6 PASS, bouncer PASS.
+
 - TASK-102 - Fix visitor stats, visitor label, and match audit in HomeFortress calculator - CLOSED 2026-03-11
   Home Fortress structured payload now labels the aggregate away side as
   VISITORS, computes all-visitor wins/defended/chased from summary_df when

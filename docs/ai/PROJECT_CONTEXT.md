@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-11 (TASK-102 fortress visitor aggregate + match audit fix)
+**Last Updated:** 2026-03-11 (TASK-103 fortress visitor metrics sentinel fix)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -702,7 +702,8 @@ core/gen_ai/skills/
 | TASK-096 closed | Venue matchup team headings and Match Audit team-name cells now resolve config-sourced jersey colours, with softer metric styling and wider layout spacing | Uses the existing team_color payload plus runtime CSS variables to keep exact team colours without raw hex literals in frontend source; panel padding and table column sizing remove clipping and jammed columns | 2026-03-10 |
 | TASK-097 closed | Match Audit venue rows now prefer DAL `venue_id` and otherwise resolve raw venue text to a canonical venue ID before falling back to raw text | Normalizes venue-name variants such as the two R Premadasa strings to one audit identifier without touching DAL, serializer, or frontend layers | 2026-03-10 |
 | TASK-102 closed | Home Fortress structured payload now labels the aggregate away side as `VISITORS`, computes aggregate visitor wins/defended/chased for `opp_team="All"`, and emits `MATCH_IDS` | Restores correct all-opponent fortress comparison semantics and re-enables enrichment-driven Match Audit rendering without changing serializer or frontend ownership | 2026-03-11 |
+| TASK-103 closed | Home Fortress structured payload now routes aggregate visitor batting/chasing metrics through the existing `"Visitors"` sentinel branch using a `visitor_df` copy with `home_team_ref` | Restores populated all-visitor batting/chasing stats for Fortress Report while preserving the `VISITORS` display label and keeping specific-opponent behavior unchanged | 2026-03-11 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-102 fortress visitor aggregate + match audit fix)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-103 fortress visitor metrics sentinel fix)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

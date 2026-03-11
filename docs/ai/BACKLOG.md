@@ -32,6 +32,35 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-103 - Use Visitors sentinel for aggregate visitor batting stats in fortress calculator
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-102
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+Visitor batting/chasing stats in the Fortress Report were rendering as dashes
+when `opp_team == "All"` because the structured payload path was not routing
+aggregate visitors through the existing `"Visitors"` sentinel branch in
+`calculate_team_metrics()`.
+
+### Acceptance Criteria
+AC-1: When `opp_team == "All"`, visitor batting/chasing stats are populated
+      with real values instead of dashes.
+AC-2: Visitor wins/defended/chased counts remain unchanged from TASK-102.
+AC-3: Visitor display name remains `VISITORS` in the report.
+AC-4: `_team_intel()` receives `"Visitors"` as the sentinel string.
+AC-5: `home_team_ref` is added only to a `visitor_df` copy.
+AC-6: Specific-opponent behaviour remains unchanged.
+AC-7: No other source files are modified.
+AC-8: Post-task compliance bouncer PASS, matching the baseline.
+
+### Files In Scope
+- `core/calculators/team/venue_calculator.py`
+- READ ONLY - `core/calculators/performance.py`
+
 ## TASK-102 - Fix visitor stats, visitor label, and match audit in HomeFortress calculator
 **Type:** bug-fix
 **Scope:** backend
