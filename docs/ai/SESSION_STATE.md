@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-102 - Fix visitor stats, visitor label, and match audit in HomeFortress calculator - CLOSED 2026-03-11
+  Home Fortress structured payload now labels the aggregate away side as
+  VISITORS, computes all-visitor wins/defended/chased from summary_df when
+  opp_team is "All", and emits MATCH_IDS so enrichment injects match_audit.
+  Gates 1/2/3/4/5/6 PASS, bouncer PASS.
+
 - TASK-101 - Hardcode opp_team=All in analyze_home_fortress_structured, retire old manifest entry - CLOSED 2026-03-11
   `analyze_home_fortress_structured()` now hardcodes `opp_team="All"` and no
   longer requires the API to pass an away-team value. The legacy flat fortress

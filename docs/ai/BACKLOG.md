@@ -32,6 +32,47 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-102 - Fix visitor stats, visitor label, and match audit in HomeFortress calculator
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-101
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+Three bugs in calculate_home_fortress_structured_payload() in
+core/calculators/team/venue_calculator.py:
+
+1. Visitor stats are empty when opp_team == "All"; the visitor side should
+   aggregate all non-home winners as a combined visitor pool.
+2. Visitor label currently shows "All"; it must display "VISITORS".
+3. No match audit renders because the structured payload omits the MATCH_IDS
+   key that enrichment uses to inject match_audit.
+
+### Acceptance Criteria
+AC-1: When opp_team == "All", visitor card name is "VISITORS" (not "All").
+AC-2: When opp_team == "All", visitor wins/defended/chased are computed
+      from summary_df (non-home-team winners) and are not zeroed out.
+AC-3: When opp_team == "All", visitor batting/chasing stat rows may remain
+      None/dash, but wins/defended/chased counts are correct.
+AC-4: When opp_team is a specific team, _team_intel() behaviour is unchanged.
+AC-5: The HomeFortressReport dict includes a MATCH_IDS key built from
+      clean_df["match_id"].
+AC-6: Match audit renders through enrichment after Execute Analysis.
+AC-7: No changes to enrichment.py, team_engine.py, manifest.py,
+      api/serializers.py, or any frontend file.
+AC-8: If HomeFortressReport TypedDict required MATCH_IDS, stop-state-trace-confirm
+      was performed and recorded.
+AC-9: All new code uses vectorized Pandas operations.
+AC-10: Post-task compliance bouncer PASS, violation count matches baseline.
+
+### Files In Scope
+- `core/calculators/team/venue_calculator.py`
+- `core/interfaces/team_types.py` (only if MATCH_IDS must be added)
+- READ ONLY - `core/services/enrichment.py`
+- READ ONLY - `core/interfaces/team_types.py`
+
 ## TASK-101 - Hardcode opp_team=All in analyze_home_fortress_structured, retire old manifest entry
 **Type:** bug-fix
 **Scope:** backend
@@ -720,6 +761,6 @@ Priority: High — will cause crashes when API runs continuously in Phase 12
 
 ---
 
-*End of BACKLOG.md — Last Updated 2026-03-10*
+*End of BACKLOG.md - Last Updated 2026-03-11*
 *For current session state, see docs/ai/SESSION_STATE.md*
 *For permanent project knowledge, see docs/ai/PROJECT_CONTEXT.md*
