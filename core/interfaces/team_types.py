@@ -165,6 +165,25 @@ class VenueMatchupReport(TypedDict):
     derived_badges: list[str]
 
 
+class HomeFortressSummary(TypedDict, total=False):
+    matches: int
+    home_win_pct: int
+    tie_nr: int
+
+
+class HomeFortressTeamPayload(TypedDict):
+    name: str
+    stats: TeamVenueStatsPayload
+
+
+class HomeFortressReport(TypedDict):
+    summary: HomeFortressSummary
+    home: HomeFortressTeamPayload
+    visitor: HomeFortressTeamPayload
+    venue_avg: VenueAveragePayload
+    low_sample_warnings: list[str]
+
+
 class SectionHighlightFlags(TypedDict, total=False):
     has_low_sample_warnings: bool
     has_form_guide: bool
@@ -570,6 +589,7 @@ EnrichablePayload: TypeAlias = Union[
     'VenueBiasReport', 
     'VenuePhasesReport', 
     'VenueMatchupReport',
+    'HomeFortressReport',
     SquadComparisonPayload,
     GlobalCompareEnvelope,
 ]

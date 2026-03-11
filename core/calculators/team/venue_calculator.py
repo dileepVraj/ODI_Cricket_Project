@@ -16,6 +16,7 @@ from core.calculators.phase_engine import (
 )
 from core.interfaces.team_types import (
     ComparisonReportRows,
+    HomeFortressReport,
     TeamVenueStatsPayload,
     TeamVenuePhaseSnapshot,
     VenueBiasReport,
@@ -79,6 +80,10 @@ class VenuePhasesContext(TypedDict):
 
 class ComparisonRowsPayload(TypedDict):
     rows: ComparisonReportRows
+
+
+class HomeFortressStructuredPayload(TypedDict):
+    payload: HomeFortressReport
 
 
 class VenueBiasPayload(TypedDict):
@@ -170,6 +175,88 @@ def calculate_home_fortress_payload(match_df: pd.DataFrame, context: HomeFortres
         return {"rows": []}
     visitor_label = context["opp_team"] if context["opp_team"] != "All" else "VISITOR_TEAM"
     return {"rows": _comparison_rows(clean_df, context["home_team"], visitor_label, "FORTRESS_REPORT", context["competitive_chase_threshold"], True)}
+
+
+def _home_fortress_summary_payload(
+    summary_df: pd.DataFrame,
+    home_team: str,
+    percent_scale: int,
+) -> dict[str, int]:
+    matchup_summary = _summary_payload(summary_df, home_team, percent_scale)
+    return {
+        "matches": matchup_summary["matches"],
+        "home_win_pct": matchup_summary["win_pct"],
+        "tie_nr": matchup_summary["tie_nr"],
+    }
+
+
+def calculate_home_fortress_structured_payload(
+    match_df: pd.DataFrame,
+    context: HomeFortressContext,
+) -> HomeFortressStructuredPayload:
+    venue_df, _ = _venue_window(
+        match_df,
+        context["stadium_id"],
+        context["years_back"],
+        context["reference_date"],
+    )
+    if venue_df.empty:
+        return cast(HomeFortressStructuredPayload, {"payload": {}})
+    rivalry_df = venue_df[
+        (venue_df["team_bat_1"] == context["home_team"])
+        | (venue_df["team_bat_2"] == context["home_team"])
+    ].copy()
+    if context["opp_team"] != "All":
+        rivalry_df = rivalry_df[
+            (rivalry_df["team_bat_1"] == context["opp_team"])
+            | (rivalry_df["team_bat_2"] == context["opp_team"])
+        ].copy()
+    clean_df = _apply_filters(rivalry_df, context["min_balls_for_completed_innings"])
+    if clean_df.empty:
+        return cast(HomeFortressStructuredPayload, {"payload": {}})
+    summary_df = clean_df[
+        ~MatchFilterService.get_excluded_no_result_mask(clean_df)
+    ].copy()
+    if summary_df.empty:
+        return cast(HomeFortressStructuredPayload, {"payload": {}})
+    low_sample_min_matches = cast(int, context.get("low_sample_min_matches", 0))
+    percent_scale = cast(int, context.get("percent_scale", 0))
+    home_stats = _team_intel(
+        summary_df,
+        context["home_team"],
+        context["competitive_chase_threshold"],
+        low_sample_min_matches,
+    )
+    visitor_name = context["opp_team"]
+    visitor_stats = (
+        _team_intel(
+            summary_df,
+            visitor_name,
+            context["competitive_chase_threshold"],
+            low_sample_min_matches,
+        )
+        if visitor_name != "All"
+        else _empty_team_stats(visitor_name)
+    )
+    low_sample_warnings = [
+        *home_stats["low_sample_warnings"],
+        *visitor_stats["low_sample_warnings"],
+    ]
+    report: HomeFortressReport = {
+        "summary": _home_fortress_summary_payload(
+            summary_df,
+            context["home_team"],
+            percent_scale,
+        ),
+        "home": {"name": context["home_team"], "stats": home_stats},
+        "visitor": {"name": visitor_name, "stats": visitor_stats},
+        "venue_avg": _venue_avg_payload(
+            summary_df,
+            context["competitive_chase_threshold"],
+        ),
+        "low_sample_warnings": low_sample_warnings,
+    }
+    return {"payload": report}
 
 
 def _safe_percent(numerator: int, denominator: int, scale: int) -> int:

@@ -182,6 +182,7 @@ MANIFEST = {
         "download_json",     # File download + preview (DownloadPanel)
         "phase_analysis",    # Venue phase breakdown (PhaseAnalysisCard)
         "venue_matchup_report", # High-fidelity dual-card matchup
+        "home_fortress",
     ],
 
     # ── Categories ───────────────────────────────────────────────────────
@@ -240,6 +241,15 @@ MANIFEST = {
                     "required_context": ["venue", "team_a", "years"],
                     "output_type": "comparison_table",
                     "output_schema": {"type": "comparison_table"},
+                },
+                {
+                    "key": "home_fortress_structured",
+                    "label": "Fortress Report",
+                    "icon": "shield",
+                    "engine_class": "TeamEngine",
+                    "engine_method": "analyze_home_fortress_structured",
+                    "required_context": ["venue", "team_a", "years"],
+                    "output_type": "home_fortress",
                 },
                 {
                     "key": "venue_phases",
@@ -681,6 +691,11 @@ CALCULATOR_LITERAL_REGISTRY = [
     "team_color",
     "team_tone",
     "low_sample_warnings",
+    "summary",
+    "home",
+    "visitor",
+    "venue_avg",
+    "home_win_pct",
 ]
 
 
