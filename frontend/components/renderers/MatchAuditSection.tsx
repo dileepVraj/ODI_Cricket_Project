@@ -8,28 +8,30 @@ import { toMatchAuditRow } from "@/lib/types";
 interface MatchAuditSectionProps {
     records: Record<string, unknown>[];
 }
-const COL_LABELS: Record<string, string> = {
+
+const DISPLAY_COLUMNS = ["start_date", "venue", "winner", "team_bat_1", "team_bat_2", "status"] as const;
+
+const COL_LABELS: Record<(typeof DISPLAY_COLUMNS)[number], string> = {
     start_date: "Date",
     venue: "Venue",
     winner: "Winner",
     team_bat_1: "Bat 1st",
-    score_inn1: "1st Inn",
     team_bat_2: "Bat 2nd",
-    score_inn2: "2nd Inn",
     status: "Status",
 };
 const TEAM_NAME_COLUMNS = new Set(["winner", "team_bat_1", "team_bat_2"]);
+const MERGED_INNINGS_COLUMNS = new Set(["team_bat_1", "team_bat_2"]);
 
 function toTeamColorVarName(teamName: string): string {
     return `--venue-team-${teamName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-color`;
 }
 
 function getColumnWidthClass(column: string): string {
-    if (column === "start_date") return "min-w-[7rem]";
-    if (column === "venue") return "min-w-[13rem]";
-    if (column === "winner" || column === "team_bat_1" || column === "team_bat_2") return "min-w-[8.5rem]";
-    if (column === "score_inn1" || column === "score_inn2") return "min-w-[7rem]";
-    if (column === "status") return "min-w-[8rem]";
+    if (column === "start_date") return "[width:12%] min-w-[8rem]";
+    if (column === "venue") return "[width:24%] min-w-[15rem]";
+    if (column === "winner") return "[width:14%] min-w-[10rem]";
+    if (column === "team_bat_1" || column === "team_bat_2") return "[width:18%] min-w-[12rem]";
+    if (column === "status") return "[width:14%] min-w-[9rem]";
     return "min-w-[7rem]";
 }
 
@@ -39,6 +41,30 @@ function resolveTeamNameStyle(value: unknown): CSSProperties | undefined {
     }
 
     return { color: `var(${toTeamColorVarName(value)})` };
+}
+
+function renderMergedInningsCell(teamValue: unknown, scoreValue: unknown) {
+    const teamName = typeof teamValue === "string" ? teamValue.trim() : "";
+    const inningsScore = typeof scoreValue === "string" || typeof scoreValue === "number"
+        ? String(scoreValue).trim()
+        : "";
+
+    if (teamName === "" && inningsScore === "") {
+        return "-";
+    }
+    if (teamName === "") {
+        return inningsScore;
+    }
+    if (inningsScore === "") {
+        return <span style={resolveTeamNameStyle(teamName)}>{teamName}</span>;
+    }
+
+    return (
+        <>
+            <span style={resolveTeamNameStyle(teamName)}>{teamName}</span>
+            <span className="[color:var(--text-primary)]"> {inningsScore}</span>
+        </>
+    );
 }
 
 export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
@@ -59,7 +85,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
         return 0;
     });
 
-    const columns = Object.keys(sortedRecords[0]).filter((c) => c in COL_LABELS);
+    const columns = DISPLAY_COLUMNS.filter((column) => sortedRecords.some((record) => column in record));
 
     return (
         <div className="[margin-top:20px]">
@@ -88,17 +114,16 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                     className="[background:var(--bg-elevated)] [border-radius:var(--radius-md)] [border:1px_solid_var(--border-subtle)] [overflow-x:auto] [box-shadow:var(--shadow-card-deep)]"
                 >
                     <table
-                        className="[width:max-content] [min-width:100%] [border-collapse:separate] [border-spacing:0] [font-size:0.8rem]"
+                        className="[width:100%] [min-width:68rem] [table-layout:fixed] [border-collapse:separate] [border-spacing:0] [font-size:0.8rem]"
                     >
                         <thead>
                             <tr>
                                 {columns.map((col, index) => {
-                                    const right = col === "score_inn1" || col === "score_inn2";
                                     const withDivider = index > 0;
                                     return (
                                         <th
                                             key={col}
-                                            className={`${getColumnWidthClass(col)} [padding:14px_18px] [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] [color:var(--text-secondary)] [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] ${right ? "[text-align:right]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
+                                            className={`${getColumnWidthClass(col)} [padding:14px_16px] [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] [color:var(--text-secondary)] [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] [text-align:left] ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
                                         >
                                             {COL_LABELS[col] ?? col}
                                         </th>
@@ -125,19 +150,24 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                             const val = row[col];
                                             const isStatus = col === "status";
                                             const isTeamName = TEAM_NAME_COLUMNS.has(col);
-                                            const right = col === "score_inn1" || col === "score_inn2";
+                                            const isMergedInnings = MERGED_INNINGS_COLUMNS.has(col);
                                             const withDivider = index > 0;
                                             const statusBadgeClass = isStatus ? resolveStatusTone(typedRow.status_tone) : "";
                                             const teamNameStyle = isTeamName ? resolveTeamNameStyle(val) : undefined;
+                                            const mergedScore = col === "team_bat_1" ? row["score_inn1"] : row["score_inn2"];
 
                                             return (
                                                 <td
                                                     key={col}
-                                                    className={`${getColumnWidthClass(col)} [padding:12px_18px] [font-size:0.85rem] [white-space:nowrap] ${right ? "[text-align:right] font-numeric [color:var(--text-primary)]" : "[text-align:left]"} ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
+                                                    className={`${getColumnWidthClass(col)} [padding:12px_16px] [font-size:0.85rem] align-top ${isMergedInnings || col === "venue" ? "[white-space:normal] break-words" : "[white-space:nowrap]"} [text-align:left] ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
                                                 >
                                                     {isStatus ? (
                                                         <span className={`badge ${statusBadgeClass} text-[10px] px-2.5 py-0.5 rounded-full uppercase font-black tracking-wider`}>
                                                             {val === null || val === undefined ? "-" : String(val)}
+                                                        </span>
+                                                    ) : isMergedInnings ? (
+                                                        <span className="font-medium leading-[1.35]">
+                                                            {renderMergedInningsCell(val, mergedScore)}
                                                         </span>
                                                     ) : (
                                                         <span className={isTeamName ? "font-semibold" : "[color:var(--text-primary)]"} style={teamNameStyle}>

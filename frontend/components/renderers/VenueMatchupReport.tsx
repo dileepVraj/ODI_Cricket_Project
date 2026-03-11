@@ -177,7 +177,7 @@ function TeamCard({ team, isHome }: TeamCardProps) {
     const s = team.stats;
     if (!s) {
         return (
-            <div className="p-10 text-center [color:var(--text-muted)] [background:var(--bg-surface)] rounded-xl [border:1px_dashed_var(--border-default)]">
+            <div className="p-7 text-center [color:var(--text-muted)] [background:var(--bg-surface)] rounded-md [border:1px_dashed_var(--border-default)]">
                 No data for {team.name}
             </div>
         );
@@ -187,23 +187,26 @@ function TeamCard({ team, isHome }: TeamCardProps) {
     const teamAccentClass = isHome
         ? "border-l-4 [border-left-color:var(--accent-primary)]"
         : "border-l-4 [border-left-color:var(--tier-danger)]";
-    const teamHeadingStyle = s.team_color ? { color: s.team_color } : undefined;
+    const teamHeadingStyle = {
+        ...(s.team_color ? { color: s.team_color } : {}),
+        textShadow: "0 0 1px var(--text-primary), 0 0 1px var(--text-primary)",
+    };
 
     return (
-        <div className={`relative [background:var(--bg-surface)] border rounded-2xl overflow-hidden backdrop-blur-sm [box-shadow:var(--shadow-lg)] ${tone.border} ${teamAccentClass}`}>
-            <div className={`pointer-events-none absolute inset-x-0 top-0 h-20 opacity-25 ${tone.overlay}`} />
+        <div className={`relative [background:var(--bg-surface)] border rounded-md overflow-hidden backdrop-blur-sm [box-shadow:var(--shadow-lg)] ${tone.border} ${teamAccentClass}`}>
+            <div className={`pointer-events-none absolute inset-x-0 top-0 h-16 opacity-25 ${tone.overlay}`} />
 
-            <div className="border-b [border-color:var(--glass-border)] px-6 py-6 flex flex-col items-center gap-5">
-                <h3 className="text-center text-2xl font-black tracking-tight uppercase" style={teamHeadingStyle}>{team.name}</h3>
+            <div className="border-b [border-color:var(--glass-border)] px-5 py-4 flex flex-col items-center gap-3.5">
+                <h3 className="text-center text-[1.65rem] font-black tracking-tight uppercase" style={teamHeadingStyle}>{team.name}</h3>
 
-                <div className="flex justify-center gap-2.5">
+                <div className="flex justify-center gap-2">
                     <StatBadge icon={<Trophy size={12} className="[color:var(--tier-caution)]" />} label="Wins" value={s.wins} />
                     <StatBadge icon={<ShieldCheck size={12} className="[color:var(--accent-primary)]" />} label="Def" value={s.defended} />
                     <StatBadge icon={<Target size={12} className="[color:var(--tier-danger)]" />} label="Chs" value={s.chased} />
                 </div>
             </div>
 
-            <div className="px-6 py-7 sm:px-7 flex flex-col gap-7">
+            <div className="px-5 py-5 sm:px-6 flex flex-col gap-5">
                 <div>
                     <SectionHeader label="BATTING 1ST" activeColor="[color:var(--tier-elite)]" />
                     <div className="flex flex-col gap-1 mt-3">
@@ -230,7 +233,7 @@ function TeamCard({ team, isHome }: TeamCardProps) {
 
 function StatBadge({ icon, label, value }: StatBadgeProps) {
     return (
-        <div className="flex items-center gap-2 [background:var(--glass-bg)] px-4 py-2 rounded-full [border:1px_solid_var(--glass-border)] [box-shadow:var(--shadow-sm)] hover:[background:var(--bg-hover)] transition-colors">
+        <div className="flex items-center gap-2 [background:var(--glass-bg)] px-3 py-1.5 rounded-full [border:1px_solid_var(--glass-border)] [box-shadow:var(--shadow-sm)] hover:[background:var(--bg-hover)] transition-colors">
             {icon}
             <span className="text-sm font-black [color:var(--text-primary)] font-numeric leading-none">{value}</span>
             <span className="text-[10px] font-bold [color:var(--text-secondary)] uppercase tracking-[0.12em] leading-none mb-[-1px]">{label}</span>
@@ -267,10 +270,10 @@ function DataRow({ label, value, labelColor }: { label: string; value: string; l
 
     return (
         <div className="grid grid-cols-[minmax(0,1fr)_minmax(max-content,auto)] items-start gap-x-4 py-1.5 border-b [border-color:var(--border-subtle)] last:border-0 group">
-            <span className={`min-w-0 pl-1 text-[12px] font-bold tracking-tight leading-[1.3] ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>
+            <span className={`min-w-0 pl-1 text-[12px] font-medium tracking-tight leading-[1.3] ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>
                 {label}
             </span>
-            <span className="min-w-0 pr-3 text-[15px] leading-[1.25] font-semibold [color:var(--text-primary)] font-numeric tracking-tight text-right whitespace-normal break-words [opacity:0.88]">
+            <span className="min-w-0 pr-3 text-[12px] leading-[1.3] font-medium [color:var(--text-primary)] tracking-tight text-right whitespace-normal break-words">
                 {renderValue(value)}
             </span>
         </div>
