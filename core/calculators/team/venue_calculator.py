@@ -229,18 +229,27 @@ def calculate_home_fortress_structured_payload(
     )
     if context["opp_team"] == "All":
         visitor_display_name = "Visitors".upper()
-        visitor_stats = _empty_team_stats(visitor_display_name)
-        home_team_norm = context["home_team"].lower().strip()
-        winner_series = summary_df["winner"].fillna("").astype(str).str.lower().str.strip()
-        visitor_wins_df = summary_df[
-            (winner_series != home_team_norm)
-            & (~winner_series.isin(["tie", "no result", "nan", "none", ""]))
-        ].copy()
-        team_bat_1_series = visitor_wins_df["team_bat_1"].fillna("").astype(str).str.lower().str.strip()
-        team_bat_2_series = visitor_wins_df["team_bat_2"].fillna("").astype(str).str.lower().str.strip()
-        visitor_stats["wins"] = len(visitor_wins_df)
-        visitor_stats["defended"] = int((team_bat_1_series != home_team_norm).sum())
-        visitor_stats["chased"] = int((team_bat_2_series != home_team_norm).sum())
+        visitor_df = summary_df.copy()
+        visitor_df["home_team_ref"] = context["home_team"]
+        visitor_stats = _team_intel(
+            visitor_df,
+            "Visitors",
+            context["competitive_chase_threshold"],
+            low_sample_min_matches,
+        )
+        visitor_wins_df = summary_df[summary_df["winner"] != context["home_team"]]
+        valid_winners = visitor_wins_df[
+            ~visitor_wins_df["winner"].str.lower().isin(
+                ["tie", "no result", "nan", "none", ""]
+            )
+        ]
+        visitor_stats["wins"] = len(valid_winners)
+        visitor_stats["defended"] = int(
+            (valid_winners["team_bat_1"] != context["home_team"]).sum()
+        )
+        visitor_stats["chased"] = int(
+            (valid_winners["team_bat_2"] != context["home_team"]).sum()
+        )
     else:
         visitor_display_name = context["opp_team"]
         visitor_stats = _team_intel(
