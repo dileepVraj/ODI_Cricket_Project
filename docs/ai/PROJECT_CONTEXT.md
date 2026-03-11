@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-11 (TASK-098 venue matchup frontend display refinement)
+**Last Updated:** 2026-03-11 (TASK-099 Match Audit table compaction)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -560,6 +560,7 @@ In priority order:
 | AI_MEMORY.md → deprecate | Replaced with SESSION_STATE.md | Memory file became git-log noise |
 | Standards split CORE/BACKEND/FRONTEND | Reduces context load per agent | Frontend agent does not need WebSocket-first mandate |
 | Venue Matchup frontend display merge | TASK-098 complete 2026-03-11 | Tightened team-card geometry and merged innings scores into batting columns without backend payload changes |
+| TASK-099 closed | Match Audit team-name spans now reuse the existing heading outline, audit columns were compacted to fit the viewport, and status pills render compact display labels | Fixes jersey-colour contrast and horizontal scroll without changing backend payloads or renderer ownership | 2026-03-11 |
 | URL bidirectional sync in context | `window.history.replaceState` only | Back-stack pollution from slider drags would break UX |
 | CORE updated to v2.3 | Part 2.2 and Part 5.4 rewritten | Frontend rules expanded to 38, 3-tier pipeline formalised |
 | Frontend rules expanded 6 → 38 | 2.2A through 2.2F | Grounded in page.tsx, globals.css, FunctionRenderer.tsx, FormatSelector.tsx |
@@ -698,6 +699,6 @@ core/gen_ai/skills/
 | TASK-096 closed | Venue matchup team headings and Match Audit team-name cells now resolve config-sourced jersey colours, with softer metric styling and wider layout spacing | Uses the existing team_color payload plus runtime CSS variables to keep exact team colours without raw hex literals in frontend source; panel padding and table column sizing remove clipping and jammed columns | 2026-03-10 |
 | TASK-097 closed | Match Audit venue rows now prefer DAL `venue_id` and otherwise resolve raw venue text to a canonical venue ID before falling back to raw text | Normalizes venue-name variants such as the two R Premadasa strings to one audit identifier without touching DAL, serializer, or frontend layers | 2026-03-10 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-10 (TASK-097 audit venue canonicalization)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-099 Match Audit table compaction)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

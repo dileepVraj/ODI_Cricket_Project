@@ -32,6 +32,54 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-099 - Tighten Match Audit cell contrast, widths, and status labels
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-098
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+Two issues remain in the Match Audit table of the Venue Matchup / Fortress
+Report screen after TASK-098. First, the white text outline applied to team
+name headings in TASK-098 was not applied to the team name spans inside the
+BAT 1ST and BAT 2ND cells - Sri Lanka's blue jersey colour bleeds into the
+dark background making it unreadable. Second, column spacing between VENUE,
+WINNER, BAT 1ST, BAT 2ND, and STATUS is too wide causing a horizontal
+scrollbar - all columns must fit within the viewport with minimal gaps. The
+STATUS column pill labels are also too verbose for the available space and
+must be shortened to compact icon-based labels that still communicate the
+excluded innings.
+
+### Acceptance Criteria
+AC-1: Team name spans inside BAT 1ST and BAT 2ND cells have the same
+      thin white text outline/shadow applied as the panel headings -
+      no jersey colour bleeds into the dark background.
+
+AC-2: All Match Audit columns - DATE, VENUE, WINNER, BAT 1ST, BAT 2ND,
+      STATUS - fit within the viewport width with no horizontal scrollbar.
+
+AC-3: Column gaps between all adjacent columns are minimal and consistent
+      - approximately 0.5rem or equivalent tight spacing.
+
+AC-4: STATUS column uses compact pill labels:
+      - Included       -> ✅ (green pill)
+      - Excluded Short 2nd innings -> 2nd ⛔ (amber/red pill)
+      - Excluded Short 1st innings -> 1st ⛔ (amber/red pill)
+      Any other excluded reason -> ⛔ with shortest meaningful label.
+
+AC-5: All columns remain readable - no text truncation on DATE, VENUE,
+      WINNER, or score values in BAT 1ST and BAT 2ND.
+
+AC-6: No regression - all data values, jersey colours on team names,
+      and existing pill styling remain correct.
+
+AC-7: Post-task bouncer output matches or improves on baseline.
+
+### Files In Scope
+- frontend/components/renderers/MatchAuditSection.tsx
+
 ## TASK-098 - Tighten Venue Matchup Report panel styling and merge innings display columns
 **Type:** frontend-modification
 **Scope:** frontend

@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-099 - Tighten Match Audit cell contrast, widths, and status labels - CLOSED 2026-03-11
+  Match Audit team-name spans now reuse the existing token-based heading
+  outline, status badges render compact icon labels, and column widths/padding
+  were tightened to remove the horizontal scroll regression. Gates F1/F2/F3/5/6
+  PASS, bouncer PASS.
+
 - TASK-098 - Tighten Venue Matchup Report panel styling and merge innings display columns - CLOSED 2026-03-11
   Venue matchup team cards now use subtler corners, tighter padding, uniform
   metric typography, and token-based heading outlines for jersey-colour contrast.
