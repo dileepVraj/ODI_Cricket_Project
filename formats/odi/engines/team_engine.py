@@ -174,13 +174,13 @@ class TeamEngine(ITeamEngine):
         self,
         stadium_name: str,
         home_team: str,
-        opp_team: str,
         years_back: int = 0,
         match_context: Optional[TeamMatchContext] = None,
     ) -> HomeFortressReport:
         ctx = self._require_match_context(match_context)
         resolved_years = self._resolved_years(years_back)
         stadium_id = VenueService.resolve_stadium_id(stadium_name)
+        opp_team: str = "All"
         payload = calculate_home_fortress_structured_payload(
             self._context_df(ctx, "match_df"),
             {
