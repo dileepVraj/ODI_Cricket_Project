@@ -21,17 +21,18 @@ const COL_LABELS: Record<(typeof DISPLAY_COLUMNS)[number], string> = {
 };
 const TEAM_NAME_COLUMNS = new Set(["winner", "team_bat_1", "team_bat_2"]);
 const MERGED_INNINGS_COLUMNS = new Set(["team_bat_1", "team_bat_2"]);
+const TEAM_NAME_TEXT_SHADOW = "0 0 1px var(--text-primary), 0 0 1px var(--text-primary)";
 
 function toTeamColorVarName(teamName: string): string {
     return `--venue-team-${teamName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-color`;
 }
 
 function getColumnWidthClass(column: string): string {
-    if (column === "start_date") return "[width:12%] min-w-[8rem]";
-    if (column === "venue") return "[width:24%] min-w-[15rem]";
-    if (column === "winner") return "[width:14%] min-w-[10rem]";
-    if (column === "team_bat_1" || column === "team_bat_2") return "[width:18%] min-w-[12rem]";
-    if (column === "status") return "[width:14%] min-w-[9rem]";
+    if (column === "start_date") return "w-[11%] min-w-[6.75rem]";
+    if (column === "venue") return "w-[17%] min-w-[8rem]";
+    if (column === "winner") return "w-[13%] min-w-[7.5rem]";
+    if (column === "team_bat_1" || column === "team_bat_2") return "w-[24%] min-w-[10.5rem]";
+    if (column === "status") return "w-[11%] min-w-[5.75rem]";
     return "min-w-[7rem]";
 }
 
@@ -40,7 +41,44 @@ function resolveTeamNameStyle(value: unknown): CSSProperties | undefined {
         return undefined;
     }
 
-    return { color: `var(${toTeamColorVarName(value)})` };
+    return {
+        color: `var(${toTeamColorVarName(value)})`,
+        textShadow: TEAM_NAME_TEXT_SHADOW,
+    };
+}
+
+function getCompactStatusLabel(status: unknown): string {
+    if (status === null || status === undefined) {
+        return "-";
+    }
+
+    const rawStatus = String(status).trim();
+    if (rawStatus === "") {
+        return "-";
+    }
+
+    const normalized = rawStatus.toUpperCase();
+    const isShortSecond = normalized === "STATUS_SHORT_SECOND_DROP"
+        || (normalized.includes("SHORT") && (normalized.includes("2ND") || normalized.includes("SECOND")));
+    const isShortFirst = normalized === "STATUS_SHORT_FIRST_DROP"
+        || (normalized.includes("SHORT") && (normalized.includes("1ST") || normalized.includes("FIRST")));
+    const isIncluded = normalized === "STATUS_OK"
+        || (normalized.includes("INCLUDED") && !normalized.includes("EXCLUDED"));
+
+    if (isIncluded) {
+        return "✅";
+    }
+    if (isShortSecond) {
+        return "2nd ⛔";
+    }
+    if (isShortFirst) {
+        return "1st ⛔";
+    }
+    if (normalized.includes("EXCLUDED") || normalized.startsWith("STATUS_")) {
+        return "⛔";
+    }
+
+    return rawStatus;
 }
 
 function renderMergedInningsCell(teamValue: unknown, scoreValue: unknown) {
@@ -114,7 +152,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                     className="[background:var(--bg-elevated)] [border-radius:var(--radius-md)] [border:1px_solid_var(--border-subtle)] [overflow-x:auto] [box-shadow:var(--shadow-card-deep)]"
                 >
                     <table
-                        className="[width:100%] [min-width:68rem] [table-layout:fixed] [border-collapse:separate] [border-spacing:0] [font-size:0.8rem]"
+                        className="[width:100%] min-w-full [table-layout:fixed] [border-collapse:separate] [border-spacing:0] [font-size:0.8rem]"
                     >
                         <thead>
                             <tr>
@@ -123,7 +161,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                     return (
                                         <th
                                             key={col}
-                                            className={`${getColumnWidthClass(col)} [padding:14px_16px] [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] [color:var(--text-secondary)] [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] [text-align:left] ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
+                                            className={`${getColumnWidthClass(col)} px-2 py-3 [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] [color:var(--text-secondary)] [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] [text-align:left] ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
                                         >
                                             {COL_LABELS[col] ?? col}
                                         </th>
@@ -151,19 +189,25 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                             const isStatus = col === "status";
                                             const isTeamName = TEAM_NAME_COLUMNS.has(col);
                                             const isMergedInnings = MERGED_INNINGS_COLUMNS.has(col);
+                                            const isVenue = col === "venue";
                                             const withDivider = index > 0;
                                             const statusBadgeClass = isStatus ? resolveStatusTone(typedRow.status_tone) : "";
                                             const teamNameStyle = isTeamName ? resolveTeamNameStyle(val) : undefined;
                                             const mergedScore = col === "team_bat_1" ? row["score_inn1"] : row["score_inn2"];
+                                            const cellWrapClass = isVenue
+                                                ? "[white-space:normal] [overflow-wrap:anywhere]"
+                                                : isMergedInnings
+                                                    ? "[white-space:normal]"
+                                                    : "[white-space:nowrap]";
 
                                             return (
                                                 <td
                                                     key={col}
-                                                    className={`${getColumnWidthClass(col)} [padding:12px_16px] [font-size:0.85rem] align-top ${isMergedInnings || col === "venue" ? "[white-space:normal] break-words" : "[white-space:nowrap]"} [text-align:left] ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
+                                                    className={`${getColumnWidthClass(col)} px-2 py-2.5 [font-size:0.85rem] align-top ${cellWrapClass} [text-align:left] ${withDivider ? "[border-left:1px_solid_var(--border-subtle)]" : ""}`}
                                                 >
                                                     {isStatus ? (
-                                                        <span className={`badge ${statusBadgeClass} text-[10px] px-2.5 py-0.5 rounded-full uppercase font-black tracking-wider`}>
-                                                            {val === null || val === undefined ? "-" : String(val)}
+                                                        <span className={`badge ${statusBadgeClass} inline-flex items-center justify-center whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-black tracking-[0.08em]`}>
+                                                            {getCompactStatusLabel(val)}
                                                         </span>
                                                     ) : isMergedInnings ? (
                                                         <span className="font-medium leading-[1.35]">
