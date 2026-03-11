@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-11 (TASK-100B FortressReport renderer)
+**Last Updated:** 2026-03-11 (TASK-101 fortress structured signature + manifest cleanup)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -563,6 +563,7 @@ In priority order:
 | TASK-099 closed | Match Audit team-name spans now reuse the existing heading outline, audit columns were compacted to fit the viewport, and status pills render compact display labels | Fixes jersey-colour contrast and horizontal scroll without changing backend payloads or renderer ownership | 2026-03-11 |
 | TASK-100A closed | Home Fortress now has a typed structured payload path (`HomeFortressReport`) alongside the legacy flat comparison rows, with a separate manifest function keyed to `home_fortress` | Preserves the existing fortress table while exposing venue averages, split metrics, and team-colour context for structured consumers | 2026-03-11 |
 | TASK-100B closed | Added `FortressReport.tsx` and registered the `home_fortress` dispatch in `FunctionRenderer.tsx`, reusing the Venue Matchup glass cards, stat badges, footer averages, and low-sample warning pattern | Keeps the structured fortress UI additive to the existing table path while preserving token-only styling, lazy loading, and match-audit ownership in the dispatcher | 2026-03-11 |
+| TASK-101 closed | `analyze_home_fortress_structured()` no longer accepts `opp_team`, hardcodes `"All"` internally, and the manifest now exposes a single `home_fortress` entry pointing at the structured engine method | Removes the runtime missing-argument failure and eliminates the duplicate Fortress Report tabs introduced by the parallel legacy/structured entries | 2026-03-11 |
 | URL bidirectional sync in context | `window.history.replaceState` only | Back-stack pollution from slider drags would break UX |
 | CORE updated to v2.3 | Part 2.2 and Part 5.4 rewritten | Frontend rules expanded to 38, 3-tier pipeline formalised |
 | Frontend rules expanded 6 → 38 | 2.2A through 2.2F | Grounded in page.tsx, globals.css, FunctionRenderer.tsx, FormatSelector.tsx |
@@ -701,6 +702,6 @@ core/gen_ai/skills/
 | TASK-096 closed | Venue matchup team headings and Match Audit team-name cells now resolve config-sourced jersey colours, with softer metric styling and wider layout spacing | Uses the existing team_color payload plus runtime CSS variables to keep exact team colours without raw hex literals in frontend source; panel padding and table column sizing remove clipping and jammed columns | 2026-03-10 |
 | TASK-097 closed | Match Audit venue rows now prefer DAL `venue_id` and otherwise resolve raw venue text to a canonical venue ID before falling back to raw text | Normalizes venue-name variants such as the two R Premadasa strings to one audit identifier without touching DAL, serializer, or frontend layers | 2026-03-10 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-100B FortressReport renderer)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-101 fortress structured signature + manifest cleanup)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

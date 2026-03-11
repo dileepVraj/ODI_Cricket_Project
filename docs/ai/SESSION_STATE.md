@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-101 - Hardcode opp_team=All in analyze_home_fortress_structured, retire old manifest entry - CLOSED 2026-03-11
+  `analyze_home_fortress_structured()` now hardcodes `opp_team="All"` and no
+  longer requires the API to pass an away-team value. The legacy flat fortress
+  manifest entry was removed, leaving one structured Fortress Report tab. Gates
+  1/2/3/4/5/6 PASS, bouncer PASS.
+
 - TASK-100B - Create FortressReport.tsx and register home_fortress case in FunctionRenderer - CLOSED 2026-03-11
   Added `FortressReport.tsx` and registered the `home_fortress` renderer path in
   `FunctionRenderer.tsx`, reusing the Venue Matchup glass-panel card system and

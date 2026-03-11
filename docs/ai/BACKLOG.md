@@ -32,6 +32,52 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-101 - Hardcode opp_team=All in analyze_home_fortress_structured, retire old manifest entry
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-100A
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+analyze_home_fortress_structured() currently accepts opp_team as a
+parameter. The manifest entry for home_fortress_structured does not
+include opp_team in required_context, so the API layer never passes it,
+causing a missing positional argument error at runtime.
+
+The intended behaviour of the Fortress Report is home team vs ALL teams
+at the venue - opp_team is always "All" regardless of what the user has
+selected in the away team dropdown. opp_team must be removed from the
+method signature entirely and hardcoded to "All" inside the method body.
+
+Additionally, the old home_fortress manifest entry (key: "home_fortress",
+engine_method: "analyze_home_fortress", output_type: "comparison_table")
+must be retired - it is superseded by home_fortress_structured. Leaving
+both active causes two "Fortress Report" tabs to appear in the UI.
+
+### Acceptance Criteria
+AC-1: analyze_home_fortress_structured() in team_engine.py has NO
+      opp_team parameter in its signature.
+AC-2: Inside analyze_home_fortress_structured(), opp_team is set to
+      the string "All" before being passed to
+      calculate_home_fortress_structured_payload() via the context dict.
+AC-3: The method still accepts: stadium_name, home_team, years_back,
+      match_context - unchanged from TASK-100A minus opp_team.
+AC-4: The old manifest entry with key "home_fortress" and
+      engine_method "analyze_home_fortress" is removed.
+AC-5: The manifest entry with engine_method "analyze_home_fortress_structured"
+      has key "home_fortress" (renamed from "home_fortress_structured").
+AC-6: Only one "Fortress Report" entry exists in the manifest after the fix.
+AC-7: KIP-001 and KIP-002 untouched.
+AC-8: Post-task compliance bouncer PASS, violation count matches baseline.
+
+### Files In Scope
+- `formats/odi/engines/team_engine.py`
+- `formats/odi/manifest.py`
+- READ ONLY - `formats/odi/engines/team_engine.py`
+- READ ONLY - `formats/odi/manifest.py`
+
 ## TASK-100B - Create FortressReport.tsx and register home_fortress case in FunctionRenderer
 **Type:** frontend-new-component
 **Scope:** frontend
