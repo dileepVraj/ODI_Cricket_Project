@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-100B - Create FortressReport.tsx and register home_fortress case in FunctionRenderer - CLOSED 2026-03-11
+  Added `FortressReport.tsx` and registered the `home_fortress` renderer path in
+  `FunctionRenderer.tsx`, reusing the Venue Matchup glass-panel card system and
+  runtime team-colour CSS variables for the structured fortress payload. Gates
+  F1/F2/5/6 PASS, GATE F3 SKIPPED per task scope, bouncer PASS.
+
 - TASK-100A - Add HomeFortressReport structured payload and register home_fortress output type - CLOSED 2026-03-11
   Added `HomeFortressReport`, a structured fortress calculator payload, and
   `analyze_home_fortress_structured()` so fortress analysis can return typed

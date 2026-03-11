@@ -32,6 +32,53 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-100B - Create FortressReport.tsx and register home_fortress case in FunctionRenderer
+**Type:** frontend-new-component
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-100A
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+TASK-100A added analyze_home_fortress_structured() and registered
+output_type "home_fortress" in the manifest. This task creates the
+frontend renderer for that output type.
+
+Create frontend/components/renderers/FortressReport.tsx from scratch
+using the VenueMatchup presentation system (glass panels, tone-mapped
+team cards, StatBadge pills, SectionHeader/DataRow rows, FooterItem
+venue averages, low-sample warning banner). Register it in
+FunctionRenderer.tsx under case "home_fortress". No backend files,
+no API contract, no types.ts, no manifest changes.
+
+### Acceptance Criteria
+AC-1: FortressReport.tsx created at
+      frontend/components/renderers/FortressReport.tsx.
+AC-2: FunctionRenderer.tsx adds the FortressReport lazy import and the
+      home_fortress switch case.
+AC-3: Root wrapper uses the required max-w-5xl animate-fade-in layout.
+AC-4: Summary bar renders Matches, Home Win %, and Tied/NR in a glass panel.
+AC-5: Home team card follows the VenueMatchup tone + heading treatment.
+AC-6: Visitor card always renders, including zero-filled All-opponent payloads.
+AC-7: Batting 1st and Chasing sections use SectionHeader/DataRow with bracket splits.
+AC-8: Venue averages footer uses the shared footer presentation pattern.
+AC-9: Low-sample warnings render the sparse-data notice banner when present.
+AC-10: team_color CSS vars are injected via useEffect and cleaned up on unmount.
+AC-11: toneClasses() is copied verbatim from VenueMatchupReport.tsx.
+AC-12: DataRow bracket annotation renderer is copied verbatim.
+AC-13: No hardcoded hex values are introduced.
+AC-14: No inline styles are used except the team heading style.
+AC-15: No new CSS variable names are introduced.
+AC-16: EmptyState fallback exists for unrecognisable payloads.
+AC-17: match_audit is not rendered inside FortressReport.tsx.
+AC-18: GATE F3 remains skipped because lib/types.ts is untouched.
+AC-19: Post-task bouncer matches the baseline PASS.
+
+### Files In Scope
+- frontend/components/renderers/FortressReport.tsx
+- frontend/components/renderers/FunctionRenderer.tsx
+
 ## TASK-100A - Add HomeFortressReport structured payload and register home_fortress output type
 **Type:** backend - new-feature
 **Scope:** backend
