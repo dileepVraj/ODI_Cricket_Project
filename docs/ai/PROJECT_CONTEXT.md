@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-11 (TASK-103 fortress visitor metrics sentinel fix)
+**Last Updated:** 2026-03-11 (TASK-104 fortress audit team colour injection)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -564,6 +564,7 @@ In priority order:
 | TASK-100A closed | Home Fortress now has a typed structured payload path (`HomeFortressReport`) alongside the legacy flat comparison rows, with a separate manifest function keyed to `home_fortress` | Preserves the existing fortress table while exposing venue averages, split metrics, and team-colour context for structured consumers | 2026-03-11 |
 | TASK-100B closed | Added `FortressReport.tsx` and registered the `home_fortress` dispatch in `FunctionRenderer.tsx`, reusing the Venue Matchup glass cards, stat badges, footer averages, and low-sample warning pattern | Keeps the structured fortress UI additive to the existing table path while preserving token-only styling, lazy loading, and match-audit ownership in the dispatcher | 2026-03-11 |
 | TASK-101 closed | `analyze_home_fortress_structured()` no longer accepts `opp_team`, hardcodes `"All"` internally, and the manifest now exposes a single `home_fortress` entry pointing at the structured engine method | Removes the runtime missing-argument failure and eliminates the duplicate Fortress Report tabs introduced by the parallel legacy/structured entries | 2026-03-11 |
+| TASK-104 closed | Home Fortress structured payload now exposes a `team_colors` map for all unique audit-table teams, and FortressReport injects CSS vars for those entries at render time | Restores jersey-colour resolution for Match Audit team names in Fortress Report without adding frontend colour logic or changing serializer ownership | 2026-03-11 |
 | URL bidirectional sync in context | `window.history.replaceState` only | Back-stack pollution from slider drags would break UX |
 | CORE updated to v2.3 | Part 2.2 and Part 5.4 rewritten | Frontend rules expanded to 38, 3-tier pipeline formalised |
 | Frontend rules expanded 6 → 38 | 2.2A through 2.2F | Grounded in page.tsx, globals.css, FunctionRenderer.tsx, FormatSelector.tsx |
@@ -704,6 +705,6 @@ core/gen_ai/skills/
 | TASK-102 closed | Home Fortress structured payload now labels the aggregate away side as `VISITORS`, computes aggregate visitor wins/defended/chased for `opp_team="All"`, and emits `MATCH_IDS` | Restores correct all-opponent fortress comparison semantics and re-enables enrichment-driven Match Audit rendering without changing serializer or frontend ownership | 2026-03-11 |
 | TASK-103 closed | Home Fortress structured payload now routes aggregate visitor batting/chasing metrics through the existing `"Visitors"` sentinel branch using a `visitor_df` copy with `home_team_ref` | Restores populated all-visitor batting/chasing stats for Fortress Report while preserving the `VISITORS` display label and keeping specific-opponent behavior unchanged | 2026-03-11 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-103 fortress visitor metrics sentinel fix)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-104 fortress audit team colour injection)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

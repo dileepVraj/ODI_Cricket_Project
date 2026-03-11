@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-104 - Inject team jersey colours for all audit table teams in FortressReport - CLOSED 2026-03-11
+  Home Fortress structured payload now emits a typed `team_colors` map built
+  from unique audit-table teams, and FortressReport injects runtime CSS vars
+  for every entry so Match Audit team names resolve jersey colours. Gates
+  1/2/3/4/F1/F2/5/6 PASS, GATE F3 SKIPPED, bouncer PASS.
+
 - TASK-103 - Use Visitors sentinel for aggregate visitor batting stats in fortress calculator - CLOSED 2026-03-11
   Home Fortress structured payload now passes aggregate visitors through the
   existing `"Visitors"` metrics branch via a `visitor_df` copy with

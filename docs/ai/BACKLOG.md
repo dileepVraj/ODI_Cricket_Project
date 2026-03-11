@@ -32,6 +32,52 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-104 - Inject team jersey colours for all audit table teams in FortressReport
+**Type:** bug-fix
+**Scope:** both
+**Priority:** High
+**Depends On:** TASK-103
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+Team names in the Fortress Report match audit table render without jersey
+colours. In VenueMatchup this works because the two team card colours are
+injected as CSS vars. In Fortress the audit table shows many visiting teams
+(England, India, Bangladesh, Australia etc.) and none of their CSS vars are
+injected.
+
+Fix: add a team_colors dict to HomeFortressReport payload containing
+{team_name: hex_color} for every unique team appearing in clean_df.
+The frontend useEffect in FortressReport.tsx iterates this dict and
+injects a CSS var for each team, making MatchAuditSection colour
+resolution work identically to VenueMatchup.
+
+### Acceptance Criteria
+AC-1: HomeFortressReport TypedDict in team_types.py has:
+      team_colors: dict[str, str]
+      stop-state-trace-confirm performed and recorded.
+AC-2: calculate_home_fortress_structured_payload() populates team_colors:
+      all unique team names from clean_df["team_bat_1"] and
+      clean_df["team_bat_2"] combined, looked up via TEAM_COLORS.get().
+      Teams with no entry in TEAM_COLORS are omitted.
+AC-3: team_colors is added to the HomeFortressReport dict in the
+      calculator alongside the other top-level keys.
+AC-4: FortressReport.tsx useEffect injects CSS vars for
+      all entries in team_colors and cleans them up on unmount.
+AC-5: All team names in the match audit table render with jersey
+      colours matching VenueMatchup.
+AC-6: No domain logic added to the frontend component.
+AC-7: GATE F3 triggered only if lib/types.ts is modified.
+AC-8: Post-task compliance bouncer PASS, violation count matches baseline.
+
+### Files In Scope
+- `core/interfaces/team_types.py`
+- `core/calculators/team/venue_calculator.py`
+- `frontend/components/renderers/FortressReport.tsx`
+- READ ONLY - `config/shared/team_colors.py`
+- READ ONLY - `frontend/components/renderers/VenueMatchupReport.tsx`
+
 ## TASK-103 - Use Visitors sentinel for aggregate visitor batting stats in fortress calculator
 **Type:** bug-fix
 **Scope:** backend
