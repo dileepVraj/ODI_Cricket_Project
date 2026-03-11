@@ -181,6 +181,7 @@ class HomeFortressReport(TypedDict):
     home: HomeFortressTeamPayload
     visitor: HomeFortressTeamPayload
     venue_avg: VenueAveragePayload
+    team_colors: dict[str, str]
     MATCH_IDS: str | None
     low_sample_warnings: list[str]
 

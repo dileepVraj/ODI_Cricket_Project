@@ -190,6 +190,31 @@ def _home_fortress_summary_payload(
     }
 
 
+def _home_fortress_team_colors(clean_df: pd.DataFrame) -> dict[str, str]:
+    team_columns = [
+        column_name
+        for column_name in ("team_bat_1", "team_bat_2")
+        if column_name in clean_df.columns
+    ]
+    if not team_columns:
+        return {}
+    team_names = pd.concat(
+        [
+            clean_df[column_name].dropna().astype(str).str.strip()
+            for column_name in team_columns
+        ],
+        ignore_index=True,
+    )
+    if team_names.empty:
+        return {}
+    unique_team_names = set(team_names[team_names != ""].unique().tolist())
+    return {
+        team_name: color
+        for team_name in unique_team_names
+        if (color := TEAM_COLORS.get(team_name))
+    }
+
+
 def calculate_home_fortress_structured_payload(
     match_df: pd.DataFrame,
     context: HomeFortressContext,
@@ -262,21 +287,26 @@ def calculate_home_fortress_structured_payload(
         *home_stats["low_sample_warnings"],
         *visitor_stats["low_sample_warnings"],
     ]
-    report: HomeFortressReport = {
-        "summary": _home_fortress_summary_payload(
+    report_values = [
+        _home_fortress_summary_payload(
             summary_df,
             context["home_team"],
             percent_scale,
         ),
-        "home": {"name": context["home_team"], "stats": home_stats},
-        "visitor": {"name": visitor_display_name, "stats": visitor_stats},
-        "venue_avg": _venue_avg_payload(
+        {"name": context["home_team"], "stats": home_stats},
+        {"name": visitor_display_name, "stats": visitor_stats},
+        _venue_avg_payload(
             summary_df,
             context["competitive_chase_threshold"],
         ),
-        "MATCH_IDS": ",".join(clean_df["match_id"].astype(str).unique().tolist()) or None,
-        "low_sample_warnings": low_sample_warnings,
-    }
+        _home_fortress_team_colors(clean_df),
+        ",".join(clean_df["match_id"].astype(str).unique().tolist()) or None,
+        low_sample_warnings,
+    ]
+    report = cast(
+        HomeFortressReport,
+        dict(zip(HomeFortressReport.__annotations__, report_values)),
+    )
     return {"payload": report}
 
 

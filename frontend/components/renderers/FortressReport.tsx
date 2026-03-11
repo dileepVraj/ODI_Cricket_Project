@@ -13,6 +13,7 @@ type FortressData = {
     home: FortressTeam;
     visitor: FortressTeam;
     venue_avg: { avg_1st: string; avg_2nd: string; avg_win_score: string };
+    team_colors: Record<string, string>;
     low_sample_warnings?: string[];
 };
 function isRecord(value: unknown): value is UnknownRecord {
@@ -23,6 +24,14 @@ function toRecord(value: unknown): UnknownRecord | null {
 }
 function toStringArray(value: unknown): string[] {
     return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : [];
+}
+function toStringMap(value: unknown): Record<string, string> {
+    const record = toRecord(value);
+    if (!record) return {};
+    return Object.entries(record).reduce<Record<string, string>>((acc, [key, entry]) => {
+        if (key && typeof entry === "string") acc[key] = entry;
+        return acc;
+    }, {});
 }
 function readNumber(record: UnknownRecord | null, key: string): number {
     return record && typeof record[key] === "number" ? record[key] : 0;
@@ -84,6 +93,7 @@ function getHomeFortressData(value: unknown): FortressData | null {
             avg_2nd: toDisplayValue(venueAvg["avg_2nd"]),
             avg_win_score: toDisplayValue(venueAvg["avg_win_score"]),
         },
+        team_colors: toStringMap(record["team_colors"]),
     };
     const lowSampleWarnings = toStringArray(record["low_sample_warnings"]);
     if (lowSampleWarnings.length > 0) data.low_sample_warnings = lowSampleWarnings;
@@ -141,20 +151,26 @@ export default function FortressReport({ data }: { data: Record<string, unknown>
     const lowSampleWarnings = payload.low_sample_warnings ?? [];
     React.useEffect(() => {
         const root = document.documentElement;
-        const varNames = [home, visitor]
-            .filter((team) => team.name && team.stats.team_color)
-            .map((team) => {
-                const varName = toTeamColorVarName(team.name);
-                root.style.setProperty(varName, team.stats.team_color);
-                return varName;
-            });
+        const injected: string[] = [];
+        [home, visitor].filter((team) => team.name && team.stats.team_color).forEach((team) => {
+            const varName = toTeamColorVarName(team.name);
+            root.style.setProperty(varName, team.stats.team_color);
+            injected.push(varName);
+        });
+        const teamColors = payload.team_colors ?? {};
+        Object.entries(teamColors).forEach(([teamName, color]) => {
+            if (teamName && color) {
+                const varName = toTeamColorVarName(teamName);
+                root.style.setProperty(varName, color);
+                injected.push(varName);
+            }
+        });
         return () => {
-            for (const varName of varNames) {
+            for (const varName of injected) {
                 root.style.removeProperty(varName);
             }
         };
-    }, [home, visitor]);
-
+    }, [home, visitor, payload.team_colors]);
     return (
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-7 px-4 py-2 sm:px-5 lg:px-6 animate-fade-in">
             <div className="grid grid-cols-3 [background:var(--glass-bg)] [border:1px_solid_var(--glass-border)] rounded-xl overflow-hidden backdrop-blur-sm [box-shadow:var(--shadow-md)]">
@@ -194,10 +210,7 @@ function SummaryItem({ label, value, highlight = false, icon }: { label: string;
     return (
         <div className="flex flex-col items-center justify-center p-5 border-r [border-color:var(--glass-border)] last:border-0">
             <span className={`text-[2rem] leading-none font-black font-numeric ${highlight ? "[color:var(--accent-primary)]" : "[color:var(--text-primary)]"}`}>{value}</span>
-            <div className="flex items-center gap-1.5 mt-1.5">
-                {icon}
-                <span className="text-[10px] font-semibold tracking-[0.14em] [color:var(--text-secondary)] uppercase">{label}</span>
-            </div>
+            <div className="flex items-center gap-1.5 mt-1.5">{icon}<span className="text-[10px] font-semibold tracking-[0.14em] [color:var(--text-secondary)] uppercase">{label}</span></div>
         </div>
     );
 }
@@ -260,38 +273,26 @@ function SectionHeader({ label, activeColor }: { label: string; activeColor: str
 function DataRow({ label, value, labelColor }: { label: string; value: string; labelColor: string }) {
     const renderValue = (val: string) => {
         if (val === null || val === undefined || val === "" || val === "-") return "-";
-
         const parts = val.split(/(\[.*?\])/);
         if (parts.length === 1) return val;
-
         return parts.map((part, i) => {
             if (part.startsWith("[") && part.endsWith("]")) {
-                return (
-                    <span key={i} className="text-[0.8em] [color:var(--text-muted)] ml-1.5 font-medium">
-                        {part}
-                    </span>
-                );
+                return <span key={i} className="text-[0.8em] [color:var(--text-muted)] ml-1.5 font-medium">{part}</span>;
             }
             return part;
         });
     };
-
     return (
         <div className="grid grid-cols-[minmax(0,1fr)_minmax(max-content,auto)] items-start gap-x-4 py-1.5 border-b [border-color:var(--border-subtle)] last:border-0 group">
-            <span className={`min-w-0 pl-1 text-[12px] font-medium tracking-tight leading-[1.3] ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>
-                {label}
-            </span>
-            <span className="min-w-0 pr-3 text-[12px] leading-[1.3] font-medium [color:var(--text-primary)] tracking-tight text-right whitespace-normal break-words">
-                {renderValue(value)}
-            </span>
+            <span className={`min-w-0 pl-1 text-[12px] font-medium tracking-tight leading-[1.3] ${labelColor} group-hover:[color:var(--text-primary)] transition-colors`}>{label}</span>
+            <span className="min-w-0 pr-3 text-[12px] leading-[1.3] font-medium [color:var(--text-primary)] tracking-tight text-right whitespace-normal break-words">{renderValue(value)}</span>
         </div>
     );
 }
 function FooterItem({ label, value }: { label: string; value: string }) {
     return (
         <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold [color:var(--text-secondary)] whitespace-nowrap">{label}:</span>
-            <span className="text-sm font-black [color:var(--text-primary)] font-numeric tracking-tight">{value}</span>
+            <span className="text-xs font-semibold [color:var(--text-secondary)] whitespace-nowrap">{label}:</span><span className="text-sm font-black [color:var(--text-primary)] font-numeric tracking-tight">{value}</span>
         </div>
     );
 }
