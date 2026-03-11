@@ -705,6 +705,8 @@ core/gen_ai/skills/
 | TASK-102 closed | Home Fortress structured payload now labels the aggregate away side as `VISITORS`, computes aggregate visitor wins/defended/chased for `opp_team="All"`, and emits `MATCH_IDS` | Restores correct all-opponent fortress comparison semantics and re-enables enrichment-driven Match Audit rendering without changing serializer or frontend ownership | 2026-03-11 |
 | TASK-103 closed | Home Fortress structured payload now routes aggregate visitor batting/chasing metrics through the existing `"Visitors"` sentinel branch using a `visitor_df` copy with `home_team_ref` | Restores populated all-visitor batting/chasing stats for Fortress Report while preserving the `VISITORS` display label and keeping specific-opponent behavior unchanged | 2026-03-11 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-104 fortress audit team colour injection)*
+| TASK-105 closed | Frontend paradigm sentinel now detects renderer payload extractors whose first parameter is `unknown` and whose typed return is a domain object | Captures the FortressReport SRP leak at the validator layer while preserving display-safe helpers and local type predicates | 2026-03-11 |
+
+*End of PROJECT_CONTEXT.md - Updated 2026-03-11 (TASK-105 payload extractor validator rule)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

@@ -32,6 +32,37 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-105 - Add payload extractor detection rule R6 to frontend-paradigm-sentinel
+**Type:** validator-fix
+**Scope:** tooling
+**Priority:** High
+**Depends On:** TASK-104
+**Created:** 2026-03-11
+**Status:** CLOSED - 2026-03-11
+
+### Description
+frontend-paradigm-sentinel had no rule detecting payload extraction
+functions inside renderer files. This allowed FortressReport.tsx to
+embed raw API payload parsing and type coercion helpers that belong in
+`lib/`, not in renderer components.
+
+The new rule targets functions in `components/renderers/` whose sole or
+first parameter is typed `unknown` and whose return type is a non-display
+domain type. Display-safe helpers remain exempt.
+
+### Acceptance Criteria
+AC-1: `check_payload_extractor_in_renderer()` exists in
+      `run_frontend_paradigm.py` and is called from `scan_file()`.
+AC-2: All 7 audited FortressReport payload extractors are flagged.
+AC-3: All 8 audited legitimate helpers remain exempt.
+AC-4: Full-tree GATE F2 produces violations only on FortressReport.tsx.
+AC-5: `SKILL.md` includes Rule 2.2A-R6 in the checks table.
+AC-6: Post-task compliance bouncer PASS matches baseline.
+
+### Files In Scope
+- `core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/scripts/run_frontend_paradigm.py`
+- `core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/SKILL.md`
+
 ## TASK-104 - Inject team jersey colours for all audit table teams in FortressReport
 **Type:** bug-fix
 **Scope:** both

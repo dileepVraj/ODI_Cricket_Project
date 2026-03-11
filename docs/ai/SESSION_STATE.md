@@ -20,6 +20,13 @@ None.
 
 ## Last Completed
 
+- TASK-105 - Add payload extractor detection rule R6 to frontend-paradigm-sentinel - CLOSED 2026-03-11
+  Frontend paradigm sentinel now flags renderer-local payload extraction
+  helpers whose first input is `unknown` and whose typed return is a domain
+  object, while exempting display-safe helpers. GATE F2 now FAILS on the
+  seven FortressReport extractors only (KNOWN VIOLATION - TASK-106 pending),
+  and bouncer PASS remains unchanged.
+
 - TASK-104 - Inject team jersey colours for all audit table teams in FortressReport - CLOSED 2026-03-11
   Home Fortress structured payload now emits a typed `team_colors` map built
   from unique audit-table teams, and FortressReport injects runtime CSS vars
