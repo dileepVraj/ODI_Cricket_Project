@@ -1,6 +1,6 @@
 "use client";
 
-import { lazy, Suspense, type ReactNode } from "react";
+import React, { lazy, Suspense, type ReactNode } from "react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { isJsonRecordArray } from "@/lib/types";
 
@@ -18,6 +18,7 @@ const DownloadPanel = lazy(() => import("./DownloadPanel"));
 const PhaseAnalysisCard = lazy(() => import("./PhaseAnalysisCard"));
 const VenueMatchupReport = lazy(() => import("./VenueMatchupReport"));
 const CountryH2HReport = lazy(() => import("./CountryH2HReport"));
+const GlobalH2HReport = React.lazy(() => import("./GlobalH2HReport"));
 const FortressReport = lazy(() => import("./FortressReport"));
 const MatchAuditSection = lazy(() => import("./MatchAuditSection"));
 
@@ -78,6 +79,19 @@ function renderMatchAudit(matchAudit: JsonRecordArray | null): ReactNode {
     );
 }
 
+function renderWithAudit(
+    renderer: ReactNode,
+    fallbackMessage: string,
+    matchAudit: JsonRecordArray | null
+): ReactNode {
+    return (
+        <>
+            {wrapRenderer(renderer, fallbackMessage)}
+            {renderMatchAudit(matchAudit)}
+        </>
+    );
+}
+
 function getSuspenseFallback(): ReactNode {
     return (
         <div className="skeleton" aria-hidden="true">
@@ -105,50 +119,34 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
     switch (outputType) {
         case "report":
             if (isJsonRecord(mainData)) {
-                renderedOutput = (
-                    <>
-                        {wrapRenderer(
-                            <ReportCard data={mainData} />,
-                            "Unable to render report output."
-                        )}
-                        {renderMatchAudit(matchAudit)}
-                    </>
+                renderedOutput = renderWithAudit(
+                    <ReportCard data={mainData} />,
+                    "Unable to render report output.",
+                    matchAudit
                 );
             } else if (isJsonRecordArray(mainData)) {
-                renderedOutput = (
-                    <>
-                        {wrapRenderer(
-                            <DataTable data={mainData} />,
-                            "Unable to render table output."
-                        )}
-                        {renderMatchAudit(matchAudit)}
-                    </>
+                renderedOutput = renderWithAudit(
+                    <DataTable data={mainData} />,
+                    "Unable to render table output.",
+                    matchAudit
                 );
             }
             break;
         case "comparison_table":
             if (isJsonRecordArray(mainData)) {
-                renderedOutput = (
-                    <>
-                        {wrapRenderer(
-                            <ComparisonTable data={mainData} />,
-                            "Unable to render comparison table."
-                        )}
-                        {renderMatchAudit(matchAudit)}
-                    </>
+                renderedOutput = renderWithAudit(
+                    <ComparisonTable data={mainData} />,
+                    "Unable to render comparison table.",
+                    matchAudit
                 );
             }
             break;
         case "matrix_table":
             if (isJsonRecordArray(mainData)) {
-                renderedOutput = (
-                    <>
-                        {wrapRenderer(
-                            <MatrixTable data={mainData} />,
-                            "Unable to render matrix table."
-                        )}
-                        {renderMatchAudit(matchAudit)}
-                    </>
+                renderedOutput = renderWithAudit(
+                    <MatrixTable data={mainData} />,
+                    "Unable to render matrix table.",
+                    matchAudit
                 );
             }
             break;
@@ -162,14 +160,10 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
             break;
         case "table":
             if (isJsonRecordArray(mainData)) {
-                renderedOutput = (
-                    <>
-                        {wrapRenderer(
-                            <DataTable data={mainData} />,
-                            "Unable to render table output."
-                        )}
-                        {renderMatchAudit(matchAudit)}
-                    </>
+                renderedOutput = renderWithAudit(
+                    <DataTable data={mainData} />,
+                    "Unable to render table output.",
+                    matchAudit
                 );
             }
             break;
@@ -183,40 +177,37 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
             break;
         case "venue_matchup_report":
             if (isJsonRecord(mainData)) {
-                renderedOutput = (
-                    <>
-                        {wrapRenderer(
-                            <VenueMatchupReport data={mainData} />,
-                            "Unable to render venue matchup report."
-                        )}
-                        {renderMatchAudit(matchAudit)}
-                    </>
+                renderedOutput = renderWithAudit(
+                    <VenueMatchupReport data={mainData} />,
+                    "Unable to render venue matchup report.",
+                    matchAudit
                 );
             }
             break;
         case "country_h2h_report":
             if (isJsonRecord(mainData)) {
-                renderedOutput = (
-                    <>
-                        {wrapRenderer(
-                            <CountryH2HReport data={mainData} />,
-                            "Unable to render country H2H report."
-                        )}
-                        {renderMatchAudit(matchAudit)}
-                    </>
+                renderedOutput = renderWithAudit(
+                    <CountryH2HReport data={mainData} />,
+                    "Unable to render country H2H report.",
+                    matchAudit
+                );
+            }
+            break;
+        case "global_h2h_report":
+            if (isJsonRecord(mainData)) {
+                renderedOutput = renderWithAudit(
+                    <GlobalH2HReport data={mainData} />,
+                    "Unable to render Global H2H report.",
+                    matchAudit
                 );
             }
             break;
         case "home_fortress":
             if (isJsonRecord(mainData)) {
-                renderedOutput = (
-                    <>
-                        {wrapRenderer(
-                            <FortressReport data={mainData} />,
-                            "Unable to render fortress report."
-                        )}
-                        {renderMatchAudit(matchAudit)}
-                    </>
+                renderedOutput = renderWithAudit(
+                    <FortressReport data={mainData} />,
+                    "Unable to render fortress report.",
+                    matchAudit
                 );
             }
             break;

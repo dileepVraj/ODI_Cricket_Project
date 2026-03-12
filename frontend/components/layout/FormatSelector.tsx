@@ -16,9 +16,13 @@ export default function FormatSelector() {
                     <Activity size={18} className="[color:var(--text-primary)]" />
                 </div>
                 <div>
-                    <h1 className="gradient-text [font-size:1rem] [font-weight:800] [letter-spacing:-0.02em]">CricketAlgo</h1>
+                    <h1
+                        className="gradient-text [font-size:1rem] [font-weight:800] [letter-spacing:-0.02em]"
+                    >
+                        Vantage
+                    </h1>
                     <span className="[font-size:0.65rem] [color:var(--text-disabled)] [font-weight:500] [letter-spacing:0.05em] [text-transform:uppercase]">
-                        Trading Platform
+                        Strategic Algo Exchange
                     </span>
                 </div>
             </div>

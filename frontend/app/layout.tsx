@@ -3,7 +3,7 @@ import "./globals.css";
 import { AppProvider } from "@/lib/context";
 
 export const metadata: Metadata = {
-  title: "CricketAlgo | Trading Intelligence",
+  title: "Vantage | Strategic Algo Exchange",
   description:
     "AI-powered cricket analysis for algo-trading. " +
     "Venue intelligence, rivalry analysis, score prediction, and match-day packs.",
