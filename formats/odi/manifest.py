@@ -299,7 +299,7 @@ MANIFEST = {
                             "source": "host_countries",
                         },
                     },
-                    "output_type": "comparison_table",
+                    "output_type": "country_h2h_report",
                 },
                 {
                     "key": "continent_perf",

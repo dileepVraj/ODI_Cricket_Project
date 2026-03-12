@@ -309,7 +309,7 @@ class TeamEngine(ITeamEngine):
         years_back: int = 0,
         recorder: Optional[RecorderPort] = None,
         match_context: Optional[TeamMatchContext] = None,
-    ) -> ComparisonReportRows:
+    ) -> VenueMatchupReport:
         _ = recorder
         ctx = self._require_match_context(match_context)
         resolved_years = self._resolved_years(years_back)
@@ -325,7 +325,7 @@ class TeamEngine(ITeamEngine):
                 "competitive_chase_threshold": self._threshold(ctx, "competitive_chase_threshold"),
             },
         )
-        return cast(ComparisonReportRows, payload.get("rows", []))
+        return cast(VenueMatchupReport, payload.get("payload", {}))
 
     def analyze_home_dominance(
         self,
