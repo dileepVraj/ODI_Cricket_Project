@@ -20,6 +20,19 @@ None.
 
 ## Last Completed
 
+- TASK-115 - GlobalH2HReport frontend renderer + FunctionRenderer registration - CLOSED 2026-03-12
+  Added `frontend/lib/global-h2h-types.ts`,
+  `frontend/components/renderers/GlobalH2HReport.tsx`, and the
+  `global_h2h_report` dispatcher path in `FunctionRenderer.tsx`.
+  Committed alongside TASK-115: pre-existing branding changes from the
+  prior session task chain — app name changed from
+  `CricketAlgo | Trading` to `Vantage | Strategic Algo Exchange`,
+  FormatSelector sidebar name/subtitle updated, default UI font moved to
+  Cascadia Code, Vantage shield icon replaced
+  `frontend/app/icon.png` and `frontend/public/icon.png`, and
+  `frontend/app/layout.tsx` metadata title updated. Gates F1/F2/F3/5/6
+  PASS, bouncer PASS.
+
 - TASK-114 - Add analyze_global_h2h_structured backend method + manifest registration - CLOSED 2026-03-12
   Added `calculate_global_h2h_structured_payload()` plus
   `_build_global_h2h_structured()` in `matchup_calculator.py`,

@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-12 (TASK-114 global_h2h structured backend registration)
+**Last Updated:** 2026-03-12 (TASK-115 global_h2h frontend renderer + branding carry-forward)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -402,8 +402,9 @@ Rules are documented in `AGENTS.md Part 5` and `GEMINI.md Part 5`. Both files ar
 - Fallback auto-detection for unknown output types — safety net only
 - `EmptyState` from `components/common/` for null/undefined data
 - Current output_types: `report`, `comparison_table`, `matrix_table`, `form_table`,
-  `table`, `phase_analysis`, `venue_matchup_report`, `prediction_card`,
-  `profile_card`, `matchup_table`, `download_json`
+  `table`, `phase_analysis`, `venue_matchup_report`, `country_h2h_report`,
+  `global_h2h_report`, `home_fortress`, `prediction_card`, `profile_card`,
+  `matchup_table`, `download_json`
 
 ### 6.5 globals.css — Design System v1.0
 
@@ -721,6 +722,8 @@ core/gen_ai/skills/
 
 | TASK-114 closed | Added `_build_global_h2h_structured()` and `calculate_global_h2h_structured_payload()` in `core/calculators/team/matchup_calculator.py`, plus `analyze_global_h2h_structured()` in `formats/odi/engines/team_engine.py` | Registers the additive backend-only `global_h2h_structured` manifest path with `output_type="global_h2h_report"`, preserving the legacy flat `analyze_global_h2h()` comparison-table flow for existing consumers | 2026-03-12 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-114 global_h2h structured backend registration)*
+| TASK-115 closed | Added `frontend/lib/global-h2h-types.ts`, `frontend/components/renderers/GlobalH2HReport.tsx`, and the `global_h2h_report` FunctionRenderer dispatch path | Committed alongside pre-existing branding changes: app renamed from `CricketAlgo | Trading` to `Vantage | Strategic Algo Exchange`, FormatSelector sidebar branding updated, Cascadia Code is now the default UI font, Vantage shield icons replaced `frontend/app/icon.png` and `frontend/public/icon.png`, and `frontend/app/layout.tsx` metadata title was updated | 2026-03-12 |
+
+*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-115 global_h2h frontend renderer + branding carry-forward)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*
