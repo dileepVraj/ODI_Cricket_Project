@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-12 (TASK-108 country H2H engine + manifest wiring)
+**Last Updated:** 2026-03-12 (TASK-109 country H2H frontend type contract)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -553,6 +553,7 @@ In priority order:
 
 | Decision | Outcome | Rationale |
 |----------|---------|-----------|
+| TASK-109 closed | Added `frontend/lib/country-h2h-types.ts` with a distinct `CountryH2HData` interface, frontend-only sub-shapes, and a mirrored `getCountryH2HData()` parser for `country_h2h_report` | Keeps Country H2H typing independent from Venue Matchup while preserving the same structured payload contract for the Task 4 renderer follow-up | 2026-03-12 |
 | TASK-108 closed | `analyze_country_h2h()` now consumes `payload["payload"]` as a `VenueMatchupReport`, and the `country_h2h` manifest entry now emits `output_type="country_h2h_report"` | Completes the downstream wiring for TASK-107 so the API/engine path returns the structured report contract while preserving compatibility for the planned frontend renderer follow-up tasks | 2026-03-12 |
 | TASK-107 closed | `calculate_country_h2h_payload()` now returns a structured `VenueMatchupReport`-compatible payload built directly from `clean_df`, without changing `_comparison_rows()` or `core/services/report_builder.py` | The flat `rows` path hid the structured stats this report needed; extracting the builder in `matchup_calculator.py` surfaces summary, team splits, venue averages, and MATCH_IDS while keeping the upstream builder untouched | 2026-03-12 |
 | Remove Mandate 7 (Numba AOT) | Removed from v2.2 | Premature — agents kept pushing Phase 12 |
@@ -711,6 +712,6 @@ core/gen_ai/skills/
 
 | TASK-106 closed | FortressReport payload types and extraction helpers now live in `frontend/lib/fortress-types.ts`, and FortressReport imports that adapter instead of parsing unknown payloads inline | Removes the Gate F2 renderer-SRP violation while preserving fortress UI output and restoring the renderer to a formatted sub-300-line file | 2026-03-11 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-108 country H2H engine + manifest wiring)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-109 country H2H frontend type contract)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

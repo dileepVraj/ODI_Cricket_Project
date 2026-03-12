@@ -20,6 +20,11 @@ None.
 
 ## Last Completed
 
+- TASK-109 - Task 3 - Create frontend/lib/country-h2h-types.ts - CLOSED 2026-03-12
+  Added `frontend/lib/country-h2h-types.ts` with a distinct
+  `CountryH2HData` contract and a parser that mirrors the Venue Matchup
+  adapter pattern. Gates F1/F2/F3/5/6 PASS and bouncer PASS.
+
 - TASK-108 - Task 2 - Country H2H Engine + Manifest Wiring - CLOSED 2026-03-12
   `analyze_country_h2h()` now reads the structured `payload` key and
   returns `VenueMatchupReport`, while the `country_h2h` manifest entry

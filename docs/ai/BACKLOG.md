@@ -32,6 +32,37 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-109 - Task 3 - Create frontend/lib/country-h2h-types.ts
+**Type:** frontend-new-component
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-107, TASK-108
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+Create `frontend/lib/country-h2h-types.ts` as the frontend type contract
+for the structured `country_h2h_report` payload. The file must define
+`CountryH2HData` as a distinct type that mirrors the Venue Matchup
+payload structure, plus `getCountryH2HData()` to parse that payload for
+the renderer follow-up task.
+
+### Acceptance Criteria
+AC-1: `frontend/lib/country-h2h-types.ts` exists on disk.
+AC-2: `CountryH2HData` mirrors `VenueMatchupData` structure.
+AC-3: `CountryH2HData` includes the required `@schema` JSDoc tag.
+AC-4: `getCountryH2HData()` exports the mirrored parser.
+AC-5: Helper usage aligns with the established Venue Matchup parsing pattern.
+AC-6: No `any`, final `unknown`, or bare `object` in type signatures.
+AC-7: GATE F3 passes.
+AC-8: Post-task compliance bouncer PASS with zero new violations.
+
+### Files In Scope
+- `frontend/lib/country-h2h-types.ts`
+- READ ONLY - `frontend/lib/venue-types.ts`
+- READ ONLY - `frontend/lib/fortress-types.ts`
+- READ ONLY - `core/interfaces/team_types.py`
+
 ## TASK-108 - Task 2 - Wire analyze_country_h2h() and manifest to new payload
 **Type:** modification
 **Scope:** backend
