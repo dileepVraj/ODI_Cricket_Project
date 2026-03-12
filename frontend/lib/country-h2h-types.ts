@@ -28,6 +28,14 @@ function readString(record: Record<string, unknown>, key: string): string {
     return typeof record[key] === "string" ? record[key] : "";
 }
 
+function readStringOrNumber(record: Record<string, unknown>, key: string): string {
+    const value = record[key];
+    if (typeof value === "string" || typeof value === "number") {
+        return String(value);
+    }
+    return "";
+}
+
 function readNumber(record: Record<string, unknown>, key: string): number {
     return typeof record[key] === "number" ? record[key] : 0;
 }
@@ -116,11 +124,11 @@ function toVenueTeamBattingStats(value: unknown): VenueTeamBattingStats {
     }
 
     return {
-        avg: readString(record, "avg"),
-        high: readString(record, "high"),
-        low: readString(record, "low"),
-        avg_win: readString(record, "avg_win"),
-        low_def: readString(record, "low_def"),
+        avg: readStringOrNumber(record, "avg"),
+        high: readStringOrNumber(record, "high"),
+        low: readStringOrNumber(record, "low"),
+        avg_win: readStringOrNumber(record, "avg_win"),
+        low_def: readStringOrNumber(record, "low_def"),
     };
 }
 
@@ -131,10 +139,10 @@ function toVenueTeamChaseStats(value: unknown): VenueTeamChaseStats {
     }
 
     return {
-        avg: readString(record, "avg"),
-        high: readString(record, "high"),
-        succ: readString(record, "succ"),
-        fail: readString(record, "fail"),
+        avg: readStringOrNumber(record, "avg"),
+        high: readStringOrNumber(record, "high"),
+        succ: readStringOrNumber(record, "succ"),
+        fail: readStringOrNumber(record, "fail"),
     };
 }
 
