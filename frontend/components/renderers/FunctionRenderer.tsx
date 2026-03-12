@@ -17,6 +17,7 @@ const MatchupTable = lazy(() => import("./MatchupTable"));
 const DownloadPanel = lazy(() => import("./DownloadPanel"));
 const PhaseAnalysisCard = lazy(() => import("./PhaseAnalysisCard"));
 const VenueMatchupReport = lazy(() => import("./VenueMatchupReport"));
+const CountryH2HReport = lazy(() => import("./CountryH2HReport"));
 const FortressReport = lazy(() => import("./FortressReport"));
 const MatchAuditSection = lazy(() => import("./MatchAuditSection"));
 
@@ -36,7 +37,6 @@ interface EnrichedDataResult {
 function isJsonRecord(value: unknown): value is JsonRecord {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
-
 
 function extractEnrichedData(data: unknown): EnrichedDataResult {
     if (isJsonRecord(data)) {
@@ -61,10 +61,7 @@ function extractEnrichedData(data: unknown): EnrichedDataResult {
     return { mainData: data, matchAudit: null };
 }
 
-function wrapRenderer(
-    renderer: ReactNode,
-    fallbackMessage: string
-): ReactNode {
+function wrapRenderer(renderer: ReactNode, fallbackMessage: string): ReactNode {
     return (
         <ErrorBoundary fallbackMessage={fallbackMessage}>
             {renderer}
@@ -129,7 +126,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "comparison_table":
             if (isJsonRecordArray(mainData)) {
                 renderedOutput = (
@@ -143,7 +139,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "matrix_table":
             if (isJsonRecordArray(mainData)) {
                 renderedOutput = (
@@ -157,7 +152,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "form_table":
             if (isJsonRecordArray(mainData)) {
                 renderedOutput = wrapRenderer(
@@ -166,7 +160,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "table":
             if (isJsonRecordArray(mainData)) {
                 renderedOutput = (
@@ -180,7 +173,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "phase_analysis":
             if (isJsonRecord(mainData)) {
                 renderedOutput = wrapRenderer(
@@ -189,7 +181,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "venue_matchup_report":
             if (isJsonRecord(mainData)) {
                 renderedOutput = (
@@ -203,7 +194,19 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
+        case "country_h2h_report":
+            if (isJsonRecord(mainData)) {
+                renderedOutput = (
+                    <>
+                        {wrapRenderer(
+                            <CountryH2HReport data={mainData} />,
+                            "Unable to render country H2H report."
+                        )}
+                        {renderMatchAudit(matchAudit)}
+                    </>
+                );
+            }
+            break;
         case "home_fortress":
             if (isJsonRecord(mainData)) {
                 renderedOutput = (
@@ -217,7 +220,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "prediction_card":
             if (isJsonRecord(mainData)) {
                 renderedOutput = wrapRenderer(
@@ -226,7 +228,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "profile_card":
             if (isJsonRecord(mainData)) {
                 renderedOutput = wrapRenderer(
@@ -235,7 +236,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "matchup_table":
             if (isJsonRecordArray(mainData)) {
                 renderedOutput = wrapRenderer(
@@ -244,7 +244,6 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-
         case "download_json":
             if (isJsonRecord(mainData)) {
                 renderedOutput = wrapRenderer(
