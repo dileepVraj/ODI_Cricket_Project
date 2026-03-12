@@ -284,6 +284,15 @@ MANIFEST = {
                     "output_type": "comparison_table",
                 },
                 {
+                    "key": "global_h2h_structured",
+                    "label": "Global H2H",
+                    "icon": "swords",
+                    "engine_class": "TeamEngine",
+                    "engine_method": "analyze_global_h2h_structured",
+                    "required_context": ["team_a", "team_b", "years"],
+                    "output_type": "global_h2h_report",
+                },
+                {
                     "key": "country_h2h",
                     "label": "Host Country H2H",
                     "icon": "flag",

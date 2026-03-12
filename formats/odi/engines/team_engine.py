@@ -7,7 +7,7 @@ from typing import Optional, Union, cast
 
 import pandas as pd
 
-from core.calculators.team.matchup_calculator import calculate_away_performance_payload, calculate_continent_performance_payload, calculate_country_h2h_payload, calculate_global_h2h_payload, calculate_global_performance_payload, calculate_home_dominance_payload, calculate_team_form_payload
+from core.calculators.team.matchup_calculator import calculate_away_performance_payload, calculate_continent_performance_payload, calculate_country_h2h_payload, calculate_global_h2h_payload, calculate_global_h2h_structured_payload, calculate_global_performance_payload, calculate_home_dominance_payload, calculate_team_form_payload
 from core.calculators.team.venue_calculator import calculate_home_fortress_payload, calculate_home_fortress_structured_payload, calculate_venue_bias_payload, calculate_venue_matchup_payload, calculate_venue_phases_payload
 from core.exceptions import ConfigurationError
 from core.interfaces.team_interface import ITeamEngine
@@ -300,6 +300,30 @@ class TeamEngine(ITeamEngine):
             },
         )
         return cast(ComparisonReportRows, payload.get("rows", []))
+
+    def analyze_global_h2h_structured(
+        self,
+        home_team: str,
+        opp_team: str,
+        years_back: int = 0,
+        match_context: Optional[TeamMatchContext] = None,
+    ) -> VenueMatchupReport:
+        ctx = self._require_match_context(match_context)
+        resolved_years = self._resolved_years(years_back)
+        payload = calculate_global_h2h_structured_payload(
+            self._context_df(ctx, "match_df"),
+            {
+                "home_team": home_team,
+                "opp_team": opp_team,
+                "years_back": resolved_years,
+                "reference_date": self._context_reference_date(ctx),
+                "min_balls_for_completed_innings": self._min_balls_for_completed_innings(),
+                "competitive_chase_threshold": self._threshold(ctx, "competitive_chase_threshold"),
+                "low_sample_min_matches": self._threshold(ctx, "low_sample_min_matches"),
+                "percent_scale": self._sport_constant("percent_scale"),
+            },
+        )
+        return cast(VenueMatchupReport, payload.get("payload", {}))
 
     def analyze_country_h2h(
         self,
