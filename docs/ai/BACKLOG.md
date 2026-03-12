@@ -32,6 +32,55 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-110 - Task 4 - Create CountryH2HReport.tsx and register country_h2h_report
+**Type:** frontend-new-component
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-107, TASK-108, TASK-109
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+Create `frontend/components/renderers/CountryH2HReport.tsx` and register it
+in `frontend/components/renderers/FunctionRenderer.tsx` under
+`output_type="country_h2h_report"`.
+
+The new renderer mirrors the Venue Matchup presentation structure:
+3-column summary hero bar, optional form-guide strip, two team cards with
+Batting 1st and Chasing sections, averages footer, and sparse-data notice.
+Audit rendering remains owned by `FunctionRenderer` via `renderMatchAudit()`.
+
+### Acceptance Criteria
+AC-1: `frontend/components/renderers/CountryH2HReport.tsx` exists on disk.
+AC-2: CountryH2HReport imports `CountryH2HData` and `getCountryH2HData`
+      from `@/lib/country-h2h-types`.
+AC-3: CountryH2HReport renders the same structure as VenueMatchupReport.
+AC-4: `averagesTitle` defaults to `"COUNTRY AVERAGES"`.
+AC-5: `MatchAuditSection` is not rendered inside CountryH2HReport.
+AC-6: Team colors are injected via `useEffect` + CSS custom properties.
+AC-7: team_a uses the home accent and team_b uses the away accent.
+AC-8: `EmptyState` renders if `getCountryH2HData()` returns null.
+AC-9: Zero `@keyframes` definitions in CountryH2HReport.tsx.
+AC-10: Zero raw hex color values in CountryH2HReport.tsx.
+AC-11: Zero illegal inline object/array props.
+AC-12: Zero `any`, final `unknown`, or bare `object` in signatures.
+AC-13: `FunctionRenderer.tsx` adds a `React.lazy()` import for CountryH2HReport.
+AC-14: `FunctionRenderer.tsx` adds a `country_h2h_report` case mirroring
+       `venue_matchup_report`.
+AC-15: Existing `comparison_table`, `venue_matchup_report`, and `home_fortress`
+       cases remain untouched.
+AC-16: Gates F1, F2, F3, 5, and 6 all pass.
+
+### Files In Scope
+- `frontend/components/renderers/CountryH2HReport.tsx`
+- `frontend/components/renderers/FunctionRenderer.tsx`
+- READ ONLY - `frontend/components/renderers/VenueMatchupReport.tsx`
+- READ ONLY - `frontend/components/renderers/FortressReport.tsx`
+- READ ONLY - `frontend/components/renderers/MatchAuditSection.tsx`
+- READ ONLY - `frontend/lib/country-h2h-types.ts`
+- READ ONLY - `frontend/lib/venue-types.ts`
+- READ ONLY - `frontend/lib/comparison-types.ts`
+
 ## TASK-109 - Task 3 - Create frontend/lib/country-h2h-types.ts
 **Type:** frontend-new-component
 **Scope:** frontend

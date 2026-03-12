@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-110 - Task 4 - CountryH2HReport renderer + FunctionRenderer wiring - CLOSED 2026-03-12
+  Added `frontend/components/renderers/CountryH2HReport.tsx` and registered
+  `country_h2h_report` in `FunctionRenderer.tsx`, mirroring the Venue Matchup
+  layout while keeping match audit rendering in the dispatcher. Gates F1/F2/F3/5/6
+  PASS and bouncer PASS.
+
 - TASK-109 - Task 3 - Create frontend/lib/country-h2h-types.ts - CLOSED 2026-03-12
   Added `frontend/lib/country-h2h-types.ts` with a distinct
   `CountryH2HData` contract and a parser that mirrors the Venue Matchup
