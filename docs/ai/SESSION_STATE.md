@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-111 - country_h2h opp_team regression fix - CLOSED 2026-03-12
+  `country_h2h` now requires `team_b` in the manifest, and
+  `analyze_country_h2h()` no longer defaults `opp_team` to `"All"`.
+  The calculator now exits early on stale `"All"` requests and removes the
+  `VISITOR_TEAM` placeholder. Gates 1/2/3/4/5/6 PASS, bouncer PASS.
+
 - TASK-110 - Task 4 - CountryH2HReport renderer + FunctionRenderer wiring - CLOSED 2026-03-12
   Added `frontend/components/renderers/CountryH2HReport.tsx` and registered
   `country_h2h_report` in `FunctionRenderer.tsx`, mirroring the Venue Matchup

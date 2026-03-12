@@ -32,6 +32,35 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-111 - country_h2h opp_team regression fix
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-107, TASK-108
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+Fix the `country_h2h` regression where `team_b` never reached the backend
+because the manifest treated it as optional and the engine defaulted
+`opp_team` to `"All"`, inflating host-country match counts and rendering
+the visitor label as a placeholder.
+
+### Acceptance Criteria
+AC-1: `team_b` moved to `required_context` for `country_h2h`.
+AC-2: `analyze_country_h2h()` requires `opp_team: str` with no default.
+AC-3: `calculate_country_h2h_payload()` returns `{"payload": {}}`
+      immediately if normalized `opp_scope == "All"`.
+AC-4: `"VISITOR_TEAM"` does not appear in `matchup_calculator.py`.
+AC-5: Gate 3 manifest-contract-verifier PASS.
+AC-6: Gate 6 compliance bouncer PASS with zero new violations.
+
+### Files In Scope
+- `formats/odi/manifest.py`
+- `formats/odi/engines/team_engine.py`
+- `core/calculators/team/matchup_calculator.py`
+- READ ONLY - `docs/ai/tasks/`
+
 ## TASK-110 - Task 4 - Create CountryH2HReport.tsx and register country_h2h_report
 **Type:** frontend-new-component
 **Scope:** frontend
