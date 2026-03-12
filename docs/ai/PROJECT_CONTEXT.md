@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-11 (TASK-106 fortress type extraction)
+**Last Updated:** 2026-03-12 (TASK-107 country H2H payload restructure)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -553,6 +553,7 @@ In priority order:
 
 | Decision | Outcome | Rationale |
 |----------|---------|-----------|
+| TASK-107 closed | `calculate_country_h2h_payload()` now returns a structured `VenueMatchupReport`-compatible payload built directly from `clean_df`, without changing `_comparison_rows()` or `core/services/report_builder.py` | The flat `rows` path hid the structured stats this report needed; extracting the builder in `matchup_calculator.py` surfaces summary, team splits, venue averages, and MATCH_IDS while keeping the upstream builder untouched | 2026-03-12 |
 | Remove Mandate 7 (Numba AOT) | Removed from v2.2 | Premature — agents kept pushing Phase 12 |
 | Do-Not-Touch Registry → High-Impact Registry | 3 files, stop-trace-confirm rule | Active refactoring needs engines/manifest/calculators accessible |
 | `executive-auditor` kept but not in gate sequence | Redundant with paradigm-sentinel | paradigm-sentinel does everything executive-auditor does, plus more |

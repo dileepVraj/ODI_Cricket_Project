@@ -1,5 +1,5 @@
 # Session State
-**Last Updated:** 2026-03-11
+**Last Updated:** 2026-03-12
 **Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+
+- TASK-107 - Task 1 (revised) - Country H2H Payload Restructure - CLOSED 2026-03-12
+  `calculate_country_h2h_payload()` now returns a structured
+  `VenueMatchupReport`-compatible payload built directly from `clean_df`
+  in `matchup_calculator.py`. Gates 1/2/4/5/6 PASS, Gate 3 SKIPPED,
+  bouncer PASS, and the TeamEngine consumer update remains deferred to Task 2.
 
 - TASK-106 - Extract fortress-types.ts, fix R6 violations, restore FortressReport formatting - CLOSED 2026-03-11
   FortressReport payload types and extraction helpers now live in

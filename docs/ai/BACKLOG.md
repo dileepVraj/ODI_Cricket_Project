@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-11
+**Last Updated:** 2026-03-12
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,44 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-107 - Task 1 (revised) - Country H2H Payload Restructure
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+Extract `_build_country_h2h_structured()` in
+`core/calculators/team/matchup_calculator.py` so
+`calculate_country_h2h_payload()` can return a structured
+`VenueMatchupReport`-compatible payload computed directly from
+`clean_df`, without touching `ReportBuilder` or
+`_comparison_rows()`.
+
+### Acceptance Criteria
+AC-1: `_build_country_h2h_structured()` exists in
+      `matchup_calculator.py` with a fully typed signature and
+      returns a `VenueMatchupReport`-compatible dict.
+AC-2: All required aggregates are computed with vectorized
+      Pandas or NumPy operations only.
+AC-3: `calculate_country_h2h_payload()` returns
+      `{"payload": ...}` and its return annotation is
+      `VenueMatchupPayload`.
+AC-4: `_comparison_rows()` and `core/services/report_builder.py`
+      remain untouched.
+AC-5: `ComparisonRowsPayload` remains in place.
+AC-6: All triggered gates pass and post-task bouncer output
+      matches baseline.
+
+### Files In Scope
+- `core/calculators/team/matchup_calculator.py`
+- READ ONLY - `core/calculators/team/venue_calculator.py`
+- READ ONLY - `core/services/report_builder.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `docs/ai/tasks/task1_h2h_payload_restructure_report.md`
+
 ## TASK-106 - Extract fortress-types.ts, fix R6 violations, restore FortressReport formatting
 **Type:** frontend-modification
 **Scope:** frontend
