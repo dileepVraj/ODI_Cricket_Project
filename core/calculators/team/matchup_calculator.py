@@ -6,6 +6,7 @@ from typing import Mapping, TypedDict, cast
 
 import pandas as pd
 
+from config.shared.team_colors import TEAM_COLORS
 from config.shared.venues import VENUE_MAP, get_country_prefixes
 from core.calculators.performance import calculate_team_metrics
 from core.interfaces.team_types import ComparisonReportRows, MatrixReportRows, TeamFormRows, VenueMatchupReport
@@ -279,7 +280,7 @@ def _build_country_h2h_structured(
                     "succ": _normalize_structured_metric(home_stats["avg_succ"]),
                     "fail": _normalize_structured_metric(home_stats["avg_fail"]),
                 },
-                "team_color": None,
+                "team_color": TEAM_COLORS.get(home_team) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray"),
                 "team_tone": None,
                 "low_sample_warnings": [],
                 "highlight_flags": {},
@@ -305,7 +306,7 @@ def _build_country_h2h_structured(
                     "succ": _normalize_structured_metric(visitor_stats["avg_succ"]),
                     "fail": _normalize_structured_metric(visitor_stats["avg_fail"]),
                 },
-                "team_color": None,
+                "team_color": TEAM_COLORS.get(visitor_label) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray"),
                 "team_tone": None,
                 "low_sample_warnings": [],
                 "highlight_flags": {},
