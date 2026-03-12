@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-12 (TASK-113 country_h2h structured team colors fix)
+**Last Updated:** 2026-03-12 (TASK-114 global_h2h structured backend registration)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -719,6 +719,8 @@ core/gen_ai/skills/
 
 | TASK-113 closed | Country H2H structured payload team cards now emit jersey colors via `TEAM_COLORS` for both home and away teams | Mirrors the Venue Matchup color lookup chain so `CountryH2HReport` can inject the correct CSS variables without changing payload shape or team-tone behavior | 2026-03-12 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-113 country_h2h structured team colors fix)*
+| TASK-114 closed | Added `_build_global_h2h_structured()` and `calculate_global_h2h_structured_payload()` in `core/calculators/team/matchup_calculator.py`, plus `analyze_global_h2h_structured()` in `formats/odi/engines/team_engine.py` | Registers the additive backend-only `global_h2h_structured` manifest path with `output_type="global_h2h_report"`, preserving the legacy flat `analyze_global_h2h()` comparison-table flow for existing consumers | 2026-03-12 |
+
+*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-114 global_h2h structured backend registration)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

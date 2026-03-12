@@ -20,6 +20,14 @@ None.
 
 ## Last Completed
 
+- TASK-114 - Add analyze_global_h2h_structured backend method + manifest registration - CLOSED 2026-03-12
+  Added `calculate_global_h2h_structured_payload()` plus
+  `_build_global_h2h_structured()` in `matchup_calculator.py`,
+  `analyze_global_h2h_structured()` in `team_engine.py`, and a new
+  `global_h2h_structured` manifest entry with
+  `output_type=\"global_h2h_report\"`. Gates 1/2/3/4/5/6 PASS,
+  bouncer PASS.
+
 - TASK-113 - country_h2h structured team colors fix - CLOSED 2026-03-12
   `core/calculators/team/matchup_calculator.py` now imports `TEAM_COLORS`
   and populates both Country H2H team-card `team_color` fields with the same

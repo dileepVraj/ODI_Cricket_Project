@@ -32,6 +32,56 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-114 - Add analyze_global_h2h_structured backend method + manifest registration
+**Type:** new-feature
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-107
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+Add a structured global H2H backend path alongside the legacy
+comparison-table flow.
+
+`core/calculators/team/matchup_calculator.py` now exposes
+`_build_global_h2h_structured()` and
+`calculate_global_h2h_structured_payload()`,
+`formats/odi/engines/team_engine.py` now exposes
+`analyze_global_h2h_structured()`, and
+`formats/odi/manifest.py` now registers
+`global_h2h_structured` with `output_type="global_h2h_report"`.
+The existing `analyze_global_h2h()` method and
+`comparison_table` manifest entry remain intact.
+
+### Acceptance Criteria
+AC-1: `_build_global_h2h_structured()` exists and returns a
+      `VenueMatchupReport`-shaped payload.
+AC-2: Both team stat blocks populate `team_color` via the
+      `TEAM_COLORS` fallback chain.
+AC-3: `analyze_global_h2h_structured()` exists in `team_engine.py`
+      and returns `VenueMatchupReport`.
+AC-4: Manifest entry `global_h2h_structured` is registered with
+      `engine_method="analyze_global_h2h_structured"` and
+      `output_type="global_h2h_report"`.
+AC-5: No `duckdb` import added to the modified backend files.
+AC-6: No `.iterrows()` or `.itertuples()` introduced.
+AC-7: Gates 1/2/3/4/5/6 all pass.
+AC-8: Summary payload includes matches, win_pct, tie_nr,
+      last_5_home, last_5_away.
+AC-9: `venue_avg` payload includes avg_1st, avg_2nd, avg_win_score.
+AC-10: Existing `analyze_global_h2h()` behaviour remains unchanged.
+
+### Files In Scope
+- `core/calculators/team/matchup_calculator.py`
+- `formats/odi/engines/team_engine.py`
+- `formats/odi/manifest.py`
+- READ ONLY - `core/calculators/team/venue_calculator.py`
+- READ ONLY - `config/shared/team_colors.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `api/serializers.py`
+- READ ONLY - `core/data_access.py`
+
 ## TASK-113 - country_h2h structured team colors fix
 **Type:** bug-fix
 **Scope:** backend
