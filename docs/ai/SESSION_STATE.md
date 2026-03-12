@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-116 - Remove hardcoded top_teams filter in report_builder.py - CLOSED 2026-03-12
+  `ReportBuilder._generate_matrix_report()` now derives its opponent rows
+  from `clean["opponent"].unique()` instead of a hardcoded top-10 list,
+  and the OVERALL row aggregates that same dynamic opponent set.
+  Gates 1/2/5/6 PASS, bouncer PASS.
+
 - TASK-115 - GlobalH2HReport frontend renderer + FunctionRenderer registration - CLOSED 2026-03-12
   Added `frontend/lib/global-h2h-types.ts`,
   `frontend/components/renderers/GlobalH2HReport.tsx`, and the

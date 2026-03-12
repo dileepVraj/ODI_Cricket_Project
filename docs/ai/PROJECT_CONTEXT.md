@@ -554,6 +554,7 @@ In priority order:
 
 | Decision | Outcome | Rationale |
 |----------|---------|-----------|
+| TASK-116 closed | `core/services/report_builder.py` now derives matrix opponents from `clean["opponent"].unique()` and computes the OVERALL row from that same dynamic opponent set | Removes the hardcoded top-10 opponent ceiling so Home Dominance, Away Performance, Global Performance, and other matrix callers report every actual filtered opponent without changing the MatrixReportRow contract | 2026-03-12 |
 | TASK-111 closed | `country_h2h` now requires `team_b` in the manifest, `analyze_country_h2h()` no longer defaults `opp_team` to `"All"`, and the calculator exits early on stale `"All"` requests instead of rendering `VISITOR_TEAM` | Restores the intended host-country rivalry contract so the backend only computes explicit opponent matchups and never inflates counts with all-visitor aggregates | 2026-03-12 |
 | TASK-109 closed | Added `frontend/lib/country-h2h-types.ts` with a distinct `CountryH2HData` interface, frontend-only sub-shapes, and a mirrored `getCountryH2HData()` parser for `country_h2h_report` | Keeps Country H2H typing independent from Venue Matchup while preserving the same structured payload contract for the Task 4 renderer follow-up | 2026-03-12 |
 | TASK-108 closed | `analyze_country_h2h()` now consumes `payload["payload"]` as a `VenueMatchupReport`, and the `country_h2h` manifest entry now emits `output_type="country_h2h_report"` | Completes the downstream wiring for TASK-107 so the API/engine path returns the structured report contract while preserving compatibility for the planned frontend renderer follow-up tasks | 2026-03-12 |
@@ -724,6 +725,6 @@ core/gen_ai/skills/
 
 | TASK-115 closed | Added `frontend/lib/global-h2h-types.ts`, `frontend/components/renderers/GlobalH2HReport.tsx`, and the `global_h2h_report` FunctionRenderer dispatch path | Committed alongside pre-existing branding changes: app renamed from `CricketAlgo | Trading` to `Vantage | Strategic Algo Exchange`, FormatSelector sidebar branding updated, Cascadia Code is now the default UI font, Vantage shield icons replaced `frontend/app/icon.png` and `frontend/public/icon.png`, and `frontend/app/layout.tsx` metadata title was updated | 2026-03-12 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-115 global_h2h frontend renderer + branding carry-forward)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-116 dynamic matrix opponents fix)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

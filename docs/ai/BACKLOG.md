@@ -32,6 +32,46 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-116 - Remove hardcoded top_teams filter in report_builder.py
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+The Home Dominance matrix, Away Performance matrix, and every other
+caller of `ReportBuilder._generate_matrix_report()` previously
+hardcoded a top-10 opponent list. Any opponent outside that list was
+silently excluded from the matrix output even when valid filtered match
+rows existed.
+
+`core/services/report_builder.py` now derives opponents dynamically
+from the filtered match data, keeps the row order alphabetic, and
+computes the OVERALL row from that same dynamic opponent set.
+
+### Acceptance Criteria
+AC-1: The hardcoded `top_teams` list is removed from
+      `_generate_matrix_report()`.
+AC-2: Opponents are derived from `clean["opponent"].unique()`
+      excluding `team_name`.
+AC-3: Opponent rows are ordered consistently and documented inline.
+AC-4: The OVERALL row remains first and aggregates the full dynamic
+      opponent set.
+AC-5: MatrixReportRow shape remains unchanged.
+AC-6: No `.iterrows()` or `.itertuples()` introduced.
+AC-7: No `duckdb` import introduced.
+AC-8: Gates 1/2/5/6 pass and the bouncer matches baseline.
+AC-9: All `_generate_matrix_report()` callers inherit the fix.
+
+### Files In Scope
+- `core/services/report_builder.py`
+- READ ONLY - `core/calculators/team/matchup_calculator.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `api/serializers.py`
+- READ ONLY - `core/data_access.py`
+
 ## TASK-114 - Add analyze_global_h2h_structured backend method + manifest registration
 **Type:** new-feature
 **Scope:** backend
