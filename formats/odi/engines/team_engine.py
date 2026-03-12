@@ -304,7 +304,7 @@ class TeamEngine(ITeamEngine):
     def analyze_country_h2h(
         self,
         home_team: str,
-        opp_team: str = "All",
+        opp_team: str,
         country_name: Optional[str] = None,
         years_back: int = 0,
         recorder: Optional[RecorderPort] = None,

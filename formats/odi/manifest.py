@@ -289,8 +289,7 @@ MANIFEST = {
                     "icon": "flag",
                     "engine_class": "TeamEngine",
                     "engine_method": "analyze_country_h2h",
-                    "required_context": ["team_a", "years"],
-                    "optional_context": ["team_b"],
+                    "required_context": ["team_a", "team_b", "years"],
                     "extra_inputs": {
                         "country_name": {
                             "type": "dropdown",

@@ -334,6 +334,8 @@ def calculate_country_h2h_payload(match_df: pd.DataFrame, context: CountryH2HCon
     if window_df.empty:
         return {"payload": {}}
     opp_scope = _normalize_opp_scope(context["opp_team"])
+    if opp_scope == "All":
+        return {"payload": {}}
     country_scope, default_home_country = _country_scope(context["home_team"], context["country_name"])
     masked_df = window_df[_country_matchup_mask(window_df, context["home_team"], opp_scope)].copy()
     if masked_df.empty:
@@ -342,7 +344,7 @@ def calculate_country_h2h_payload(match_df: pd.DataFrame, context: CountryH2HCon
     clean_df = _apply_filters(country_df, context["min_balls_for_completed_innings"])
     if clean_df.empty:
         return {"payload": {}}
-    visitor_label = opp_scope if opp_scope != "All" else "VISITOR_TEAM"
+    visitor_label = opp_scope
     return {
         "payload": _build_country_h2h_structured(
             clean_df,
