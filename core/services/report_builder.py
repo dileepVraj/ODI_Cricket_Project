@@ -224,19 +224,8 @@ class ReportBuilder:
         valid_1st_mask = valid_2nd_mask | MatchFilterService.get_excluded_short_second_mask(clean)
         valid = clean[valid_1st_mask]
 
-        top_teams = [
-            "India",
-            "Australia",
-            "England",
-            "South Africa",
-            "New Zealand",
-            "Pakistan",
-            "Sri Lanka",
-            "West Indies",
-            "Bangladesh",
-            "Afghanistan",
-        ]
-        opponents = [team for team in top_teams if team != team_name]
+        # Sort opponents alphabetically for stable matrix row ordering across callers.
+        opponents = sorted([opp for opp in clean["opponent"].unique() if pd.notna(opp) and opp != team_name])
 
         stats = []
         for opp in opponents:
@@ -274,34 +263,38 @@ class ReportBuilder:
             # Fallback for empty results.
             return []
 
-        df = pd.DataFrame(stats).sort_values("Mat", ascending=False)
+        df = pd.DataFrame(stats)
 
-        top_full = clean[clean["opponent"].isin(top_teams)]
-        top_val = valid[valid["opponent"].isin(top_teams)]
-        total_wins = len(top_full[top_full["winner"] == team_name])
+        overall_full = clean[clean["opponent"].isin(opponents) & count_mask]
+        overall_val = valid[valid["opponent"].isin(opponents)]
+        total_wins = len(overall_full[overall_full["winner"] == team_name])
 
-        winner_lower = top_full["winner"].astype(str).str.lower().str.strip()
+        winner_lower = overall_full["winner"].astype(str).str.lower().str.strip()
         team_lower = team_name.lower().strip()
         is_loss = (winner_lower != team_lower) & (~winner_lower.isin(["tie", "no result", "nan", "none"]))
-        total_losses = len(top_full[is_loss])
+        total_losses = len(overall_full[is_loss])
 
-        total_tie_nr = len(top_full) - total_wins - total_losses
-        total_decisions = len(top_full) - total_tie_nr
+        total_tie_nr = len(overall_full) - total_wins - total_losses
+        total_decisions = len(overall_full) - total_tie_nr
         total_pct = int((total_wins / total_decisions) * 100) if total_decisions > 0 else 0
 
         overall = pd.DataFrame(
             [
                 {
                     "Opponent": "🔹 OVERALL",
-                    "Mat": len(top_full),
+                    "Mat": len(overall_full),
                     "Won": total_wins,
                     "Lost": total_losses,
                     "Tie/NR": total_tie_nr,
                     "Win %": f"{total_pct}%",
-                    "form_data": ReportBuilder._build_form_data_payload(top_full, team_name),
-                    f"{team_name} Avg (1st)": ReportBuilder._get_avg_with_count(top_val[top_val["team_bat_1"] == team_name], "score_inn1"),
-                    "Opp Avg (1st)": ReportBuilder._get_avg_with_count(top_val[top_val["team_bat_1"] != team_name], "score_inn1"),
-                    "MATCH_IDS": ",".join(map(str, top_full["match_id"].unique().tolist())),
+                    "form_data": ReportBuilder._build_form_data_payload(overall_full, team_name),
+                    f"{team_name} Avg (1st)": ReportBuilder._get_avg_with_count(
+                        overall_val[overall_val["team_bat_1"] == team_name], "score_inn1"
+                    ),
+                    "Opp Avg (1st)": ReportBuilder._get_avg_with_count(
+                        overall_val[overall_val["team_bat_1"] != team_name], "score_inn1"
+                    ),
+                    "MATCH_IDS": ",".join(map(str, overall_full["match_id"].unique().tolist())),
                     "cell_tones": {"Win %": ReportFormatter._tone_from_win_pct(total_pct)},
                     "highlight_flags": {"is_overall": True},
                     "derived_badges": [f"{total_pct}% win rate", "Overall benchmark"],
