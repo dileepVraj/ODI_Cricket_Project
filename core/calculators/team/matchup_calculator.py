@@ -8,8 +8,8 @@ import pandas as pd
 
 from config.shared.venues import VENUE_MAP, get_country_prefixes
 from core.calculators.performance import calculate_team_metrics
-from core.interfaces.team_types import ComparisonReportRows, MatrixReportRows, TeamFormRows
-from core.services.match_filter_service import apply_smart_filters as apply_match_filters
+from core.interfaces.team_types import ComparisonReportRows, MatrixReportRows, TeamFormRows, VenueMatchupReport
+from core.services.match_filter_service import MatchFilterService, apply_smart_filters as apply_match_filters
 from core.services.report_builder import ReportBuilder
 from core.services.serialization_service import SerializationService
 from core.services.venue_service import VenueService
@@ -77,6 +77,10 @@ class TeamFormContext(TypedDict):
 
 class ComparisonRowsPayload(TypedDict):
     rows: ComparisonReportRows
+
+
+class VenueMatchupPayload(TypedDict):
+    payload: VenueMatchupReport
 
 
 class MatrixRowsPayload(TypedDict):
@@ -221,24 +225,130 @@ def calculate_global_h2h_payload(match_df: pd.DataFrame, context: GlobalH2HConte
     }
 
 
-def calculate_country_h2h_payload(match_df: pd.DataFrame, context: CountryH2HContext) -> ComparisonRowsPayload:
+def _normalize_structured_metric(value: str | int) -> str | int | None:
+    return None if value == "-" else value
+
+
+def _build_country_h2h_structured(
+    clean_df: pd.DataFrame,
+    home_team: str,
+    visitor_label: str,
+    context: CountryH2HContext,
+) -> VenueMatchupReport:
+    winners = clean_df["winner"].astype(str).str.lower().str.strip()
+    home_clean = home_team.lower().strip()
+    visitor_clean = visitor_label.lower().strip()
+    home_wins_df = clean_df[winners == home_clean]
+    visitor_wins_df = clean_df[winners == visitor_clean]
+    tie_nr = int(winners.isin(["tie", "no result", "nan", "none"]).sum())
+    matches = int(len(clean_df))
+    decisions = matches - tie_nr
+    win_pct = int(format(len(home_wins_df) / decisions, "%").split(".")[0]) if decisions > 0 else 0
+    home_stats = calculate_team_metrics(clean_df, home_team, context["competitive_chase_threshold"])
+    visitor_stats = calculate_team_metrics(clean_df, visitor_label, context["competitive_chase_threshold"])
+    valid_2nd_mask = MatchFilterService.get_valid_matches_mask(clean_df)
+    valid_1st_mask = valid_2nd_mask | MatchFilterService.get_excluded_short_second_mask(clean_df)
+    valid_1st = clean_df[valid_1st_mask]
+    valid_2nd = clean_df[valid_2nd_mask]
+    winning_bat1_df = valid_1st[valid_1st["winner"] == valid_1st["team_bat_1"]]
+    match_ids = ",".join(clean_df["match_id"].astype(str).unique().tolist()) if "match_id" in clean_df.columns else ""
+    return {
+        "summary": {
+            "matches": matches,
+            "win_pct": win_pct,
+            "tie_nr": tie_nr,
+            "last_5_home": "",
+            "last_5_away": "",
+        },
+        "team_a": {
+            "name": home_team,
+            "stats": {
+                "wins": int(len(home_wins_df)),
+                "defended": int((home_wins_df["team_bat_1"] == home_team).sum()),
+                "chased": int((home_wins_df["team_bat_2"] == home_team).sum()),
+                "bat1": {
+                    "avg": _normalize_structured_metric(home_stats["avg_1st"]),
+                    "high": _normalize_structured_metric(home_stats["high_1st"]),
+                    "low": _normalize_structured_metric(home_stats["low_1st"]),
+                    "avg_win": _normalize_structured_metric(home_stats["avg_1st_win"]),
+                    "low_def": _normalize_structured_metric(home_stats["low_defended"]),
+                },
+                "chase": {
+                    "avg": _normalize_structured_metric(home_stats["avg_2nd"]),
+                    "high": _normalize_structured_metric(home_stats["high_chased"]),
+                    "succ": _normalize_structured_metric(home_stats["avg_succ"]),
+                    "fail": _normalize_structured_metric(home_stats["avg_fail"]),
+                },
+                "team_color": None,
+                "team_tone": None,
+                "low_sample_warnings": [],
+                "highlight_flags": {},
+                "derived_badges": [],
+            },
+        },
+        "team_b": {
+            "name": visitor_label,
+            "stats": {
+                "wins": int(len(visitor_wins_df)),
+                "defended": int((visitor_wins_df["team_bat_1"] == visitor_label).sum()),
+                "chased": int((visitor_wins_df["team_bat_2"] == visitor_label).sum()),
+                "bat1": {
+                    "avg": _normalize_structured_metric(visitor_stats["avg_1st"]),
+                    "high": _normalize_structured_metric(visitor_stats["high_1st"]),
+                    "low": _normalize_structured_metric(visitor_stats["low_1st"]),
+                    "avg_win": _normalize_structured_metric(visitor_stats["avg_1st_win"]),
+                    "low_def": _normalize_structured_metric(visitor_stats["low_defended"]),
+                },
+                "chase": {
+                    "avg": _normalize_structured_metric(visitor_stats["avg_2nd"]),
+                    "high": _normalize_structured_metric(visitor_stats["high_chased"]),
+                    "succ": _normalize_structured_metric(visitor_stats["avg_succ"]),
+                    "fail": _normalize_structured_metric(visitor_stats["avg_fail"]),
+                },
+                "team_color": None,
+                "team_tone": None,
+                "low_sample_warnings": [],
+                "highlight_flags": {},
+                "derived_badges": [],
+            },
+        },
+        "venue_avg": {
+            "avg_1st": _normalize_structured_metric(ReportBuilder._get_avg_with_count(valid_1st, "score_inn1")),
+            "avg_2nd": _normalize_structured_metric(ReportBuilder._get_avg_with_count(valid_2nd, "score_inn2")),
+            "avg_win_score": _normalize_structured_metric(
+                ReportBuilder._get_avg_with_count(winning_bat1_df, "score_inn1")
+            ),
+        },
+        "MATCH_IDS": match_ids or None,
+        "low_sample_warnings": [],
+        "highlight_flags": {
+            "has_low_sample_warnings": False,
+            "has_form_guide": False,
+        },
+        "derived_badges": [],
+    }
+
+
+def calculate_country_h2h_payload(match_df: pd.DataFrame, context: CountryH2HContext) -> VenueMatchupPayload:
     window_df = _filter_year_window(match_df, context["reference_date"], context["years_back"])
     if window_df.empty:
-        return {"rows": []}
+        return {"payload": {}}
     opp_scope = _normalize_opp_scope(context["opp_team"])
     country_scope, default_home_country = _country_scope(context["home_team"], context["country_name"])
     masked_df = window_df[_country_matchup_mask(window_df, context["home_team"], opp_scope)].copy()
     if masked_df.empty:
-        return {"rows": []}
+        return {"payload": {}}
     country_df = _apply_country_scope(masked_df, country_scope, default_home_country)
     clean_df = _apply_filters(country_df, context["min_balls_for_completed_innings"])
     if clean_df.empty:
-        return {"rows": []}
+        return {"payload": {}}
     visitor_label = opp_scope if opp_scope != "All" else "VISITOR_TEAM"
     return {
-        "rows": _comparison_rows(
-            clean_df, context["home_team"], visitor_label, "HOST_COUNTRY_REPORT",
-            context["competitive_chase_threshold"],
+        "payload": _build_country_h2h_structured(
+            clean_df,
+            context["home_team"],
+            visitor_label,
+            context,
         )
     }
 
