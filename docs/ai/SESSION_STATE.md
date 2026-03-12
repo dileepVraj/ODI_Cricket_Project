@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-108 - Task 2 - Country H2H Engine + Manifest Wiring - CLOSED 2026-03-12
+  `analyze_country_h2h()` now reads the structured `payload` key and
+  returns `VenueMatchupReport`, while the `country_h2h` manifest entry
+  now emits `output_type="country_h2h_report"`. Gates 2/3/4/5/6 PASS,
+  bouncer PASS, and frontend renderer follow-up remains deferred.
+
 - TASK-107 - Task 1 (revised) - Country H2H Payload Restructure - CLOSED 2026-03-12
   `calculate_country_h2h_payload()` now returns a structured
   `VenueMatchupReport`-compatible payload built directly from `clean_df`

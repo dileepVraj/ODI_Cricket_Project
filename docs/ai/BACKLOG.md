@@ -32,6 +32,42 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-108 - Task 2 - Wire analyze_country_h2h() and manifest to new payload
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-107
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+Wire `formats/odi/engines/team_engine.py` and
+`formats/odi/manifest.py` to the structured country H2H payload
+introduced by TASK-107. `analyze_country_h2h()` must consume
+`{"payload": VenueMatchupReport}` instead of `{"rows": ...}`,
+and the manifest must expose output_type `country_h2h_report`
+for the frontend renderer follow-up tasks.
+
+### Acceptance Criteria
+AC-1: `analyze_country_h2h()` calls `payload.get("payload", {})`
+      instead of `payload.get("rows", [])`.
+AC-2: `analyze_country_h2h()` casts to `VenueMatchupReport`
+      instead of `ComparisonReportRows`.
+AC-3: `analyze_country_h2h()` return type annotation is updated
+      to `VenueMatchupReport`.
+AC-4: The `country_h2h` entry in `formats/odi/manifest.py` has
+      output_type `country_h2h_report`.
+AC-5: No other field in the `country_h2h` manifest entry changes.
+AC-6: Gate 3 manifest-contract-verifier PASS.
+AC-7: Post-task compliance bouncer PASS with zero new violations.
+
+### Files In Scope
+- `formats/odi/engines/team_engine.py`
+- `formats/odi/manifest.py`
+- READ ONLY - `core/calculators/team/matchup_calculator.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `docs/ai/tasks/task1_h2h_payload_restructure_report.md`
+
 ## TASK-107 - Task 1 (revised) - Country H2H Payload Restructure
 **Type:** modification
 **Scope:** backend
@@ -945,6 +981,6 @@ Priority: High — will cause crashes when API runs continuously in Phase 12
 
 ---
 
-*End of BACKLOG.md - Last Updated 2026-03-11*
+*End of BACKLOG.md - Last Updated 2026-03-12*
 *For current session state, see docs/ai/SESSION_STATE.md*
 *For permanent project knowledge, see docs/ai/PROJECT_CONTEXT.md*
