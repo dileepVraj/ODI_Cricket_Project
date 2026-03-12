@@ -32,6 +32,41 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-113 - country_h2h structured team colors fix
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-107
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+Fix missing team jersey colors in `CountryH2HReport`.
+
+`_build_country_h2h_structured()` in
+`core/calculators/team/matchup_calculator.py` hardcoded
+`team_color: None` and `team_tone: None` for both team cards.
+The structured payload now mirrors the `venue_calculator.py`
+TEAM_COLORS lookup so the frontend can inject jersey colors
+for both countries again.
+
+### Acceptance Criteria
+AC-1: `from config.shared.team_colors import TEAM_COLORS` is present
+      in `matchup_calculator.py`.
+AC-2: team_a `team_color` uses
+      `TEAM_COLORS.get(home_team) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray")`.
+AC-3: team_b `team_color` uses
+      `TEAM_COLORS.get(visitor_label) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray")`.
+AC-4: `team_tone` remains `None` for both teams.
+AC-5: No other logic in `_build_country_h2h_structured()` changed.
+AC-6: GATE 1 boundary-sentinel PASS.
+AC-7: GATE 6 compliance bouncer PASS with zero new violations.
+
+### Files In Scope
+- `core/calculators/team/matchup_calculator.py`
+- READ ONLY - `core/calculators/team/venue_calculator.py`
+- READ ONLY - `config/shared/team_colors.py`
+
 ## TASK-112 - country-h2h-types.ts readStringOrNumber fix
 **Type:** frontend-bug-fix
 **Scope:** frontend

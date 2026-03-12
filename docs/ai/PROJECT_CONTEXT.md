@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-12 (TASK-112 country-h2h-types.ts readStringOrNumber fix)
+**Last Updated:** 2026-03-12 (TASK-113 country_h2h structured team colors fix)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -717,6 +717,8 @@ core/gen_ai/skills/
 
 | TASK-112 closed | `frontend/lib/country-h2h-types.ts` now parses bat1/chase payload scalars with `readStringOrNumber()` so numeric backend stats survive as displayable strings | The backend contract allows `int | str | None` for these fields; preserving numeric values fixes the frontend-only dash regression without changing renderers or backend payloads | 2026-03-12 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-112 country-h2h-types.ts readStringOrNumber fix)*
+| TASK-113 closed | Country H2H structured payload team cards now emit jersey colors via `TEAM_COLORS` for both home and away teams | Mirrors the Venue Matchup color lookup chain so `CountryH2HReport` can inject the correct CSS variables without changing payload shape or team-tone behavior | 2026-03-12 |
+
+*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-113 country_h2h structured team colors fix)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

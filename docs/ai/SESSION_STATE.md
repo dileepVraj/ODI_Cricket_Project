@@ -20,6 +20,11 @@ None.
 
 ## Last Completed
 
+- TASK-113 - country_h2h structured team colors fix - CLOSED 2026-03-12
+  `core/calculators/team/matchup_calculator.py` now imports `TEAM_COLORS`
+  and populates both Country H2H team-card `team_color` fields with the same
+  fallback chain used by `venue_calculator.py`. Gates 1/2/4/5/6 PASS, bouncer PASS.
+
 - TASK-112 - country-h2h-types.ts readStringOrNumber fix - CLOSED 2026-03-12
   `country-h2h-types.ts` now preserves numeric country-H2H bat1/chase values
   by coercing strings or numbers to string during parsing instead of dropping
