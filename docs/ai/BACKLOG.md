@@ -32,6 +32,38 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-112 - country-h2h-types.ts readStringOrNumber fix
+**Type:** frontend-bug-fix
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-109
+**Created:** 2026-03-12
+**Status:** CLOSED - 2026-03-12
+
+### Description
+Fix numeric field dropout in `frontend/lib/country-h2h-types.ts`.
+
+The backend type contract for bat1/chase stat fields (`low_def`, `high`,
+`low`, `avg_win`, `avg`, `succ`, `fail`) allows `int | str | None`. When the
+backend returns a plain integer (for example `low_def = 271`), the frontend
+parser silently drops it to `""` because `readString()` only accepts
+`typeof === "string"`. The empty string then passes through `renderValue()`
+in `CountryH2HReport.tsx` and displays as a dash.
+
+### Acceptance Criteria
+AC-1: `readStringOrNumber()` helper exists in `country-h2h-types.ts`.
+AC-2: All bat1 stat fields use `readStringOrNumber()`.
+AC-3: All chase stat fields use `readStringOrNumber()`.
+AC-4: `readString()` remains for string-only fields.
+AC-5: No `any`, final `unknown`, or bare `object` introduced.
+AC-6: Gate F3 passes.
+AC-7: Gate 6 bouncer PASS with zero new violations versus baseline.
+
+### Files In Scope
+- `frontend/lib/country-h2h-types.ts`
+- READ ONLY - `frontend/components/renderers/CountryH2HReport.tsx`
+- READ ONLY - `core/interfaces/team_types.py`
+
 ## TASK-111 - country_h2h opp_team regression fix
 **Type:** bug-fix
 **Scope:** backend

@@ -20,6 +20,11 @@ None.
 
 ## Last Completed
 
+- TASK-112 - country-h2h-types.ts readStringOrNumber fix - CLOSED 2026-03-12
+  `country-h2h-types.ts` now preserves numeric country-H2H bat1/chase values
+  by coercing strings or numbers to string during parsing instead of dropping
+  ints to `""`. Gates F1/F2/F3/5/6 PASS and bouncer PASS.
+
 - TASK-111 - country_h2h opp_team regression fix - CLOSED 2026-03-12
   `country_h2h` now requires `team_b` in the manifest, and
   `analyze_country_h2h()` no longer defaults `opp_team` to `"All"`.
