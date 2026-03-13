@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-12 (TASK-115 global_h2h frontend renderer + branding carry-forward)
+**Last Updated:** 2026-03-13 (TASK-117 matrix team_color payload)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -725,6 +725,8 @@ core/gen_ai/skills/
 
 | TASK-115 closed | Added `frontend/lib/global-h2h-types.ts`, `frontend/components/renderers/GlobalH2HReport.tsx`, and the `global_h2h_report` FunctionRenderer dispatch path | Committed alongside pre-existing branding changes: app renamed from `CricketAlgo | Trading` to `Vantage | Strategic Algo Exchange`, FormatSelector sidebar branding updated, Cascadia Code is now the default UI font, Vantage shield icons replaced `frontend/app/icon.png` and `frontend/public/icon.png`, and `frontend/app/layout.tsx` metadata title was updated | 2026-03-12 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-12 (TASK-116 dynamic matrix opponents fix)*
+| TASK-117 closed | Matrix-table payload rows now carry opponent `team_color`, and the aggregate OVERALL row explicitly emits `None` | Keeps the backend payload additive for `MatrixReportRow` while matching the CSS-variable jersey-colour pattern already used by Venue Matchup, Country H2H, and Global H2H renderers | 2026-03-13 |
+
+*End of PROJECT_CONTEXT.md - Updated 2026-03-13 (TASK-117 matrix team_color payload)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

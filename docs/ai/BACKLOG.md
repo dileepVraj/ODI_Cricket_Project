@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-12
+**Last Updated:** 2026-03-13
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,44 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-117 - Add team_color to MatrixReportRow in report_builder.py
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-116
+**Created:** 2026-03-13
+**Status:** CLOSED - 2026-03-13
+
+### Description
+Add opponent team jersey colours to matrix-table payload rows.
+
+`core/interfaces/team_types.py` now adds an optional `team_color`
+field to `MatrixReportRow`, and
+`core/services/report_builder.py` now populates that field for each
+opponent row via the standard `TEAM_COLORS` lookup chain while setting
+the aggregate OVERALL row to `None`.
+
+### Acceptance Criteria
+AC-1: `MatrixReportRow` includes `team_color: Optional[str]`.
+AC-2: `report_builder.py` imports `TEAM_COLORS`.
+AC-3: Opponent rows use
+      `TEAM_COLORS.get(opponent_name) or TEAM_COLORS.get("Visitors", "gray")`.
+AC-4: OVERALL row uses `team_color: None`.
+AC-5: Change is additive only - no existing fields removed or renamed.
+AC-6: No `.iterrows()` / `.itertuples()` introduced.
+AC-7: No `duckdb` import introduced.
+AC-8: Stop-state-trace-confirm completed for `core/interfaces/team_types.py`.
+AC-9: Gates 1/2/5/6 pass and bouncer matches baseline.
+
+### Files In Scope
+- `core/interfaces/team_types.py`
+- `core/services/report_builder.py`
+- READ ONLY - `config/shared/team_colors.py`
+- READ ONLY - `core/calculators/team/matchup_calculator.py`
+- READ ONLY - `core/calculators/team/venue_calculator.py`
+- READ ONLY - `api/serializers.py`
+- READ ONLY - `core/data_access.py`
+
 ## TASK-116 - Remove hardcoded top_teams filter in report_builder.py
 **Type:** bug-fix
 **Scope:** backend
@@ -1247,6 +1285,6 @@ Priority: High — will cause crashes when API runs continuously in Phase 12
 
 ---
 
-*End of BACKLOG.md - Last Updated 2026-03-12*
+*End of BACKLOG.md - Last Updated 2026-03-13*
 *For current session state, see docs/ai/SESSION_STATE.md*
 *For permanent project knowledge, see docs/ai/PROJECT_CONTEXT.md*

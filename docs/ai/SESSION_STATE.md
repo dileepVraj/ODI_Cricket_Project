@@ -1,5 +1,5 @@
 # Session State
-**Last Updated:** 2026-03-12
+**Last Updated:** 2026-03-13
 **Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+
+- TASK-117 - Add team_color to MatrixReportRow in report_builder.py - CLOSED 2026-03-13
+  `MatrixReportRow` now includes an additive optional `team_color` field,
+  and `ReportBuilder._generate_matrix_report()` now emits opponent-row team
+  colours via `TEAM_COLORS` while setting the aggregate OVERALL row to `None`.
+  Gates 1/2/5/6 PASS, bouncer PASS.
 
 - TASK-116 - Remove hardcoded top_teams filter in report_builder.py - CLOSED 2026-03-12
   `ReportBuilder._generate_matrix_report()` now derives its opponent rows
