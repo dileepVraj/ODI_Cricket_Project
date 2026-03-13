@@ -39,3 +39,6 @@ frontend/tsconfig.tsbuildinfo
 taskFile.md
 taskFileTemplate.md
 run_task.py
+
+# Temporary AI scratch
+docs/ai/recon/

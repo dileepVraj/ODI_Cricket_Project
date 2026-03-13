@@ -250,6 +250,10 @@ class FormSequencePayload(TypedDict):
     missing_token: str
 
 
+MATRIX_ROW_HOME_TEAM_COLOR = "home_team_color"
+MATRIX_ROW_HOME_TEAM_NAME = "home_team_name"
+
+
 MatrixReportRow = TypedDict(
     "MatrixReportRow",
     {
@@ -260,6 +264,8 @@ MatrixReportRow = TypedDict(
         "Tie/NR": int,
         "Win %": str,
         "team_color": Optional[str],
+        MATRIX_ROW_HOME_TEAM_COLOR: Optional[str],
+        MATRIX_ROW_HOME_TEAM_NAME: Optional[str],
         "form_data": FormGuidePayload,
         "Opp Avg (1st)": str,
         "MATCH_IDS": str,

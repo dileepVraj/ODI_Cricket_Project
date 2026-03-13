@@ -4,6 +4,8 @@ from config.shared.team_colors import TEAM_COLORS
 from core.interfaces.team_types import (
     ComparisonReportRow,
     FormGuidePayload,
+    MATRIX_ROW_HOME_TEAM_COLOR,
+    MATRIX_ROW_HOME_TEAM_NAME,
     TeamMetricsPayload,
     MatrixReportRow,
     PlayerStatRow,
@@ -291,6 +293,8 @@ class ReportBuilder:
                     "Tie/NR": total_tie_nr,
                     "Win %": f"{total_pct}%",
                     "team_color": None,
+                    MATRIX_ROW_HOME_TEAM_COLOR: TEAM_COLORS.get(team_name) or TEAM_COLORS.get("Visitors", "gray"),
+                    MATRIX_ROW_HOME_TEAM_NAME: team_name,
                     "form_data": ReportBuilder._build_form_data_payload(overall_full, team_name),
                     f"{team_name} Avg (1st)": ReportBuilder._get_avg_with_count(
                         overall_val[overall_val["team_bat_1"] == team_name], "score_inn1"
