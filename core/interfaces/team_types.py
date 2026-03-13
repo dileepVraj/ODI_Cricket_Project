@@ -4,7 +4,7 @@ Typed contracts for TeamEngine payloads and request context.
 
 from __future__ import annotations
 
-from typing import Dict, Literal, Protocol, Sequence, Tuple, TypeAlias, TypedDict, Union
+from typing import Dict, Literal, Optional, Protocol, Sequence, Tuple, TypeAlias, TypedDict, Union
 
 import pandas as pd
 
@@ -259,6 +259,7 @@ MatrixReportRow = TypedDict(
         "Lost": int,
         "Tie/NR": int,
         "Win %": str,
+        "team_color": Optional[str],
         "form_data": FormGuidePayload,
         "Opp Avg (1st)": str,
         "MATCH_IDS": str,

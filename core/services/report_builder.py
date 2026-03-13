@@ -1,4 +1,6 @@
 from typing import Callable, Dict, List, Union
+
+from config.shared.team_colors import TEAM_COLORS
 from core.interfaces.team_types import (
     ComparisonReportRow,
     FormGuidePayload,
@@ -249,6 +251,7 @@ class ReportBuilder:
                     "Lost": losses,
                     "Tie/NR": tie_nr,
                     "Win %": f"{pct}%",
+                    "team_color": TEAM_COLORS.get(opp) or TEAM_COLORS.get("Visitors", "gray"),
                     "form_data": ReportBuilder._build_form_data_payload(full, team_name),
                     f"{team_name} Avg (1st)": ReportBuilder._get_avg_with_count(val[val["team_bat_1"] == team_name], "score_inn1"),
                     "Opp Avg (1st)": ReportBuilder._get_avg_with_count(val[val["team_bat_1"] != team_name], "score_inn1"),
@@ -287,6 +290,7 @@ class ReportBuilder:
                     "Lost": total_losses,
                     "Tie/NR": total_tie_nr,
                     "Win %": f"{total_pct}%",
+                    "team_color": None,
                     "form_data": ReportBuilder._build_form_data_payload(overall_full, team_name),
                     f"{team_name} Avg (1st)": ReportBuilder._get_avg_with_count(
                         overall_val[overall_val["team_bat_1"] == team_name], "score_inn1"
