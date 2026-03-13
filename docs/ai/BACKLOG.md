@@ -32,6 +32,40 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-119R - MatrixTable column alignment, home team colour, chip label fix (retry)
+**Type:** frontend-bug-fix
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-120
+**Created:** 2026-03-13
+**Status:** CLOSED - 2026-03-13
+
+### Description
+Retry the blocked MatrixTable frontend cleanup now that TASK-120 supplies
+`home_team_color` and `home_team_name` on the OVERALL row.
+
+`frontend/components/renderers/MatrixTable.tsx` now applies fixed table
+layout with explicit per-column width classes, injects the OVERALL-row
+home-team CSS variable for Match Audit colouring, and retokens the
+overall-record chip labels to `--accent-primary`.
+
+### Acceptance Criteria
+AC-1: Add `[table-layout:fixed]` to the matrix table className.
+AC-2: Add `getColumnWidthClass()` and apply it to all `th` and `td`.
+AC-3: Keep headers and cells aligned without Win% / Last 5 collisions.
+AC-4: Read `home_team_name` and `home_team_color` from `overallRow`.
+AC-5: Guard home-team CSS injection against null/empty strings.
+AC-6: Keep the useEffect dependency array at `[rows, overallRow]`.
+AC-7: Change only the overall-record chip label divs to `--accent-primary`.
+AC-8: Keep the task frontend-only with no new raw hex colours or `any`.
+AC-9: Gates F1/F2/F3/5/6 pass and bouncer matches baseline.
+
+### Files In Scope
+- `frontend/components/renderers/MatrixTable.tsx`
+- READ ONLY - `frontend/components/renderers/VenueMatchupReport.tsx`
+- READ ONLY - `frontend/lib/context.ts`
+- READ ONLY - `frontend/components/common/MatchAuditSection.tsx`
+
 ## TASK-120 - Add home_team_color and home_team_name to OVERALL row
 **Type:** modification
 **Scope:** backend

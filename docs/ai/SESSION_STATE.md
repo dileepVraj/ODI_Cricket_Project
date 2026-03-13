@@ -20,6 +20,14 @@ None.
 
 ## Last Completed
 
+- TASK-119R - MatrixTable column alignment, home team colour, chip label fix (retry) - CLOSED 2026-03-13
+  `MatrixTable.tsx` now applies fixed table layout plus explicit width
+  classes across every matrix header and cell, and hides OVERALL-only
+  home-team metadata from visible columns.
+  The existing CSS-variable effect now also injects `overallRow`
+  `home_team_name` / `home_team_color`, and overall stat-chip labels
+  use `--accent-primary`. Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-120 - Add home_team_color and home_team_name to OVERALL row - CLOSED 2026-03-13
   `MatrixReportRow` now includes additive optional `home_team_color`
   and `home_team_name` keys, and `ReportBuilder._generate_matrix_report()`
