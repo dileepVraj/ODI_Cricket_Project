@@ -11,7 +11,16 @@ interface MatrixTableProps {
     data: Record<string, unknown>[];
 }
 
-const HIDDEN_COLS = new Set(["MATCH_IDS", "match_ids", "cell_tones", "highlight_flags", "derived_badges", "team_color"]);
+const HIDDEN_COLS = new Set([
+    "MATCH_IDS",
+    "match_ids",
+    "cell_tones",
+    "highlight_flags",
+    "derived_badges",
+    "team_color",
+    "home_team_color",
+    "home_team_name",
+]);
 const FORM_COLUMNS = new Set(["form_data", "form_guide"]);
 const COL_LABELS: Record<string, string> = {
     form_data: "Last 5",
@@ -27,6 +36,17 @@ const OPPONENT_TEXT_SHADOW = "0 0 1px var(--text-primary), 0 0 1px var(--text-pr
 
 function toTeamColorVarName(teamName: string): string {
     return `--venue-team-${teamName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-color`;
+}
+
+function getColumnWidthClass(col: string): string {
+    if (col === "Opponent") return "w-[18%] min-w-[9rem]";
+    if (col === "Mat") return "w-[6%] min-w-[3rem]";
+    if (col === "Won") return "w-[6%] min-w-[3rem]";
+    if (col === "Lost") return "w-[6%] min-w-[3rem]";
+    if (col === "Tie/NR") return "w-[6%] min-w-[3.5rem]";
+    if (col === "Win %" || col === "Win%") return "w-[7%] min-w-[4rem]";
+    if (FORM_COLUMNS.has(col)) return "w-[13%] min-w-[7rem]";
+    return "w-[9%] min-w-[6rem]";
 }
 
 export default function MatrixTable({ data }: MatrixTableProps) {
@@ -68,12 +88,25 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                 return varName;
             });
 
+        const homeTeamName = typeof overallRow?.["home_team_name"] === "string"
+            ? overallRow["home_team_name"].trim()
+            : "";
+        const homeTeamColor = typeof overallRow?.["home_team_color"] === "string"
+            ? overallRow["home_team_color"].trim()
+            : "";
+
+        if (homeTeamName !== "" && homeTeamColor !== "") {
+            const homeVarName = toTeamColorVarName(homeTeamName);
+            root.style.setProperty(homeVarName, homeTeamColor);
+            varNames.push(homeVarName);
+        }
+
         return () => {
             for (const varName of varNames) {
                 root.style.removeProperty(varName);
             }
         };
-    }, [rows]);
+    }, [rows, overallRow]);
 
     function handleSort(col: string) {
         if (sortCol === col) {
@@ -143,7 +176,7 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                         .filter((c) => c !== "Opponent" && c !== "Won" && c !== "Lost" && c !== "Tie/NR" && !FORM_COLUMNS.has(c))
                         .map((col) => (
                             <div key={col} className="[text-align:center] [min-width:60px]">
-                                <div className="[font-size:0.65rem] [text-transform:uppercase] [color:var(--text-disabled)] [font-weight:600]">{COL_LABELS[col] ?? col}</div>
+                                <div className="[font-size:0.65rem] [text-transform:uppercase] [color:var(--accent-primary)] [font-weight:600]">{COL_LABELS[col] ?? col}</div>
                                 <div className={`[font-size:0.95rem] [font-weight:700] ${getCellToneClass(overallRow, col, overallRow[col])}`}>
                                     {String(overallRow[col] ?? "-")}
                                 </div>
@@ -152,7 +185,7 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                 </div>
             )}
 
-            <table className="[width:100%] [border-collapse:collapse] [font-size:0.825rem]">
+            <table className="[width:100%] [table-layout:fixed] [border-collapse:collapse] [font-size:0.825rem]">
                 <thead>
                     <tr>
                         {allColumns.map((col) => (
@@ -169,7 +202,7 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                                             : "descending"
                                         : "none"
                                 }
-                                className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:right]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
+                                className={`${getColumnWidthClass(col)} [padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:right]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
                             >
                                 <span className="[display:inline-flex] [align-items:center] [gap:4px]">
                                     {COL_LABELS[col] ?? col}
@@ -203,7 +236,7 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                                 return (
                                     <td
                                         key={col}
-                                        className={`[padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:right]"} ${isNum ? "font-numeric" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
+                                        className={`${getColumnWidthClass(col)} [padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:right]"} ${isNum ? "font-numeric" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
                                         onClick={() => {
                                             if (isOpponent) {
                                                 navigateToOpponent(String(val ?? ""));
