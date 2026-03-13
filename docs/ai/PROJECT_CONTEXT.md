@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 **Purpose:** Claude Projects knowledge base — full project history, decisions, standards, and pending work.
-**Last Updated:** 2026-03-13 (TASK-117 matrix team_color payload)
+**Last Updated:** 2026-03-13 (TASK-120 overall row home team metadata)
 **Project:** Cricket Algo-Trading Platform
 
 ---
@@ -727,7 +727,8 @@ core/gen_ai/skills/
 
 | TASK-117 closed | Matrix-table payload rows now carry opponent `team_color`, and the aggregate OVERALL row explicitly emits `None` | Keeps the backend payload additive for `MatrixReportRow` while matching the CSS-variable jersey-colour pattern already used by Venue Matchup, Country H2H, and Global H2H renderers | 2026-03-13 |
 | TASK-118 closed | MatrixTable now renders `form_data.raw_results` as `Last 5`, preserves all overall stat chips, and injects opponent jersey colours from row-level `team_color`; MatchAuditSection now uses token-based per-column header colours | Completes the frontend half of the matrix colour/display fix chain introduced by TASK-117 without adding backend logic, raw colour literals, or new type drift | 2026-03-13 |
+| TASK-120 closed | Matrix-table OVERALL rows now carry `home_team_color` and `home_team_name`, while opponent rows remain unchanged | Gives the frontend the home-team metadata it needs for aggregate Match Audit colouring without changing opponent-row payloads or widening the existing matrix contract beyond additive optional fields | 2026-03-13 |
 
-*End of PROJECT_CONTEXT.md - Updated 2026-03-13 (TASK-118 matrix frontend remediation)*
+*End of PROJECT_CONTEXT.md - Updated 2026-03-13 (TASK-120 overall row home team metadata)*
 *For ongoing session state, see SESSION_STATE.md — update between every session.*
 *For agent task routing, see docs/ai/TASK_PROTOCOL.md — read before every task.*

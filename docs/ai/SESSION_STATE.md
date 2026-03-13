@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-120 - Add home_team_color and home_team_name to OVERALL row - CLOSED 2026-03-13
+  `MatrixReportRow` now includes additive optional `home_team_color`
+  and `home_team_name` keys, and `ReportBuilder._generate_matrix_report()`
+  now emits them only on the aggregate OVERALL row via `TEAM_COLORS`.
+  Gates 1/2/5/6 PASS, bouncer PASS.
+
 - TASK-118 - MatrixTable + MatchAuditSection frontend fixes - CLOSED 2026-03-13
   `MatrixTable.tsx` now renders `form_data.raw_results` as emoji-based
   `Last 5`, removes the overall stat-chip slice limit, and injects

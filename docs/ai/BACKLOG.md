@@ -32,6 +32,44 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-120 - Add home_team_color and home_team_name to OVERALL row
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-117
+**Created:** 2026-03-13
+**Status:** CLOSED - 2026-03-13
+
+### Description
+Add home-team metadata to the aggregate matrix row only.
+
+`core/interfaces/team_types.py` now adds additive optional
+`home_team_color` and `home_team_name` support for `MatrixReportRow`,
+and `core/services/report_builder.py` now emits those fields on the
+aggregate OVERALL row using the existing `TEAM_COLORS` lookup chain
+while leaving opponent rows unchanged.
+
+### Acceptance Criteria
+AC-1: `MatrixReportRow` includes `home_team_color: Optional[str]`.
+AC-2: `MatrixReportRow` includes `home_team_name: Optional[str]`.
+AC-3: OVERALL row uses
+      `TEAM_COLORS.get(team_name) or TEAM_COLORS.get("Visitors", "gray")`.
+AC-4: OVERALL row uses `home_team_name: team_name`.
+AC-5: Opponent rows remain unchanged.
+AC-6: Change is additive only - no existing fields removed or renamed.
+AC-7: No `.iterrows()` / `.itertuples()` introduced.
+AC-8: No `duckdb` import introduced.
+AC-9: Stop-state-trace-confirm completed for `core/interfaces/team_types.py`.
+AC-10: Gates 1/2/5/6 pass and bouncer matches baseline.
+
+### Files In Scope
+- `core/interfaces/team_types.py`
+- `core/services/report_builder.py`
+- READ ONLY - `config/shared/team_colors.py`
+- READ ONLY - `core/calculators/team/venue_calculator.py`
+- READ ONLY - `api/serializers.py`
+- READ ONLY - `core/data_access.py`
+
 ## TASK-118 - MatrixTable + MatchAuditSection frontend fixes
 **Type:** frontend-modification
 **Scope:** frontend
