@@ -19,6 +19,14 @@ const COL_LABELS: Record<(typeof DISPLAY_COLUMNS)[number], string> = {
     team_bat_2: "Bat 2nd",
     status: "Status",
 };
+const COL_HEADER_COLOR: Record<string, string> = {
+    start_date: "[color:var(--text-muted)]",
+    venue: "[color:var(--text-muted)]",
+    winner: "[color:var(--accent-primary)]",
+    team_bat_1: "[color:var(--accent-primary)]",
+    team_bat_2: "[color:var(--accent-primary)]",
+    status: "[color:var(--text-secondary)]",
+};
 const TEAM_NAME_COLUMNS = new Set(["winner", "team_bat_1", "team_bat_2"]);
 const MERGED_INNINGS_COLUMNS = new Set(["team_bat_1", "team_bat_2"]);
 const TEAM_NAME_TEXT_SHADOW = "0 0 1px var(--text-primary), 0 0 1px var(--text-primary)";
@@ -161,7 +169,7 @@ export default function MatchAuditSection({ records }: MatchAuditSectionProps) {
                                     return (
                                         <th
                                             key={col}
-                                            className={`${getColumnWidthClass(col)} px-2 py-3 [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] [color:var(--text-secondary)] [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] [text-align:left] ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
+                                            className={`${getColumnWidthClass(col)} px-2 py-3 [background:var(--bg-active)] [border-bottom:1px_solid_var(--border-strong)] ${COL_HEADER_COLOR[col] ?? "[color:var(--text-secondary)]"} [font-weight:800] [font-size:0.75rem] [letter-spacing:0.08em] [text-transform:uppercase] [white-space:nowrap] [text-align:left] ${withDivider ? "[border-left:1px_solid_var(--border-default)]" : ""}`}
                                         >
                                             {COL_LABELS[col] ?? col}
                                         </th>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp, ChevronsUpDown, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import EmptyState from "@/components/common/EmptyState";
@@ -11,7 +11,23 @@ interface MatrixTableProps {
     data: Record<string, unknown>[];
 }
 
-const HIDDEN_COLS = new Set(["MATCH_IDS", "match_ids", "cell_tones", "highlight_flags", "derived_badges"]);
+const HIDDEN_COLS = new Set(["MATCH_IDS", "match_ids", "cell_tones", "highlight_flags", "derived_badges", "team_color"]);
+const FORM_COLUMNS = new Set(["form_data", "form_guide"]);
+const COL_LABELS: Record<string, string> = {
+    form_data: "Last 5",
+    form_guide: "Last 5",
+};
+const RESULT_EMOJI: Record<string, string> = {
+    W: "✅",
+    L: "❌",
+    T: "🤝",
+    NR: "🌧️",
+};
+const OPPONENT_TEXT_SHADOW = "0 0 1px var(--text-primary), 0 0 1px var(--text-primary)";
+
+function toTeamColorVarName(teamName: string): string {
+    return `--venue-team-${teamName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-color`;
+}
 
 export default function MatrixTable({ data }: MatrixTableProps) {
     const [sortCol, setSortCol] = useState<string | null>(null);
@@ -33,6 +49,31 @@ export default function MatrixTable({ data }: MatrixTableProps) {
         () => (rows.length > 0 ? Object.keys(rows[0]).filter((c) => !HIDDEN_COLS.has(c)) : []),
         [rows]
     );
+
+    React.useEffect(() => {
+        const root = document.documentElement;
+        const varNames = rows
+            .filter((row) => {
+                const teamColor = row["team_color"];
+                const opponent = row["Opponent"];
+                return typeof teamColor === "string"
+                    && teamColor.trim() !== ""
+                    && typeof opponent === "string"
+                    && opponent.trim() !== "";
+            })
+            .map((row) => {
+                const opponent = String(row["Opponent"]);
+                const varName = toTeamColorVarName(opponent);
+                root.style.setProperty(varName, String(row["team_color"]));
+                return varName;
+            });
+
+        return () => {
+            for (const varName of varNames) {
+                root.style.removeProperty(varName);
+            }
+        };
+    }, [rows]);
 
     function handleSort(col: string) {
         if (sortCol === col) {
@@ -90,7 +131,7 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                         <Trophy size={18} className="[color:var(--accent-primary)]" />
                     </div>
                     <div className="[flex:1]">
-                        <div className="[font-size:0.7rem] [text-transform:uppercase] [letter-spacing:0.06em] [color:var(--text-disabled)] [font-weight:600]">
+                        <div className="[font-size:0.7rem] [text-transform:uppercase] [letter-spacing:0.06em] [color:var(--accent-primary)] [font-weight:600]">
                             Overall Record
                         </div>
                         <div className="[font-size:1.1rem] [font-weight:800] [color:var(--text-primary)]">
@@ -99,11 +140,10 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                         </div>
                     </div>
                     {allColumns
-                        .filter((c) => c !== "Opponent" && c !== "Won" && c !== "Lost" && c !== "Tie/NR")
-                        .slice(0, 4)
+                        .filter((c) => c !== "Opponent" && c !== "Won" && c !== "Lost" && c !== "Tie/NR" && !FORM_COLUMNS.has(c))
                         .map((col) => (
                             <div key={col} className="[text-align:center] [min-width:60px]">
-                                <div className="[font-size:0.65rem] [text-transform:uppercase] [color:var(--text-disabled)] [font-weight:600]">{col}</div>
+                                <div className="[font-size:0.65rem] [text-transform:uppercase] [color:var(--text-disabled)] [font-weight:600]">{COL_LABELS[col] ?? col}</div>
                                 <div className={`[font-size:0.95rem] [font-weight:700] ${getCellToneClass(overallRow, col, overallRow[col])}`}>
                                     {String(overallRow[col] ?? "-")}
                                 </div>
@@ -129,10 +169,10 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                                             : "descending"
                                         : "none"
                                 }
-                                className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] ${col === "Opponent" || col === "form_guide" ? "[text-align:left]" : "[text-align:right]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
+                                className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:right]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
                             >
                                 <span className="[display:inline-flex] [align-items:center] [gap:4px]">
-                                    {col}
+                                    {COL_LABELS[col] ?? col}
                                     {sortCol === col ? (
                                         sortDir === "asc" ? <ChevronUp size={12} /> : <ChevronDown size={12} />
                                     ) : (
@@ -148,12 +188,22 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                         <tr key={i} className="[border-bottom:1px_solid_var(--border-subtle)] hover:[background:var(--bg-hover)] [transition:background_var(--transition-fast)]">
                             {allColumns.map((col) => {
                                 const val = row[col];
-                                const isNum = col !== "Opponent" && col !== "form_guide";
+                                const isNum = col !== "Opponent" && !FORM_COLUMNS.has(col);
                                 const isOpponent = col === "Opponent";
+                                const opponentStyle = isOpponent
+                                    && typeof val === "string"
+                                    && val.trim() !== ""
+                                    && typeof row["team_color"] === "string"
+                                    && row["team_color"].trim() !== ""
+                                    ? {
+                                        color: `var(${toTeamColorVarName(val)})`,
+                                        textShadow: OPPONENT_TEXT_SHADOW,
+                                    }
+                                    : undefined;
                                 return (
                                     <td
                                         key={col}
-                                        className={`[padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || col === "form_guide" ? "[text-align:left]" : "[text-align:right]"} ${isNum ? "font-numeric" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
+                                        className={`[padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:right]"} ${isNum ? "font-numeric" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
                                         onClick={() => {
                                             if (isOpponent) {
                                                 navigateToOpponent(String(val ?? ""));
@@ -167,8 +217,9 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                                         role={isOpponent ? "button" : undefined}
                                         tabIndex={isOpponent ? 0 : undefined}
                                         aria-label={isOpponent ? `Open rivalry view for ${String(val ?? "")}` : undefined}
+                                        style={opponentStyle}
                                     >
-                                        {col === "form_guide" ? <FormGuide value={String(val ?? "")} /> : formatVal(val)}
+                                        {FORM_COLUMNS.has(col) ? <FormGuide value={val} /> : formatVal(val)}
                                     </td>
                                 );
                             })}
@@ -180,14 +231,20 @@ export default function MatrixTable({ data }: MatrixTableProps) {
     );
 }
 
-function FormGuide({ value }: { value: string }) {
-    const chars = value.split("").filter((c) => c.trim() !== "");
+function FormGuide({ value }: { value: unknown }) {
+    if (
+        value === null ||
+        value === undefined ||
+        typeof value !== "object" ||
+        !Array.isArray((value as Record<string, unknown>)["raw_results"])
+    ) {
+        return <span className="[color:var(--text-muted)]">—</span>;
+    }
+    const results = (value as Record<string, unknown>)["raw_results"] as string[];
     return (
         <span className="[display:inline-flex] [gap:3px] [font-size:0.9rem]">
-            {chars.map((c, i) => (
-                <span key={i} className="[font-size:0.85rem]">
-                    {c}
-                </span>
+            {results.map((result, index) => (
+                <span key={index}>{RESULT_EMOJI[result] ?? result}</span>
             ))}
         </span>
     );
