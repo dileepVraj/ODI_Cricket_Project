@@ -32,6 +32,45 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-118 - MatrixTable + MatchAuditSection frontend fixes
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-117
+**Created:** 2026-03-13
+**Status:** CLOSED - 2026-03-13
+
+### Description
+Fix the Home Dominance matrix renderer and Match Audit header colours.
+
+`frontend/components/renderers/MatrixTable.tsx` now reads `form_data`
+payload objects via `raw_results`, displays the column as `Last 5`,
+renders all overall-record stat chips, highlights the overall label,
+and injects opponent jersey colours from row-level `team_color`.
+`frontend/components/renderers/MatchAuditSection.tsx` now applies
+token-based per-column header colours for date/venue/team/status.
+
+### Acceptance Criteria
+AC-1: `form_data` no longer renders `[object Object]`.
+AC-2: FormGuide maps `W/L/T/NR` to emoji display tokens.
+AC-3: Matrix header displays `Last 5` for the form column.
+AC-4: Overall record renders all stat chips with no slice limit.
+AC-5: Overall Record label uses `--accent-primary`.
+AC-6: Matrix opponent cells resolve `team_color` through runtime CSS vars.
+AC-7: Match Audit team headers use `--accent-primary`; date/venue stay muted.
+AC-8: No backend files modified.
+AC-9: Gates F1/F2/F3/5/6 pass and bouncer matches baseline.
+
+### Files In Scope
+- `frontend/components/renderers/MatrixTable.tsx`
+- `frontend/components/renderers/MatchAuditSection.tsx`
+- READ ONLY - `frontend/lib/comparison-types.ts`
+- READ ONLY - `frontend/components/renderers/VenueMatchupReport.tsx`
+- READ ONLY - `frontend/components/renderers/CountryH2HReport.tsx`
+- READ ONLY - `frontend/app/globals.css`
+- READ ONLY - `docs/ai/SESSION_STATE.md`
+- READ ONLY - `docs/guides/ENGINEERING_STANDARDS_FRONTEND.md`
+
 ## TASK-117 - Add team_color to MatrixReportRow in report_builder.py
 **Type:** modification
 **Scope:** backend

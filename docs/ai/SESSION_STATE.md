@@ -20,6 +20,14 @@ None.
 
 ## Last Completed
 
+- TASK-118 - MatrixTable + MatchAuditSection frontend fixes - CLOSED 2026-03-13
+  `MatrixTable.tsx` now renders `form_data.raw_results` as emoji-based
+  `Last 5`, removes the overall stat-chip slice limit, and injects
+  row-level `team_color` CSS variables for opponent cells.
+  `MatchAuditSection.tsx` now colours team-name headers with
+  `--accent-primary` while keeping date/venue muted and status secondary.
+  Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-117 - Add team_color to MatrixReportRow in report_builder.py - CLOSED 2026-03-13
   `MatrixReportRow` now includes an additive optional `team_color` field,
   and `ReportBuilder._generate_matrix_report()` now emits opponent-row team
