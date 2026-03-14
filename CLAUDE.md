@@ -1,7 +1,7 @@
-# AGENTS.MD — Governing Law for AI Agents (Codex CLI)
+# AGENTS.MD — Governing Law for AI Agents
 
-**Version:** 2.0
-**Last Updated:** 2026-03-03
+**Version:** 3.0
+**Last Updated:** 2026-03-14
 **Status:** SUPREME DIRECTIVE — all prior versions superseded
 **Core Directive:** "Assume data is dirty, boundaries are strict, and trust is zero."
 **Project:** Cricket Algo-Trading Platform
@@ -9,26 +9,212 @@
 
 ---
 
+## PART 0: DUAL-AGENT WORKFLOW
+
+This project uses two agents with distinct roles. Read this part first regardless of which agent you are.
+
+---
+
+### The Two Agents
+
+**Claude** — Planning & Verification Agent
+- Role: Think, plan, write task prompts, verify reports, maintain handoff context
+- Does NOT execute implementation tasks (engines, calculators, API, components)
+- CAN make small direct tweaks (see Small Tweak Rule below)
+- Reads this file for PART 0 + PART 1 (Claude Bootstrap section)
+
+**Codex** — Execution Agent
+- Role: Implement tasks written by Claude, run gates, commit, write reports
+- Reads this file in full — all parts apply
+- Receives work exclusively via `workflow/taskFile.md`
+
+---
+
+### Workflow Files (all in `workflow/` directory)
+
+| File | Written by | Purpose |
+|---|---|---|
+| `workflow/plan.md` | Claude | Plan for current idea — awaits human approval |
+| `workflow/tasks.md` | Claude | Task breakdown after plan is approved |
+| `workflow/taskFile.md` | Claude | Active task prompt for Codex — one task at a time |
+| `workflow/taskFileTemplate.md` | Reference | Template Claude follows when writing taskFile.md |
+| `workflow/report.md` | Codex | Task completion report — human presents to Claude for verification |
+| `workflow/handoff.md` | Claude | ≤25 line context brief — human pastes at start of new session |
+
+---
+
+### The Workflow Cycle
+
+```
+1. IDEA
+   Human brings idea (bug fix / feature / refactor / small task) to Claude.
+
+2. PLAN
+   Claude reads only the relevant files needed to understand the scope.
+   Claude writes plan to workflow/plan.md.
+   Human reviews — approves or iterates. No tasks are written until plan is approved.
+
+3. TASK BREAKDOWN
+   Claude writes workflow/tasks.md — splits plan into discrete tasks.
+   Each task = one Codex session.
+
+4. TASK WRITE
+   Claude writes one task prompt into workflow/taskFile.md
+   following workflow/taskFileTemplate.md exactly.
+   Task prompt MUST include READ FIRST with exact standards file paths.
+
+5. CODEX EXECUTES
+   Human triggers Codex. Codex reads workflow/taskFile.md.
+   Codex implements, runs gates, commits, writes workflow/report.md, prints terminal summary.
+
+6. UNBLOCK (if needed)
+   If Codex is blocked — human pastes the blocker to Claude.
+   Claude diagnoses and provides a resolution path.
+   Human relays resolution to Codex.
+
+7. VERIFY
+   Human presents workflow/report.md to Claude.
+   Claude checks: gates passed, acceptance criteria met, no violations.
+   If PASS → Claude gives green signal + overwrites workflow/handoff.md.
+   If FAIL → Claude flags the issue — human decides next action.
+
+8. NEXT TASK / CONTEXT RESET
+   Human /clears Claude context.
+   New session starts with: "Read workflow/handoff.md" to restore context.
+   Repeat from step 1 or 4 for next task.
+```
+
+---
+
+### Claude's Planning Rules
+
+**1. Read only what you need.**
+Before writing a plan, read only the files relevant to the idea:
+- Always read: `docs/ai/SESSION_STATE.md`, `workflow/handoff.md`
+- Read relevant source files based on what the idea touches
+- Do NOT scan the full codebase speculatively
+
+**2. plan.md discipline.**
+- Write the plan to `workflow/plan.md`
+- Mark it DRAFT until human approves
+- Do not write `workflow/tasks.md` until human explicitly approves the plan
+- If plan is revised, overwrite `workflow/plan.md` — do not append
+
+**3. tasks.md discipline.**
+- After plan approval, split into the minimum number of tasks needed
+- Each task must be independently executable by Codex in one session
+- Order tasks so dependencies are respected (no task requires output from a future task)
+
+**4. taskFile.md discipline — the most important rule.**
+When writing `workflow/taskFile.md`, follow `workflow/taskFileTemplate.md` exactly.
+Every task prompt MUST include a `READ FIRST` section listing the exact standards files
+Codex must load. Use the table below to select files:
+
+| Task scope | Standards files to include in READ FIRST |
+|---|---|
+| Backend engine/calculator/service | MANDATES_1_TO_4, SYSTEM_TOPOLOGY, HIGH_IMPACT_REGISTRY, GATE_SEQUENCE, SKILLS_REGISTRY, WORKFLOW_AND_LAWS, PYTHON_STANDARDS, MEMORY_AND_THREADING |
+| team_engine.py modification | All backend files above + KNOWN_PATTERNS_KIPS |
+| Frontend component | MANDATES_1_TO_4, SYSTEM_TOPOLOGY, HIGH_IMPACT_REGISTRY, GATE_SEQUENCE, SKILLS_REGISTRY, WORKFLOW_AND_LAWS, TACTICAL_EXECUTION, UI_IMPLEMENTATION, PERF_RESILIENCE_A11Y_TESTING |
+| Both backend + frontend | All backend files + all frontend files |
+
+All paths are relative to `docs/guides/`. Example full path: `docs/guides/coreStandards/MANDATES_1_TO_4.md`
+
+**5. Report verification.**
+When human presents `workflow/report.md`, check:
+- All triggered gates are PASS
+- All acceptance criteria SATISFIED
+- Bouncer post-task matches or improves baseline
+- Both commit hashes are real (not NONE)
+- PROJECT_CONTEXT.md Section 4 has exactly 5 entries
+- workflow/taskFile.md cleared — YES
+If all checks pass → give green signal → overwrite `workflow/handoff.md`.
+
+**6. handoff.md rules.**
+- Overwrite `workflow/handoff.md` only after giving green signal on a verified report
+- Maximum 25 lines of content
+- Cover: last task completed, what was achieved, current phase, next task in queue, any known blockers
+- Write in plain text — no markdown headers, no bullet nesting
+
+**7. Small Tweak Rule.**
+Claude may execute small changes directly (without writing a taskFile for Codex) when ALL of these are true:
+- Touches ≤ 3 files
+- Does NOT touch engine, calculator, or service files in `formats/` or `core/`
+- Does NOT touch any registered file (`core/data_access.py`, `core/interfaces/team_types.py`, `api/serializers.py`)
+- Does NOT require gate validation (no bouncer run needed)
+- Examples: config edits, template updates, doc fixes, small frontend style tweaks
+
+If any condition above is NOT met → write a task for Codex instead.
+
+---
+
 ## PART 1: MANDATORY BOOTSTRAP
+
+**→ If you are Claude: follow the Claude Bootstrap below.**
+**→ If you are Codex: skip to the Codex Bootstrap section.**
+
+---
+
+### Claude Bootstrap
+
+Execute at the start of every Claude session, in order.
+
+**Step C1 — Restore context**
+```bash
+cat workflow/handoff.md
+cat docs/ai/SESSION_STATE.md
+```
+Extract: current phase, last completed task, next task in queue, active blockers.
+If handoff.md is empty — ask human what we're working on before proceeding.
+
+**Step C2 — Understand the request**
+Identify which workflow step the human is asking for:
+- New idea → go to Plan (Step C3)
+- Plan revision → update workflow/plan.md
+- Task write → go to Task Write (Step C4)
+- Report verification → go to Verify (Step C5)
+- Blocker resolution → diagnose and provide resolution path
+- Small tweak → check Small Tweak Rule (Part 0), execute if eligible
+
+**Step C3 — Plan**
+Read the relevant source files for the idea.
+Write plan to `workflow/plan.md`. Mark status: DRAFT.
+Present plan to human. Wait for approval. Do not proceed to Step C4 without approval.
+
+**Step C4 — Task Write**
+If tasks.md not yet written: write `workflow/tasks.md` with task breakdown.
+Write one task prompt to `workflow/taskFile.md` following `workflow/taskFileTemplate.md`.
+Include READ FIRST with exact standards file paths (see table in Part 0 Rule 4).
+Confirm with human before handing off to Codex.
+
+**Step C5 — Verify Report**
+Read `workflow/report.md`.
+Check all items listed in Part 0 Rule 5.
+If all pass → print: "GREEN SIGNAL — TASK-XXX complete. Proceed to next task."
+Then overwrite `workflow/handoff.md` with current context (≤25 lines).
+If any check fails → list the specific failures. Do not give green signal.
+
+---
+
+### Codex Bootstrap
 
 Execute this sequence before any code change, in this exact order. Do not skip steps.
 
-### Step 0 — Check for taskFile.md
-Before any other step, check if `taskFile.md` exists in the project root.
+**Step 0 — Check for workflow/taskFile.md**
+Before any other step, check if `workflow/taskFile.md` exists and is non-empty.
 ```bash
-cat taskFile.md
+cat workflow/taskFile.md
 ```
 
 If it exists and is non-empty:
 - Stop all other bootstrap steps
 - Read `docs/ai/TASK_RUNNER.md`
-- Execute the task in `taskFile.md`
+- Execute the task in `workflow/taskFile.md`
 - Do not proceed with Steps 1–4 below — TASK_RUNNER handles everything
 
 If it does not exist or is empty:
 - Continue with Step 1 below as normal
 
-### Step 1 — Load Context (context-loader skill)
+**Step 1 — Load Context (context-loader skill)**
 Invoke `core/gen_ai/skills/guides/backend/context-loader/context-loader.md` now.
 Follow every step in that template before proceeding.
 
@@ -44,23 +230,46 @@ Do not proceed to Step 2 until the skill outputs:
 
 If SESSION_STATE.md is missing or unreadable — hard stop. Report and do not proceed.
 
-### Step 2 — Load Scoped Standards File
-Based on Active Task scope from SESSION_STATE:
-- Backend task → read `docs/guides/ENGINEERING_STANDARDS_BACKEND.md` in full
-- Frontend task → read `docs/guides/ENGINEERING_STANDARDS_FRONTEND.md` in full
-- Both → read both files in full
+**Step 2 — Load Scoped Standards Files**
+
+Load ONLY the files listed for your task type. All paths are relative to `docs/guides/`.
+Do NOT load files not listed for your task type.
+
+**MANDATORY (every task):**
+- `coreStandards/MANDATES_1_TO_4.md`
+- `coreStandards/SYSTEM_TOPOLOGY.md`
+- `coreStandards/HIGH_IMPACT_REGISTRY.md`
+- `coreStandards/GATE_SEQUENCE.md`
+- `coreStandards/SKILLS_REGISTRY.md`
+
+**FOR ALL TASKS MODIFYING EXISTING CODE (add to mandatory):**
+- `coreStandards/WORKFLOW_AND_LAWS.md`
+
+**FOR BACKEND TASKS (add to mandatory):**
+- `backendStandards/PYTHON_STANDARDS.md`
+- `backendStandards/MEMORY_AND_THREADING.md`
+
+**FOR FRONTEND TASKS (add to mandatory):**
+- `frontendStandards/TACTICAL_EXECUTION.md`
+- `frontendStandards/UI_IMPLEMENTATION.md`
+- `frontendStandards/PERF_RESILIENCE_A11Y_TESTING.md`
+
+**CONDITIONAL (load only when explicitly required by task):**
+- `backendStandards/KNOWN_PATTERNS_KIPS.md` → only when task touches `formats/odi/engines/team_engine.py`
+- `coreStandards/MANDATES_5_6_LIVE.md` → only when task touches `core/live/` or `api/live/` [DORMANT]
 
 Do not read `ENGINEERING_STANDARDS_CORE.md` — that is the human architect file, not the agent file.
 Do not read or update `docs/ai/AI_MEMORY.md` — it is deprecated and replaced by SESSION_STATE.md.
 
-### Step 3 — Run Baseline Bouncer
+**Step 3 — Run Baseline Bouncer**
 ```bash
 python core/utils/compliance_bouncer.py --root .
 ```
 Record the output. This is your before-snapshot. Do not proceed if you cannot run this command.
 
-### Step 4 — Classify the Task
-Before writing any code, classify every file the task will touch using the layer role table in Part 0 of the standards file. This determines which mandates apply.
+**Step 4 — Classify the Task**
+Before writing any code, classify every file the task will touch using the layer role table in
+`docs/guides/coreStandards/MANDATES_1_TO_4.md`. This determines which mandates apply.
 
 If SESSION_STATE.md is missing or unreadable — hard stop. Do not proceed. Report the missing file.
 
@@ -262,7 +471,9 @@ A task is NOT complete until all of the following are true:
 3. Gate 6 (compliance_bouncer) output is `PASS: 100% compliance`.
 4. Post-change bouncer output matches or improves on baseline bouncer output.
 5. No registered file was modified without explicit instruction or stop-state-trace-confirm.
-6. Report is submitted in the required format (see Part 8).
+6. Report written to `workflow/report.md` in the required format (see Part 7).
+7. PROJECT_CONTEXT.md Section 4 contains exactly 5 entries (rolling window enforced).
+8. Terminal summary printed with task status and report location.
 
 A passing bouncer with missing gate results is a FAIL. All gates must be present.
 
@@ -270,13 +481,15 @@ A passing bouncer with missing gate results is a FAIL. All gates must be present
 
 ## PART 7: REPORT FORMAT
 
-Every completed task MUST produce a report in EXACTLY this format. No prose summaries, no alternative layouts, no "what changed" sections. Deviation from this template is a hard fail. Max 30 lines.
+Every completed task MUST produce a report written to `workflow/report.md` in EXACTLY this format.
+No prose summaries, no alternative layouts, no "what changed" sections. Deviation is a hard fail.
 
 ```
 TASK REPORT
 ===========
 Task: [one-line description]
 Date: [date]
+Agent: Codex
 
 Baseline Bouncer: [PASS/FAIL — N violations]
 Post-Task Bouncer: [PASS/FAIL — N violations — matches baseline: YES/NO]
@@ -299,6 +512,16 @@ Stop-State-Trace-Confirm Used: [YES/NO — which file]
 Blockers Hit: [list or NONE]
 Phase 12 References Added: [YES — VIOLATION / NO — confirmed]
 AI_MEMORY.md Updated: [should always be NO — file is deprecated]
+
+Doc Updates:
+- BACKLOG.md              : TASK-{ID} CLOSED — YES/NO
+- SESSION_STATE.md        : Last Completed updated — YES/NO
+- PROJECT_CONTEXT.md Sec4 : Rolling window enforced (exactly 5 entries) — YES/NO
+
+workflow/taskFile.md Cleared: YES — must be YES before COMPLETE
+
+Commit 1 (task work)  : [hash] — must be a real hash, not NONE
+Commit 2 (doc updates): [hash] — must be a real hash, not NONE
 
 Status: [COMPLETE / BLOCKED — reason]
 ```
@@ -325,24 +548,24 @@ These are sins. Any occurrence is an immediate hard fail.
 - Skipping context-loader invocation at session start — it is mandatory for all task scopes
 - Running `git status --short .` or `git status --short` without an explicit named directory — BANNED. Required form: `git status --short tests/` or `git status --short api/` etc. The `.` argument is not a valid scope.
 - Submitting a task report in any format other than the template defined in Part 7 — report format is mandatory, not a suggestion
+- Writing report output to terminal only — report MUST be written to `workflow/report.md`
 - Do NOT modify or remove the constructor
   discard pattern
   `_ = (match_df, phase_df, dal)`
   in `formats/odi/engines/team_engine.py`
   line 26 — intentional stateless design.
-  See ENGINEERING_STANDARDS_BACKEND.md
-  Part 7 KIP-001.
+  See docs/guides/backendStandards/KNOWN_PATTERNS_KIPS.md KIP-001.
 
 - Do NOT add a duplicate definition of
   `_context_match_df` to the upper section
   of `formats/odi/engines/team_engine.py`
   — method is defined in the lower section
   of the same file.
-  See ENGINEERING_STANDARDS_BACKEND.md
-  Part 7 KIP-002.
+  See docs/guides/backendStandards/KNOWN_PATTERNS_KIPS.md KIP-002.
 
 ---
 
-*End of AGENTS.md — Version 2.0 — 2026-03-03*
+*End of AGENTS.md — Version 3.0 — 2026-03-14*
 *Source of truth for current project state: docs/ai/SESSION_STATE.md*
-*Authoritative standards: docs/guides/ENGINEERING_STANDARDS_CORE.md (human) / BACKEND.md or FRONTEND.md (agents)*
+*Workflow files: workflow/ directory*
+*Standards: docs/guides/coreStandards/ | docs/guides/backendStandards/ | docs/guides/frontendStandards/*

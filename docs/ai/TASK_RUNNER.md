@@ -1,25 +1,26 @@
 # TASK_RUNNER.md — Autonomous Task Execution Loop
 # Location: docs/ai/TASK_RUNNER.md
-# Version: 1.0
-# Last Updated: 2026-03-10
-# Purpose: Autonomous end-to-end task execution from taskFile.md input
-#          to committed output with full doc updates and task report.
-#          This file is the entry point for all agent task execution.
+# Version: 2.0
+# Last Updated: 2026-03-14
+# Purpose: Autonomous end-to-end task execution from workflow/taskFile.md input
+#          to committed output with full doc updates, report.md write, and terminal summary.
+#          This file is the entry point for all Codex task execution.
 #
 # HOW TO INVOKE:
-#   "Read docs/ai/TASK_RUNNER.md and execute the task in taskFile.md"
+#   "Read docs/ai/TASK_RUNNER.md and execute the task in workflow/taskFile.md"
 #
 # FAILURE BEHAVIOUR:
 #   On any STOP condition — restore from snapshot (Phase 3), report BLOCKED.
+#   Write BLOCKED report to workflow/report.md. Print status to terminal.
 #   Never leave docs/ai/ files in a partial update state.
 
 ---
 
 ## PHASE 1 — INGEST TASK
 
-### 1.1 Read taskFile.md
+### 1.1 Read workflow/taskFile.md
 ```bash
-cat taskFile.md
+cat workflow/taskFile.md
 ```
 
 Extract and record:
@@ -31,9 +32,9 @@ Extract and record:
 - Constraints
 - Full task prompt
 
-If taskFile.md is missing or empty:
+If workflow/taskFile.md is missing or empty:
 ```
-CRITICAL BLOCKER: taskFile.md missing or empty.
+CRITICAL BLOCKER: workflow/taskFile.md missing or empty.
 Cannot begin execution. Halting.
 ```
 Stop. Do not proceed.
@@ -150,11 +151,11 @@ cp docs/ai/SESSION_STATE.md.snap docs/ai/SESSION_STATE.md
 cp docs/ai/PROJECT_CONTEXT.md.snap docs/ai/PROJECT_CONTEXT.md
 rm docs/ai/*.snap
 ```
-Then report BLOCKED with exact failure reason.
+Then write BLOCKED report to `workflow/report.md` and print status to terminal.
 
 ---
 
-## PHASE 4 — BOOTSTRAP (standard CLAUDE.md sequence)
+## PHASE 4 — BOOTSTRAP
 
 ### 4.1 Load context-loader skill
 ```
@@ -162,17 +163,37 @@ Invoke: core/gen_ai/skills/guides/backend/context-loader/context-loader.md
 ```
 Do not proceed until output shows: `CONTEXT LOADED — {scope} task`
 
-### 4.2 Load scoped standards file
-- Backend scope → read `docs/guides/ENGINEERING_STANDARDS_BACKEND.md` in full
-- Frontend scope → read `docs/guides/ENGINEERING_STANDARDS_FRONTEND.md` in full
-- Both → read both in full
+### 4.2 Load scoped standards files
+
+Load ONLY the files listed for the task scope. All paths are relative to `docs/guides/`.
+
+**MANDATORY (every task):**
+- `coreStandards/MANDATES_1_TO_4.md`
+- `coreStandards/SYSTEM_TOPOLOGY.md`
+- `coreStandards/HIGH_IMPACT_REGISTRY.md`
+- `coreStandards/GATE_SEQUENCE.md`
+- `coreStandards/SKILLS_REGISTRY.md`
+- `coreStandards/WORKFLOW_AND_LAWS.md`
+
+**FOR BACKEND TASKS (add to mandatory):**
+- `backendStandards/PYTHON_STANDARDS.md`
+- `backendStandards/MEMORY_AND_THREADING.md`
+
+**FOR FRONTEND TASKS (add to mandatory):**
+- `frontendStandards/TACTICAL_EXECUTION.md`
+- `frontendStandards/UI_IMPLEMENTATION.md`
+- `frontendStandards/PERF_RESILIENCE_A11Y_TESTING.md`
+
+**CONDITIONAL (load only when task explicitly requires):**
+- `backendStandards/KNOWN_PATTERNS_KIPS.md` → only when task touches `formats/odi/engines/team_engine.py`
+- `coreStandards/MANDATES_5_6_LIVE.md` → only when task touches `core/live/` or `api/live/` [DORMANT]
 
 ### 4.3 Run baseline bouncer
 ```bash
 python core/utils/compliance_bouncer.py --root .
 ```
 Record output as **baseline**.
-If FAIL: trigger rollback. Report BLOCKED. Stop.
+If FAIL: trigger rollback. Write BLOCKED report to `workflow/report.md`. Print status. Stop.
 
 ### 4.4 Load TASK_PROTOCOL.md
 ```bash
@@ -190,24 +211,24 @@ Do not begin task execution until guide skill is loaded.
 
 ## PHASE 5 — EXECUTE TASK
 
-Execute the full task prompt from taskFile.md.
+Execute the full task prompt from `workflow/taskFile.md`.
 
 Follow the loaded guide skill checkpoints in sequence.
-Follow all rules from CLAUDE.md Parts 2–5.
+Follow all rules from CLAUDE.md Parts 2–8.
 Follow all filesystem integrity rules (CLAUDE.md Part 5, Rules 1–7).
 
 **During execution, enforce these invariants:**
 
 - Run gate sequence as each file is modified (per TASK_PROTOCOL.md Section 3)
 - On any gate FAIL: stop on that file — fix before continuing to next file
-- On any CRITICAL DEVIATION: trigger rollback, report BLOCKED, stop
+- On any CRITICAL DEVIATION: trigger rollback, write BLOCKED report, stop
 - On any registered file touch without explicit instruction: trigger rollback, stop
 - Never write to docs/ai/ during Phase 5 — that is Phase 7 only
 - Never run banned git commands (CLAUDE.md Part 5, Rule 2)
 - Scope all git status calls to task directory (CLAUDE.md Part 5, Rule 3)
 
 **Verify acceptance criteria as you go:**
-Check each acceptance criterion from taskFile.md as it is satisfied.
+Check each acceptance criterion from `workflow/taskFile.md` as it is satisfied.
 Record: "AC-{N}: SATISFIED / NOT YET SATISFIED"
 
 ---
@@ -215,13 +236,13 @@ Record: "AC-{N}: SATISFIED / NOT YET SATISFIED"
 ## PHASE 6 — VERIFICATION
 
 ### 6.1 Acceptance criteria check
-For each criterion in taskFile.md:
+For each criterion in `workflow/taskFile.md`:
 ```
 AC-1: {criterion text} — SATISFIED / FAILED
 AC-2: {criterion text} — SATISFIED / FAILED
 ...
 ```
-If any criterion is FAILED: trigger rollback. Report BLOCKED. Stop.
+If any criterion is FAILED: trigger rollback. Write BLOCKED report. Stop.
 
 ### 6.2 Disk verify all modified files
 For every source file modified in Phase 5:
@@ -229,14 +250,14 @@ For every source file modified in Phase 5:
 wc -l {filepath}
 grep -c "{key_marker}" {filepath}
 ```
-If any verify fails: trigger rollback. Report BLOCKED. Stop.
+If any verify fails: trigger rollback. Write BLOCKED report. Stop.
 
 ### 6.3 Post-task bouncer
 ```bash
 python core/utils/compliance_bouncer.py --root .
 ```
 Expected: PASS — matches or improves on baseline.
-If FAIL: trigger rollback. Report BLOCKED. Stop.
+If FAIL: trigger rollback. Write BLOCKED report. Stop.
 
 ### 6.4 Run all triggered gates
 Run every gate triggered by the files modified in Phase 5.
@@ -246,79 +267,93 @@ Record each gate result:
 ```
 GATE {N} ({name}): TRIGGERED — PASS / FAIL
 ```
-If any gate FAIL: trigger rollback. Report BLOCKED. Stop.
+If any gate FAIL: trigger rollback. Write BLOCKED report. Stop.
 
 ---
 
 ## PHASE 7 — POST-TASK DOC UPDATES
 
-Execute `docs/ai/POST_TASK_CHECKLIST.md` in full.
+### 7.1 Update BACKLOG.md
+Mark TASK-{ID} as CLOSED.
 
-Steps 7.1 through 7.13 in order.
-Determine applicable steps from task type and scope.
-Steps 7.1, 7.2, 7.3, 7.10, 7.11, 7.12, 7.13 are ALWAYS required.
+### 7.2 Update SESSION_STATE.md
+Set Last Completed to TASK-{ID} and today's date.
+Set Active Task back to None.
 
-On completion of Step 7.12 (two-commit sequence):
+### 7.3 Update PROJECT_CONTEXT.md — Section 4 Rolling Window
+In `docs/ai/PROJECT_CONTEXT.md`, update Section 4 (RECENT ARCHITECTURAL DECISIONS):
+1. Prepend one new entry at position 1 describing the key architectural change made.
+2. Renumber all entries (1–5).
+3. **Delete any entry beyond position 5.** The list MUST contain exactly 5 items after this update.
+   Format: `N. **TASK-XXX:** [one-line architectural decision summary]`
+
+Verify:
+```bash
+grep -c "^\d\." docs/ai/PROJECT_CONTEXT.md
+```
+Expected: exactly 5 numbered entries in Section 4.
+
+### 7.4 Commits
+```bash
+# Commit 1 — task work
+git add [every source file modified in Phase 5]
+git commit -m "TASK-XXX: [one line description]"
+
+# Commit 2 — doc updates
+git add docs/ai/BACKLOG.md docs/ai/SESSION_STATE.md docs/ai/PROJECT_CONTEXT.md
+git commit -m "docs: TASK-XXX post-task doc updates"
+```
+
+Record both commit hashes. A task with Status: COMPLETE but NONE commits is invalid.
+
+### 7.5 Clear workflow/taskFile.md
+```bash
+echo "" > workflow/taskFile.md
+```
+Verify:
+```bash
+cat workflow/taskFile.md
+```
+Expected: Empty or single blank line.
+
+### 7.6 Write report to workflow/report.md
+Overwrite `workflow/report.md` with the full task report using the format defined
+in `workflow/taskFileTemplate.md` EXPECTED REPORT FORMAT section.
+
+Both commit hashes MUST be real hashes — not NONE — before writing COMPLETE status.
+
+### 7.7 Print terminal summary
+After writing report.md, print to terminal:
+```
+TASK-{ID} [STATUS: COMPLETE / BLOCKED]
+Report written to workflow/report.md
+{One line: what was done, or why blocked}
+```
+
+Delete snapshots after successful completion:
 ```bash
 rm docs/ai/BACKLOG.md.snap
 rm docs/ai/SESSION_STATE.md.snap
 rm docs/ai/PROJECT_CONTEXT.md.snap
 ```
-Snapshots are deleted only after successful commit. Never before.
-
-**Clear taskFile.md:**
-```bash
-echo "" > taskFile.md
-```
-Verify:
-```bash
-cat taskFile.md
-```
-Expected: Empty or single blank line.
 
 ---
 
-## PHASE 8 — TASK REPORT
-
-Produce report in CLAUDE.md Part 7 format.
-
-Append the following doc update block to the standard report:
-
-```
-Doc Updates:
-- BACKLOG.md        : TASK-{ID} CLOSED — YES/NO
-- SESSION_STATE.md  : Last Completed updated — YES/NO
-- PROJECT_CONTEXT.md: Section 10 updated — YES/NO
-- Additional docs   : {list or NONE}
-
-Acceptance Criteria:
-- AC-1: {text} — SATISFIED/FAILED
-- AC-2: {text} — SATISFIED/FAILED
-
-Rollback Used: YES/NO
-Snapshots Cleaned: YES/NO
-
-Commit 1 (task work)  : {hash}
-Commit 2 (doc updates): {hash}
-```
-
----
-
-## HARD STOPS — IMMEDIATE ROLLBACK + REPORT BLOCKED
+## HARD STOPS — IMMEDIATE ROLLBACK + WRITE BLOCKED REPORT
 
 These conditions trigger immediate rollback with no exception:
 
 | Condition | Action |
 |-----------|--------|
 | SESSION_STATE.md shows active task at Phase 1 | Stop before Phase 2 — no rollback needed |
-| taskFile.md missing or empty | Stop before Phase 2 — no rollback needed |
-| Baseline bouncer FAIL | Rollback Phase 3 snapshot. Report BLOCKED. |
-| Any gate FAIL during execution | Rollback Phase 3 snapshot. Report BLOCKED. |
-| Post-task bouncer FAIL | Rollback Phase 3 snapshot. Report BLOCKED. |
-| CRITICAL DEVIATION (wrong file modified) | Rollback Phase 3 snapshot. Report BLOCKED. |
-| Registered file touched without instruction | Rollback Phase 3 snapshot. Report BLOCKED. |
-| Any acceptance criterion FAILED | Rollback Phase 3 snapshot. Report BLOCKED. |
-| docs/ai/ write outside POST_TASK_CHECKLIST steps | Rollback Phase 3 snapshot. Report BLOCKED. |
+| workflow/taskFile.md missing or empty | Stop before Phase 2 — no rollback needed |
+| Baseline bouncer FAIL | Rollback Phase 3 snapshot. Write BLOCKED report. |
+| Any gate FAIL during execution | Rollback Phase 3 snapshot. Write BLOCKED report. |
+| Post-task bouncer FAIL | Rollback Phase 3 snapshot. Write BLOCKED report. |
+| CRITICAL DEVIATION (wrong file modified) | Rollback Phase 3 snapshot. Write BLOCKED report. |
+| Registered file touched without instruction | Rollback Phase 3 snapshot. Write BLOCKED report. |
+| Any acceptance criterion FAILED | Rollback Phase 3 snapshot. Write BLOCKED report. |
+| docs/ai/ write outside Phase 7 steps | Rollback Phase 3 snapshot. Write BLOCKED report. |
 
 ---
 
@@ -327,19 +362,18 @@ These conditions trigger immediate rollback with no exception:
 ```
 TASK_RUNNER EXECUTION ORDER
 ════════════════════════════
-Phase 1  → Read taskFile.md + SESSION_STATE.md
+Phase 1  → Read workflow/taskFile.md + SESSION_STATE.md
 Phase 2  → Assign TASK-ID + write BACKLOG entry
 Phase 3  → Snapshot docs (rollback safety)
 Phase 4  → Bootstrap (context-loader + standards + baseline bouncer + TASK_PROTOCOL)
 Phase 5  → Execute task (guide skill + gates)
 Phase 6  → Verification (AC check + disk verify + post bouncer + gates)
-Phase 7  → POST_TASK_CHECKLIST (Steps 7.1–7.13)
-Phase 8  → Task report
+Phase 7  → Doc updates + commits + write workflow/report.md + print terminal summary
 ```
 
 ---
 
 *End of TASK_RUNNER.md*
-*Version: 1.0*
-*Last Updated: 2026-03-10*
-*Invocation: "Read docs/ai/TASK_RUNNER.md and execute the task in taskFile.md"*
+*Version: 2.0*
+*Last Updated: 2026-03-14*
+*Invocation: "Read docs/ai/TASK_RUNNER.md and execute the task in workflow/taskFile.md"*
