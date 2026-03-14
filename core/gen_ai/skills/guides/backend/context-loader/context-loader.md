@@ -18,11 +18,13 @@ Input:
 
 Attach rules:
 
-| Scope | Attach |
-|---|---|
-| `backend` | `docs/guides/ENGINEERING_STANDARDS_BACKEND.md`, `docs/ai/SESSION_STATE.md` |
-| `frontend` | `docs/guides/ENGINEERING_STANDARDS_FRONTEND.md`, `docs/ai/SESSION_STATE.md` |
-| `architecture` | `docs/guides/ENGINEERING_STANDARDS_BACKEND.md`, `docs/guides/ENGINEERING_STANDARDS_FRONTEND.md`, `docs/ai/SESSION_STATE.md`, `docs/guides/TECHNICAL_AUDIT_REPORT.md` |
+All paths below are relative to `docs/guides/`.
+
+| Scope | Mandatory | Conditional |
+|---|---|---|
+| `backend` | `coreStandards/MANDATES_1_TO_4.md`, `coreStandards/SYSTEM_TOPOLOGY.md`, `coreStandards/HIGH_IMPACT_REGISTRY.md`, `coreStandards/GATE_SEQUENCE.md`, `coreStandards/SKILLS_REGISTRY.md`, `coreStandards/WORKFLOW_AND_LAWS.md`, `backendStandards/PYTHON_STANDARDS.md`, `backendStandards/MEMORY_AND_THREADING.md`, `docs/ai/SESSION_STATE.md` | `backendStandards/KNOWN_PATTERNS_KIPS.md` — load only if task touches `formats/odi/engines/team_engine.py` |
+| `frontend` | `coreStandards/MANDATES_1_TO_4.md`, `coreStandards/SYSTEM_TOPOLOGY.md`, `coreStandards/HIGH_IMPACT_REGISTRY.md`, `coreStandards/GATE_SEQUENCE.md`, `coreStandards/SKILLS_REGISTRY.md`, `coreStandards/WORKFLOW_AND_LAWS.md`, `frontendStandards/TACTICAL_EXECUTION.md`, `frontendStandards/UI_IMPLEMENTATION.md`, `frontendStandards/PERF_RESILIENCE_A11Y_TESTING.md`, `docs/ai/SESSION_STATE.md` | — |
+| `architecture` | all backend mandatory files + all frontend mandatory files + `docs/guides/TECHNICAL_AUDIT_REPORT.md` | — |
 
 Return files in the exact order shown above.
 
