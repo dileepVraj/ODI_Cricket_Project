@@ -20,6 +20,13 @@ None.
 
 ## Last Completed
 
+- TASK-127 - Player Profile screen redesign - CLOSED 2026-03-15
+  `player_profile` now exposes venue/year extra inputs plus
+  dual `Profile` / `Batting Intel` execute buttons, with
+  `_view`-enriched frontend rendering in `CategoryScreen.tsx`,
+  `ExtraInputCombobox.tsx`, and `PlayerProfileCard.tsx`.
+  Gates 3/F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-125 - Add Batting Intel toggle panel to PlayerProfileCard - CLOSED 2026-03-15
   `PlayerProfileCard.tsx` now adds a closed-by-default Batting Intel panel
   with last-10 score chips, phase-runs breakdown, and bowling-style tables

@@ -32,6 +32,35 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-127 - Player Profile Screen Redesign
+**Type:** frontend-modification
+**Scope:** both
+**Priority:** High
+**Depends On:** TASK-125
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+`player_profile` now removes the Host Country dropdown, adds manifest-driven
+`Venue` and `Years` extra inputs, and replaces the single execute action with
+paired `Profile` / `Batting Intel` buttons that drive `_view`-aware rendering
+in `PlayerProfileCard.tsx`.
+
+### Acceptance Criteria
+AC-1: `player_profile` manifest entry removes `country_name` and `optional_context`.
+AC-2: `venue_id` and `years` extra inputs are present and optional.
+AC-3: `execute_buttons` drives dual action buttons in `CategoryScreen.tsx`.
+AC-4: `ExtraInputCombobox.tsx` supports `venues` source via `fetchVenues()`.
+AC-5: `PlayerProfileCard.tsx` renders profile-only and batting-intel-only views.
+AC-6: TypeScript build passes with no `any` usage added.
+AC-7: Gates 3/F1/F2/F3/5/6 pass and the bouncer matches baseline.
+
+## TASK-126 - Player Profile redesign predecessor
+**Status:** CLOSED - 2026-03-15
+
+### Description
+Superseded by TASK-127 before execution. No code changes were made under TASK-126.
+
 ## TASK-125 - Add Batting Intel toggle panel to PlayerProfileCard
 **Type:** frontend-modification
 **Scope:** frontend
