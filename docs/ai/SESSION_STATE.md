@@ -1,5 +1,5 @@
 # Session State
-**Last Updated:** 2026-03-13
+**Last Updated:** 2026-03-15
 **Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
@@ -19,6 +19,13 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+
+- TASK-121 - Strict Decisions refactor — decisions = wins + losses in matrix report - CLOSED 2026-03-15
+  `ReportBuilder._generate_matrix_report()` now defines per-opponent and
+  OVERALL decisions explicitly as wins plus losses, derives Tie/NR from
+  that count, and keeps silent local dirty-data diagnostics without
+  changing the MatrixReportRow output contract. Gates 1/2/5/6 PASS,
+  bouncer PASS.
 
 - TASK-119R - MatrixTable column alignment, home team colour, chip label fix (retry) - CLOSED 2026-03-13
   `MatrixTable.tsx` now applies fixed table layout plus explicit width

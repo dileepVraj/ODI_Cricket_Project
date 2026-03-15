@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-13
+**Last Updated:** 2026-03-15
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,34 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-121 - Strict Decisions refactor — decisions = wins + losses in _generate_matrix_report
+**Type:** refactor
+**Scope:** backend
+**Priority:** Medium
+**Depends On:** NONE
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+Harden the matrix-report decision denominator against dirty winner values.
+
+`core/services/report_builder.py` now defines per-opponent and OVERALL
+`decisions` explicitly as wins plus losses, derives `Tie/NR` from that
+count, and keeps silent local diagnostics for dirty non-decision winner
+strings without widening the `MatrixReportRow` contract.
+
+### Acceptance Criteria
+AC-1: Per-opponent `decisions` uses `wins + losses`.
+AC-2: OVERALL `total_decisions` uses `total_wins + total_losses`.
+AC-3: Local `data_gaps` diagnostics exist but are not emitted.
+AC-4: `MatrixReportRow` remains unchanged.
+AC-5: Gates 1/2/5/6 pass and bouncer matches baseline.
+
+### Files In Scope
+- `core/services/report_builder.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `core/services/match_filter_service.py`
+
 ## TASK-119R - MatrixTable column alignment, home team colour, chip label fix (retry)
 **Type:** frontend-bug-fix
 **Scope:** frontend
