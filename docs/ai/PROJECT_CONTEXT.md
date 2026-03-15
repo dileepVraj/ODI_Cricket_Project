@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-128:** Player profile phase runs now derive from venue-filtered `raw_bat_ground`; redundant `phase_runs_raw` contract removed from the engine, interface, and schema layers.
-2. **TASK-127:** Player profile redesigned - venue combobox + years text input replace host country dropdown; dual Profile/Batting Intel buttons replace single execute; `_view` injection drives conditional rendering.
-3. **TASK-125:** PlayerProfileCard "Batting Intel" toggle panel added - phase runs table, vs-style CSS bar chart, last_10_runs sparkline chips.
-4. **TASK-124:** analyze_player_profile enriched with phase-wise runs, vs-bowling-style breakdown, and last_10_runs numeric field; country pre-filter applied at context_builder layer.
-5. **TASK-123:** Continent Performance now always returns matrix rows, eliminating the flat comparison payload path that violated the `matrix_table` contract for opponent-scoped requests.
+1. **TASK-129:** Player profile now adds Bowling Intel as a third execute path, with venue-aware phase bowling metrics and parsed last-10 wicket chips flowing from engine/interface/schema to the renderer.
+2. **TASK-128:** Player profile phase runs now derive from venue-filtered `raw_bat_ground`; redundant `phase_runs_raw` contract removed from the engine, interface, and schema layers.
+3. **TASK-127:** Player profile redesigned - venue combobox + years text input replace host country dropdown; dual Profile/Batting Intel buttons replace single execute; `_view` injection drives conditional rendering.
+4. **TASK-125:** PlayerProfileCard "Batting Intel" toggle panel added - phase runs table, vs-style CSS bar chart, last_10_runs sparkline chips.
+5. **TASK-124:** analyze_player_profile enriched with phase-wise runs, vs-bowling-style breakdown, and last_10_runs numeric field; country pre-filter applied at context_builder layer.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*

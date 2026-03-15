@@ -32,6 +32,29 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-129 - Add Bowling Intel to the player profile screen
+**Type:** new-feature
+**Scope:** both
+**Priority:** High
+**Depends On:** TASK-128
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+`player_profile` now exposes a third execute action, `Bowling Intel`,
+and the player-profile payload now includes venue-aware bowling phase
+rows plus numeric last-10 wicket chips derived from bowling form tokens.
+
+### Acceptance Criteria
+AC-1: `PhaseBowlingRow` added to `core/interfaces/player_interface.py`.
+AC-2: `PlayerProfile` exposes `phase_bowling` and `last_10_bowling`.
+AC-3: `analyze_player_profile()` computes ground-filtered bowling phase metrics.
+AC-4: `_parse_last_10_bowling()` parses wicket tokens from bowling form.
+AC-5: `formats/odi/manifest.py` adds the `bowling_intel` execute button.
+AC-6: `PlayerProfileSchema` accepts the additive bowling intel fields.
+AC-7: `PlayerProfileCard.tsx` renders the dedicated Bowling Intel panel.
+AC-8: Gates 1/2/3/F1/F2/F3/5/6 pass and the bouncer matches baseline.
+
 ## TASK-128 - Make player profile phase_runs venue-aware
 **Type:** bug-fix
 **Scope:** backend

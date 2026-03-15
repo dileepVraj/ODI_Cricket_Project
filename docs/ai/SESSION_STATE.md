@@ -20,6 +20,14 @@ None.
 
 ## Last Completed
 
+- TASK-129 - Add Bowling Intel to player profile screen - CLOSED 2026-03-15
+  `PlayerProfile` and `PlayerProfileSchema` now expose `phase_bowling`
+  and `last_10_bowling`, `analyze_player_profile()` now derives
+  venue-aware bowling phases from the same ground-filtered raw balls
+  path, and `PlayerProfileCard.tsx` now renders a dedicated
+  `Bowling Intel` panel.
+  Gates 1/2/3/F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-128 - Make player profile phase_runs venue-aware - CLOSED 2026-03-15
   `PlayerProfile` and `PlayerProfileSchema` no longer expose
   `phase_runs_raw`, and `analyze_player_profile()` now derives
