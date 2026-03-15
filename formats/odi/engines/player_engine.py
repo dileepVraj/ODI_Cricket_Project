@@ -13,6 +13,7 @@ from core.interfaces.player_interface import (
     BowlingStats,
     ContextStats,
     IPlayerEngine,
+    PhaseBowlingRow,
     PhaseRunsRow,
     PlayerProfile,
     SquadComparisonData,
@@ -650,6 +651,25 @@ class PlayerEngine(IPlayerEngine):
                 parsed_runs.append(None)
         return parsed_runs
 
+    def _parse_last_10_bowling(self, form_last_10: List[str]) -> List[Optional[int]]:
+        parsed_wickets: List[Optional[int]] = []
+        for token in form_last_10:
+            value = str(token).strip()
+            if value == "" or value == "-" or value.upper() == "DNB":
+                parsed_wickets.append(None)
+                continue
+            if "/" in value:
+                try:
+                    parsed_wickets.append(int(value.split("/", maxsplit=1)[0]))
+                except ValueError:
+                    parsed_wickets.append(None)
+                continue
+            try:
+                parsed_wickets.append(int(value))
+            except ValueError:
+                parsed_wickets.append(None)
+        return parsed_wickets
+
     def _compute_phase_runs(self, raw_bat: pd.DataFrame) -> List[PhaseRunsRow]:
         required_cols = {"over_num", "runs_off_bat", "player_dismissed"}
         if raw_bat.empty or not required_cols.issubset(raw_bat.columns):
@@ -719,6 +739,79 @@ class PlayerEngine(IPlayerEngine):
                 agg["strike_rate"],
             )
         ]
+
+    def _compute_phase_bowling(self, raw_bowl: pd.DataFrame) -> List[PhaseBowlingRow]:
+        required_cols = {"over_num", "runs_off_bat", "player_dismissed"}
+        if raw_bowl.empty or not required_cols.issubset(raw_bowl.columns):
+            return []
+
+        phases_cfg = self.rules.get("phases", {})
+        if not isinstance(phases_cfg, dict) or not phases_cfg:
+            return []
+
+        work = raw_bowl.copy()
+        over_num = pd.to_numeric(work["over_num"], errors="coerce")
+        conditions: List[pd.Series] = []
+        labels: List[str] = []
+
+        for phase_key, bounds in phases_cfg.items():
+            if not isinstance(bounds, (list, tuple)) or len(bounds) != 2:
+                continue
+            start_over = pd.to_numeric(pd.Series([bounds[0]]), errors="coerce").iloc[0]
+            end_over = pd.to_numeric(pd.Series([bounds[1]]), errors="coerce").iloc[0]
+            if pd.isna(start_over) or pd.isna(end_over):
+                continue
+            canonical = _PHASE_CANONICAL.get(str(phase_key), str(phase_key))
+            conditions.append(over_num.between(float(start_over), float(end_over)))
+            labels.append(canonical)
+
+        if not conditions:
+            return []
+
+        phase_order = list(dict.fromkeys(_PHASE_CANONICAL.values()))
+        work["phase_bucket"] = np.select(conditions, labels, default="")
+        work = work[work["phase_bucket"] != ""].copy()
+        if work.empty:
+            return []
+
+        work["phase_bucket"] = pd.Categorical(
+            work["phase_bucket"],
+            categories=phase_order,
+            ordered=True,
+        )
+        phase_bucket = work["phase_bucket"]
+        runs_off_bat = pd.to_numeric(work["runs_off_bat"], errors="coerce").fillna(0)
+        wickets = work["player_dismissed"].replace("", pd.NA).notna().astype(int)
+        dot_balls = (runs_off_bat == 0).astype(int)
+        boundary_balls = (runs_off_bat >= 4).astype(int)
+        phase_runs = runs_off_bat.groupby(phase_bucket, observed=True, sort=True).sum()
+        phase_balls = runs_off_bat.groupby(phase_bucket, observed=True, sort=True).count()
+        phase_wickets = wickets.groupby(phase_bucket, observed=True, sort=True).sum()
+        phase_dots = dot_balls.groupby(phase_bucket, observed=True, sort=True).sum()
+        phase_boundaries = boundary_balls.groupby(phase_bucket, observed=True, sort=True).sum()
+        balls_per_over = float(self.rules["SPORT_CONSTANTS"]["balls_per_over"])
+        percent_scale = float(self.rules["SPORT_CONSTANTS"]["percent_scale"])
+        phase_rows: List[PhaseBowlingRow] = []
+        for phase in phase_order:
+            total_balls = int(phase_balls.get(phase, 0))
+            if total_balls <= 0:
+                continue
+            total_runs = int(phase_runs.get(phase, 0))
+            total_wickets = int(phase_wickets.get(phase, 0))
+            total_dots = int(phase_dots.get(phase, 0))
+            total_boundaries = int(phase_boundaries.get(phase, 0))
+            phase_rows.append(
+                PhaseBowlingRow(
+                    phase=phase,
+                    wickets=total_wickets,
+                    economy=round((total_runs / total_balls) * balls_per_over, 1) if total_balls > 0 else 0.0,
+                    average=round(total_runs / total_wickets, 1) if total_wickets > 0 else 0.0,
+                    strike_rate=round(total_balls / total_wickets, 1) if total_wickets > 0 else 0.0,
+                    dot_pct=round(total_dots / total_balls * percent_scale, 1) if total_balls > 0 else 0.0,
+                    boundary_pct=round(total_boundaries / total_balls * percent_scale, 1) if total_balls > 0 else 0.0,
+                )
+            )
+        return phase_rows
 
     def _compute_vs_bowling_style(self, raw_bat: pd.DataFrame) -> List[VsBowlingStyleRow]:
         required_cols = {"bowler", "runs_off_bat", "player_dismissed"}
@@ -917,4 +1010,29 @@ class PlayerEngine(IPlayerEngine):
         raw_bat_ground = self._apply_ground_filter(raw_bat, ground) if not raw_bat.empty else raw_bat
         profile.phase_runs = self._compute_phase_runs(raw_bat_ground)
         profile.vs_bowling_style = self._compute_vs_bowling_style(raw_bat_ground)
+        raw_bowl: pd.DataFrame = pd.DataFrame()
+        if (
+            isinstance(raw_balls_df, pd.DataFrame)
+            and not raw_balls_df.empty
+            and "bowler" in raw_balls_df.columns
+        ):
+            raw_bowl = raw_balls_df[raw_balls_df["bowler"] == player_name].copy()
+            if years is not None and "start_date" in raw_bowl.columns:
+                cutoff_bowl = self._get_reference_date() - pd.DateOffset(
+                    years=self._get_years_back(years)
+                )
+                bowl_dates = pd.to_datetime(raw_bowl["start_date"], errors="coerce")
+                raw_bowl = raw_bowl[bowl_dates >= cutoff_bowl].copy()
+
+        raw_bowl_ground = (
+            self._apply_ground_filter(raw_bowl, ground)
+            if not raw_bowl.empty
+            else raw_bowl
+        )
+        profile.phase_bowling = self._compute_phase_bowling(raw_bowl_ground)
+        profile.last_10_bowling = (
+            self._parse_last_10_bowling(profile.bowling.form_last_10)
+            if profile.bowling is not None
+            else []
+        )
         return profile

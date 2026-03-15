@@ -38,6 +38,8 @@ class PlayerProfileSchema(BaseModel):
     vs_opponent_stats: Optional[ContextStatsSchema] = None
     phase_runs: List[dict] = Field(default_factory=list)
     vs_bowling_style: List[dict] = Field(default_factory=list)
+    phase_bowling: List[dict] = Field(default_factory=list)
+    last_10_bowling: List[Optional[int]] = Field(default_factory=list)
 
 class MatchupStatsSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")

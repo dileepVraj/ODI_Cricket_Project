@@ -47,6 +47,17 @@ class VsBowlingStyleRow:
 
 
 @dataclass
+class PhaseBowlingRow:
+    phase: str
+    wickets: int
+    economy: float
+    average: float
+    strike_rate: float
+    dot_pct: float
+    boundary_pct: float
+
+
+@dataclass
 class ContextStats:
     batting: BattingStats
     bowling: Optional[BowlingStats]
@@ -61,6 +72,8 @@ class PlayerProfile:
     vs_opponent_stats: Optional[ContextStats] = None
     phase_runs: List[PhaseRunsRow] = field(default_factory=list)
     vs_bowling_style: List[VsBowlingStyleRow] = field(default_factory=list)
+    phase_bowling: List[PhaseBowlingRow] = field(default_factory=list)
+    last_10_bowling: List[Optional[int]] = field(default_factory=list)
 
 @dataclass
 class SquadMetrics:

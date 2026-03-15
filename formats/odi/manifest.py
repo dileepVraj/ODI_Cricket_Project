@@ -414,6 +414,7 @@ MANIFEST = {
                     "execute_buttons": [
                         {"key": "profile", "label": "Profile"},
                         {"key": "batting_intel", "label": "Batting Intel"},
+                        {"key": "bowling_intel", "label": "Bowling Intel"},
                     ],
                     "output_type": "profile_card",
                 },
