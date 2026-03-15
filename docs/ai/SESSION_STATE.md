@@ -20,6 +20,13 @@ None.
 
 ## Last Completed
 
+- TASK-128 - Make player profile phase_runs venue-aware - CLOSED 2026-03-15
+  `PlayerProfile` and `PlayerProfileSchema` no longer expose
+  `phase_runs_raw`, and `analyze_player_profile()` now derives
+  `phase_runs` from the same ground-filtered `raw_bat_ground` path
+  already used by `vs_bowling_style`.
+  Gates 1/2/5/6 PASS, bouncer PASS.
+
 - TASK-127 - Player Profile screen redesign - CLOSED 2026-03-15
   `player_profile` now exposes venue/year extra inputs plus
   dual `Profile` / `Batting Intel` execute buttons, with

@@ -32,6 +32,27 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-128 - Make player profile phase_runs venue-aware
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+`analyze_player_profile()` now derives `phase_runs` from the venue-filtered
+`raw_bat_ground` path, matching the existing `vs_bowling_style` behaviour.
+The redundant `phase_runs_raw` payload and `PhaseRunsRawRow` contract are
+removed from the engine/interface/schema layer.
+
+### Acceptance Criteria
+AC-1: `PhaseRunsRawRow` removed from `core/interfaces/player_interface.py`.
+AC-2: `phase_runs_raw` removed from `PlayerProfile` and `PlayerProfileSchema`.
+AC-3: `profile.phase_runs` now uses venue-filtered `raw_bat_ground`.
+AC-4: The redundant raw phase-runs assignment block is removed.
+AC-5: Gates 1/2/5/6 pass and the bouncer matches baseline.
+
 ## TASK-127 - Player Profile Screen Redesign
 **Type:** frontend-modification
 **Scope:** both

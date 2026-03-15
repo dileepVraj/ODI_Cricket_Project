@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-127:** Player profile redesigned - venue combobox + years text input replace host country dropdown; dual Profile/Batting Intel buttons replace single execute; `_view` injection drives conditional rendering.
-2. **TASK-125:** PlayerProfileCard "Batting Intel" toggle panel added - phase runs table, vs-style CSS bar chart, last_10_runs sparkline chips.
-3. **TASK-124:** analyze_player_profile enriched with phase-wise runs, vs-bowling-style breakdown, and last_10_runs numeric field; country pre-filter applied at context_builder layer.
-4. **TASK-123:** Continent Performance now always returns matrix rows, eliminating the flat comparison payload path that violated the `matrix_table` contract for opponent-scoped requests.
-5. **TASK-122:** Continent Performance now forwards non-trivial optional execute context from the manifest and caps form-guide payloads to the latest five matches at the backend boundary.
+1. **TASK-128:** Player profile phase runs now derive from venue-filtered `raw_bat_ground`; redundant `phase_runs_raw` contract removed from the engine, interface, and schema layers.
+2. **TASK-127:** Player profile redesigned - venue combobox + years text input replace host country dropdown; dual Profile/Batting Intel buttons replace single execute; `_view` injection drives conditional rendering.
+3. **TASK-125:** PlayerProfileCard "Batting Intel" toggle panel added - phase runs table, vs-style CSS bar chart, last_10_runs sparkline chips.
+4. **TASK-124:** analyze_player_profile enriched with phase-wise runs, vs-bowling-style breakdown, and last_10_runs numeric field; country pre-filter applied at context_builder layer.
+5. **TASK-123:** Continent Performance now always returns matrix rows, eliminating the flat comparison payload path that violated the `matrix_table` contract for opponent-scoped requests.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*
