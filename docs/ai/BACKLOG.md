@@ -32,6 +32,26 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-130 - Add Gate F2 rule 2.2A-R7 for internal _view dispatch in leaf renderers
+**Type:** validator-fix
+**Scope:** tooling
+**Priority:** High
+**Depends On:** TASK-129
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+`run_frontend_paradigm.py` now flags `data["_view"]` and `data['_view']`
+reads inside leaf renderer files under `components/renderers/`, reserving
+view dispatch exclusively for `FunctionRenderer.tsx`.
+
+### Acceptance Criteria
+AC-1: `VIEW_DISPATCH_PATTERN` exists at module level.
+AC-2: `check_view_dispatch_in_renderer()` scans renderer files only.
+AC-3: `FunctionRenderer.tsx` is exempt via `path.stem == "FunctionRenderer"`.
+AC-4: Gate F2 fails on `PlayerProfileCard.tsx` only.
+AC-5: Bouncer PASS matches baseline.
+
 ## TASK-129 - Add Bowling Intel to the player profile screen
 **Type:** new-feature
 **Scope:** both
@@ -1618,6 +1638,6 @@ Priority: High — will cause crashes when API runs continuously in Phase 12
 
 ---
 
-*End of BACKLOG.md - Last Updated 2026-03-13*
+*End of BACKLOG.md - Last Updated 2026-03-15*
 *For current session state, see docs/ai/SESSION_STATE.md*
 *For permanent project knowledge, see docs/ai/PROJECT_CONTEXT.md*

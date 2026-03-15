@@ -20,6 +20,13 @@ None.
 
 ## Last Completed
 
+- TASK-130 - Add Gate F2 rule 2.2A-R7 for internal _view dispatch in leaf renderers - CLOSED 2026-03-15
+  `run_frontend_paradigm.py` now adds `VIEW_DISPATCH_PATTERN` and
+  `check_view_dispatch_in_renderer()`, and Gate F2 now fails intentionally
+  on `PlayerProfileCard.tsx` until TASK-131 moves `_view` routing into
+  `FunctionRenderer.tsx`.
+  Gate F2 FAIL (expected), Gates 5/6 PASS, bouncer PASS.
+
 - TASK-129 - Add Bowling Intel to player profile screen - CLOSED 2026-03-15
   `PlayerProfile` and `PlayerProfileSchema` now expose `phase_bowling`
   and `last_10_bowling`, `analyze_player_profile()` now derives
@@ -363,3 +370,14 @@ any active task. Agents must NOT block on their presence in git status:
 | 2.2E-R3 | check_live_region_announcements | TASK-070 |
 | 2.2E-R3 | check_loading_aria_live (extended) | TASK-083 |
 | 2.2F-R1 | check_non_vitest_imports | pre-sprint |
+
+## Rule Inventory — frontend-paradigm-sentinel (Gate F2)
+| Rule | Function | Added |
+|---|---|---|
+| 2.2A-R3 | check_external_state | pre-sprint |
+| 2.2A-R4 | check_file_size | pre-sprint |
+| 2.2A-R5 | check_domain_arithmetic | pre-sprint |
+| 2.2A-R6 | check_payload_extractor_in_renderer | TASK-105 |
+| 2.2A-R7 | check_view_dispatch_in_renderer | TASK-130 |
+| 2.2B-R7 | check_renderer_placement | pre-sprint |
+| 2.2D-R2 | check_silent_catch_in_renderer | pre-sprint |
