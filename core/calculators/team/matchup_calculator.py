@@ -592,7 +592,7 @@ def calculate_global_performance_payload(match_df: pd.DataFrame, context: Global
 def calculate_continent_performance_payload(
     match_df: pd.DataFrame,
     context: ContinentPerformanceContext,
-) -> ContinentRowsPayload:
+) -> MatrixRowsPayload:
     window_df = _filter_year_window(match_df, context["reference_date"], context["years_back"])
     if window_df.empty:
         return {"rows": []}
@@ -605,12 +605,6 @@ def calculate_continent_performance_payload(
     scoped_df = window_df[mask].copy()
     if scoped_df.empty:
         return {"rows": []}
-    if opp_scope != "All":
-        clean_df = _apply_filters(scoped_df, context["min_balls_for_completed_innings"])
-        if clean_df.empty:
-            return {"rows": []}
-        rows = _comparison_rows(clean_df, context["team_name"], opp_scope, "REGIONAL_RIVALRY_REPORT", context["competitive_chase_threshold"])
-        return {"rows": rows}
     return {"rows": _matrix_rows(scoped_df, context["team_name"], "REGIONAL_PERFORMANCE_MATRIX", False, context["min_balls_for_completed_innings"])}
 
 
