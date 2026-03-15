@@ -32,6 +32,28 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-131 - SRP refactor of PlayerProfileCard.tsx and _view dispatch
+**Type:** refactor
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-130
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+`PlayerProfileCard.tsx` is now profile-only, shared intel display utilities live in
+`frontend/lib/player-intel.ts`, and `_view` dispatch for `profile_card` now happens
+in `FunctionRenderer.tsx` via dedicated `PlayerBattingIntel.tsx` and
+`PlayerBowlingIntel.tsx` renderers.
+
+### Acceptance Criteria
+AC-1: `frontend/lib/player-intel.ts` exports the shared intel types, constants, and helpers.
+AC-2: `PlayerBattingIntel.tsx` renders batting intel without reading `data["_view"]`.
+AC-3: `PlayerBowlingIntel.tsx` renders bowling intel without reading `data["_view"]`.
+AC-4: `PlayerProfileCard.tsx` is profile-only and under 200 lines.
+AC-5: `FunctionRenderer.tsx` dispatches `profile_card` on `_view`.
+AC-6: Gates F1/F2/F3/5/6 pass and the bouncer matches baseline.
+
 ## TASK-130 - Add Gate F2 rule 2.2A-R7 for internal _view dispatch in leaf renderers
 **Type:** validator-fix
 **Scope:** tooling

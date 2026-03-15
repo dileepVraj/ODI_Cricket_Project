@@ -20,6 +20,13 @@ None.
 
 ## Last Completed
 
+- TASK-131 - SRP refactor of PlayerProfileCard.tsx and _view dispatch - CLOSED 2026-03-15
+  `PlayerProfileCard.tsx` now renders the profile-only path, shared intel display
+  helpers live in `frontend/lib/player-intel.ts`, and `FunctionRenderer.tsx`
+  dispatches `profile_card` payloads to `PlayerBattingIntel.tsx` or
+  `PlayerBowlingIntel.tsx` when `_view` requests an intel mode.
+  Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-130 - Add Gate F2 rule 2.2A-R7 for internal _view dispatch in leaf renderers - CLOSED 2026-03-15
   `run_frontend_paradigm.py` now adds `VIEW_DISPATCH_PATTERN` and
   `check_view_dispatch_in_renderer()`, and Gate F2 now fails intentionally
