@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-124:** analyze_player_profile enriched with phase-wise runs, vs-bowling-style breakdown, and last_10_runs numeric field; country pre-filter applied at context_builder layer.
-2. **TASK-123:** Continent Performance now always returns matrix rows, eliminating the flat comparison payload path that violated the `matrix_table` contract for opponent-scoped requests.
-3. **TASK-122:** Continent Performance now forwards non-trivial optional execute context from the manifest and caps form-guide payloads to the latest five matches at the backend boundary.
-4. **TASK-121:** Matrix-report decision denominators are now defined explicitly as wins plus losses, with silent dirty-winner diagnostics kept local to `ReportBuilder`.
-5. **TASK-119R:** MatrixTable applies fixed widths and injects home-team CSS variables for aggregate Match Audit coloring.
+1. **TASK-125:** PlayerProfileCard "Batting Intel" toggle panel added — phase runs table, vs-style CSS bar chart, last_10_runs sparkline chips.
+2. **TASK-124:** analyze_player_profile enriched with phase-wise runs, vs-bowling-style breakdown, and last_10_runs numeric field; country pre-filter applied at context_builder layer.
+3. **TASK-123:** Continent Performance now always returns matrix rows, eliminating the flat comparison payload path that violated the `matrix_table` contract for opponent-scoped requests.
+4. **TASK-122:** Continent Performance now forwards non-trivial optional execute context from the manifest and caps form-guide payloads to the latest five matches at the backend boundary.
+5. **TASK-121:** Matrix-report decision denominators are now defined explicitly as wins plus losses, with silent dirty-winner diagnostics kept local to `ReportBuilder`.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*

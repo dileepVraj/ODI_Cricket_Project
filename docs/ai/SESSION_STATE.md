@@ -20,6 +20,11 @@ None.
 
 ## Last Completed
 
+- TASK-125 - Add Batting Intel toggle panel to PlayerProfileCard - CLOSED 2026-03-15
+  `PlayerProfileCard.tsx` now adds a closed-by-default Batting Intel panel
+  with last-10 score chips, phase-runs breakdown, and bowling-style tables
+  plus CSS comparison bars. Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-124 - Enhance analyze_player_profile with phase runs, vs-style breakdown, last_10_runs - CLOSED 2026-03-15
   `PlayerEngine.analyze_player_profile()` now adds `phase_runs`,
   `vs_bowling_style`, `phase_runs_raw`, and numeric `last_10_runs`

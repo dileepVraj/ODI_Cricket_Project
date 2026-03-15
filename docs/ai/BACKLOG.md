@@ -32,6 +32,29 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-125 - Add Batting Intel toggle panel to PlayerProfileCard
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-124
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+`frontend/components/renderers/PlayerProfileCard.tsx` now adds a closed-by-default
+`Batting Intel` toggle that reveals phase-runs and bowling-style deep-dive views,
+plus inline `last_10_runs` sparkline chips rendered in the same renderer without
+introducing new files or external chart libraries.
+
+### Acceptance Criteria
+AC-1: `Batting Intel` toggle button appears and defaults closed.
+AC-2: Phase Runs table renders mapped `pp/mid/dth` labels when rows exist.
+AC-3: Vs Bowling Style table and CSS bar chart render when rows exist.
+AC-4: `last_10_runs` chips render silently when present and hide when absent.
+AC-5: Existing default player profile sections remain unchanged when intel is closed.
+AC-6: Renderer remains token-driven, bracket-notation compliant, and `any`-free.
+AC-7: Gates F1/F2/F3/5/6 pass and the bouncer matches baseline.
+
 ## TASK-124 - Enhance analyze_player_profile with phase runs, vs-style breakdown, and last_10_runs
 **Type:** new-feature
 **Scope:** backend
