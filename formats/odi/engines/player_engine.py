@@ -13,7 +13,6 @@ from core.interfaces.player_interface import (
     BowlingStats,
     ContextStats,
     IPlayerEngine,
-    PhaseRunsRawRow,
     PhaseRunsRow,
     PlayerProfile,
     SquadComparisonData,
@@ -915,21 +914,7 @@ class PlayerEngine(IPlayerEngine):
                 start_dates = pd.to_datetime(raw_bat["start_date"], errors="coerce")
                 raw_bat = raw_bat[start_dates >= cutoff_date].copy()
 
-        profile.phase_runs = self._compute_phase_runs(raw_bat)
-
         raw_bat_ground = self._apply_ground_filter(raw_bat, ground) if not raw_bat.empty else raw_bat
+        profile.phase_runs = self._compute_phase_runs(raw_bat_ground)
         profile.vs_bowling_style = self._compute_vs_bowling_style(raw_bat_ground)
-
-        phase_raw_rows = self._compute_phase_runs(raw_bat_ground)
-        profile.phase_runs_raw = [
-            PhaseRunsRawRow(
-                phase=row.phase,
-                total_runs=row.total_runs,
-                balls_faced=row.balls_faced,
-                dismissals=row.dismissals,
-                avg_runs=row.avg_runs,
-                strike_rate=row.strike_rate,
-            )
-            for row in phase_raw_rows
-        ]
         return profile
