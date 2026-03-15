@@ -20,6 +20,15 @@ None.
 
 ## Last Completed
 
+- TASK-122 - Continent Performance optional context passthrough + Last 5 limit - CLOSED 2026-03-15
+  `buildExecuteParams()` now forwards manifest-defined optional context values
+  when they are non-empty and not `All`, `CategoryScreen.tsx` now passes
+  `activeFn.optional_context`, and `ReportBuilder._build_form_data_payload()`
+  now limits `raw_results` and derived counts to the five most recent matches.
+  `MatrixTable.tsx` also removes an unused width helper and redundant top-level
+  blank lines to restore frontend paradigm compliance. Gates 1/2/F1/F2/F3/5/6
+  PASS, bouncer PASS.
+
 - TASK-121 - Strict Decisions refactor — decisions = wins + losses in matrix report - CLOSED 2026-03-15
   `ReportBuilder._generate_matrix_report()` now defines per-opponent and
   OVERALL decisions explicitly as wins plus losses, derives Tie/NR from

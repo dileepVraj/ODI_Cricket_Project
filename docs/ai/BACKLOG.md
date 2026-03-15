@@ -32,6 +32,44 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-122 - Fix continent_performance optional context passthrough and Last 5 row limit
+**Type:** bug-fix
+**Scope:** both
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+Fix two Continent Performance bugs across the frontend execute path and the
+backend form payload builder.
+
+`frontend/lib/executeHelpers.ts` now includes manifest-defined optional
+context values when they are non-empty and not `All`,
+`frontend/components/layout/CategoryScreen.tsx` now passes
+`activeFn.optional_context`, and
+`core/services/report_builder.py` now caps form-guide results to the five
+most recent matches before deriving the `raw_results` payload. To clear the
+frontend paradigm gate, `frontend/components/renderers/MatrixTable.tsx`
+also removes an unused width helper and redundant top-level blank lines
+without changing render output.
+
+### Acceptance Criteria
+AC-1: `buildExecuteParams()` accepts `optionalContext?: string[]`.
+AC-2: Optional context values are included only when present and non-trivial.
+AC-3: `CategoryScreen.tsx` passes `activeFn.optional_context ?? []`.
+AC-4: `_build_form_data_payload()` applies `.head(5)` after date sort.
+AC-5: `FormGuidePayload` contract remains unchanged.
+AC-6: `MatrixTable.tsx` is reduced below 300 lines with dead-code-only cleanup.
+AC-7: Gates 1, 2, F1, F2, F3, 5, and 6 all pass.
+
+### Files In Scope
+- `frontend/lib/executeHelpers.ts`
+- `frontend/components/layout/CategoryScreen.tsx`
+- `frontend/components/renderers/MatrixTable.tsx`
+- `core/services/report_builder.py`
+- READ ONLY - `frontend/lib/api.ts`
+
 ## TASK-121 - Strict Decisions refactor — decisions = wins + losses in _generate_matrix_report
 **Type:** refactor
 **Scope:** backend
