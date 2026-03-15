@@ -83,6 +83,9 @@ UNKNOWN_FIRST_PARAM = re.compile(
     r'function\s+\w+\s*\(\s*\w+\s*:\s*unknown'
 )
 
+# View dispatch in renderer — _view routing belongs in FunctionRenderer.tsx
+VIEW_DISPATCH_PATTERN = re.compile(r"""data\[['"]_view['"]\]""")
+
 
 def check_external_state(path: Path, lines: list[str]) -> list[tuple[int, int, str]]:
     """2.2A-R3 — external state library imports"""
@@ -196,6 +199,34 @@ def check_payload_extractor_in_renderer(
     return hits
 
 
+def check_view_dispatch_in_renderer(
+    path: Path, content: str
+) -> list[tuple[int, int, str]]:
+    """2.2A-R7 — internal _view dispatch in renderer component.
+
+    Detects any renderer file (other than FunctionRenderer.tsx) that reads
+    data["_view"] or data['_view']. This pattern means the renderer is
+    performing its own view routing, which violates SRP. View dispatch
+    belongs exclusively in FunctionRenderer.tsx.
+    """
+    parts = [p.lower() for p in path.parts]
+    if "renderers" not in parts:
+        return []
+    if path.stem == "FunctionRenderer":
+        return []
+    hits = []
+    for m in VIEW_DISPATCH_PATTERN.finditer(content):
+        line_no = content[: m.start()].count("\n") + 1
+        hits.append((
+            line_no,
+            1,
+            "[RULE 2.2A-R7] Internal _view dispatch in renderer — "
+            "reading data['_view'] in a leaf renderer violates SRP. "
+            "View routing belongs in FunctionRenderer.tsx.",
+        ))
+    return hits
+
+
 def scan_file(path: Path) -> list[tuple[int, int, str]]:
     try:
         content = path.read_text(encoding="utf-8", errors="replace")
@@ -211,6 +242,7 @@ def scan_file(path: Path) -> list[tuple[int, int, str]]:
     hits.extend(check_polling_execute(path, content))
     hits.extend(check_silent_catch_in_renderer(path, content))
     hits.extend(check_payload_extractor_in_renderer(path, lines))
+    hits.extend(check_view_dispatch_in_renderer(path, content))
     return hits
 
 
