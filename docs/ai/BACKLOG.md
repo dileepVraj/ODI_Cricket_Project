@@ -32,6 +32,38 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-123 - Remove _comparison_rows branch from calculate_continent_performance_payload
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-122
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+Fix the Continent Performance payload shape regression exposed by the
+TASK-122 optional-context passthrough.
+
+`core/calculators/team/matchup_calculator.py` no longer returns a
+VenueMatchup-style flat comparison payload when `opp_team` is a specific
+team. `calculate_continent_performance_payload()` now keeps the existing
+opponent/continent mask logic and always emits matrix rows, so the
+`matrix_table` manifest contract stays aligned with the MatrixTable
+frontend renderer.
+
+### Acceptance Criteria
+AC-1: The `_comparison_rows` early-return branch is removed from
+      `calculate_continent_performance_payload()`.
+AC-2: The existing `scoped_df` mask logic is preserved.
+AC-3: The function always returns `_matrix_rows(scoped_df, ...)`.
+AC-4: The return annotation is narrowed to `MatrixRowsPayload`.
+AC-5: Gates 1/2/5/6 pass and the bouncer matches baseline.
+
+### Files In Scope
+- `core/calculators/team/matchup_calculator.py`
+- READ ONLY - `core/interfaces/team_types.py`
+- READ ONLY - `formats/odi/engines/team_engine.py`
+
 ## TASK-122 - Fix continent_performance optional context passthrough and Last 5 row limit
 **Type:** bug-fix
 **Scope:** both

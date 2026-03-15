@@ -20,6 +20,13 @@ None.
 
 ## Last Completed
 
+- TASK-123 - Continent Performance matrix payload unification - CLOSED 2026-03-15
+  `calculate_continent_performance_payload()` now preserves the existing
+  opponent/continent mask logic while always returning `_matrix_rows(...)`,
+  removing the flat comparison-table branch that broke the `matrix_table`
+  contract whenever `opp_team` was a specific team. Gates 1/2/5/6 PASS,
+  bouncer PASS.
+
 - TASK-122 - Continent Performance optional context passthrough + Last 5 limit - CLOSED 2026-03-15
   `buildExecuteParams()` now forwards manifest-defined optional context values
   when they are non-empty and not `All`, `CategoryScreen.tsx` now passes
