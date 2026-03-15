@@ -91,6 +91,7 @@ export interface ManifestFunction {
     output_type: string;
     output_schema?: Record<string, unknown>;
     extra_inputs?: Record<string, unknown>;
+    execute_buttons?: Array<{ key: string; label: string }>;
 }
 
 /**

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
-import { Search, X } from "lucide-react";
-import { fetchPlayers } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { fetchPlayers, fetchVenues, type VenueItem } from "@/lib/api";
 import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
 
 interface ExtraInputFieldDefinition {
@@ -56,13 +56,30 @@ export default function ExtraInputCombobox({
     value,
     onChange,
 }: ExtraInputComboboxProps) {
-    const filterId = useId();
-    const [options, setOptions] = useState<string[]>([]);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [options, setOptions] = useState<Array<{ label: string; value: string }>>([]);
     const [isLoading, setIsLoading] = useState(false);
     const sourceTeam = resolveSourceTeam(field.source, field.source_params, contextValues);
 
     useEffect(() => {
+        if (field.source === "venues") {
+            let cancelled = false;
+            setIsLoading(true);
+            fetchVenues(formatKey)
+                .then((venueItems: VenueItem[]) => {
+                    if (cancelled) return;
+                    setOptions(venueItems.map((v) => ({ label: v.label, value: v.id })));
+                    setIsLoading(false);
+                })
+                .catch(() => {
+                    if (cancelled) return;
+                    setOptions([]);
+                    setIsLoading(false);
+                });
+            return () => {
+                cancelled = true;
+            };
+        }
+
         if (!sourceTeam) {
             setOptions([]);
             return;
@@ -70,14 +87,13 @@ export default function ExtraInputCombobox({
 
         let cancelled = false;
         setIsLoading(true);
-
         fetchPlayers(formatKey, sourceTeam)
             .then((players) => {
                 if (cancelled) {
                     return;
                 }
 
-                setOptions(players);
+                setOptions(players.map((p) => ({ label: p, value: p })));
                 setIsLoading(false);
             })
             .catch(() => {
@@ -92,49 +108,38 @@ export default function ExtraInputCombobox({
         return () => {
             cancelled = true;
         };
-    }, [formatKey, sourceTeam]);
+    }, [formatKey, sourceTeam, field.source]);
 
-    const filteredOptions = options
-        .filter((option) => option.toLowerCase().includes(searchTerm.toLowerCase()))
-        .slice(0, 50)
-        .map((option) => ({
-            label: option,
-            value: option,
-        }));
+    const allOptions = options;
     const label = sanitizeLabel(field.label);
-    const helperText = !sourceTeam
-        ? "Select a team in the Context Bar before choosing a player."
-        : isLoading
-            ? `Loading ${label.toLowerCase()} options...`
-            : filteredOptions.length === 0
-                ? "No players match this search."
-                : `${filteredOptions.length} player options ready`;
+    const helperText =
+        field.source === "venues"
+            ? isLoading
+                ? "Loading venue options..."
+                : options.length === 0
+                    ? "No venues available."
+                    : `${options.length} venue options ready`
+            : !sourceTeam
+                ? "Select a team in the Context Bar before choosing a player."
+                : isLoading
+                    ? `Loading ${label.toLowerCase()} options...`
+                    : options.length === 0
+                        ? "No players available."
+                        : `${options.length} player options ready`;
 
     return (
         <div className="[display:flex] [flex-direction:column] [gap:6px]">
-            <label htmlFor={filterId} className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
-                {field.label}
-                {field.required ? (
-                    <span className="[color:var(--tier-danger)] [margin-left:4px]">*</span>
-                ) : null}
-            </label>
-
-            <div className="[display:flex] [align-items:center] [gap:8px]">
-                <Search size={14} className="[color:var(--text-muted)] [flex-shrink:0]" />
-                <input
-                    id={filterId}
-                    type="text"
-                    value={searchTerm}
-                    onChange={(event) => setSearchTerm(event.target.value)}
-                    placeholder={`Filter ${label}`}
-                    disabled={!sourceTeam}
-                    className="context-input"
-                    aria-label={`Filter ${label} combobox options`}
-                />
+            <div className="[display:flex] [align-items:center] [justify-content:space-between]">
+                <span className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
+                    {field.label}
+                    {field.required ? (
+                        <span className="[color:var(--tier-danger)] [margin-left:4px]">*</span>
+                    ) : null}
+                </span>
                 {value ? (
                     <button
                         type="button"
-                        className="btn-ghost [padding:8px]"
+                        className="btn-ghost [padding:4px]"
                         onClick={() => onChange("")}
                         aria-label={`Clear selected ${label}`}
                     >
@@ -145,12 +150,15 @@ export default function ExtraInputCombobox({
 
             <AccessibleCombobox
                 value={value}
-                onChange={(nextValue) => {
-                    onChange(nextValue);
-                    setSearchTerm("");
-                }}
-                options={filteredOptions}
-                placeholder={!sourceTeam ? "Select a team first" : `Choose ${label}`}
+                onChange={onChange}
+                options={allOptions}
+                placeholder={
+                    field.source === "venues"
+                        ? "Search venue..."
+                        : !sourceTeam
+                            ? "Select a team first"
+                            : `Search ${label}...`
+                }
             />
 
             <p className="[font-size:0.74rem] [color:var(--text-muted)]">

@@ -390,7 +390,6 @@ MANIFEST = {
                     "engine_class": "PlayerEngine",
                     "engine_method": "analyze_player_profile",
                     "required_context": [],
-                    "optional_context": ["venue"],
                     "extra_inputs": {
                         "player_name": {
                             "type": "combobox",
@@ -399,13 +398,23 @@ MANIFEST = {
                             "source": "players",
                             "source_params": {"team": "All"},
                         },
-                        "country_name": {
-                            "type": "dropdown",
-                            "label": "Host Country",
+                        "venue_id": {
+                            "type": "combobox",
+                            "label": "🏟️ Venue",
                             "required": False,
-                            "source": "host_countries",
+                            "source": "venues",
+                        },
+                        "years": {
+                            "type": "text",
+                            "label": "📅 Years",
+                            "required": False,
+                            "placeholder": "e.g. 5",
                         },
                     },
+                    "execute_buttons": [
+                        {"key": "profile", "label": "Profile"},
+                        {"key": "batting_intel", "label": "Batting Intel"},
+                    ],
                     "output_type": "profile_card",
                 },
             ],

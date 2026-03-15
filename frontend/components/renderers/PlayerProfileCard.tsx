@@ -70,6 +70,19 @@ export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
     const name = String(data["player_name"] ?? data["name"] ?? data["Player"] ?? "Unknown");
     const team = String(data["team"] ?? data["Team"] ?? "");
     const role = String(data["role"] ?? data["Role"] ?? "");
+    const view = String(data["_view"] ?? "");
+    const venueLabel = String(data["_venue_label"] ?? "");
+    const yearsInput = String(data["_years_input"] ?? "");
+    let intelHeaderMsg: string;
+    if (venueLabel && yearsInput) {
+        intelHeaderMsg = `${name} at ${venueLabel} - Last ${yearsInput} Years`;
+    } else if (venueLabel) {
+        intelHeaderMsg = `${name} at ${venueLabel} - All Time`;
+    } else if (yearsInput) {
+        intelHeaderMsg = `${name} - Last ${yearsInput} Years`;
+    } else {
+        intelHeaderMsg = `${name} - Overall`;
+    }
     const battingObj = toPlayerPayloadFragment(data["batting"]);
     const bowlingObj = toPlayerPayloadFragment(data["bowling"]);
     const venueCtx = toPlayerPayloadFragment(data["venue_stats"]);
@@ -84,12 +97,14 @@ export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
         const bowling = toPlayerPayloadFragment(ctx["bowling"]);
         return [...pickStats(batting, ["innings", "runs", "average", "strike_rate", "highest_score", "centuries", "fifties"]), ...pickStats(bowling, ["innings", "wickets", "average", "economy", "best_figures"])];
     };
-    const displayEntries = Object.entries(data).filter(([key]) => !["player_name", "name", "Player", "team", "Team", "role", "Role", "MATCH_IDS", "raw_matches"].includes(key) && typeof data[key] !== "object");
+    const displayEntries = Object.entries(data).filter(([key]) => !["player_name", "name", "Player", "team", "Team", "role", "Role", "MATCH_IDS", "raw_matches", "_view", "_venue_label", "_years_input"].includes(key) && typeof data[key] !== "object");
     const battingStatsNested = pickStats(battingObj, ["innings", "runs", "average", "strike_rate", "centuries", "fifties", "highest_score"]);
     const bowlingStatsNested = pickStats(bowlingObj, ["innings", "wickets", "average", "economy", "best_figures"]);
     const battingStats = battingStatsNested.length > 0 ? battingStatsNested : displayEntries.filter(([key]) => BAT_KEYS.some((batKey) => key.toLowerCase().includes(batKey.toLowerCase())));
     const bowlingStats = bowlingStatsNested.length > 0 ? bowlingStatsNested : displayEntries.filter(([key]) => BOWL_KEYS.some((bowlKey) => key.toLowerCase().includes(bowlKey.toLowerCase())));
     const otherStats = displayEntries.filter(([key]) => !BAT_KEYS.some((batKey) => key.toLowerCase().includes(batKey.toLowerCase())) && !BOWL_KEYS.some((bowlKey) => key.toLowerCase().includes(bowlKey.toLowerCase())));
+    const opponentStats = contextToStats(opponentCtx);
+    const venueStats = contextToStats(venueCtx);
     const hasIntel = phaseRuns.length > 0 || vsStyle.length > 0 || last10.length > 0;
 
     return (
@@ -104,14 +119,30 @@ export default function PlayerProfileCard({ data }: PlayerProfileCardProps) {
                     </div>
                 </div>
             </div>
-            {battingStats.length > 0 && <StatSection title="Batting" icon={<Award size={14} />} stats={battingStats} tone="primary" />}
-            {bowlingStats.length > 0 && <StatSection title="Bowling" icon={<Target size={14} />} stats={bowlingStats} tone="secondary" />}
-            {contextToStats(opponentCtx).length > 0 && <StatSection title="Vs Opponent" icon={<Target size={14} />} stats={contextToStats(opponentCtx)} tone="tertiary" />}
-            {contextToStats(venueCtx).length > 0 && <StatSection title="At Venue" icon={<Award size={14} />} stats={contextToStats(venueCtx)} tone="tertiary" />}
-            {otherStats.length > 0 && <StatSection title="Details" icon={<User size={14} />} stats={otherStats} tone="tertiary" />}
-            {hasIntel && (
+            {view === "batting_intel" && (
                 <>
-                    <button className="btn-ghost [display:flex] [align-items:center] [justify-content:center] [gap:6px] [width:100%] [margin-top:4px] [font-size:0.82rem] [font-weight:600] [color:var(--accent-primary)]" onClick={() => setIntelOpen((value) => !value)}>
+                    <div className="[font-size:0.9rem] [font-weight:600] [color:var(--text-secondary)] [padding:4px_0]">
+                        {intelHeaderMsg}
+                    </div>
+                    <BattingIntelPanel last10={last10} phaseRuns={phaseRuns} vsStyle={vsStyle} />
+                </>
+            )}
+            {view !== "batting_intel" && (
+                <>
+                    {battingStats.length > 0 && <StatSection title="Batting" icon={<Award size={14} />} stats={battingStats} tone="primary" />}
+                    {bowlingStats.length > 0 && <StatSection title="Bowling" icon={<Target size={14} />} stats={bowlingStats} tone="secondary" />}
+                    {opponentStats.length > 0 && <StatSection title="Vs Opponent" icon={<Target size={14} />} stats={opponentStats} tone="tertiary" />}
+                    {venueStats.length > 0 && <StatSection title="At Venue" icon={<Award size={14} />} stats={venueStats} tone="tertiary" />}
+                    {otherStats.length > 0 && <StatSection title="Details" icon={<User size={14} />} stats={otherStats} tone="tertiary" />}
+                </>
+            )}
+            {view === "" && hasIntel && (
+                <>
+                    <button
+                        className="btn-ghost [display:flex] [align-items:center] [justify-content:center] [gap:6px] [width:100%] [margin-top:4px] [font-size:0.82rem] [font-weight:600] [color:var(--accent-primary)]"
+                        aria-label="Toggle batting intel"
+                        onClick={() => setIntelOpen((value) => !value)}
+                    >
                         {intelOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}{intelOpen ? "Hide Intel" : "Batting Intel"}
                     </button>
                     {intelOpen && <BattingIntelPanel last10={last10} phaseRuns={phaseRuns} vsStyle={vsStyle} />}
