@@ -1,9 +1,7 @@
 "use client";
-
 import React, { lazy, Suspense, type ReactNode } from "react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { isJsonRecordArray } from "@/lib/types";
-
 const EmptyState = lazy(() => import("@/components/common/EmptyState"));
 const FallbackBanner = lazy(() => import("@/components/common/FallbackBanner"));
 const DataTable = lazy(() => import("./DataTable"));
@@ -13,6 +11,8 @@ const FormTable = lazy(() => import("./FormTable"));
 const ReportCard = lazy(() => import("./ReportCard"));
 const PredictionCard = lazy(() => import("./PredictionCard"));
 const PlayerProfileCard = lazy(() => import("./PlayerProfileCard"));
+const PlayerBattingIntel = lazy(() => import("./PlayerBattingIntel"));
+const PlayerBowlingIntel = lazy(() => import("./PlayerBowlingIntel"));
 const MatchupTable = lazy(() => import("./MatchupTable"));
 const DownloadPanel = lazy(() => import("./DownloadPanel"));
 const PhaseAnalysisCard = lazy(() => import("./PhaseAnalysisCard"));
@@ -21,36 +21,29 @@ const CountryH2HReport = lazy(() => import("./CountryH2HReport"));
 const GlobalH2HReport = React.lazy(() => import("./GlobalH2HReport"));
 const FortressReport = lazy(() => import("./FortressReport"));
 const MatchAuditSection = lazy(() => import("./MatchAuditSection"));
-
 interface FunctionRendererProps {
     outputType: string;
     data: unknown;
 }
-
 type JsonRecord = Record<string, unknown>;
 type JsonRecordArray = JsonRecord[];
-
 interface EnrichedDataResult {
     mainData: unknown;
     matchAudit: JsonRecordArray | null;
 }
-
 function isJsonRecord(value: unknown): value is JsonRecord {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
-
 function extractEnrichedData(data: unknown): EnrichedDataResult {
     if (isJsonRecord(data)) {
         const stats = data.stats;
         const matchAudit = isJsonRecordArray(data.match_audit) ? data.match_audit : null;
-
         if (isJsonRecordArray(stats)) {
             return {
                 mainData: stats,
                 matchAudit,
             };
         }
-
         if ("match_audit" in data) {
             return {
                 mainData: data,
@@ -58,10 +51,8 @@ function extractEnrichedData(data: unknown): EnrichedDataResult {
             };
         }
     }
-
     return { mainData: data, matchAudit: null };
 }
-
 function wrapRenderer(renderer: ReactNode, fallbackMessage: string): ReactNode {
     return (
         <ErrorBoundary fallbackMessage={fallbackMessage}>
@@ -69,16 +60,13 @@ function wrapRenderer(renderer: ReactNode, fallbackMessage: string): ReactNode {
         </ErrorBoundary>
     );
 }
-
 function renderMatchAudit(matchAudit: JsonRecordArray | null): ReactNode {
     if (!matchAudit) return null;
-
     return wrapRenderer(
         <MatchAuditSection records={matchAudit} />,
         "Unable to render match audit."
     );
 }
-
 function renderWithAudit(
     renderer: ReactNode,
     fallbackMessage: string,
@@ -91,14 +79,7 @@ function renderWithAudit(
         </>
     );
 }
-
-function getSuspenseFallback(): ReactNode {
-    return (
-        <div className="skeleton" aria-hidden="true">
-            &nbsp;
-        </div>
-    );
-}
+function getSuspenseFallback(): ReactNode { return <div className="skeleton" aria-hidden="true">&nbsp;</div>; }
 
 export default function FunctionRenderer({ outputType, data }: FunctionRendererProps) {
     if (data === null || data === undefined) {
@@ -219,14 +200,28 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 );
             }
             break;
-        case "profile_card":
+        case "profile_card": {
             if (isJsonRecord(mainData)) {
-                renderedOutput = wrapRenderer(
-                    <PlayerProfileCard data={mainData} />,
-                    "Unable to render profile card."
-                );
+                const profileView = typeof mainData["_view"] === "string" ? mainData["_view"] : "";
+                if (profileView === "batting_intel") {
+                    renderedOutput = wrapRenderer(
+                        <PlayerBattingIntel data={mainData} />,
+                        "Unable to render batting intel."
+                    );
+                } else if (profileView === "bowling_intel") {
+                    renderedOutput = wrapRenderer(
+                        <PlayerBowlingIntel data={mainData} />,
+                        "Unable to render bowling intel."
+                    );
+                } else {
+                    renderedOutput = wrapRenderer(
+                        <PlayerProfileCard data={mainData} />,
+                        "Unable to render profile card."
+                    );
+                }
             }
             break;
+        }
         case "matchup_table":
             if (isJsonRecordArray(mainData)) {
                 renderedOutput = wrapRenderer(
