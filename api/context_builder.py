@@ -21,6 +21,12 @@ class DataAccessProtocol(Protocol):
     ) -> pd.DataFrame:
         ...
 
+    def get_matches(
+        self,
+        country: Optional[str] = None,
+    ) -> pd.DataFrame:
+        ...
+
 
 class AnalyzerProtocol(Protocol):
     match_df: pd.DataFrame
@@ -46,7 +52,9 @@ class EngineCallParams(TypedDict, total=False):
     years_back: int
     limit: int
     continent: str
+    country: Optional[str]
     country_name: str
+    ground: Optional[str]
     player_name: str
     name: str
     batter: str
@@ -200,11 +208,34 @@ def _inject_player_engine_context(
         params["context_df"] = _build_recent_player_context(analyzer, players, params.get("years"))
         return params
 
-    if method in {"analyze_player_profile", "get_player_profile"}:
+    if method == "analyze_player_profile":
         player_name = str(params.get("player_name") or params.get("name") or "").strip()
         raw_balls_df = _build_recent_player_context(analyzer, [player_name], params.get("years"))
+        country = params.get("country")
+        if country is None:
+            raw_country = params.get("country_name")
+            country = str(raw_country).strip() if raw_country else None
+        if (
+            country
+            and not raw_balls_df.empty
+            and "match_id" in raw_balls_df.columns
+        ):
+            dal = getattr(analyzer, "dal", None)
+            if dal is not None:
+                country_matches = dal.get_matches(country=country)
+                if not country_matches.empty and "match_id" in country_matches.columns:
+                    valid_ids: set[str] = set(country_matches["match_id"].astype(str))
+                    raw_balls_df = raw_balls_df[
+                        raw_balls_df["match_id"].astype(str).isin(valid_ids)
+                    ].copy()
+        params["country"] = country
+        params["ground"] = params.get("ground") or params.get("venue_id")
         params["raw_balls_df"] = raw_balls_df
         return params
 
-    return params
+    if method == "get_player_profile":
+        player_name = str(params.get("player_name") or params.get("name") or "").strip()
+        params["raw_balls_df"] = _build_recent_player_context(analyzer, [player_name], params.get("years"))
+        return params
 
+    return params

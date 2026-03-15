@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import pandas as pd
 from core.interfaces.team_types import TacticalRecorderPort, DisplayRecord
 
@@ -14,6 +14,7 @@ class BattingStats:
     fifties: int
     highest_score: int
     form_last_10: List[str]  # ["12", "55*", "0", "DNB"]
+    last_10_runs: List[Optional[int]] = field(default_factory=list)
 
 @dataclass
 class BowlingStats:
@@ -23,6 +24,36 @@ class BowlingStats:
     economy: float
     best_figures: Optional[str]  # "5/24"
     form_last_10: List[str]  # ["2/30", "0/45", "-"]
+
+
+@dataclass
+class PhaseRunsRow:
+    phase: str
+    total_runs: int
+    balls_faced: int
+    dismissals: int
+    avg_runs: float
+    strike_rate: float
+
+
+@dataclass
+class VsBowlingStyleRow:
+    style: str
+    total_runs: int
+    balls_faced: int
+    dismissals: int
+    avg_runs: float
+    strike_rate: float
+
+
+@dataclass
+class PhaseRunsRawRow:
+    phase: str
+    total_runs: int
+    balls_faced: int
+    dismissals: int
+    avg_runs: float
+    strike_rate: float
 
 @dataclass
 class ContextStats:
@@ -35,8 +66,11 @@ class PlayerProfile:
     role: str
     batting: BattingStats
     bowling: Optional[BowlingStats]
-    venue_stats: Optional[ContextStats]
-    vs_opponent_stats: Optional[ContextStats]
+    venue_stats: Optional[ContextStats] = None
+    vs_opponent_stats: Optional[ContextStats] = None
+    phase_runs: List[PhaseRunsRow] = field(default_factory=list)
+    vs_bowling_style: List[VsBowlingStyleRow] = field(default_factory=list)
+    phase_runs_raw: List[PhaseRunsRawRow] = field(default_factory=list)
 
 @dataclass
 class SquadMetrics:
@@ -185,6 +219,8 @@ class IPlayerEngine(ABC):
         active_bowlers: Optional[List[str]] = None,
         years: Optional[int] = None,
         raw_balls_df: Optional[pd.DataFrame] = None,
+        country: Optional[str] = None,
+        ground: Optional[str] = None,
     ) -> Optional[PlayerProfile]:
         """
         Context-aware player profile retrieval.

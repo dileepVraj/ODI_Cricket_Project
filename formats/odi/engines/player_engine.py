@@ -13,8 +13,11 @@ from core.interfaces.player_interface import (
     BowlingStats,
     ContextStats,
     IPlayerEngine,
+    PhaseRunsRawRow,
+    PhaseRunsRow,
     PlayerProfile,
     SquadComparisonData,
+    VsBowlingStyleRow,
 )
 from core.interfaces.team_types import (
     DataAccessPort,
@@ -24,6 +27,17 @@ from core.interfaces.team_types import (
     SquadComparisonPayload,
     TacticalRecorderPort,
 )
+
+
+_PHASE_CANONICAL: Dict[str, str] = {
+    "powerplay": "pp",
+    "pp": "pp",
+    "middle": "mid",
+    "mid": "mid",
+    "death": "dth",
+    "dth": "dth",
+}
+
 
 class PlayerEngine(IPlayerEngine):
     """
@@ -624,6 +638,144 @@ class PlayerEngine(IPlayerEngine):
     def _player_exists(self, player_name: str) -> bool:
         return player_name in self.player_df['player'].values
 
+    def _parse_last_10_runs(self, form_last_10: List[str]) -> List[Optional[int]]:
+        parsed_runs: List[Optional[int]] = []
+        for token in form_last_10:
+            value = str(token).strip()
+            if value in {"DNB", "-"}:
+                parsed_runs.append(None)
+                continue
+            try:
+                parsed_runs.append(int(value.rstrip("*")))
+            except ValueError:
+                parsed_runs.append(None)
+        return parsed_runs
+
+    def _compute_phase_runs(self, raw_bat: pd.DataFrame) -> List[PhaseRunsRow]:
+        required_cols = {"over_num", "runs_off_bat", "player_dismissed"}
+        if raw_bat.empty or not required_cols.issubset(raw_bat.columns):
+            return []
+
+        phases_cfg = self.rules.get("phases", {})
+        if not isinstance(phases_cfg, dict) or not phases_cfg:
+            return []
+
+        work = raw_bat.copy()
+        over_num = pd.to_numeric(work["over_num"], errors="coerce")
+        conditions: List[pd.Series] = []
+        labels: List[str] = []
+
+        for phase_key, bounds in phases_cfg.items():
+            if not isinstance(bounds, (list, tuple)) or len(bounds) != 2:
+                continue
+            start_over = pd.to_numeric(pd.Series([bounds[0]]), errors="coerce").iloc[0]
+            end_over = pd.to_numeric(pd.Series([bounds[1]]), errors="coerce").iloc[0]
+            if pd.isna(start_over) or pd.isna(end_over):
+                continue
+            canonical = _PHASE_CANONICAL.get(str(phase_key), str(phase_key))
+            conditions.append(over_num.between(float(start_over), float(end_over)))
+            labels.append(canonical)
+
+        if not conditions:
+            return []
+
+        work["phase_bucket"] = np.select(conditions, labels, default="")
+        work = work[work["phase_bucket"] != ""].copy()
+        if work.empty:
+            return []
+
+        work["is_dismissal"] = work["player_dismissed"].notna().astype(int)
+        agg = work.groupby("phase_bucket", sort=False).agg(
+            total_runs=("runs_off_bat", "sum"),
+            balls_faced=("runs_off_bat", "count"),
+            dismissals=("is_dismissal", "sum"),
+        ).reset_index()
+
+        agg["avg_runs"] = np.where(
+            agg["dismissals"] > 0,
+            (agg["total_runs"] / agg["dismissals"]).round(2),
+            agg["total_runs"].astype(float),
+        )
+        agg["strike_rate"] = np.where(
+            agg["balls_faced"] > 0,
+            (agg["total_runs"] / agg["balls_faced"] * 100).round(1),
+            0.0,
+        )
+
+        return [
+            PhaseRunsRow(
+                phase=str(phase),
+                total_runs=int(runs),
+                balls_faced=int(balls),
+                dismissals=int(dismissals),
+                avg_runs=float(avg_runs),
+                strike_rate=float(strike_rate),
+            )
+            for phase, runs, balls, dismissals, avg_runs, strike_rate in zip(
+                agg["phase_bucket"],
+                agg["total_runs"],
+                agg["balls_faced"],
+                agg["dismissals"],
+                agg["avg_runs"],
+                agg["strike_rate"],
+            )
+        ]
+
+    def _compute_vs_bowling_style(self, raw_bat: pd.DataFrame) -> List[VsBowlingStyleRow]:
+        required_cols = {"bowler", "runs_off_bat", "player_dismissed"}
+        if raw_bat.empty or not required_cols.issubset(raw_bat.columns):
+            return []
+
+        work = raw_bat.copy()
+        work["style"] = work["bowler"].map(self.style_map).fillna("Other")
+        work["is_dismissal"] = work["player_dismissed"].notna().astype(int)
+        agg = work.groupby("style", sort=False).agg(
+            total_runs=("runs_off_bat", "sum"),
+            balls_faced=("runs_off_bat", "count"),
+            dismissals=("is_dismissal", "sum"),
+        ).reset_index()
+
+        agg["avg_runs"] = np.where(
+            agg["dismissals"] > 0,
+            (agg["total_runs"] / agg["dismissals"]).round(2),
+            agg["total_runs"].astype(float),
+        )
+        agg["strike_rate"] = np.where(
+            agg["balls_faced"] > 0,
+            (agg["total_runs"] / agg["balls_faced"] * 100).round(1),
+            0.0,
+        )
+        agg = agg.sort_values("style").reset_index(drop=True)
+
+        return [
+            VsBowlingStyleRow(
+                style=str(style),
+                total_runs=int(runs),
+                balls_faced=int(balls),
+                dismissals=int(dismissals),
+                avg_runs=float(avg_runs),
+                strike_rate=float(strike_rate),
+            )
+            for style, runs, balls, dismissals, avg_runs, strike_rate in zip(
+                agg["style"],
+                agg["total_runs"],
+                agg["balls_faced"],
+                agg["dismissals"],
+                agg["avg_runs"],
+                agg["strike_rate"],
+            )
+        ]
+
+    def _apply_ground_filter(self, df: pd.DataFrame, ground: Optional[str]) -> pd.DataFrame:
+        if ground is None:
+            return df
+        if "venue" not in df.columns:
+            return df
+        aliases = get_venue_aliases(ground)
+        if not aliases:
+            return df
+        return df[df["venue"].isin(aliases)].copy()
+
     def get_player_profile(
         self,
         player_name: str,
@@ -727,18 +879,57 @@ class PlayerEngine(IPlayerEngine):
         active_bowlers: Optional[List[str]] = None,
         years: Optional[int] = None,
         raw_balls_df: Optional[pd.DataFrame] = None,
+        country: Optional[str] = None,
+        ground: Optional[str] = None,
     ) -> Optional[PlayerProfile]:
         """
         Headless API: Context-Aware Player Profile retrieval.
         """
+        _ = (active_bowlers, country)
         if not self._player_exists(player_name):
             return None
 
-        _ = active_bowlers
-        return self.get_player_profile(
+        profile = self.get_player_profile(
             player_name,
             opposition,
             venue_id,
             years,
             raw_balls_df=raw_balls_df,
         )
+        if profile is None:
+            return None
+
+        profile.batting.last_10_runs = self._parse_last_10_runs(profile.batting.form_last_10)
+
+        raw_bat = pd.DataFrame()
+        if (
+            isinstance(raw_balls_df, pd.DataFrame)
+            and not raw_balls_df.empty
+            and "striker" in raw_balls_df.columns
+        ):
+            raw_bat = raw_balls_df[raw_balls_df["striker"] == player_name].copy()
+            if years is not None and "start_date" in raw_bat.columns:
+                cutoff_date = self._get_reference_date() - pd.DateOffset(
+                    years=self._get_years_back(years)
+                )
+                start_dates = pd.to_datetime(raw_bat["start_date"], errors="coerce")
+                raw_bat = raw_bat[start_dates >= cutoff_date].copy()
+
+        profile.phase_runs = self._compute_phase_runs(raw_bat)
+
+        raw_bat_ground = self._apply_ground_filter(raw_bat, ground) if not raw_bat.empty else raw_bat
+        profile.vs_bowling_style = self._compute_vs_bowling_style(raw_bat_ground)
+
+        phase_raw_rows = self._compute_phase_runs(raw_bat_ground)
+        profile.phase_runs_raw = [
+            PhaseRunsRawRow(
+                phase=row.phase,
+                total_runs=row.total_runs,
+                balls_faced=row.balls_faced,
+                dismissals=row.dismissals,
+                avg_runs=row.avg_runs,
+                strike_rate=row.strike_rate,
+            )
+            for row in phase_raw_rows
+        ]
+        return profile

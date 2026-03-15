@@ -277,15 +277,6 @@ MANIFEST = {
                 {
                     "key": "global_h2h",
                     "label": "Global H2H",
-                    "icon": "globe",
-                    "engine_class": "TeamEngine",
-                    "engine_method": "analyze_global_h2h",
-                    "required_context": ["team_a", "team_b", "years"],
-                    "output_type": "comparison_table",
-                },
-                {
-                    "key": "global_h2h_structured",
-                    "label": "Global H2H",
                     "icon": "swords",
                     "engine_class": "TeamEngine",
                     "engine_method": "analyze_global_h2h_structured",
@@ -399,6 +390,7 @@ MANIFEST = {
                     "engine_class": "PlayerEngine",
                     "engine_method": "analyze_player_profile",
                     "required_context": [],
+                    "optional_context": ["venue"],
                     "extra_inputs": {
                         "player_name": {
                             "type": "combobox",
@@ -406,6 +398,12 @@ MANIFEST = {
                             "required": True,
                             "source": "players",
                             "source_params": {"team": "All"},
+                        },
+                        "country_name": {
+                            "type": "dropdown",
+                            "label": "Host Country",
+                            "required": False,
+                            "source": "host_countries",
                         },
                     },
                     "output_type": "profile_card",
@@ -570,6 +568,9 @@ ENGINE_LITERAL_REGISTRY += [
     "Format rule '",
     "' must be > 0.",
     "engine default",
+    "avg_runs",
+    "is_dismissal",
+    "Other",
 ]
 
 # Phase 11.2: Service literal registry for compliance-bouncer

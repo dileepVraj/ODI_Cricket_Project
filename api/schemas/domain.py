@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, ConfigDict, JsonValue
+from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
 class BattingStatsSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -12,6 +12,7 @@ class BattingStatsSchema(BaseModel):
     fifties: int
     highest_score: int
     form_last_10: List[str]
+    last_10_runs: List[Optional[int]] = Field(default_factory=list)
 
 class BowlingStatsSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -35,6 +36,9 @@ class PlayerProfileSchema(BaseModel):
     bowling: Optional[BowlingStatsSchema] = None
     venue_stats: Optional[ContextStatsSchema] = None
     vs_opponent_stats: Optional[ContextStatsSchema] = None
+    phase_runs: List[dict] = Field(default_factory=list)
+    vs_bowling_style: List[dict] = Field(default_factory=list)
+    phase_runs_raw: List[dict] = Field(default_factory=list)
 
 class MatchupStatsSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")
