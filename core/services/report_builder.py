@@ -241,8 +241,12 @@ class ReportBuilder:
 
             wins = len(full[full["winner"] == team_name])
             losses = len(full[full["winner"] == opp])
-            tie_nr = len(full) - wins - losses
-            decisions = len(full) - tie_nr
+            decisions = wins + losses
+            tie_nr = len(full) - decisions
+            known_non_decisions = int(
+                full["winner"].astype(str).str.lower().str.strip().isin(["tie", "no result", "nan", "none"]).sum()
+            )
+            data_gaps = tie_nr - known_non_decisions
             pct = int((wins / decisions) * 100) if decisions > 0 else 0
 
             stats.append(
@@ -279,8 +283,12 @@ class ReportBuilder:
         is_loss = (winner_lower != team_lower) & (~winner_lower.isin(["tie", "no result", "nan", "none"]))
         total_losses = len(overall_full[is_loss])
 
-        total_tie_nr = len(overall_full) - total_wins - total_losses
-        total_decisions = len(overall_full) - total_tie_nr
+        total_decisions = total_wins + total_losses
+        total_tie_nr = len(overall_full) - total_decisions
+        total_known_non_decisions = int(
+            overall_full["winner"].astype(str).str.lower().str.strip().isin(["tie", "no result", "nan", "none"]).sum()
+        )
+        total_data_gaps = total_tie_nr - total_known_non_decisions
         total_pct = int((total_wins / total_decisions) * 100) if total_decisions > 0 else 0
 
         overall = pd.DataFrame(
