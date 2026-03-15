@@ -6,11 +6,9 @@ import { useRouter } from "next/navigation";
 import EmptyState from "@/components/common/EmptyState";
 import { useAppContext } from "@/lib/context";
 import { MatrixRow, toMatrixRows } from "@/lib/comparison-types";
-
 interface MatrixTableProps {
     data: Record<string, unknown>[];
 }
-
 const HIDDEN_COLS = new Set([
     "MATCH_IDS",
     "match_ids",
@@ -33,22 +31,17 @@ const RESULT_EMOJI: Record<string, string> = {
     NR: "🌧️",
 };
 const OPPONENT_TEXT_SHADOW = "0 0 1px var(--text-primary), 0 0 1px var(--text-primary)";
-
 function toTeamColorVarName(teamName: string): string {
     return `--venue-team-${teamName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-color`;
 }
-
-function getColumnWidthClass(col: string): string {
-    if (col === "Opponent") return "w-[18%] min-w-[9rem]";
-    if (col === "Mat") return "w-[6%] min-w-[3rem]";
-    if (col === "Won") return "w-[6%] min-w-[3rem]";
-    if (col === "Lost") return "w-[6%] min-w-[3rem]";
-    if (col === "Tie/NR") return "w-[6%] min-w-[3.5rem]";
-    if (col === "Win %" || col === "Win%") return "w-[7%] min-w-[4rem]";
-    if (FORM_COLUMNS.has(col)) return "w-[13%] min-w-[7rem]";
-    return "w-[9%] min-w-[6rem]";
+function getColWidth(col: string): string {
+    if (col === "Opponent") return "16%";
+    if (col === "Mat" || col === "Won" || col === "Lost") return "6%";
+    if (col === "Tie/NR") return "6%";
+    if (col === "Win %") return "7%";
+    if (FORM_COLUMNS.has(col)) return "10%";
+    return "18%";
 }
-
 export default function MatrixTable({ data }: MatrixTableProps) {
     const [sortCol, setSortCol] = useState<string | null>(null);
     const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
@@ -186,6 +179,11 @@ export default function MatrixTable({ data }: MatrixTableProps) {
             )}
 
             <table className="[width:100%] [table-layout:fixed] [border-collapse:collapse] [font-size:0.825rem]">
+                <colgroup>
+                    {allColumns.map((col) => (
+                        <col key={col} style={{ width: getColWidth(col) }} />
+                    ))}
+                </colgroup>
                 <thead>
                     <tr>
                         {allColumns.map((col) => (
@@ -202,9 +200,9 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                                             : "descending"
                                         : "none"
                                 }
-                                className={`${getColumnWidthClass(col)} [padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:right]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
+                                className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:center]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
                             >
-                                <span className="[display:inline-flex] [align-items:center] [gap:4px]">
+                                <span className={`[display:inline-flex] [align-items:center] [gap:4px] [width:100%] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[justify-content:flex-start]" : "[justify-content:center]"}`}>
                                     {COL_LABELS[col] ?? col}
                                     {sortCol === col ? (
                                         sortDir === "asc" ? <ChevronUp size={12} /> : <ChevronDown size={12} />
@@ -236,7 +234,7 @@ export default function MatrixTable({ data }: MatrixTableProps) {
                                 return (
                                     <td
                                         key={col}
-                                        className={`${getColumnWidthClass(col)} [padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:right]"} ${isNum ? "font-numeric" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
+                                        className={`[padding:10px_12px] [white-space:nowrap] ${col === "Opponent" || FORM_COLUMNS.has(col) ? "[text-align:left]" : "[text-align:center]"} ${isNum ? "font-numeric" : ""} ${isOpponent ? "[font-weight:600] [cursor:pointer]" : "[font-weight:400] [cursor:default]"} ${getCellToneClass(row, col, val)}`}
                                         onClick={() => {
                                             if (isOpponent) {
                                                 navigateToOpponent(String(val ?? ""));
@@ -263,7 +261,6 @@ export default function MatrixTable({ data }: MatrixTableProps) {
         </div>
     );
 }
-
 function FormGuide({ value }: { value: unknown }) {
     if (
         value === null ||
@@ -282,12 +279,10 @@ function FormGuide({ value }: { value: unknown }) {
         </span>
     );
 }
-
 function formatVal(val: unknown): string {
     if (val === null || val === undefined) return "-";
     return String(val);
 }
-
 function getCellToneClass(row: MatrixRow, col: string, val: unknown): string {
     const tone = row.cell_tones?.[col];
     if (tone === "elite") return "[color:var(--tier-elite)]";

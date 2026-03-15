@@ -124,6 +124,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
     try {
       const params = buildExecuteParams({
         requiredContext: effectiveRequiredContext,
+        optionalContext: activeFn.optional_context ?? [],
         contextValues,
         needsSquadBuilder,
         homeXI,
@@ -213,9 +214,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
           </div>
         </div>
 
-        {!canExecute && missingContext.length > 0 && (
-          <MissingContextBanner missingContextLabels={missingContext.map(getContextLabel)} />
-        )}
+        {!canExecute && missingContext.length > 0 && <MissingContextBanner missingContextLabels={missingContext.map(getContextLabel)} />}
 
         {Object.keys(extraInputFields).length > 0 && activeFormat && (
           <ExtraInputRenderer

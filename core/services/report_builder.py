@@ -182,7 +182,7 @@ class ReportBuilder:
         recent = df.sort_values("start_date", ascending=False).head(5)
         winners = recent["winner"].astype(str).str.lower()
         team_lower = team.lower()
-        is_level = recent["score_inn1"] == recent["score_inn2"]
+        is_level = (recent["score_inn1"].fillna(-1) == recent["score_inn2"].fillna(-2)).to_numpy(dtype=bool)
 
         conditions = [
             winners == team_lower,
@@ -390,7 +390,7 @@ class ReportBuilder:
             recent["score_inn1"].notna()
             & recent["score_inn2"].notna()
             & recent["score_inn1"].eq(recent["score_inn2"])
-        )
+        ).to_numpy(dtype=bool, na_value=False)
         no_result_tokens = ["nan", "no result", "none"]
 
         recent["Result"] = np.select(
@@ -403,8 +403,10 @@ class ReportBuilder:
             default="LOSS",
         )
 
-        team_scores = pd.to_numeric(np.where(bat1, recent["score_inn1"], recent["score_inn2"]), errors="coerce")
-        opp_scores = pd.to_numeric(np.where(bat1, recent["score_inn2"], recent["score_inn1"]), errors="coerce")
+        s1 = recent["score_inn1"].to_numpy(dtype="float64", na_value=float("nan"))
+        s2 = recent["score_inn2"].to_numpy(dtype="float64", na_value=float("nan"))
+        team_scores = pd.Series(np.where(bat1, s1, s2), index=recent.index, dtype="float64")
+        opp_scores = pd.Series(np.where(bat1, s2, s1), index=recent.index, dtype="float64")
 
         team_score_text = team_scores.astype("Int64").astype(str).replace("<NA>", "-")
         opp_score_text = opp_scores.astype("Int64").astype(str).replace("<NA>", "-")
@@ -457,6 +459,7 @@ class ReportBuilder:
         ].to_dict("records")
         for row in records:
             row["form_data"] = form_payload
+            row["form_summary"] = form_payload
             row["highlight_flags"] = {"is_win": row.get("Result") == "WIN"}
             row["derived_badges"] = [f"Result: {row.get('Result', '-')}"]
 

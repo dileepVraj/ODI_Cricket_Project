@@ -88,6 +88,7 @@ export function getMissingContext(
 
 export function buildExecuteParams(args: {
     requiredContext: string[];
+    optionalContext?: string[];
     contextValues: Record<string, string | number>;
     needsSquadBuilder: boolean;
     homeXI: string[];
@@ -96,6 +97,7 @@ export function buildExecuteParams(args: {
 }): Record<string, unknown> {
     const {
         requiredContext,
+        optionalContext,
         contextValues,
         needsSquadBuilder,
         homeXI,
@@ -106,6 +108,13 @@ export function buildExecuteParams(args: {
     const params: Record<string, unknown> = {};
 
     for (const key of requiredContext) {
+        const val = contextValues[key];
+        if (val && val !== "" && val !== "All") {
+            params[key] = val;
+        }
+    }
+
+    for (const key of optionalContext ?? []) {
         const val = contextValues[key];
         if (val && val !== "" && val !== "All") {
             params[key] = val;
