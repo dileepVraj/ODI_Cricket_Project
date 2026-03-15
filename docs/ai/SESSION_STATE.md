@@ -20,6 +20,13 @@ None.
 
 ## Last Completed
 
+- TASK-124 - Enhance analyze_player_profile with phase runs, vs-style breakdown, last_10_runs - CLOSED 2026-03-15
+  `PlayerEngine.analyze_player_profile()` now adds `phase_runs`,
+  `vs_bowling_style`, `phase_runs_raw`, and numeric `last_10_runs`
+  payload fields, with country pre-filtering handled in
+  `api/context_builder.py` and ground filtering handled in-engine.
+  Gates 1/2/3/5/6 PASS, bouncer PASS.
+
 - TASK-123 - Continent Performance matrix payload unification - CLOSED 2026-03-15
   `calculate_continent_performance_payload()` now preserves the existing
   opponent/continent mask logic while always returning `_matrix_rows(...)`,

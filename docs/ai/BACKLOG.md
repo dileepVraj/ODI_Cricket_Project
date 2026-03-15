@@ -32,6 +32,34 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-124 - Enhance analyze_player_profile with phase runs, vs-style breakdown, and last_10_runs
+**Type:** new-feature
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-15
+**Status:** CLOSED - 2026-03-15
+
+### Description
+`analyze_player_profile()` now enriches the player payload with
+phase-wise batting rows, bowling-style breakdown rows, phase-raw rows,
+and a numeric `last_10_runs` list derived from the existing form tokens.
+Country pre-filtering is applied in `api/context_builder.py`, while
+ground filtering remains inside `PlayerEngine` via venue aliases.
+
+### Acceptance Criteria
+AC-1: `BattingStats` includes `last_10_runs: List[Optional[int]]`.
+AC-2: `PhaseRunsRow`, `VsBowlingStyleRow`, and `PhaseRunsRawRow`
+      exist in `core/interfaces/player_interface.py`.
+AC-3: `PlayerProfile` exposes `phase_runs`, `vs_bowling_style`,
+      and `phase_runs_raw`.
+AC-4: `analyze_player_profile()` accepts optional `country`
+      and `ground` inputs.
+AC-5: `api/context_builder.py` pre-filters by country and forwards
+      both engine kwargs.
+AC-6: `api/schemas/domain.py` accepts the additive payload fields.
+AC-7: Gates 1/2/3/5/6 pass and the bouncer matches baseline.
+
 ## TASK-123 - Remove _comparison_rows branch from calculate_continent_performance_payload
 **Type:** bug-fix
 **Scope:** backend
