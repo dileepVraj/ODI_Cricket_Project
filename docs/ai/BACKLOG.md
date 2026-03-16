@@ -32,6 +32,30 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-134 - Consolidate squad player search to single combobox field
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** Medium
+**Depends On:** NONE
+**Created:** 2026-03-16
+**Status:** CLOSED - 2026-03-16
+
+### Description
+`PlayerSearch.tsx` now relies solely on `AccessibleCombobox` for player
+filtering, and `SquadBuilder.tsx` no longer maintains a redundant outer
+search term / filtered-player layer for each squad panel.
+
+### Acceptance Criteria
+AC-1: `PlayerSearch.tsx` no longer renders the outer `<input type="text">` filter block.
+AC-2: `PlayerSearch.tsx` accepts a `players: string[]` prop and passes it directly to `AccessibleCombobox`.
+AC-3: `searchTerm`, `onSearchTermChange`, and `filteredPlayers` are removed from the PlayerSearch props interface.
+AC-4: `useSquadPanelController()` no longer holds `searchTerm`, `setSearchTerm`, or `filteredPlayers`.
+AC-5: `SquadBuilder.tsx` passes `availablePlayers` to `PlayerSearch` as the `players` prop.
+AC-6: Squad Battle shows one input field per team panel.
+AC-7: Typing in the combobox filters the player list correctly.
+AC-8: `Load Squad` still uses the existing opponent-aware `fetchPlayers()` path unchanged.
+AC-9: Gates F1/F2/F3/5/6 pass and the bouncer matches baseline.
+
 ## TASK-133 - Supplement short last-match XI with same-match non-XI rows
 **Type:** bug-fix
 **Scope:** backend

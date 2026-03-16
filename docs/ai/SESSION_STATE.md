@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-134 - Consolidate squad player search to single combobox field - CLOSED 2026-03-16
+  `PlayerSearch.tsx` now renders only the `AccessibleCombobox`, and
+  `SquadBuilder.tsx` no longer stores a parallel `searchTerm` /
+  `filteredPlayers` layer before passing player options into the squad
+  picker. Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-133 - Fix get_last_match_xi same-match XI supplementation - CLOSED 2026-03-16
   `PlayerEngine.get_last_match_xi()` now supplements short `is_playing_xi=True`
   squad results with remaining same-match team rows ordered by `player_order`,
