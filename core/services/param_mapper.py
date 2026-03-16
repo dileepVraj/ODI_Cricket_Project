@@ -45,6 +45,7 @@ class ParamMapperService:
         },
         "analyze_squad_types": {
             "team_a": "team_name",
+            "team_b": None,
             "home_xi": "players",
             "away_xi": "opposition_bowlers",
             "years": "years",
