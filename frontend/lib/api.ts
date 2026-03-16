@@ -1,10 +1,3 @@
-/**
- * lib/api.ts — API Client for the Cricket Algo-Trading Platform
- * 
- * Centralized API layer. All components call these functions
- * instead of raw fetch() — single source of truth for API URLs.
- */
-
 const API_BASE = "";  // Empty = same origin (proxied by Next.js rewrites)
 
 type ApiErrorCode = "validation" | "server" | "http" | "network";
@@ -22,8 +15,6 @@ export class ApiClientError extends Error {
         this.details = details;
     }
 }
-
-// ── Types ───────────────────────────────────────────────────────────────
 
 /**
  * @schema FormatInfo
@@ -152,8 +143,6 @@ export interface ExecuteResponse {
     metadata: Record<string, string>;
 }
 
-// ── API Functions ───────────────────────────────────────────────────────
-
 function getErrorCode(status: number): ApiErrorCode {
     if (status === 422) return "validation";
     if (status >= 500) return "server";
@@ -250,42 +239,38 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
 export async function fetchHealth(): Promise<HealthStatus> {
     return requestJson<HealthStatus>("/health");
 }
-
 export async function fetchFormats(): Promise<FormatInfo[]> {
     return requestJson<FormatInfo[]>("/api/v1/formats");
 }
-
 export async function fetchManifest(formatKey: string): Promise<Manifest> {
     return requestJson<Manifest>(`/api/v1/${formatKey}/manifest`);
 }
-
 export async function fetchTeams(formatKey: string): Promise<string[]> {
     const data = await requestJson<{ teams: string[] }>(`/api/v1/${formatKey}/context/teams`);
     return data.teams;
 }
-
 export async function fetchVenues(formatKey: string): Promise<VenueItem[]> {
     const data = await requestJson<{ venues: VenueItem[] }>(`/api/v1/${formatKey}/context/venues`);
     return data.venues;
 }
-
-export async function fetchPlayers(formatKey: string, team: string): Promise<string[]> {
-    const data = await requestJson<{ players: string[] }>(
-        `/api/v1/${formatKey}/context/players/${encodeURIComponent(team)}`
-    );
+export async function fetchPlayers(
+    formatKey: string,
+    team: string,
+    opponent?: string
+): Promise<string[]> {
+    const base = `/api/v1/${formatKey}/context/players/${encodeURIComponent(team)}`;
+    const url = opponent ? `${base}?opponent=${encodeURIComponent(opponent)}` : base;
+    const data = await requestJson<{ players: string[] }>(url);
     return data.players;
 }
-
 export async function fetchRegions(formatKey: string): Promise<string[]> {
     const data = await requestJson<{ regions: string[] }>(`/api/v1/${formatKey}/context/regions`);
     return data.regions;
 }
-
 export async function fetchHostCountries(formatKey: string): Promise<string[]> {
     const data = await requestJson<{ countries: string[] }>(`/api/v1/${formatKey}/context/host_countries`);
     return data.countries;
 }
-
 export async function executeFunction(
     formatKey: string,
     functionKey: string,

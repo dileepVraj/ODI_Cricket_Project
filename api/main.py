@@ -19,10 +19,10 @@ import os
 import sys
 import logging
 import io
-from typing import Dict, List, TypedDict, cast
+from typing import Dict, List, Optional, TypedDict, cast
 from contextlib import redirect_stdout
 import pandas as pd
-from fastapi import FastAPI, HTTPException, Path, Request
+from fastapi import FastAPI, HTTPException, Path, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
@@ -229,10 +229,15 @@ def get_venues(format_type: str = Path(..., description="Format key")) -> Venues
 def get_players(
     team: str = Path(..., description="Team name (or 'All')"),
     format_type: str = Path(..., description="Format key"),
+    opponent: Optional[str] = Query(
+        None,
+        description="Opponent team name for h2h squad lookup",
+    ),
 ) -> PlayersResponse:
     """Returns unique players from the dataset, optionally filtered by team."""
     analyzer = _get_analyzer_or_404(format_type)
     team_norm = str(team).strip()
+    opponent_norm = str(opponent).strip() if opponent else None
     players = []
 
     if team_norm.lower() == "all":
@@ -253,7 +258,10 @@ def get_players(
                 if hasattr(player_engine, "get_last_match_xi"):
                     dal = getattr(analyzer, "dal", None)
                     if dal is not None:
-                        team_matches = dal.get_matches(team_a=team_norm)
+                        team_matches = dal.get_matches(
+                            team_a=team_norm,
+                            team_b=opponent_norm if opponent_norm else None,
+                        )
                         if not team_matches.empty and "match_id" in team_matches.columns:
                             recent_match_ids = (
                                 team_matches.sort_values("start_date", ascending=False)["match_id"]
@@ -268,6 +276,7 @@ def get_players(
                         team_norm,
                         team_matches=team_matches,
                         match_balls_df=match_balls,
+                        opponent=opponent_norm if opponent_norm else None,
                     ) or []
                 if hasattr(player_engine, "get_active_squad"):
                     active_squad = player_engine.get_active_squad(team_norm) or []

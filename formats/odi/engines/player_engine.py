@@ -225,22 +225,39 @@ class PlayerEngine(IPlayerEngine):
         team_name: str,
         team_matches: Optional[pd.DataFrame] = None,
         match_balls_df: Optional[pd.DataFrame] = None,
+        opponent: Optional[str] = None,
     ) -> List[str]:
         """
         Retrieves players from the last match using Squads DB (preferred) or
         pre-fetched match/ball data.
         """
-        
+        opponent_norm = str(opponent).strip() if opponent else ""
+
         # 1. Try Squads DB First
         if not self.squads_df.empty:
-            team_squads = self.squads_df[self.squads_df['team'] == team_name]
-            if not team_squads.empty:
-                dates = team_squads.sort_values('date', ascending=False)
-                last_match_id = dates.iloc[0]['match_id']
-                last_match_rows = team_squads[team_squads['match_id'] == str(last_match_id)].copy()
+            team_rows = self.squads_df[self.squads_df['team'] == team_name]
+            if opponent_norm:
+                opponent_match_ids = self.squads_df.loc[
+                    self.squads_df['team'] == opponent_norm, 'match_id'
+                ].astype(str)
+                team_rows = team_rows[team_rows['match_id'].isin(opponent_match_ids)]
+            if not team_rows.empty:
+                dates = team_rows.sort_values('date', ascending=False)
+                last_match_id = str(dates.iloc[0]['match_id'])
+                last_match_rows = team_rows[team_rows['match_id'] == last_match_id]
                 if 'is_playing_xi' in last_match_rows.columns:
                     last_match_rows = last_match_rows[last_match_rows['is_playing_xi'] == True]
-                return sorted(last_match_rows['player'].unique().tolist())
+                player_sequence_columns = [
+                    column_name
+                    for column_name in last_match_rows.columns
+                    if column_name != 'player'
+                    and column_name.startswith('player')
+                    and pd.api.types.is_numeric_dtype(last_match_rows[column_name])
+                ]
+                if player_sequence_columns:
+                    ordered_rows = last_match_rows.sort_values(player_sequence_columns[0])
+                    return ordered_rows['player'].dropna().tolist()
+                return last_match_rows['player'].dropna().tolist()
 
         # 2. Fallback to pre-fetched raw data (provided by API/Facade layer)
         if team_matches is None or team_matches.empty:
@@ -248,26 +265,53 @@ class PlayerEngine(IPlayerEngine):
 
         balls_source = match_balls_df if match_balls_df is not None else pd.DataFrame()
         if not balls_source.empty and 'match_id' in balls_source.columns:
-            balls_source = balls_source.copy()
-            balls_source['match_id'] = balls_source['match_id'].astype(str)
+            balls_source = balls_source.assign(match_id=balls_source['match_id'].astype(str))
 
-        sorted_matches = team_matches.sort_values('start_date', ascending=False)['match_id'].unique()
-        squad = set()
+        filtered_matches = team_matches
+        if opponent_norm:
+            candidate_columns = [
+                column_name
+                for column_name in ['team_a', 'team_b', 'home_team', 'away_team']
+                if column_name in team_matches.columns
+            ]
+            if candidate_columns:
+                team_mask = pd.Series(False, index=team_matches.index)
+                opponent_mask = pd.Series(False, index=team_matches.index)
+                for column_name in candidate_columns:
+                    column_values = team_matches[column_name].astype(str)
+                    team_mask = team_mask | (column_values == team_name)
+                    opponent_mask = opponent_mask | (column_values == opponent_norm)
+                head_to_head_matches = team_matches[team_mask & opponent_mask]
+                if not head_to_head_matches.empty:
+                    filtered_matches = head_to_head_matches
+
+        sorted_matches = filtered_matches.sort_values('start_date', ascending=False)['match_id'].astype(str).unique()
         backscan_limit = self._get_engine_default("squad_backscan_match_limit")
-        
-        for match_id in sorted_matches[:backscan_limit]: 
-            if len(squad) >= self.rules["player_rules"]["last_xi_match_limit"]:
-                break
+
+        for match_id in sorted_matches[:backscan_limit]:
             if balls_source.empty:
                 continue
-            match_data = balls_source[balls_source['match_id'] == str(match_id)]
+            match_data = balls_source[balls_source['match_id'] == match_id]
             if match_data.empty:
                 continue
-            squad.update(match_data[match_data['batting_team'] == team_name]['striker'].unique())
-            squad.update(match_data[match_data['batting_team'] == team_name]['non_striker'].unique())
-            squad.update(match_data[match_data['bowling_team'] == team_name]['bowler'].unique())
-            
-        return sorted(list(squad))
+            order_columns = [
+                column_name
+                for column_name in ['over_num', 'ball']
+                if column_name in match_data.columns
+            ]
+            ordered_match_data = (
+                match_data.sort_values(order_columns)
+                if order_columns
+                else match_data
+            )
+            batting_rows = ordered_match_data[ordered_match_data['batting_team'] == team_name]
+            bowling_rows = ordered_match_data[ordered_match_data['bowling_team'] == team_name]
+            striker_order = batting_rows['striker'].dropna().drop_duplicates().tolist()
+            non_striker_order = batting_rows['non_striker'].dropna().drop_duplicates().tolist()
+            bowler_order = bowling_rows['bowler'].dropna().drop_duplicates().tolist()
+            return list(dict.fromkeys([*striker_order, *non_striker_order, *bowler_order]))
+
+        return []
 
     def _build_squad_context_df(
         self,

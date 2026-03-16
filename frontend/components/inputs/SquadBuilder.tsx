@@ -21,6 +21,7 @@ interface SquadBuilderProps {
 interface SquadPanelControllerArgs {
     formatKey: string;
     team: string;
+    opponent: string;
     maxPlayers: number;
     selectedPlayers: string[];
     onPlayersChange: (players: string[]) => void;
@@ -44,7 +45,7 @@ function isValidTeam(team: string): boolean {
 }
 
 function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelController {
-    const { formatKey, team, maxPlayers, selectedPlayers, onPlayersChange } = args;
+    const { formatKey, team, opponent, maxPlayers, selectedPlayers, onPlayersChange } = args;
     const [availablePlayers, setAvailablePlayers] = useState<string[]>([]);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -121,7 +122,7 @@ function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelCont
         setLoadError(null);
 
         try {
-            const players = await fetchPlayers(formatKey, team);
+            const players = await fetchPlayers(formatKey, team, opponent || undefined);
             setAvailablePlayers(players);
             onPlayersChange(players.slice(0, maxPlayers));
         } catch {
@@ -129,7 +130,7 @@ function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelCont
         } finally {
             setIsLoadingPlayers(false);
         }
-    }, [formatKey, maxPlayers, onPlayersChange, team, validTeam]);
+    }, [formatKey, maxPlayers, onPlayersChange, opponent, team, validTeam]);
 
     return {
         availablePlayers,
@@ -161,6 +162,7 @@ export default function SquadBuilder({
     const homeController = useSquadPanelController({
         formatKey,
         team: teamA,
+        opponent: teamB,
         maxPlayers,
         selectedPlayers: homeXI,
         onPlayersChange: onHomeXIChange,
@@ -168,6 +170,7 @@ export default function SquadBuilder({
     const awayController = useSquadPanelController({
         formatKey,
         team: teamB,
+        opponent: teamA,
         maxPlayers,
         selectedPlayers: awayXI,
         onPlayersChange: onAwayXIChange,
