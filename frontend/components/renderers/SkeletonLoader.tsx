@@ -20,6 +20,8 @@ export default function SkeletonLoader({ outputType }: SkeletonLoaderProps) {
             return <ProfileSkeleton />;
         case "download_json":
             return <CardSkeleton />;
+        case "squad_comparison":
+            return <ReportSkeleton />;
         default:
             return <TableSkeleton />;
     }

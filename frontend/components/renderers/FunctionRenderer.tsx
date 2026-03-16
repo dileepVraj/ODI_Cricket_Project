@@ -20,6 +20,7 @@ const VenueMatchupReport = lazy(() => import("./VenueMatchupReport"));
 const CountryH2HReport = lazy(() => import("./CountryH2HReport"));
 const GlobalH2HReport = React.lazy(() => import("./GlobalH2HReport"));
 const FortressReport = lazy(() => import("./FortressReport"));
+const SquadComparisonCard = lazy(() => import("./SquadComparisonCard"));
 const MatchAuditSection = lazy(() => import("./MatchAuditSection"));
 interface FunctionRendererProps {
     outputType: string;
@@ -235,6 +236,14 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
                 renderedOutput = wrapRenderer(
                     <DownloadPanel data={mainData} />,
                     "Unable to render download panel."
+                );
+            }
+            break;
+        case "squad_comparison":
+            if (isJsonRecord(mainData)) {
+                renderedOutput = wrapRenderer(
+                    <SquadComparisonCard data={mainData} />,
+                    "Unable to render squad comparison."
                 );
             }
             break;
