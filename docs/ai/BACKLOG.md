@@ -32,6 +32,28 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-135 - Slim compare_squads to squad-metrics only
+**Type:** refactor
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-16
+**Status:** CLOSED - 2026-03-16
+
+### Description
+`compare_squads` now returns only Tab 0 squad metrics plus player stats.
+The redundant GlobalCompareEnvelope API wrapper is removed, and the
+manifest output type is now `squad_comparison` for the dedicated frontend
+renderer follow-up.
+
+### Acceptance Criteria
+AC-1: `get_squad_comparison_data()` no longer computes tactical matrix or matchups.
+AC-2: `SquadComparisonData` and `SquadComparisonDataSchema` expose only Tab 0 fields.
+AC-3: The compare-squads serialization wrapper and report-builder payload helper are removed.
+AC-4: `api/main.py` no longer rewrites compare-squads output post-serialization.
+AC-5: `formats/odi/manifest.py` now advertises `output_type: "squad_comparison"`.
+AC-6: Gates 1/2/3/4/5/6 pass and the bouncer matches baseline.
+
 ## TASK-134 - Consolidate squad player search to single combobox field
 **Type:** frontend-modification
 **Scope:** frontend

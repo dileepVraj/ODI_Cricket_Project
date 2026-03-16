@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-134:** Squad Battle now uses a single combobox search field per team panel, with `AccessibleCombobox` owning all player filtering and `SquadBuilder.tsx` no longer duplicating that search state.
-2. **TASK-133:** `get_last_match_xi()` now supplements short `is_playing_xi=True` squads with remaining same-match rows ordered by `player_order`, preventing compare-squad XI padding from injecting historical ghost players while keeping the balls fallback unchanged.
-3. **TASK-132:** `get_last_match_xi()` now accepts an `opponent` parameter so compare-squad XI loading resolves the latest head-to-head match, preserves `player_order` / first-appearance batting order, and receives the counterpart team through the API/frontend fetch path.
-4. **TASK-131:** Player profile rendering is now split by responsibility: `PlayerProfileCard.tsx` owns the default profile view, dedicated batting/bowling intel renderers own their respective `_view` payloads, and `FunctionRenderer.tsx` is the sole view dispatcher.
-5. **TASK-130:** Frontend Paradigm Sentinel now treats `data['_view']` reads in leaf renderer components as an SRP violation, reserving view dispatch for `FunctionRenderer.tsx` and intentionally surfacing `PlayerProfileCard.tsx` until TASK-131.
+1. **TASK-135:** Slimmed compare_squads to squad-metrics only — removed tactical matrix and matchup computation from get_squad_comparison_data; deleted GlobalCompareEnvelope serialization layer; output_type set to "squad_comparison".
+2. **TASK-134:** Squad Battle now uses a single combobox search field per team panel, with `AccessibleCombobox` owning all player filtering and `SquadBuilder.tsx` no longer duplicating that search state.
+3. **TASK-133:** `get_last_match_xi()` now supplements short `is_playing_xi=True` squads with remaining same-match rows ordered by `player_order`, preventing compare-squad XI padding from injecting historical ghost players while keeping the balls fallback unchanged.
+4. **TASK-132:** `get_last_match_xi()` now accepts an `opponent` parameter so compare-squad XI loading resolves the latest head-to-head match, preserves `player_order` / first-appearance batting order, and receives the counterpart team through the API/frontend fetch path.
+5. **TASK-131:** Player profile rendering is now split by responsibility: `PlayerProfileCard.tsx` owns the default profile view, dedicated batting/bowling intel renderers own their respective `_view` payloads, and `FunctionRenderer.tsx` is the sole view dispatcher.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*
