@@ -32,6 +32,26 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-138 - Fix Tactical Matrix to return both Home and Away team rows
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-16
+**Status:** CLOSED - 2026-03-16
+
+### Description
+The Squad Battle Tactical Matrix now routes through a new
+`analyze_dual_squad_matrix()` wrapper so the table returns rows for both
+teams instead of only the home side.
+
+### Acceptance Criteria
+AC-1: `PlayerEngine.analyze_dual_squad_matrix()` exists with the required dual-team signature.
+AC-2: Tactical Matrix rows include a `"Team"` column identifying the owning team.
+AC-3: The tactical_matrix manifest entry uses `engine_method: "analyze_dual_squad_matrix"`.
+AC-4: Param mapper and context builder are wired for the dual-team method.
+AC-5: Gates 1/2/3/5/6 pass and the bouncer matches baseline.
+
 ## TASK-137 - Fix analyze_squad_types opp_team param leak in param_mapper
 **Type:** bug-fix
 **Scope:** backend

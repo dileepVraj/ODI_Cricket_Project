@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-138 - Add dual-team Tactical Matrix wrapper in PlayerEngine - CLOSED 2026-03-16
+  Added `analyze_dual_squad_matrix()` plus manifest, param-mapper, and
+  context-builder wiring so Tactical Matrix now returns both home and away
+  team rows in one execute path. Gates 1/2/3/5/6 PASS, bouncer PASS.
+
 
 - TASK-137 - Suppress team_b→opp_team global mapping for analyze_squad_types in ParamMapperService - CLOSED 2026-03-16
   Added `\"team_b\": None` to the method-specific mapping so the global
