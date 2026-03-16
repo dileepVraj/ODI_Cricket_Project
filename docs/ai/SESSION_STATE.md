@@ -20,6 +20,11 @@ None.
 
 ## Last Completed
 
+- TASK-137 - Suppress team_b→opp_team global mapping for analyze_squad_types in ParamMapperService - CLOSED 2026-03-16
+  Added `\"team_b\": None` to the method-specific mapping so the global
+  `team_b -> opp_team` default no longer leaks into Tactical Matrix engine
+  calls. Gates 1/2/5/6 PASS, bouncer PASS.
+
 - TASK-136 - Add SquadComparisonCard renderer for squad_comparison output type - CLOSED 2026-03-16
   Added `frontend/components/renderers/SquadComparisonCard.tsx`, wired
   `squad_comparison` into `FunctionRenderer.tsx` and `SkeletonLoader.tsx`,

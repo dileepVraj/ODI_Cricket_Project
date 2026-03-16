@@ -32,6 +32,26 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-137 - Fix analyze_squad_types opp_team param leak in param_mapper
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-16
+**Status:** CLOSED - 2026-03-16
+
+### Description
+`ParamMapperService.MAPPING_REGISTRY["analyze_squad_types"]` now explicitly
+sets `team_b` to `None`, suppressing the global `team_b -> opp_team`
+default so Tactical Matrix no longer passes an unexpected `opp_team`
+keyword into `PlayerEngine.analyze_squad_types()`.
+
+### Acceptance Criteria
+AC-1: `MAPPING_REGISTRY["analyze_squad_types"]` contains `"team_b": None`.
+AC-2: The global `MAPPING_REGISTRY["*"]["team_b"]` remains `"opp_team"`.
+AC-3: No other `MAPPING_REGISTRY` entries are modified.
+AC-4: Gates 1/2/5/6 pass and the bouncer matches baseline.
+
 ## TASK-136 - Add SquadComparisonCard renderer for squad_comparison output type
 **Type:** frontend-new-component
 **Scope:** frontend

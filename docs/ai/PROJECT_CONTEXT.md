@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-136:** Added SquadComparisonCard renderer for output_type "squad_comparison" — displays squad metrics comparison and per-team player stats tables; wired into FunctionRenderer and SkeletonLoader.
-2. **TASK-135:** Slimmed compare_squads to squad-metrics only — removed tactical matrix and matchup computation from get_squad_comparison_data; deleted GlobalCompareEnvelope serialization layer; output_type set to "squad_comparison".
-3. **TASK-134:** Squad Battle now uses a single combobox search field per team panel, with `AccessibleCombobox` owning all player filtering and `SquadBuilder.tsx` no longer duplicating that search state.
-4. **TASK-133:** `get_last_match_xi()` now supplements short `is_playing_xi=True` squads with remaining same-match rows ordered by `player_order`, preventing compare-squad XI padding from injecting historical ghost players while keeping the balls fallback unchanged.
-5. **TASK-132:** `get_last_match_xi()` now accepts an `opponent` parameter so compare-squad XI loading resolves the latest head-to-head match, preserves `player_order` / first-appearance batting order, and receives the counterpart team through the API/frontend fetch path.
+1. **TASK-137:** Suppress team_b→opp_team global mapping for analyze_squad_types in ParamMapperService to fix Tactical Matrix runtime error.
+2. **TASK-136:** Added SquadComparisonCard renderer for output_type "squad_comparison" — displays squad metrics comparison and per-team player stats tables; wired into FunctionRenderer and SkeletonLoader.
+3. **TASK-135:** Slimmed compare_squads to squad-metrics only — removed tactical matrix and matchup computation from get_squad_comparison_data; deleted GlobalCompareEnvelope serialization layer; output_type set to "squad_comparison".
+4. **TASK-134:** Squad Battle now uses a single combobox search field per team panel, with `AccessibleCombobox` owning all player filtering and `SquadBuilder.tsx` no longer duplicating that search state.
+5. **TASK-133:** `get_last_match_xi()` now supplements short `is_playing_xi=True` squads with remaining same-match rows ordered by `player_order`, preventing compare-squad XI padding from injecting historical ghost players while keeping the balls fallback unchanged.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*
