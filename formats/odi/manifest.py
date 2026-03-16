@@ -447,7 +447,7 @@ MANIFEST = {
                     "label": "Tactical Matrix",
                     "icon": "grid",
                     "engine_class": "PlayerEngine",
-                    "engine_method": "analyze_squad_types",
+                    "engine_method": "analyze_dual_squad_matrix",
                     "required_context": ["team_a", "team_b"],
                     "extra_inputs": {"squad_builder": True},
                     "output_type": "table",
@@ -582,6 +582,7 @@ ENGINE_LITERAL_REGISTRY += [
     "avg_runs",
     "is_dismissal",
     "Other",
+    "Team",
 ]
 
 # Phase 11.2: Service literal registry for compliance-bouncer
@@ -599,6 +600,8 @@ SERVICE_LITERAL_REGISTRY += [
     'form_data',
     # form_guide: semantic key used by format_form_guide() and builder-to-formatter handoff
     'form_guide',
+    'analyze_squad_types',
+    'analyze_dual_squad_matrix',
     # FormSequencePayload keys (core/interfaces/team_types.py: FormSequencePayload)
     'results',
     'missing_token',

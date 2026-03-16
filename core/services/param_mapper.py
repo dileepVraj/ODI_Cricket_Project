@@ -50,6 +50,13 @@ class ParamMapperService:
             "away_xi": "opposition_bowlers",
             "years": "years",
         },
+        "analyze_dual_squad_matrix": {
+            "team_a": "team_a_name",
+            "team_b": "team_b_name",
+            "home_xi": "team_a_players",
+            "away_xi": "team_b_players",
+            "years": "years",
+        },
         "analyze_team_form": {
             "team_a": "team_name",
             "team_b": "opp_team",

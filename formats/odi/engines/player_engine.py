@@ -499,6 +499,34 @@ class PlayerEngine(IPlayerEngine):
 
         return table_data
 
+    def analyze_dual_squad_matrix(
+        self,
+        team_a_name: str,
+        team_a_players: List[str],
+        team_b_name: str,
+        team_b_players: List[str],
+        years: Optional[int] = None,
+        *,
+        context_df: pd.DataFrame,
+    ) -> List[DisplayRecord]:
+        rows_a = self.analyze_squad_types(
+            team_name=team_a_name,
+            players=team_a_players,
+            opposition_bowlers=team_b_players,
+            years=years,
+            context_df=context_df,
+        )
+        rows_b = self.analyze_squad_types(
+            team_name=team_b_name,
+            players=team_b_players,
+            opposition_bowlers=team_a_players,
+            years=years,
+            context_df=context_df,
+        )
+        team_a_rows: List[DisplayRecord] = [{"Team": team_a_name, **row} for row in rows_a]
+        team_b_rows: List[DisplayRecord] = [{"Team": team_b_name, **row} for row in rows_b]
+        return team_a_rows + team_b_rows
+
 
     # --- HELPERS ---
 

@@ -197,6 +197,14 @@ def _inject_player_engine_context(
         params["context_df"] = _build_recent_player_context(analyzer, players, params.get("years"))
         return params
 
+    if method in {"analyze_dual_squad_matrix"}:
+        players = (
+            list(params.get("team_a_players") or [])
+            + list(params.get("team_b_players") or [])
+        )
+        params["context_df"] = _build_recent_player_context(analyzer, players, params.get("years"))
+        return params
+
     if method in {"get_matchups"}:
         players = []
         batter = params.get("batter")
@@ -222,15 +230,19 @@ def _inject_player_engine_context(
         ):
             dal = getattr(analyzer, "dal", None)
             if dal is not None:
-                country_matches = dal.get_matches(country=country)
-                if not country_matches.empty and "match_id" in country_matches.columns:
-                    valid_ids: set[str] = set(country_matches["match_id"].astype(str))
-                    raw_balls_df = raw_balls_df[
-                        raw_balls_df["match_id"].astype(str).isin(valid_ids)
-                    ].copy()
+                try:
+                    country_matches = dal.get_matches(country=country)
+                    if not country_matches.empty and "match_id" in country_matches.columns:
+                        valid_ids: set[str] = set(country_matches["match_id"].astype(str))
+                        raw_balls_df = raw_balls_df[
+                            raw_balls_df["match_id"].astype(str).isin(valid_ids)
+                        ].copy()
+                except Exception:
+                    pass  # country column absent from matches table — skip filter
         params["country"] = country
         params["ground"] = params.get("ground") or params.get("venue_id")
         params["raw_balls_df"] = raw_balls_df
+        params.pop("country_name", None)
         return params
 
     if method == "get_player_profile":
