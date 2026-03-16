@@ -9,7 +9,6 @@ from core.interfaces.team_types import (
     TeamMetricsPayload,
     MatrixReportRow,
     PlayerStatRow,
-    SquadComparisonPayload,
     TeamFormRow,
 )
 
@@ -335,41 +334,6 @@ class ReportBuilder:
                 continue
             indexed[player_name] = row
         return indexed
-
-    @staticmethod
-    def _build_squad_comparison_payload(
-        team_a_name: str,
-        team_b_name: str,
-        squad_a: list[str],
-        squad_b: list[str],
-        matrix_a: list[MatrixReportRow],
-        matrix_b: list[MatrixReportRow],
-        matchups_a: dict[str, list[ComparisonReportRow]],
-        matchups_b: dict[str, list[ComparisonReportRow]],
-        player_stats_a: list[PlayerStatRow],
-        player_stats_b: list[PlayerStatRow],
-    ) -> SquadComparisonPayload:
-        """
-        Build the regression payload contract used by compare_squads.
-        """
-        return {
-            "SquadComparison": {
-                team_a_name: squad_a,
-                team_b_name: squad_b,
-            },
-            "TacticalMatrix": {
-                team_a_name: matrix_a,
-                team_b_name: matrix_b,
-            },
-            "Matchups": {
-                team_a_name: matchups_a,
-                team_b_name: matchups_b,
-            },
-            "PlayerStats": {
-                team_a_name: ReportBuilder._index_player_stats(player_stats_a),
-                team_b_name: ReportBuilder._index_player_stats(player_stats_b),
-            },
-        }
 
     @staticmethod
     def _build_team_form_records(recent: pd.DataFrame, team_name: str) -> list[TeamFormRow]:

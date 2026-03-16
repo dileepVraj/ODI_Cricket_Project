@@ -421,11 +421,6 @@ def execute_function(
     schematized = SerializationService.wrap_as_schema(result)
     serialized = serialize_engine_output(schematized)
 
-    # 6a. Squad comparison schema parity:
-    # Keep Truth-Bridge nested payload contract under `Payload`.
-    if engine_method_name == "compare_squads" and isinstance(serialized, dict):
-        serialized = SerializationService.serialize_compare_squads_payload(serialized)
-
     # 6b. Player profile venue fallback:
     # Some datasets do not carry `at_venue` context in player_df, so engine returns
     # venue_stats=None even when venue_id is provided. Build venue batting stats

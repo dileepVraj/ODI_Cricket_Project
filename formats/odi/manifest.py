@@ -173,6 +173,7 @@ MANIFEST = {
     "output_types": [
         "report",            # Key-value stat cards (ReportCard)
         "table",             # Sortable data table (DataTable)
+        "squad_comparison",  # Squad-vs-squad overview renderer
         "comparison_table",  # Side-by-side team comparison (ComparisonTable)
         "matrix_table",      # Opponent-per-row dominance matrix (MatrixTable)
         "form_table",        # Recent form with emoji indicators (FormTable)
@@ -439,7 +440,7 @@ MANIFEST = {
                     "engine_method": "compare_squads",
                     "required_context": ["venue", "team_a", "team_b"],
                     "extra_inputs": {"squad_builder": True},
-                    "output_type": "table",
+                    "output_type": "squad_comparison",
                 },
                 {
                     "key": "tactical_matrix",

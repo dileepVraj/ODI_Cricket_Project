@@ -6,12 +6,9 @@ from core.interfaces.team_types import (
     ComparisonReportRow,
     DataclassProtocol,
     EnrichablePayload,
-    GlobalCompareEnvelope,
     MatrixReportRow,
-    PlayerStatRow,
     PydanticProtocol,
     SerializedEnvelope,
-    SquadComparisonPayload,
     TeamFormRow,
 )
 
@@ -56,101 +53,6 @@ class SerializationService:
             return [cls.to_plain_data(item) for item in data]
 
         return data
-
-    @classmethod
-    def _index_player_rows(cls, rows: list[PlayerStatRow]) -> dict[str, PlayerStatRow]:
-        """
-        Convert list-based player rows into a player-keyed dictionary.
-        """
-        if not isinstance(rows, list):
-            return {}
-
-        indexed: dict[str, PlayerStatRow] = {}
-        for row in rows:
-            if not isinstance(row, dict):
-                continue
-            player_name = str(row.get("Player") or "").strip()
-            if player_name:
-                indexed[player_name] = row
-        return indexed
-
-    @classmethod
-    def _payload_key(cls) -> str:
-        player_key = "player_stats_a"
-        model_key = "model_dump"
-        years_key = "years"
-        return (
-            player_key[0].upper()
-            + player_key[2]
-            + years_key[0]
-            + player_key[1]
-            + model_key[1]
-            + player_key[2]
-            + model_key[2]
-        )
-
-    @classmethod
-    def serialize_compare_squads_payload(cls, serialized: SquadComparisonPayload) -> GlobalCompareEnvelope:
-        """
-        Build the Truth-Bridge aligned compare_squads payload envelope.
-        """
-        payload_key = cls._payload_key()
-        payload = serialized.get(payload_key)
-        if isinstance(payload, dict):
-            return {
-                payload_key: {
-                    "SquadComparison": payload.get("SquadComparison", {}),
-                    "TacticalMatrix": payload.get("TacticalMatrix", {}),
-                    "Matchups": payload.get("Matchups", {}),
-                    "PlayerStats": payload.get("PlayerStats", {}),
-                }
-            }
-
-        team_a = str(serialized.get("team_a_name") or "team_a_name")
-        team_b = str(serialized.get("team_b_name") or "team_b_name")
-
-        suffix_a = str("metrics_a")[-1]
-        suffix_b = str("metrics_b")[-1]
-        matrix_by_team = {suffix_a: [], suffix_b: []}
-        matchups_by_team = {suffix_a: {}, suffix_b: {}}
-
-        for key, value in serialized.items():
-            if key in {"metrics_a", "metrics_b", "player_stats_a", "player_stats_b"}:
-                continue
-            if not isinstance(key, str) or not key:
-                continue
-
-            key_suffix = key[-1]
-            if key_suffix not in {suffix_a, suffix_b}:
-                continue
-
-            if isinstance(value, list):
-                matrix_by_team[key_suffix] = value
-                continue
-
-            if isinstance(value, dict):
-                matchups_by_team[key_suffix] = value
-
-        return {
-            payload_key: {
-                "SquadComparison": {
-                    team_a: serialized.get("metrics_a"),
-                    team_b: serialized.get("metrics_b"),
-                },
-                "TacticalMatrix": {
-                    team_a: matrix_by_team[suffix_a],
-                    team_b: matrix_by_team[suffix_b],
-                },
-                "Matchups": {
-                    team_a: matchups_by_team[suffix_a],
-                    team_b: matchups_by_team[suffix_b],
-                },
-                "PlayerStats": {
-                    team_a: cls._index_player_rows(serialized.get("player_stats_a")),
-                    team_b: cls._index_player_rows(serialized.get("player_stats_b")),
-                },
-            }
-        }
 
     @classmethod
     def serialize_dataframe_records(

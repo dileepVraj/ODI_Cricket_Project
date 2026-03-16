@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
+from typing import List, Optional
 from dataclasses import dataclass, field
 import pandas as pd
 from core.interfaces.team_types import TacticalRecorderPort, DisplayRecord
@@ -93,10 +93,6 @@ class SquadComparisonData:
     metrics_b: SquadMetrics
     player_stats_a: List[DisplayRecord]
     player_stats_b: List[DisplayRecord]
-    tactical_matrix_a: List[DisplayRecord]
-    tactical_matrix_b: List[DisplayRecord]
-    matchups_a: Dict[str, List[DisplayRecord]]
-    matchups_b: Dict[str, List[DisplayRecord]]
     venue_id: str
     years: int
 

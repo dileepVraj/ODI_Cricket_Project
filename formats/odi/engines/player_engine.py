@@ -5,7 +5,6 @@ from config.shared.venues import get_venue_aliases
 import re
 from core.calculators import MatchupEngine
 from core.exceptions import ConfigurationError
-from core.services.report_builder import ReportBuilder
 from core.services.report_formatter import ReportFormatter
 from core.services.squad_service import SquadService
 from core.interfaces.player_interface import (
@@ -390,26 +389,6 @@ class PlayerEngine(IPlayerEngine):
         player_stats_a = ReportFormatter.format_squad_player_stats(team_a_bundle["player_stats"])
         player_stats_b = ReportFormatter.format_squad_player_stats(team_b_bundle["player_stats"])
 
-        # 4. TACTICAL MATRIX
-        matrix_a = self.analyze_squad_types(
-            team_a_name,
-            team_a_players,
-            team_b_players,
-            years_back,
-            context_df=squad_context_df,
-        )
-        matrix_b = self.analyze_squad_types(
-            team_b_name,
-            team_b_players,
-            team_a_players,
-            years_back,
-            context_df=squad_context_df,
-        )
-
-        # 5. MATCHUPS
-        matchups_a = {p: self.get_matchups(p, team_b_players, context_df=squad_context_df) for p in team_a_players}
-        matchups_b = {p: self.get_matchups(p, team_a_players, context_df=squad_context_df) for p in team_b_players}
-
         return SquadComparisonData(
             team_a_name=team_a_name,
             team_b_name=team_b_name,
@@ -417,10 +396,6 @@ class PlayerEngine(IPlayerEngine):
             metrics_b=metrics_b,
             player_stats_a=player_stats_a,
             player_stats_b=player_stats_b,
-            tactical_matrix_a=matrix_a,
-            tactical_matrix_b=matrix_b,
-            matchups_a=matchups_a,
-            matchups_b=matchups_b,
             venue_id=venue_id,
             years=years_back
         )
@@ -670,18 +645,32 @@ class PlayerEngine(IPlayerEngine):
             m_data = self.get_matchups(p, team_a_players, context_df=squad_context_df)
             if m_data: matchups_b[p] = m_data
 
-        return ReportBuilder._build_squad_comparison_payload(
-            team_a_name=team_a_name,
-            team_b_name=team_b_name,
-            squad_a=squad_a,
-            squad_b=squad_b,
-            matrix_a=matrix_a,
-            matrix_b=matrix_b,
-            matchups_a=matchups_a,
-            matchups_b=matchups_b,
-            player_stats_a=ReportFormatter.format_squad_player_stats(team_a_bundle["player_stats"]),
-            player_stats_b=ReportFormatter.format_squad_player_stats(team_b_bundle["player_stats"]),
-        )
+        return {
+            "SquadComparison": {
+                team_a_name: squad_a,
+                team_b_name: squad_b,
+            },
+            "TacticalMatrix": {
+                team_a_name: matrix_a,
+                team_b_name: matrix_b,
+            },
+            "Matchups": {
+                team_a_name: matchups_a,
+                team_b_name: matchups_b,
+            },
+            "PlayerStats": {
+                team_a_name: {
+                    str(row.get("Player", "")).strip(): row
+                    for row in ReportFormatter.format_squad_player_stats(team_a_bundle["player_stats"])
+                    if isinstance(row, dict) and str(row.get("Player", "")).strip()
+                },
+                team_b_name: {
+                    str(row.get("Player", "")).strip(): row
+                    for row in ReportFormatter.format_squad_player_stats(team_b_bundle["player_stats"])
+                    if isinstance(row, dict) and str(row.get("Player", "")).strip()
+                },
+            },
+        }
     
     def _get_batting_milestones(self, df: pd.DataFrame) -> Tuple[int, int, int]:
         if df.empty: return 0, 0, 0

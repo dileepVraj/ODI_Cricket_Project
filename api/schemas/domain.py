@@ -79,10 +79,6 @@ class SquadComparisonDataSchema(BaseModel):
     metrics_b: SquadMetricsSchema
     player_stats_a: List[Dict[str, JsonValue]]
     player_stats_b: List[Dict[str, JsonValue]]
-    tactical_matrix_a: List[Dict[str, JsonValue]]
-    tactical_matrix_b: List[Dict[str, JsonValue]]
-    matchups_a: Dict[str, List[Dict[str, JsonValue]]]
-    matchups_b: Dict[str, List[Dict[str, JsonValue]]]
     venue_id: str
     years: int
 
