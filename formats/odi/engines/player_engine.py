@@ -232,6 +232,7 @@ class PlayerEngine(IPlayerEngine):
         pre-fetched match/ball data.
         """
         opponent_norm = str(opponent).strip() if opponent else ""
+        last_xi_match_limit = int(self.rules["player_rules"]["last_xi_match_limit"])
 
         # 1. Try Squads DB First
         if not self.squads_df.empty:
@@ -245,8 +246,6 @@ class PlayerEngine(IPlayerEngine):
                 dates = team_rows.sort_values('date', ascending=False)
                 last_match_id = str(dates.iloc[0]['match_id'])
                 last_match_rows = team_rows[team_rows['match_id'] == last_match_id]
-                if 'is_playing_xi' in last_match_rows.columns:
-                    last_match_rows = last_match_rows[last_match_rows['is_playing_xi'] == True]
                 player_sequence_columns = [
                     column_name
                     for column_name in last_match_rows.columns
@@ -254,6 +253,22 @@ class PlayerEngine(IPlayerEngine):
                     and column_name.startswith('player')
                     and pd.api.types.is_numeric_dtype(last_match_rows[column_name])
                 ]
+                if 'is_playing_xi' in last_match_rows.columns:
+                    confirmed_xi_rows = last_match_rows[last_match_rows['is_playing_xi'] == True]
+                    if len(confirmed_xi_rows) < last_xi_match_limit:
+                        supplemental_rows = last_match_rows[
+                            ~last_match_rows['player'].isin(confirmed_xi_rows['player'])
+                        ]
+                        if player_sequence_columns:
+                            supplemental_rows = supplemental_rows.sort_values(
+                                player_sequence_columns[0]
+                            )
+                        supplement_count = last_xi_match_limit - len(confirmed_xi_rows)
+                        last_match_rows = pd.concat(
+                            [confirmed_xi_rows, supplemental_rows.head(supplement_count)]
+                        )
+                    else:
+                        last_match_rows = confirmed_xi_rows
                 if player_sequence_columns:
                     ordered_rows = last_match_rows.sort_values(player_sequence_columns[0])
                     return ordered_rows['player'].dropna().tolist()
