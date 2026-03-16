@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-136 - Add SquadComparisonCard renderer for squad_comparison output type - CLOSED 2026-03-16
+  Added `frontend/components/renderers/SquadComparisonCard.tsx`, wired
+  `squad_comparison` into `FunctionRenderer.tsx` and `SkeletonLoader.tsx`,
+  and renders slim compare-squads payloads as squad metrics plus per-team
+  player stats tables. Gates F1/F2/F3/5/6 PASS, bouncer PASS.
+
 - TASK-135 - Slim compare_squads to squad-metrics only - CLOSED 2026-03-16
   `compare_squads` now returns the slim Tab 0 `SquadComparisonData`
   payload only, `api/main.py` no longer wraps it in the legacy

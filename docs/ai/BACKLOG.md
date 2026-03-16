@@ -32,6 +32,29 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-136 - Add SquadComparisonCard renderer for squad_comparison output type
+**Type:** frontend-new-component
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-135
+**Created:** 2026-03-16
+**Status:** CLOSED - 2026-03-16
+
+### Description
+`compare_squads` now renders through a dedicated `SquadComparisonCard`
+renderer that consumes the slim squad-comparison payload, displays the
+seven squad metrics for both teams, and shows per-team player stats
+tables via the existing `DataTable` component.
+
+### Acceptance Criteria
+AC-1: `frontend/components/renderers/SquadComparisonCard.tsx` exists and safely extracts payload fields.
+AC-2: Invalid or empty squad-comparison payloads render `EmptyState` without crashing.
+AC-3: All 7 squad metrics render for both teams with human-readable labels.
+AC-4: Player stats for both teams render via `DataTable`.
+AC-5: `FunctionRenderer.tsx` routes `output_type: "squad_comparison"` to the new renderer.
+AC-6: `SkeletonLoader.tsx` maps `squad_comparison` to `ReportSkeleton`.
+AC-7: Gates F1/F2/F3/5/6 pass and the bouncer matches baseline.
+
 ## TASK-135 - Slim compare_squads to squad-metrics only
 **Type:** refactor
 **Scope:** backend
