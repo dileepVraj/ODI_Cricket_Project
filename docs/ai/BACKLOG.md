@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-15
+**Last Updated:** 2026-03-16
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,30 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-132 - Fix loadSquad — h2h filtering and batting order for compare_squads XI init
+**Type:** bug-fix
+**Scope:** both
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-16
+**Status:** CLOSED - 2026-03-16
+
+### Description
+The Squad Battle `Load Squad` flow now resolves each XI from the latest
+head-to-head match between the selected teams and preserves the batting order
+from that match instead of alphabetically sorting players.
+
+### Acceptance Criteria
+AC-1: `get_last_match_xi()` accepts an optional opponent and filters squads to H2H match IDs.
+AC-2: Squads data returns players in `player_order`, with no alphabetical `sorted()` fallback.
+AC-3: Balls fallback filters by opponent and preserves first-appearance batting order.
+AC-4: `get_players()` accepts/passes optional opponent through DAL and engine calls.
+AC-5: `fetchPlayers()` forwards optional opponent query params.
+AC-6: `SquadBuilder.tsx` passes each panel's counterpart team as opponent.
+AC-7: Existing no-opponent behaviour remains unchanged.
+AC-8: No `.iterrows()` / `.itertuples()` introduced.
+AC-9: Modified Python functions remain fully typed.
+
 ## TASK-131 - SRP refactor of PlayerProfileCard.tsx and _view dispatch
 **Type:** refactor
 **Scope:** frontend
@@ -1660,6 +1684,6 @@ Priority: High — will cause crashes when API runs continuously in Phase 12
 
 ---
 
-*End of BACKLOG.md - Last Updated 2026-03-15*
+*End of BACKLOG.md - Last Updated 2026-03-16*
 *For current session state, see docs/ai/SESSION_STATE.md*
 *For permanent project knowledge, see docs/ai/PROJECT_CONTEXT.md*

@@ -1,5 +1,5 @@
 # Session State
-**Last Updated:** 2026-03-15
+**Last Updated:** 2026-03-16
 **Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
@@ -19,6 +19,13 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+
+- TASK-132 - Fix loadSquad h2h XI initialisation and batting-order preservation - CLOSED 2026-03-16
+  `PlayerEngine.get_last_match_xi()` now accepts `opponent`, filters squads and
+  fallback match history to head-to-head matches, preserves `player_order` /
+  first-appearance batting order, and the API/frontend load-squad plumbing now
+  forwards the counterpart team through `get_players()` and `fetchPlayers()`.
+  Gates 2/3/F1/F2/F3/5/6 PASS, bouncer PASS.
 
 - TASK-131 - SRP refactor of PlayerProfileCard.tsx and _view dispatch - CLOSED 2026-03-15
   `PlayerProfileCard.tsx` now renders the profile-only path, shared intel display
