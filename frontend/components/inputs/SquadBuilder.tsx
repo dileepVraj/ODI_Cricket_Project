@@ -29,11 +29,8 @@ interface SquadPanelControllerArgs {
 
 interface SquadPanelController {
     availablePlayers: string[];
-    filteredPlayers: string[];
     isLoadingPlayers: boolean;
     loadError: string | null;
-    searchTerm: string;
-    setSearchTerm: (value: string) => void;
     addPlayer: (player: string) => void;
     removePlayer: (player: string) => void;
     clearAll: () => void;
@@ -48,7 +45,6 @@ function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelCont
     const { formatKey, team, opponent, maxPlayers, selectedPlayers, onPlayersChange } = args;
     const [availablePlayers, setAvailablePlayers] = useState<string[]>([]);
     const [loadError, setLoadError] = useState<string | null>(null);
-    const [searchTerm, setSearchTerm] = useState("");
     const [isLoadingPlayers, setIsLoadingPlayers] = useState(false);
     const validTeam = isValidTeam(team);
 
@@ -56,7 +52,6 @@ function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelCont
         if (!validTeam) {
             setAvailablePlayers([]);
             setLoadError(null);
-            setSearchTerm("");
             return;
         }
 
@@ -89,19 +84,12 @@ function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelCont
         };
     }, [formatKey, team, validTeam]);
 
-    const filteredPlayers = availablePlayers.filter(
-        (player) =>
-            !selectedPlayers.includes(player) &&
-            player.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
     const addPlayer = useCallback((player: string) => {
         if (selectedPlayers.length >= maxPlayers || selectedPlayers.includes(player)) {
             return;
         }
 
         onPlayersChange([...selectedPlayers, player]);
-        setSearchTerm("");
     }, [maxPlayers, onPlayersChange, selectedPlayers]);
 
     const removePlayer = useCallback((player: string) => {
@@ -110,7 +98,6 @@ function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelCont
 
     const clearAll = useCallback(() => {
         onPlayersChange([]);
-        setSearchTerm("");
     }, [onPlayersChange]);
 
     const loadSquad = useCallback(async () => {
@@ -134,11 +121,8 @@ function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelCont
 
     return {
         availablePlayers,
-        filteredPlayers,
         isLoadingPlayers,
         loadError,
-        searchTerm,
-        setSearchTerm,
         addPlayer,
         removePlayer,
         clearAll,
@@ -229,10 +213,7 @@ export default function SquadBuilder({
                                     accentVar={panel.accentVar}
                                     isLoadingPlayers={panel.controller.isLoadingPlayers}
                                     isFull={isFull}
-                                    availablePlayerCount={panel.controller.availablePlayers.length}
-                                    searchTerm={panel.controller.searchTerm}
-                                    filteredPlayers={panel.controller.filteredPlayers}
-                                    onSearchTermChange={panel.controller.setSearchTerm}
+                                    players={panel.controller.availablePlayers}
                                     onSelectPlayer={panel.controller.addPlayer}
                                 />
                                 <PlayerList

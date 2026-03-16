@@ -1,6 +1,5 @@
 "use client";
 
-import { Search } from "lucide-react";
 import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
 
 interface PlayerSearchProps {
@@ -9,10 +8,7 @@ interface PlayerSearchProps {
     accentVar: string;
     isLoadingPlayers: boolean;
     isFull: boolean;
-    availablePlayerCount: number;
-    searchTerm: string;
-    filteredPlayers: string[];
-    onSearchTermChange: (value: string) => void;
+    players: string[];
     onSelectPlayer: (player: string) => void;
 }
 
@@ -20,7 +16,7 @@ function resolvePlaceholder(args: {
     contextLabel: string;
     isFull: boolean;
     isLoadingPlayers: boolean;
-    filteredPlayers: string[];
+    players: string[];
 }): string {
     if (args.isLoadingPlayers) {
         return "Loading players...";
@@ -28,52 +24,37 @@ function resolvePlaceholder(args: {
     if (args.isFull) {
         return "XI complete";
     }
-    if (args.filteredPlayers.length === 0) {
+    if (args.players.length === 0) {
         return `No ${args.contextLabel} matches`;
     }
     return `Choose ${args.contextLabel} player`;
 }
 
-export default function PlayerSearch({
-    contextLabel,
-    team,
-    accentVar,
-    isLoadingPlayers,
-    isFull,
-    availablePlayerCount,
-    searchTerm,
-    filteredPlayers,
-    onSearchTermChange,
-    onSelectPlayer,
-}: PlayerSearchProps) {
+export default function PlayerSearch(props: PlayerSearchProps) {
+    const {
+        contextLabel,
+        isLoadingPlayers,
+        isFull,
+        players,
+        onSelectPlayer,
+    } = props;
+
     if (isFull) {
         return null;
     }
 
-    const options = filteredPlayers.slice(0, 50).map((player) => ({
+    const options = players.map((player) => ({
         label: player,
         value: player,
     }));
     const helperText = isLoadingPlayers
         ? `Loading ${contextLabel.toLowerCase()} players...`
-        : filteredPlayers.length === 0 && searchTerm
-            ? "No players match this search."
-            : `${filteredPlayers.length} of ${availablePlayerCount} players available`;
+        : players.length === 0
+            ? "No players available"
+            : `${players.length} players available`;
 
     return (
         <div className="[display:flex] [flex-direction:column] [gap:10px] [margin-bottom:12px]">
-            <div className="[display:flex] [align-items:center] [gap:8px]">
-                <Search size={14} className={`[color:${accentVar}] [flex-shrink:0]`} />
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(event) => onSearchTermChange(event.target.value)}
-                    placeholder={`Filter ${team} players`}
-                    className="context-input"
-                    aria-label={`Filter ${team} player options`}
-                />
-            </div>
-
             <AccessibleCombobox
                 value=""
                 onChange={onSelectPlayer}
@@ -82,7 +63,7 @@ export default function PlayerSearch({
                     contextLabel,
                     isFull,
                     isLoadingPlayers,
-                    filteredPlayers,
+                    players,
                 })}
             />
 
