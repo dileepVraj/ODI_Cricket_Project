@@ -32,6 +32,27 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-133 - Supplement short last-match XI with same-match non-XI rows
+**Type:** bug-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-16
+**Status:** CLOSED - 2026-03-16
+
+### Description
+`get_last_match_xi()` now supplements a short `is_playing_xi=True` result with
+remaining same-match squad rows ordered by `player_order`, preventing the
+compare-squads XI loader from padding with historical ghost players.
+
+### Acceptance Criteria
+AC-1: When `is_playing_xi=True` yields fewer than 11 players, supplement from same-match `is_playing_xi=False` rows.
+AC-2: When `is_playing_xi=True` already yields 11 or more players, behaviour remains unchanged.
+AC-3: Supplement priority remains confirmed XI rows first, then same-match fallback rows by `player_order`.
+AC-4: Method signature and `List[str]` return contract remain unchanged.
+AC-5: Balls-data fallback path remains unchanged.
+AC-6: `compare_squads` truth-bridge suite passes with no regressions.
+
 ## TASK-132 - Fix loadSquad — h2h filtering and batting order for compare_squads XI init
 **Type:** bug-fix
 **Scope:** both

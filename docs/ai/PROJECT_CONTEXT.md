@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-132:** `get_last_match_xi()` now accepts an `opponent` parameter so compare-squad XI loading resolves the latest head-to-head match, preserves `player_order` / first-appearance batting order, and receives the counterpart team through the API/frontend fetch path.
-2. **TASK-131:** Player profile rendering is now split by responsibility: `PlayerProfileCard.tsx` owns the default profile view, dedicated batting/bowling intel renderers own their respective `_view` payloads, and `FunctionRenderer.tsx` is the sole view dispatcher.
-3. **TASK-130:** Frontend Paradigm Sentinel now treats `data['_view']` reads in leaf renderer components as an SRP violation, reserving view dispatch for `FunctionRenderer.tsx` and intentionally surfacing `PlayerProfileCard.tsx` until TASK-131.
-4. **TASK-129:** Player profile now adds Bowling Intel as a third execute path, with venue-aware phase bowling metrics and parsed last-10 wicket chips flowing from engine/interface/schema to the renderer.
-5. **TASK-128:** Player profile phase runs now derive from venue-filtered `raw_bat_ground`; redundant `phase_runs_raw` contract removed from the engine, interface, and schema layers.
+1. **TASK-133:** `get_last_match_xi()` now supplements short `is_playing_xi=True` squads with remaining same-match rows ordered by `player_order`, preventing compare-squad XI padding from injecting historical ghost players while keeping the balls fallback unchanged.
+2. **TASK-132:** `get_last_match_xi()` now accepts an `opponent` parameter so compare-squad XI loading resolves the latest head-to-head match, preserves `player_order` / first-appearance batting order, and receives the counterpart team through the API/frontend fetch path.
+3. **TASK-131:** Player profile rendering is now split by responsibility: `PlayerProfileCard.tsx` owns the default profile view, dedicated batting/bowling intel renderers own their respective `_view` payloads, and `FunctionRenderer.tsx` is the sole view dispatcher.
+4. **TASK-130:** Frontend Paradigm Sentinel now treats `data['_view']` reads in leaf renderer components as an SRP violation, reserving view dispatch for `FunctionRenderer.tsx` and intentionally surfacing `PlayerProfileCard.tsx` until TASK-131.
+5. **TASK-129:** Player profile now adds Bowling Intel as a third execute path, with venue-aware phase bowling metrics and parsed last-10 wicket chips flowing from engine/interface/schema to the renderer.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*

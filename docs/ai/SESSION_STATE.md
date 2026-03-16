@@ -20,6 +20,12 @@ None.
 
 ## Last Completed
 
+- TASK-133 - Fix get_last_match_xi same-match XI supplementation - CLOSED 2026-03-16
+  `PlayerEngine.get_last_match_xi()` now supplements short `is_playing_xi=True`
+  squad results with remaining same-match team rows ordered by `player_order`,
+  leaving the balls-data fallback untouched and preventing ghost-player XI
+  padding. Gates 2/3/5/6 PASS, compare_squads truth-bridge PASS, bouncer PASS.
+
 - TASK-132 - Fix loadSquad h2h XI initialisation and batting-order preservation - CLOSED 2026-03-16
   `PlayerEngine.get_last_match_xi()` now accepts `opponent`, filters squads and
   fallback match history to head-to-head matches, preserves `player_order` /
