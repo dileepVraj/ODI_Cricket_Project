@@ -32,6 +32,27 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-141 - Rewrite MatchupTable as batter-grouped card layout
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-18
+**Status:** CLOSED - 2026-03-18
+
+### Description
+Rewrite MatchupTable.tsx from a flat table into a card-based layout grouped by
+batter. Each batter section is collapsible (first section expanded by default).
+Matchup cards show batter/bowler, style tags, 5-stat row, advantage bar, and
+BUNNY alert. No domain logic in the component.
+
+### Acceptance Criteria
+AC-1: MatchupTable renders matchup rows grouped by batter.
+AC-2: Each batter section has a collapsible header.
+AC-3: Advantage bar color and width are driven EXCLUSIVELY by pre-computed cell_tones.SR.
+AC-4: BUNNY tag is shown ONLY when highlight_flags.bunny_alert === true.
+AC-5: Gates F1/F2/F3 and Gate 6 PASS.
+
 ## TASK-140 - Gemini CLI MCP config created â€” filesystem, context7, playwright, sequential-thinking registered in .gemini/settings.json
 **Type:** infra
 **Scope:** tooling

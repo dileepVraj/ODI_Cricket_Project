@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-141 - Rewrite MatchupTable as batter-grouped card layout - CLOSED 2026-03-18
+  Rewrote MatchupTable.tsx into a card-based layout grouped by batter.
+  Added collapsible headers, advantage bars, and BUNNY tags driven by API payload.
+  Verified compliance via Gates F1/F2/F3 and compliance_bouncer. PASS.
+
 - TASK-140 - Gemini CLI MCP config created â€” CLOSED 2026-03-18
   Created `.gemini/settings.json` with verbatim configurations for
   `filesystem`, `context7`, `playwright`, and `sequential-thinking` MCP servers

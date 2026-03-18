@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-140:** Gemini CLI MCP config created â€” filesystem, context7, playwright, sequential-thinking registered in .gemini/settings.json
-2. **TASK-139:** get_matchups dispatches to bulk team analysis when no batter selected; player_name input made optional in Squad Battle matchups.
-3. **TASK-138:** Added analyze_dual_squad_matrix to PlayerEngine so Tactical Matrix returns both team rows via a single engine call.
-4. **TASK-137:** Suppress team_b->opp_team global mapping for analyze_squad_types in ParamMapperService to fix Tactical Matrix runtime error.
-5. **TASK-136:** Added SquadComparisonCard renderer for output_type "squad_comparison" - displays squad metrics comparison and per-team player stats tables; wired into FunctionRenderer and SkeletonLoader.
+1. **TASK-141:** Rewrite MatchupTable as batter-grouped card layout; advantage bar and bunny tags driven by pre-computed API signals.
+2. **TASK-140:** Gemini CLI MCP config created â€” filesystem, context7, playwright, sequential-thinking registered in .gemini/settings.json
+3. **TASK-139:** get_matchups dispatches to bulk team analysis when no batter selected; player_name input made optional in Squad Battle matchups.
+4. **TASK-138:** Added analyze_dual_squad_matrix to PlayerEngine so Tactical Matrix returns both team rows via a single engine call.
+5. **TASK-137:** Suppress team_b->opp_team global mapping for analyze_squad_types in ParamMapperService to fix Tactical Matrix runtime error.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*
