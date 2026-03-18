@@ -1,132 +1,221 @@
 /**
- * MatchupTable.tsx - Batter vs Bowler Grid
+ * MatchupTable.tsx - Batter-Grouped Card Layout
  *
  * Used by: matchups (output_type: "matchup_table")
  */
 "use client";
 
-import { Crosshair, AlertTriangle } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { Crosshair, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
-import { MatchupRow, toMatchupRows } from "@/lib/comparison-types";
+import { MatchupRow, toMatchupRows, ToneToken } from "@/lib/comparison-types";
 
 interface MatchupTableProps {
     data: Record<string, unknown>[];
 }
 
-const HIDDEN_COLS = new Set([
-    "MATCH_IDS",
-    "match_ids",
-    "highlight_flags",
-    "cell_tones",
-    "derived_badges",
-    "DismissalTone",
-]);
+/** @schema-exempt — UI-only grouping structure */
+interface BatterGroup {
+    batter: string;
+    rows: MatchupRow[];
+}
 
 export default function MatchupTable({ data }: MatchupTableProps) {
     if (!data || data.length === 0) {
         return <EmptyState message="No matchup data available." />;
     }
 
-    const rows = toMatchupRows(data);
-    const columns = Object.keys(rows[0]).filter((c) => !HIDDEN_COLS.has(c));
-    const hasBunnyAlert = rows.some(rowHasBunnyAlert);
+    const rows = useMemo(() => toMatchupRows(data), [data]);
+
+    const batterGroups = useMemo(() => {
+        const groups: Record<string, MatchupRow[]> = {};
+        const order: string[] = [];
+
+        rows.forEach((row) => {
+            const batter = String(row["BATTER"] ?? row["Batter"] ?? "Unknown");
+            if (!groups[batter]) {
+                groups[batter] = [];
+                order.push(batter);
+            }
+            groups[batter].push(row);
+        });
+
+        return order.map(batter => ({
+            batter,
+            rows: groups[batter]
+        }));
+    }, [rows]);
+
+    const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
+        const initial: Record<string, boolean> = {};
+        if (batterGroups.length > 0) {
+            initial[batterGroups[0].batter] = true;
+        }
+        return initial;
+    });
+
+    const toggleGroup = (batter: string) => {
+        setExpandedGroups((prev) => ({
+            ...prev,
+            [batter]: !prev[batter],
+        }));
+    };
 
     return (
-        <div>
-            <div className="[display:flex] [align-items:center] [gap:8px] [margin-bottom:12px]">
+        <div className="[display:flex] [flex-direction:column] [gap:16px]">
+            <div className="[display:flex] [align-items:center] [gap:8px] [margin-bottom:4px]">
                 <Crosshair size={16} className="[color:var(--accent-primary)]" />
                 <span className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)] [text-transform:uppercase] [letter-spacing:0.04em]">
                     Player Matchups ({rows.length} records)
                 </span>
             </div>
 
-            <div className="[overflow-x:auto]">
-                <table className="[width:100%] [border-collapse:collapse] [font-size:0.825rem]">
-                    <thead>
-                        <tr>
-                            {columns.map((col) => (
-                                <th
-                                    key={col}
-                                    className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [color:var(--text-muted)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] ${isTextCol(col) ? "[text-align:left]" : "[text-align:right]"}`}
-                                >
-                                    {col}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows.map((row, i) => {
-                            const isBunny = rowHasBunnyAlert(row);
-                            return (
-                                <tr
-                                    key={i}
-                                    className={`[border-bottom:1px_solid_var(--border-subtle)] [transition:background_var(--transition-fast)] ${isBunny ? "[background:var(--bg-elevated)] [box-shadow:inset_3px_0_0_var(--tier-danger)]" : "[background:transparent]"}`}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.background = isBunny
-                                            ? "var(--bg-hover)"
-                                            : "var(--bg-hover)";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = isBunny
-                                            ? "var(--bg-elevated)"
-                                            : "transparent";
-                                    }}
-                                >
-                                    {columns.map((col) => {
-                                        const val = row[col];
-                                        return (
-                                            <td
-                                                key={col}
-                                                className={`[padding:10px_12px] [white-space:nowrap] ${isTextCol(col) ? "[text-align:left] [font-weight:600]" : "[text-align:right] [font-weight:400] font-numeric"} ${resolveCellColor(row, col, val)}`}
-                                            >
-                                                <span className="[display:inline-flex] [align-items:center] [gap:4px]">
-                                                    {val === null || val === undefined ? "-" : String(val)}
-                                                    {(col.toLowerCase().includes("outs") || col.toLowerCase().includes("dismissal")) && isBunny && (
-                                                        <AlertTriangle size={12} className="[color:var(--tier-danger)]" />
-                                                    )}
-                                                </span>
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+            <div className="[display:flex] [flex-direction:column] [gap:12px]">
+                {batterGroups.map((group) => (
+                    <MatchupBatterGroup
+                        key={group.batter}
+                        batter={group.batter}
+                        rows={group.rows}
+                        isExpanded={!!expandedGroups[group.batter]}
+                        onToggle={() => toggleGroup(group.batter)}
+                    />
+                ))}
             </div>
+        </div>
+    );
+}
 
-            {hasBunnyAlert && (
-                <div className="[display:flex] [align-items:center] [gap:6px] [margin-top:10px] [font-size:0.75rem] [color:var(--tier-danger)]">
-                    <AlertTriangle size={12} />
-                    <span>Bunny Alert: High dismissal rate detected</span>
+function MatchupBatterGroup({
+    batter,
+    rows,
+    isExpanded,
+    onToggle
+}: {
+    batter: string;
+    rows: MatchupRow[];
+    isExpanded: boolean;
+    onToggle: () => void;
+}) {
+    return (
+        <div className="[border:1px_solid_var(--border-subtle)] [border-radius:8px] [overflow:hidden] [background:var(--bg-surface)]">
+            <button
+                onClick={onToggle}
+                className="[width:100%] [padding:12px_16px] [display:flex] [align-items:center] [justify-content:space-between] [background:var(--bg-elevated)] [transition:background_var(--transition-fast)] hover:[background:var(--bg-hover)]"
+            >
+                <div className="[display:flex] [align-items:center] [gap:8px]">
+                    {isExpanded ? <ChevronUp size={16} className="[color:var(--text-muted)]" /> : <ChevronDown size={16} className="[color:var(--text-muted)]" />}
+                    <span className="[font-weight:600] [color:var(--text-primary)] [font-size:0.9rem]">
+                        {batter}
+                    </span>
+                    <span className="[font-size:0.75rem] [color:var(--text-muted)] [font-weight:400]">
+                        [{rows.length} matchups]
+                    </span>
+                </div>
+            </button>
+
+            {isExpanded && (
+                <div className="[padding:12px] [display:flex] [flex-direction:column] [gap:12px]">
+                    {rows.map((row, i) => (
+                        <MatchupCard key={i} row={row} />
+                    ))}
                 </div>
             )}
         </div>
     );
 }
 
-function isTextCol(col: string): boolean {
-    const lc = col.toLowerCase();
-    return lc.includes("batter") || lc.includes("bowler") || lc.includes("player") ||
-        lc.includes("name") || lc.includes("type");
+function MatchupCard({ row }: { row: MatchupRow }) {
+    const batter = String(row["BATTER"] ?? row["Batter"] ?? "Unknown");
+    const bowler = String(row["BOWLER"] ?? row["Bowler"] ?? "Unknown");
+    const style = String(row["STYLE"] ?? row["Style"] ?? "");
+    const isBunny = row.highlight_flags?.bunny_alert === true;
+    const srTone = row.cell_tones?.["SR"];
+
+    const stats = [
+        { label: "RUNS", value: row["RUNS"] },
+        { label: "BALLS", value: row["BALLS"] },
+        { label: "OUTS", value: row["OUTS"] },
+        { label: "AVG", value: row["AVG"] },
+        { label: "SR", value: row["SR"] },
+    ];
+
+    const { width, colorClass } = getAdvantageProps(srTone);
+
+    return (
+        <div className="[padding:12px] [border:1px_solid_var(--border-subtle)] [border-radius:6px] [background:var(--bg-base)] [display:flex] [flex-direction:column] [gap:10px] [transition:all_var(--transition-fast)] hover:[border-color:var(--border-default)]">
+            <div className="[display:flex] [align-items:center] [justify-content:space-between] [gap:8px]">
+                <div className="[display:flex] [align-items:center] [gap:8px] [flex-wrap:wrap]">
+                    <span className="[font-size:0.85rem] [font-weight:600] [color:var(--text-primary)]">
+                        {batter} <span className="[color:var(--text-muted)] [font-weight:400] [margin:0_2px]">vs</span> {bowler}
+                    </span>
+                    {style && <StyleTag style={style} />}
+                </div>
+                {isBunny && (
+                    <div className="[display:flex] [align-items:center] [gap:4px] [padding:2px_8px] [border-radius:4px] [background:var(--bg-elevated)] [border:1px_solid_var(--tier-caution)] [color:var(--tier-caution)] [font-size:0.65rem] [font-weight:700] [text-transform:uppercase] [letter-spacing:0.05em]">
+                        <AlertTriangle size={10} />
+                        BUNNY
+                    </div>
+                )}
+            </div>
+
+            <div className="[display:grid] [grid-template-columns:repeat(5,1fr)] [gap:4px]">
+                {stats.map((s) => (
+                    <div key={s.label} className="[display:flex] [flex-direction:column] [gap:2px]">
+                        <span className="[font-size:0.6rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase]">
+                            {s.label}
+                        </span>
+                        <span className="[font-size:0.85rem] [font-weight:500] [color:var(--text-primary)] font-numeric">
+                            {s.value === null || s.value === undefined ? "-" : String(s.value)}
+                        </span>
+                    </div>
+                ))}
+            </div>
+
+            <div className="[display:flex] [flex-direction:column] [gap:4px]">
+                <div className="[width:100%] [height:4px] [background:var(--border-subtle)] [border-radius:2px] [overflow:hidden]">
+                    <div
+                        style={{ width }}
+                        className={`[height:100%] [transition:width_var(--transition-normal)] ${colorClass}`}
+                    />
+                </div>
+                <span className="[font-size:0.6rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.02em]">
+                    Advantage
+                </span>
+            </div>
+        </div>
+    );
 }
 
-function rowHasBunnyAlert(row: MatchupRow): boolean {
-    const explicit = row.highlight_flags?.bunny_alert;
-    if (typeof explicit === "boolean") return explicit;
+function StyleTag({ style }: { style: string }) {
+    const dotClass = getStyleDotClass(style);
 
-    const legacy = row["IsBunny"] ?? row["is_bunny"];
-    if (typeof legacy === "boolean") return legacy;
-    return false;
+    return (
+        <div className="[display:inline-flex] [align-items:center] [gap:6px] [padding:2px_8px] [background:var(--bg-elevated)] [border-radius:12px] [border:1px_solid_var(--border-subtle)] [font-size:0.65rem] [font-weight:600] [color:var(--text-secondary)] [text-transform:uppercase] [letter-spacing:0.03em]">
+            <div className={`[width:6px] [height:6px] [border-radius:50%] ${dotClass}`} />
+            {style}
+        </div>
+    );
 }
 
-function resolveCellColor(row: MatchupRow, col: string, val: unknown): string {
-    const tone = row.cell_tones?.[col] ?? row.cell_tones?.Outs;
-    if (tone === "elite") return "[color:var(--tier-elite)]";
-    if (tone === "strong") return "[color:var(--tier-strong)]";
-    if (tone === "caution") return "[color:var(--tier-caution)]";
-    if (tone === "danger") return "[color:var(--tier-danger)]";
-    if (tone === "muted") return "[color:var(--text-disabled)]";
-    if (val === null || val === undefined) return "[color:var(--text-disabled)]";
-    return "[color:var(--text-primary)]";
+function getStyleDotClass(style: string) {
+    if (style.includes("Leg Spin")) return "[background:var(--tier-caution)]";
+    if (style.includes("Off Spin")) return "[background:var(--accent-primary)]";
+    if (style.includes("Fast") || style.includes("Med")) return "[background:var(--tier-danger)]";
+    return "[background:var(--border-default)]";
+}
+
+function getAdvantageProps(tone: ToneToken | undefined) {
+    if (tone === "elite" || tone === "strong") {
+        return {
+            width: tone === "elite" ? "90%" : "70%",
+            colorClass: "[background:var(--accent-primary)]"
+        };
+    }
+    if (tone === "danger" || tone === "caution") {
+        return {
+            width: tone === "caution" ? "40%" : "20%",
+            colorClass: "[background:var(--tier-danger)]"
+        };
+    }
+    return { width: "50%", colorClass: "[background:var(--border-default)]" };
 }
