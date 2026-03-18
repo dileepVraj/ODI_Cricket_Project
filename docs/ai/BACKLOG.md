@@ -32,6 +32,25 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-140 - Gemini CLI MCP config created â€” filesystem, context7, playwright, sequential-thinking registered in .gemini/settings.json
+**Type:** infra
+**Scope:** tooling
+**Priority:** Medium
+**Depends On:** NONE
+**Created:** 2026-03-18
+**Status:** CLOSED - 2026-03-18
+
+### Description
+Create .gemini/settings.json to configure MCP (Model Context Protocol) servers
+for the Gemini CLI agent.
+
+### Acceptance Criteria
+AC-1: .gemini/settings.json exists and is valid JSON.
+AC-2: settings.json contains exactly 4 mcpServers entries: filesystem, context7, playwright, sequential-thinking.
+AC-3: Each server's command, args, and env values match .mcp.json exactly.
+AC-4: duckdb and github entries are NOT present in settings.json.
+AC-5: No files outside .gemini/ and workflow/ were modified.
+
 ## TASK-139 - Make Player Matchups batter optional and add bulk team matchup mode
 **Type:** new-feature
 **Scope:** both

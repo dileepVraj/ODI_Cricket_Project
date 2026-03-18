@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-140 - Gemini CLI MCP config created â€” CLOSED 2026-03-18
+  Created `.gemini/settings.json` with verbatim configurations for
+  `filesystem`, `context7`, `playwright`, and `sequential-thinking` MCP servers
+  copied from `.mcp.json`. Verified baseline and post-task bouncer PASS.
+
 - TASK-139 - Make Player Matchups batter optional and add bulk team matchup mode - CLOSED 2026-03-18
   `get_matchups()` now delegates single-player calls to `_matchup_single_batter()`
   and supports bulk home-XI analysis when no batter is selected, while the
