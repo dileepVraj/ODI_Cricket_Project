@@ -1,5 +1,5 @@
 # Session State
-**Last Updated:** 2026-03-16
+**Last Updated:** 2026-03-18
 **Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-139 - Make Player Matchups batter optional and add bulk team matchup mode - CLOSED 2026-03-18
+  `get_matchups()` now delegates single-player calls to `_matchup_single_batter()`
+  and supports bulk home-XI analysis when no batter is selected, while the
+  Squad Battle `matchups` manifest input now marks `player_name` as optional.
+
 - TASK-138 - Add dual-team Tactical Matrix wrapper in PlayerEngine - CLOSED 2026-03-16
   Added `analyze_dual_squad_matrix()` plus manifest, param-mapper, and
   context-builder wiring so Tactical Matrix now returns both home and away

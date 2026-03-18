@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-16
+**Last Updated:** 2026-03-18
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,28 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-139 - Make Player Matchups batter optional and add bulk team matchup mode
+**Type:** new-feature
+**Scope:** both
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-18
+**Status:** CLOSED - 2026-03-18
+
+### Description
+The Squad Battle Player Matchups flow now allows analysis without selecting a
+specific batter. When no batter is provided, `PlayerEngine.get_matchups()`
+fans out across the home XI's non-bowlers against the away XI attack and
+returns one combined matchup table with a leading `Batter` column.
+
+### Acceptance Criteria
+AC-1: `player_name` extra input for `matchups` is optional in `formats/odi/manifest.py`.
+AC-2: The former public matchup helper is renamed to `_matchup_single_batter()`.
+AC-3: `get_matchups()` dispatches single-batter and bulk team modes correctly.
+AC-4: `MatchupTable.tsx` needs no code change and still renders `Batter` first.
+AC-5: Gates 2/3/5/6 pass and the bouncer matches baseline.
+AC-6: Existing single-player matchup behaviour remains unchanged.
+
 ## TASK-138 - Fix Tactical Matrix to return both Home and Away team rows
 **Type:** bug-fix
 **Scope:** backend
