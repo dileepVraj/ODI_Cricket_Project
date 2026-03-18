@@ -561,24 +561,41 @@ class PlayerEngine(IPlayerEngine):
                 context_df=context_df,
             )
 
-        batting_xi: List[str] = list(home_xi or [])
-        bowling_xi: List[str] = list(away_xi or [])
-        if not batting_xi or not bowling_xi:
+        home_players: List[str] = list(home_xi or [])
+        away_players: List[str] = list(away_xi or [])
+        if not home_players or not away_players:
             return []
 
-        eligible: List[str] = [
+        eligible_home: List[str] = [
             player_name
-            for player_name in batting_xi
+            for player_name in home_players
             if self._get_player_role(player_name) != _PURE_BOWLER_ROLE
         ]
-        if not eligible:
+        eligible_away: List[str] = [
+            player_name
+            for player_name in away_players
+            if self._get_player_role(player_name) != _PURE_BOWLER_ROLE
+        ]
+        if not eligible_home and not eligible_away:
             return []
 
         combined: List[DisplayRecord] = []
-        for player_name in eligible:
+        for player_name in eligible_home:
             rows = self._matchup_single_batter(
                 player_name,
-                bowling_xi,
+                away_players,
+                home_team=home_team,
+                opp_team=opp_team,
+                home_xi=home_xi,
+                away_xi=away_xi,
+                context_df=context_df,
+            )
+            for row in rows:
+                combined.append({"Batter": player_name, **row})
+        for player_name in eligible_away:
+            rows = self._matchup_single_batter(
+                player_name,
+                home_players,
                 home_team=home_team,
                 opp_team=opp_team,
                 home_xi=home_xi,
