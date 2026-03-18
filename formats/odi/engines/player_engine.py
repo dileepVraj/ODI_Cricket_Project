@@ -38,6 +38,9 @@ _PHASE_CANONICAL: Dict[str, str] = {
 }
 
 
+_PURE_BOWLER_ROLE: str = "Bowler"
+
+
 class PlayerEngine(IPlayerEngine):
     """
     The Dugout (v6.0 - Engineering Standards Aligned).
@@ -532,6 +535,62 @@ class PlayerEngine(IPlayerEngine):
 
     def get_matchups(
         self,
+        batter: Optional[str] = None,
+        bowlers: Optional[List[str]] = None,
+        *,
+        home_team: Optional[str] = None,
+        opp_team: Optional[str] = None,
+        home_xi: Optional[List[str]] = None,
+        away_xi: Optional[List[str]] = None,
+        context_df: pd.DataFrame,
+    ) -> List[DisplayRecord]:
+        """
+        Public dispatcher for Player Matchups.
+        Single-player mode: batter is provided - delegates to _matchup_single_batter.
+        Bulk mode: batter is None - iterates all non-Bowler players in home_xi against away_xi,
+        returning combined rows with a leading 'Batter' key per row.
+        """
+        if batter:
+            return self._matchup_single_batter(
+                batter,
+                bowlers,
+                home_team=home_team,
+                opp_team=opp_team,
+                home_xi=home_xi,
+                away_xi=away_xi,
+                context_df=context_df,
+            )
+
+        batting_xi: List[str] = list(home_xi or [])
+        bowling_xi: List[str] = list(away_xi or [])
+        if not batting_xi or not bowling_xi:
+            return []
+
+        eligible: List[str] = [
+            player_name
+            for player_name in batting_xi
+            if self._get_player_role(player_name) != _PURE_BOWLER_ROLE
+        ]
+        if not eligible:
+            return []
+
+        combined: List[DisplayRecord] = []
+        for player_name in eligible:
+            rows = self._matchup_single_batter(
+                player_name,
+                bowling_xi,
+                home_team=home_team,
+                opp_team=opp_team,
+                home_xi=home_xi,
+                away_xi=away_xi,
+                context_df=context_df,
+            )
+            for row in rows:
+                combined.append({"Batter": player_name, **row})
+        return combined
+
+    def _matchup_single_batter(
+        self,
         batter: str,
         bowlers: Optional[List[str]] = None,
         *,
@@ -665,12 +724,12 @@ class PlayerEngine(IPlayerEngine):
 
         matchups_a = {}
         for p in team_a_players:
-            m_data = self.get_matchups(p, team_b_players, context_df=squad_context_df)
+            m_data = self._matchup_single_batter(p, team_b_players, context_df=squad_context_df)
             if m_data: matchups_a[p] = m_data
             
         matchups_b = {}
         for p in team_b_players:
-            m_data = self.get_matchups(p, team_a_players, context_df=squad_context_df)
+            m_data = self._matchup_single_batter(p, team_a_players, context_df=squad_context_df)
             if m_data: matchups_b[p] = m_data
 
         return {
