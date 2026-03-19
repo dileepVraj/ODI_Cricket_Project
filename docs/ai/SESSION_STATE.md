@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-148 - Frontend flag migration — 9-tier ThreatRating read from API - CLOSED 2026-03-19
+  Migrated flag logic from frontend to backend. Deleted computeThreatRating(),
+  updated ThreatRating type to 9 values, updated colour/style maps and legend.
+  Verified via Gates F1/F2/F3 and compliance_bouncer. PASS.
+
 - TASK-147 - Matchup engine upgrade: 9-tier ThreatRating, recency weighting, phase stats, dismissal mode - CLOSED 2026-03-19
   Upgraded _matchup_single_batter() with recency-weighted stats, 9-tier ThreatRating
   (vectorized np.select), confidence 1-5, dismissal mode breakdown, PP/Mid/Death phase stats.
@@ -407,8 +412,8 @@ None.
 None
 
 ## Queue (in order)
-1. TASK-148 — Matchup flag migration frontend B1 — READY (DEPENDS ON TASK-147 which is now CLOSED)
-2. TASK-149 — Matchup new UI elements frontend B2 — DEPENDS ON TASK-148
+1. TASK-148 — Matchup flag migration frontend B1 — CLOSED 2026-03-19
+2. TASK-149 — Matchup new UI elements frontend B2 — READY
 3. TASK-012 — Token optimisation (parked — monitor first, from 2026-03-03)
 
 ## Icebox
