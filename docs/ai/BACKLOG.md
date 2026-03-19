@@ -32,6 +32,35 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-145 - MatchupCard redesigned with left danger strip, bowling type badge, and threat rating badge
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-144
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Redesigned MatchupCard in MatchupTable.tsx with an 8px left danger strip (rating-colored),
+bowling type badge (style-colored), inline stats row, and threat rating badge.
+Cleaned up dead code (StyleTag, getStyleDotClass, getAdvantageProps).
+Verified color token compliance with globals.css.
+
+### Acceptance Criteria
+AC-1: Each MatchupCard rendered as flex row, 8px strip + main content — SATISFIED
+AC-2: Left section: Bowler name + Bowling type badge (pill) — SATISFIED
+AC-3: Center section: AVG · SR · balls + Outs display — SATISFIED
+AC-4: Right section: Threat rating badge (BUNNY/THREAT etc) — SATISFIED
+AC-5: Strip colors use THREAT_STRIP_COLORS (mapped to CSS tokens) — SATISFIED
+AC-6: Bowling badge colors use getBowlingBadgeColor (mapped to CSS tokens) — SATISFIED
+AC-7: Threat rating badge styles (mapped to CSS tokens) — SATISFIED
+AC-8: Card background #151E2B, border #1A2740 — SATISFIED
+AC-9: Existing BUNNY alert tag removed — SATISFIED
+AC-10: Existing advantage bar removed — SATISFIED
+AC-11: StyleTag and getStyleDotClass removed — SATISFIED
+AC-12: getAdvantageProps removed — SATISFIED
+AC-13: Gates F1/F2/F3 PASS — SATISFIED
+
 ## TASK-144 - MatchupTable split layout, legend strip, batter danger summary header
 **Type:** frontend-modification
 **Scope:** frontend

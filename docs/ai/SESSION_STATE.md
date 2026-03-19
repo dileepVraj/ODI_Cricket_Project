@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-145 - MatchupCard redesign — danger strip, bowling badge, threat rating badge - CLOSED 2026-03-19
+  Redesigned MatchupCard in MatchupTable.tsx with an 8px left danger strip (rating-colored),
+  bowling type badge (style-colored), inline stats row, and threat rating badge.
+  Removed dead code and verified compliance via Gates F1/F2/F3 and compliance_bouncer. PASS.
+
 - TASK-144 - MatchupTable split layout, legend strip, batter danger summary header - CLOSED 2026-03-19
   Restructured MatchupTable to render a split two-column layout (home vs away
   batters), added a legend strip above results, and updated batter group
