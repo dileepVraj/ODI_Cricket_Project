@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-18
+**Last Updated:** 2026-03-19
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,28 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-146 - Fix pre-existing Gate 4 serialization violations - 4 .to_dict row guards
+**Type:** validator-fix
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Fix 4 pre-existing Gate 4 (serialization-guard) violations across 3 files by
+adding inline `.head(500)` guards to `.to_dict("records")` call sites. No logic
+changes.
+
+### Acceptance Criteria
+AC-1: `core/calculators/matchup_engine.py:104` has `.head(500)` guard.
+AC-2: `core/services/enrichment.py:206` has `.head(500)` guard.
+AC-3: `core/services/squad_service.py:100` has `.head(500)` guard.
+AC-4: `core/services/squad_service.py:572` has `.head(500)` guard.
+AC-5: Gate 4 reports 0 violations after fix.
+AC-6: All triggered gates PASS.
+AC-7: No other lines modified in the three source files.
+
 ## TASK-145 - MatchupCard redesigned with left danger strip, bowling type badge, and threat rating badge
 **Type:** frontend-modification
 **Scope:** frontend

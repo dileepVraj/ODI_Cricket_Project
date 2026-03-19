@@ -1,6 +1,6 @@
 # Session State
-**Last Updated:** 2026-03-18
-**Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
+**Last Updated:** 2026-03-19
+**Current Phase:** Phase 10 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Engine Layer Refactoring + Frontend Remediation.
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
 Team engine COMPLIANT 2026-03-05. Player engine COMPLIANT 2026-03-06.
@@ -16,10 +16,15 @@ Claude Code MCPs installed 2026-03-10 (6 servers).
 None.
 
 ## In Progress
-- Nothing currently in progress
+- TASK-147 - Matchup engine upgrade (pending commit)
 
 ## Last Completed
-- TASK-145 - MatchupCard redesign — danger strip, bowling badge, threat rating badge - CLOSED 2026-03-19
+- TASK-146 - Fix pre-existing Gate 4 serialization violations - CLOSED 2026-03-19
+  Added `.head(500)` guards at four `.to_dict("records")` call sites in
+  matchup_engine.py, enrichment.py, and squad_service.py.
+  Verified via Gates 1/2/4/5/6 and compliance_bouncer. PASS.
+
+- TASK-145 - MatchupCard redesign ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â danger strip, bowling badge, threat rating badge - CLOSED 2026-03-19
   Redesigned MatchupCard in MatchupTable.tsx with an 8px left danger strip (rating-colored),
   bowling type badge (style-colored), inline stats row, and threat rating badge.
   Removed dead code and verified compliance via Gates F1/F2/F3 and compliance_bouncer. PASS.
@@ -43,7 +48,7 @@ None.
   Added collapsible headers, advantage bars, and BUNNY tags driven by API payload.
   Verified compliance via Gates F1/F2/F3 and compliance_bouncer. PASS.
 
-- TASK-140 - Gemini CLI MCP config created â€” CLOSED 2026-03-18
+- TASK-140 - Gemini CLI MCP config created ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â CLOSED 2026-03-18
   Created `.gemini/settings.json` with verbatim configurations for
   `filesystem`, `context7`, `playwright`, and `sequential-thinking` MCP servers
   copied from `.mcp.json`. Verified baseline and post-task bouncer PASS.
@@ -59,7 +64,7 @@ None.
   team rows in one execute path. Gates 1/2/3/5/6 PASS, bouncer PASS.
 
 
-- TASK-137 - Suppress team_b→opp_team global mapping for analyze_squad_types in ParamMapperService - CLOSED 2026-03-16
+- TASK-137 - Suppress team_bÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢opp_team global mapping for analyze_squad_types in ParamMapperService - CLOSED 2026-03-16
   Added `\"team_b\": None` to the method-specific mapping so the global
   `team_b -> opp_team` default no longer leaks into Tactical Matrix engine
   calls. Gates 1/2/5/6 PASS, bouncer PASS.
@@ -160,7 +165,7 @@ None.
   blank lines to restore frontend paradigm compliance. Gates 1/2/F1/F2/F3/5/6
   PASS, bouncer PASS.
 
-- TASK-121 - Strict Decisions refactor — decisions = wins + losses in matrix report - CLOSED 2026-03-15
+- TASK-121 - Strict Decisions refactor ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â decisions = wins + losses in matrix report - CLOSED 2026-03-15
   `ReportBuilder._generate_matrix_report()` now defines per-opponent and
   OVERALL decisions explicitly as wins plus losses, derives Tie/NR from
   that count, and keeps silent local dirty-data diagnostics without
@@ -206,7 +211,7 @@ None.
   `frontend/components/renderers/GlobalH2HReport.tsx`, and the
   `global_h2h_report` dispatcher path in `FunctionRenderer.tsx`.
   Committed alongside TASK-115: pre-existing branding changes from the
-  prior session task chain — app name changed from
+  prior session task chain ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â app name changed from
   `CricketAlgo | Trading` to `Vantage | Strategic Algo Exchange`,
   FormatSelector sidebar name/subtitle updated, default UI font moved to
   Cascadia Code, Vantage shield icon replaced
@@ -365,51 +370,52 @@ None.
   string values in the backend payload contract. Sample query verified against
   raw calculator output. Gates 1/2/3/5/6 PASS, bouncer PASS.
 
-- Project cleanup — COMPLETE 2026-03-10
+- Project cleanup ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â COMPLETE 2026-03-10
   ~18.5MB removed: stale ETL backup, test outputs, orphaned scripts,
   dead audit docs, dev artifacts, renderers dead code.
   Bouncer PASS. Commit: 4bba4a6.
 
-- Claude Code MCP setup — COMPLETE 2026-03-10
+- Claude Code MCP setup ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â COMPLETE 2026-03-10
   6 MCPs installed: github, filesystem, sequential-thinking,
   context7, playwright, duckdb.
   All connected, zero warnings. .mcp.json at project root.
   DuckDB path: C:\Cricket_Project_Stable\formats\odi\data\odi.duckdb
 
-- TASK-086 + TASK-087 — Undefined CSS token fixes — CLOSED 2026-03-10
+- TASK-086 + TASK-087 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Undefined CSS token fixes ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CLOSED 2026-03-10
   --format-selector-height added to globals.css.
-  --warning → --tier-caution, --success → --tier-elite,
-  --danger → --tier-danger in phase-analysis components.
+  --warning ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ --tier-caution, --success ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ --tier-elite,
+  --danger ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ --tier-danger in phase-analysis components.
 
-- TASK-085 — Gate F1: check_undefined_css_tokens() — CLOSED 2026-03-10
+- TASK-085 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Gate F1: check_undefined_css_tokens() ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CLOSED 2026-03-10
   Found 4 real violations on first run. Gate F1 now 19 checks.
 
-- TASK-081 + TASK-082 + TASK-083 — Gate F1 improvements — CLOSED 2026-03-09
+- TASK-081 + TASK-082 + TASK-083 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Gate F1 improvements ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CLOSED 2026-03-09
   check_suspense_fallback_class(), check_usememo_primitive_wrap(),
   aria-busy extension in check_live_region_announcements().
 
-- TASK-079 — Tokenize box-shadow values — CLOSED 2026-03-09
+- TASK-079 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Tokenize box-shadow values ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CLOSED 2026-03-09
   --shadow-sidebar and --shadow-card-deep added to globals.css.
 
-- TASK-080 — Fix FormatSelector icon color literal — CLOSED 2026-03-09
+- TASK-080 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Fix FormatSelector icon color literal ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CLOSED 2026-03-09
 
-- TASK-073/074/075/076/078 — Frontend compliance fixes — CLOSED 2026-03-09
+- TASK-073/074/075/076/078 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Frontend compliance fixes ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CLOSED 2026-03-09
   SkeletonLoader, FunctionRenderer, page.tsx, CategoryScreen, border-radius tokens.
 
 ## Active Task
-None.
+TASK-147 - Matchup engine upgrade (pending commit)
 
 ## Queue (in order)
-1. Antigravity MCP config — next session
-2. TASK-084 — Gate F1: Add check_required_test_files()
-   DEPENDS ON: ICE-002 (TASK-077) un-iced first
-3. TASK-012 — Token optimisation (parked — monitor first, from 2026-03-03)
+1. TASK-146 — Fix pre-existing Gate 4 serialization violations (gate fix) — READY
+2. TASK-147 — Matchup engine upgrade: 9-tier ThreatRating, recency weighting, phase stats, dismissal mode — DEPENDS ON TASK-146
+3. TASK-148 — Matchup flag migration frontend B1 — DEPENDS ON TASK-147
+4. TASK-149 — Matchup new UI elements frontend B2 — DEPENDS ON TASK-148
+5. TASK-012 — Token optimisation (parked — monitor first, from 2026-03-03)
 
 ## Icebox
-- ICE-001 — MCP Integration (broader) — revisit Phase 12 scoping
-- ICE-002 — TASK-077 — Frontend test suite (Vitest + RTL)
+- ICE-001 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â MCP Integration (broader) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â revisit Phase 12 scoping
+- ICE-002 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â TASK-077 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Frontend test suite (Vitest + RTL)
   Parked: 2026-03-09. TASK-084 depends on this.
-- ICE-003 — Pylance/Python MCP — revisit Phase 12
+- ICE-003 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Pylance/Python MCP ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â revisit Phase 12
 
 ## Architect Decision Required
 None outstanding.
@@ -417,21 +423,21 @@ None outstanding.
 ## Pre-Task Dirty File Notice (standing)
 The following files have pre-existing uncommitted changes unrelated to
 any active task. Agents must NOT block on their presence in git status:
-  frontend/lib/api.ts — @schema tag additions, pre-existing
+  frontend/lib/api.ts ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â @schema tag additions, pre-existing
 
 ## Gate State Snapshot (2026-03-11)
 - GATE 1  (boundary-sentinel):           PASS
 - GATE 2  (duckdb-lint-ops):             PASS - 0 violations
 - GATE 3  (manifest-contract-verifier):  PASS
 - GATE 4  (serialization-guard):         PASS
-- GATE F1 (frontend-lint-sentinel):   PASS — 0 violations (19 checks)
-- GATE F2 (frontend-paradigm-sentinel): PASS — 0 violations
-- GATE F3 (frontend-type-sync-guard):  PASS — 0 violations
+- GATE F1 (frontend-lint-sentinel):   PASS ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â 0 violations (19 checks)
+- GATE F2 (frontend-paradigm-sentinel): PASS ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â 0 violations
+- GATE F3 (frontend-type-sync-guard):  PASS ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â 0 violations
 - GATE 5  (paradigm-sentinel):         PASS
-- GATE 6  (compliance-bouncer):        PASS — 0 violations (22 files)
-- Pre-commit hook:                     PASS — all gates active, exit 0
+- GATE 6  (compliance-bouncer):        PASS ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â 0 violations (22 files)
+- Pre-commit hook:                     PASS ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â all gates active, exit 0
 
-## Rule Inventory — frontend-lint-sentinel (Gate F1)
+## Rule Inventory ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â frontend-lint-sentinel (Gate F1)
 | Rule | Function | Added |
 |---|---|---|
 | 2.2A-R1 | check_raw_fetch | pre-sprint |
@@ -454,7 +460,7 @@ any active task. Agents must NOT block on their presence in git status:
 | 2.2E-R3 | check_loading_aria_live (extended) | TASK-083 |
 | 2.2F-R1 | check_non_vitest_imports | pre-sprint |
 
-## Rule Inventory — frontend-paradigm-sentinel (Gate F2)
+## Rule Inventory ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â frontend-paradigm-sentinel (Gate F2)
 | Rule | Function | Added |
 |---|---|---|
 | 2.2A-R3 | check_external_state | pre-sprint |
@@ -464,3 +470,4 @@ any active task. Agents must NOT block on their presence in git status:
 | 2.2A-R7 | check_view_dispatch_in_renderer | TASK-130 |
 | 2.2B-R7 | check_renderer_placement | pre-sprint |
 | 2.2D-R2 | check_silent_catch_in_renderer | pre-sprint |
+
