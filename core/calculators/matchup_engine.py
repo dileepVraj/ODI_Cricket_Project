@@ -101,7 +101,7 @@ class MatchupEngine:
         )
 
         by_player: Dict[str, Dict[str, Union[str, int, float, dict, None]]] = {}
-        for row in scaffold.to_dict("records"):
+        for row in scaffold.head(500).to_dict("records"):
             player_name = str(row["player_name"])
             player_role = str(row["player_role"])
             style_key = str(row["style_key"])

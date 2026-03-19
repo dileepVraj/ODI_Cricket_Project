@@ -97,7 +97,7 @@ class SquadService:
         empty_df["venue_wickets"] = None
         empty_df["venue_matches"] = None
         empty_df["venue_batting_activity"] = False
-        return empty_df.to_dict("records")
+        return empty_df.head(500).to_dict("records")
 
     @staticmethod
     def _calculate_squad_metrics(
@@ -569,7 +569,7 @@ class SquadService:
         output_df["venue_batting_activity"] = output_df["player_name"].map(venue_activity_flags).fillna(False).astype(bool)
 
         output_df = output_df.where(pd.notna(output_df), None)
-        return output_df.to_dict("records")
+        return output_df.head(500).to_dict("records")
 
     def get_bulk_metrics(
         self,

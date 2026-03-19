@@ -203,7 +203,7 @@ class EnrichmentService:
                 matched = matched.sort_values("start_date", ascending=False)
 
             audit_df = matched if limit is None else matched.head(limit)
-            return [_build_audit_record(row) for row in audit_df.to_dict(orient="records")]
+            return [_build_audit_record(row) for row in audit_df.head(500).to_dict(orient="records")]
 
         def _collect_match_ids_from_rows(rows: Sequence[ComparisonReportRow | MatrixReportRow]) -> str:
             all_ids: list[str] = []
