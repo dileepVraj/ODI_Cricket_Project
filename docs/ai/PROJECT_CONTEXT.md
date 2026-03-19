@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-150:** Design system overhaul — migrated from deep navy/electric-blue to bet365 green charcoal theme (#52B523, #181C1F). Swapped body font to Inter (sans-serif), removed glassmorphism blur, and updated button styles to flat solid green.
-2. **TASK-149:** Matchup card UI upgrade — confidence dots (1-5), dismissal mode line (B/LBW · caught · other), phase breakdown strip (PP/MID/DT badges).
-3. **TASK-148:** Frontend flag migration — 9-tier ThreatRating read from API, computeThreatRating() deleted, colour/style maps and legend updated for 9-tier system.
-4. **TASK-147:** Matchup engine upgraded — 9-tier ThreatRating, recency weighting, phase-wise stats (PP/Mid/Death), dismissal mode breakdown, confidence score 1-5.
-5. **TASK-146:** Pre-existing Gate 4 serialization violations fixed — 4 .to_dict row guards added.
+1. **TASK-151:** Shell redesign — emoji stripped, gradient removed from Vantage heading, backdrop-filter removed from sidebar, density increased across FormatSelector/Sidebar/ContextBar.
+2. **TASK-150:** Design system overhaul — migrated from deep navy/electric-blue to bet365 green charcoal theme (#52B523, #181C1F). Swapped body font to Inter (sans-serif), removed glassmorphism blur, and updated button styles to flat solid green.
+3. **TASK-149:** Matchup card UI upgrade — confidence dots (1-5), dismissal mode line (B/LBW · caught · other), phase breakdown strip (PP/MID/DT badges).
+4. **TASK-148:** Frontend flag migration — 9-tier ThreatRating read from API, computeThreatRating() deleted, colour/style maps and legend updated for 9-tier system.
+5. **TASK-147:** Matchup engine upgraded — 9-tier ThreatRating, recency weighting, phase-wise stats (PP/Mid/Death), dismissal mode breakdown, confidence score 1-5.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*

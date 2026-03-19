@@ -32,6 +32,21 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-151 - Shell redesign — quant terminal aesthetic — emoji stripped, gradient removed, density increased
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-150
+**Created:** 2026-03-20
+**Status:** CLOSED - 2026-03-20
+
+### Description
+Modified FormatSelector.tsx, Sidebar.tsx, and ContextBar.tsx to remove emojis,
+remove gradient decorations, tighten spacing, and strip glassmorphism blur.
+Created stripEmoji utility in frontend/lib/utils.ts. Updated globals.css
+class properties for denser UI. Logo icon box and Vantage heading now use
+flat styles. Sidebar and context bar are visually denser with compact spacing.
+
 ## TASK-150 - Design system overhaul — bet365 green theme, Inter font, flat surfaces
 **Type:** frontend-modification
 **Scope:** frontend

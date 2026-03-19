@@ -19,6 +19,14 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-151 - Shell redesign — quant terminal aesthetic — CLOSED 2026-03-20
+  Modified FormatSelector.tsx, Sidebar.tsx, and ContextBar.tsx to remove emojis,
+  remove gradient decorations, tighten spacing, and strip glassmorphism blur.
+  Created stripEmoji utility in frontend/lib/utils.ts. Updated globals.css
+  class properties for denser UI. Logo icon box and Vantage heading now use
+  flat styles. Sidebar and context bar are visually denser with compact spacing.
+  Gates F1/F2/F3 and bouncer PASS.
+
 - TASK-150 - Design system overhaul — bet365 green theme, Inter font, flat surfaces - CLOSED 2026-03-19
   Redesigned design system from deep navy/electric-blue to bet365 dark green
   theme. Swapped body font to Inter, replaced blue accents with #52B523 green,
