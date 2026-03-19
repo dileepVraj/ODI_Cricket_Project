@@ -32,6 +32,23 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-148 - Frontend flag migration — 9-tier ThreatRating from API, delete computeThreatRating()
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-147
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Deleted computeThreatRating() from MatchupTable.tsx. Updated ThreatRating type to
+9 values (NEW MATCHUP, LOW DATA, BUNNY, DOMINATED, WATCHFUL, CONTESTED, ADVANTAGE,
+THREAT, DOMINANT). Updated THREAT_STRIP_COLORS, THREAT_BADGE_STYLES, LEGEND_ITEMS
+to 9 entries. computeDangerSummary() and MatchupCard now read row["threat_rating"]
+from API. CAUTION and SAFE removed.
+
+---
+
 ## TASK-147 - Matchup engine upgrade — 9-tier ThreatRating, recency weighting, phase stats, dismissal mode
 **Type:** new-feature
 **Scope:** backend
