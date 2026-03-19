@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-152 - Remove DashboardScreen welcome screen — app defaults to first manifest category on load - CLOSED 2026-03-20
+  Removed DashboardScreen, StatCard, and STAT_CARD_VARIANT from page.tsx.
+  Updated app to land directly on the first manifest category (Venue Intelligence) 
+  via a redirect useEffect. Removed unused lucide-react imports.
+  Gates F1/F2/F3 and bouncer PASS.
+
 - TASK-151 - Shell redesign — quant terminal aesthetic — CLOSED 2026-03-20
   Modified FormatSelector.tsx, Sidebar.tsx, and ContextBar.tsx to remove emojis,
   remove gradient decorations, tighten spacing, and strip glassmorphism blur.

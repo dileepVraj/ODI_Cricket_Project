@@ -32,6 +32,19 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-152 - Remove DashboardScreen welcome screen — app defaults to first manifest category on load
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-151
+**Created:** 2026-03-20
+**Status:** CLOSED - 2026-03-20
+
+### Description
+Removed DashboardScreen, StatCard, and STAT_CARD_VARIANT from page.tsx.
+Updated app to land directly on the first manifest category (Venue Intelligence) 
+via a redirect useEffect. Removed unused lucide-react imports.
+
 ## TASK-151 - Shell redesign — quant terminal aesthetic — emoji stripped, gradient removed, density increased
 **Type:** frontend-modification
 **Scope:** frontend
