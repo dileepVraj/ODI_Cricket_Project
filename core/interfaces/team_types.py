@@ -244,6 +244,40 @@ class MatchupBadgePayload(TypedDict):
     label: str
 
 
+class MatchupRowExtended(TypedDict):
+    Bowler: str
+    Style: str
+    Balls: int
+    Runs: int
+    Outs: int
+    Avg: float
+    SR: float
+    ThreatRating: str
+    Confidence: int
+    DismissalStructural: int
+    DismissalCaught: int
+    DismissalOther: int
+    PP_Balls: int
+    PP_Runs: int
+    PP_Outs: int
+    PP_Avg: Optional[float]
+    PP_SR: Optional[float]
+    PP_ThreatRating: str
+    Mid_Balls: int
+    Mid_Runs: int
+    Mid_Outs: int
+    Mid_Avg: Optional[float]
+    Mid_SR: Optional[float]
+    Mid_ThreatRating: str
+    Death_Balls: int
+    Death_Runs: int
+    Death_Outs: int
+    Death_Avg: Optional[float]
+    Death_SR: Optional[float]
+    Death_ThreatRating: str
+    IsBunny: bool
+
+
 class FormSequencePayload(TypedDict):
     """Contract for visual form sequences."""
     results: list[str]

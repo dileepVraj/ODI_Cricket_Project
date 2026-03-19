@@ -92,21 +92,22 @@ class PlayerEngine(IPlayerEngine):
 
     def _coerce_dict_values_to_int(
         self,
-        raw: Dict[str, int | str],
+        raw: Dict[str, int | float | str],
         context_key: str,
-    ) -> Dict[str, int]:
-        """Coerce all values in a string-keyed dict to int."""
-        normalized: Dict[str, int] = {}
+    ) -> Dict[str, int | float]:
+        """Coerce all values in a string-keyed dict to numeric scalars."""
+        normalized: Dict[str, int | float] = {}
         for key, value in raw.items():
             try:
-                normalized[str(key)] = int(value)
+                numeric_value = float(value)
             except (TypeError, ValueError) as exc:
                 raise ConfigurationError(
                     f"Invalid {context_key} '{key}': {value!r}. Expected integer."
                 ) from exc
+            normalized[str(key)] = int(numeric_value) if numeric_value.is_integer() else numeric_value
         return normalized
 
-    def _require_tactical_thresholds(self) -> Dict[str, int]:
+    def _require_tactical_thresholds(self) -> Dict[str, int | float]:
         thresholds = self._require_nonempty_dict_rule("tactical_thresholds")
         return self._coerce_dict_values_to_int(thresholds, "tactical threshold")
 
@@ -187,18 +188,19 @@ class PlayerEngine(IPlayerEngine):
             raise ConfigurationError("years must be > 0.")
         return years_back
 
-    def _get_tactical_threshold(self, key: str) -> int:
+    def _get_tactical_threshold(self, key: str) -> int | float:
         if key not in self.tactical_thresholds:
             raise ConfigurationError(
                 f"Missing tactical threshold '{key}' in FORMAT_RULES['tactical_thresholds']."
             )
         raw_value = self.tactical_thresholds[key]
         try:
-            return int(raw_value)
+            numeric_value = float(raw_value)
         except (TypeError, ValueError) as exc:
             raise ConfigurationError(
                 f"Invalid tactical threshold '{key}': {raw_value!r}"
             ) from exc
+        return int(numeric_value) if numeric_value.is_integer() else numeric_value
 
     def _get_engine_default(self, key: str) -> int:
         if key not in self.engine_defaults:
@@ -606,6 +608,63 @@ class PlayerEngine(IPlayerEngine):
                 combined.append({"Batter": player_name, **row})
         return combined
 
+    def _compute_threat_rating(
+        self,
+        raw_balls: pd.Series,
+        raw_outs: pd.Series,
+        w_avg: pd.Series,
+        w_sr: pd.Series,
+        threat_min_balls: int | float,
+        threat_dominant_balls: int | float,
+        threat_dominant_sr: int | float,
+        threat_threat_sr_outs0: int | float,
+        threat_threat_avg_outs1: int | float,
+        threat_threat_sr_outs1: int | float,
+        threat_advantage_sr: int | float,
+        threat_advantage_avg: int | float,
+        threat_watchful_avg: int | float,
+        threat_watchful_sr: int | float,
+        threat_dominated_outs: int | float,
+        threat_dominated_avg: int | float,
+        threat_bunny_outs: int | float,
+        threat_bunny_avg: int | float,
+    ) -> pd.Series:
+        conditions = [
+            raw_balls == 0,
+            raw_balls < float(threat_min_balls),
+            (raw_outs >= float(threat_bunny_outs)) & (w_avg < float(threat_bunny_avg)),
+            (raw_outs >= float(threat_dominated_outs)) & (w_avg < float(threat_dominated_avg)),
+            (raw_outs >= 1) & (w_avg < float(threat_watchful_avg)) & (w_sr < float(threat_watchful_sr)),
+            (raw_balls >= float(threat_dominant_balls))
+            & (raw_outs == 0)
+            & (w_sr > float(threat_dominant_sr)),
+            (
+                ((raw_outs == 0) & (w_sr > float(threat_threat_sr_outs0)))
+                | (
+                    (raw_outs == 1)
+                    & (w_avg > float(threat_threat_avg_outs1))
+                    & (w_sr > float(threat_threat_sr_outs1))
+                )
+            ),
+            (raw_outs <= 1)
+            & (w_sr > float(threat_advantage_sr))
+            & ((raw_outs == 0) | (w_avg > float(threat_advantage_avg))),
+        ]
+        choices = [
+            "NEW MATCHUP",
+            "LOW DATA",
+            "BUNNY",
+            "DOMINATED",
+            "WATCHFUL",
+            "DOMINANT",
+            "THREAT",
+            "ADVANTAGE",
+        ]
+        return pd.Series(
+            np.select(conditions, choices, default="CONTESTED"),
+            index=raw_balls.index,
+        )
+
     def _matchup_single_batter(
         self,
         batter: str,
@@ -620,6 +679,30 @@ class PlayerEngine(IPlayerEngine):
         """
         Headless logic for Batter vs Bowlers.
         """
+        threat_min_balls = self._get_tactical_threshold("threat_min_balls")
+        threat_dominant_balls = self._get_tactical_threshold("threat_dominant_balls")
+        threat_dominant_sr = self._get_tactical_threshold("threat_dominant_sr")
+        threat_threat_sr_outs0 = self._get_tactical_threshold("threat_threat_sr_outs0")
+        threat_threat_avg_outs1 = self._get_tactical_threshold("threat_threat_avg_outs1")
+        threat_threat_sr_outs1 = self._get_tactical_threshold("threat_threat_sr_outs1")
+        threat_advantage_sr = self._get_tactical_threshold("threat_advantage_sr")
+        threat_advantage_avg = self._get_tactical_threshold("threat_advantage_avg")
+        threat_watchful_avg = self._get_tactical_threshold("threat_watchful_avg")
+        threat_watchful_sr = self._get_tactical_threshold("threat_watchful_sr")
+        threat_dominated_outs = self._get_tactical_threshold("threat_dominated_outs")
+        threat_dominated_avg = self._get_tactical_threshold("threat_dominated_avg")
+        threat_bunny_outs = self._get_tactical_threshold("threat_bunny_outs")
+        threat_bunny_avg = self._get_tactical_threshold("threat_bunny_avg")
+        recency_w_0_12 = self._get_tactical_threshold("recency_w_0_12")
+        recency_w_12_24 = self._get_tactical_threshold("recency_w_12_24")
+        recency_w_24_36 = self._get_tactical_threshold("recency_w_24_36")
+        recency_w_36_plus = self._get_tactical_threshold("recency_w_36_plus")
+        confidence_2_min = self._get_tactical_threshold("confidence_2_min")
+        confidence_3_min = self._get_tactical_threshold("confidence_3_min")
+        confidence_4_min = self._get_tactical_threshold("confidence_4_min")
+        confidence_5_min = self._get_tactical_threshold("confidence_5_min")
+        percent_scale = float(self.rules["SPORT_CONSTANTS"]["percent_scale"])
+
         inferred_bowlers: List[str] = list(bowlers or [])
         home_xi = home_xi or []
         away_xi = away_xi or []
@@ -646,57 +729,252 @@ class PlayerEngine(IPlayerEngine):
             return []
 
         base_df = context_df
-
-        required_cols = {"striker", "bowler", "runs_off_bat", "match_id", "player_dismissed"}
+        required_cols = {"striker", "bowler", "runs_off_bat", "player_dismissed"}
         if not required_cols.issubset(set(base_df.columns)):
             return []
 
-        bunny_outs_hard = self._get_tactical_threshold("bunny_outs_hard")
-        bunny_outs_soft = self._get_tactical_threshold("bunny_outs_soft")
-        bunny_balls_per_out_max = self._get_tactical_threshold("bunny_balls_per_out_max")
-
-        # Filter for relevant balls
         batter_df = base_df[
-            (base_df['striker'] == batter) & 
-            (base_df['bowler'].isin(inferred_bowlers))
+            (base_df["striker"] == batter)
+            & (base_df["bowler"].isin(inferred_bowlers))
         ].copy()
+        if batter_df.empty:
+            return []
 
-        if batter_df.empty: return []
+        batter_df["_runs_off_bat_num"] = pd.to_numeric(
+            batter_df["runs_off_bat"], errors="coerce"
+        ).fillna(0.0)
+        batter_df["_is_out"] = (batter_df["player_dismissed"] == batter).astype(int)
 
-        matchup_stats = batter_df.groupby('bowler').agg({
-            'runs_off_bat': 'sum',           
-            'match_id': 'count',             
-            'player_dismissed': lambda x: (x == batter).sum()
-        }).reset_index()
-        
-        matchup_stats.rename(columns={'match_id': 'Balls', 'runs_off_bat': 'Runs', 'player_dismissed': 'Outs'}, inplace=True)
-        matchup_stats['Style'] = matchup_stats['bowler'].map(self.style_map)
-        outs = matchup_stats['Outs'].astype(float)
-        balls = matchup_stats['Balls'].astype(float)
-        matchup_stats['IsBunny'] = (
-            (outs >= bunny_outs_hard)
-            | (
-                (outs >= bunny_outs_soft)
-                & (balls > 0)
-                & ((balls / outs) <= bunny_balls_per_out_max)
+        if "start_date" not in batter_df.columns:
+            batter_df["_weight"] = 1.0
+        else:
+            reference_date = self._get_reference_date()
+            days_ago = (
+                reference_date - pd.to_datetime(batter_df["start_date"], errors="coerce")
+            ).dt.days
+            batter_df["_weight"] = np.select(
+                [
+                    days_ago <= 365,
+                    days_ago <= 730,
+                    days_ago <= 1095,
+                ],
+                [
+                    float(recency_w_0_12),
+                    float(recency_w_12_24),
+                    float(recency_w_24_36),
+                ],
+                default=float(recency_w_36_plus),
+            ).astype(float)
+
+        batter_df["_weighted_runs"] = batter_df["_runs_off_bat_num"] * batter_df["_weight"]
+        batter_df["_weighted_outs"] = batter_df["_is_out"].astype(float) * batter_df["_weight"]
+
+        def _aggregate_matchup_window(window_df: pd.DataFrame) -> pd.DataFrame:
+            if window_df.empty:
+                return pd.DataFrame(
+                    columns=[
+                        "Bowler",
+                        "Balls",
+                        "Runs",
+                        "Outs",
+                        "Avg",
+                        "SR",
+                        "ThreatRating",
+                    ]
+                )
+
+            grouped = window_df.groupby("bowler", sort=True, dropna=False)
+            matchup_stats = grouped.agg(
+                Runs=("_runs_off_bat_num", "sum"),
+                Outs=("_is_out", "sum"),
+                WeightedBalls=("_weight", "sum"),
+                WeightedRuns=("_weighted_runs", "sum"),
+                WeightedOuts=("_weighted_outs", "sum"),
             )
-        )
-        matchup_stats['Avg'] = np.where(
-            matchup_stats['Outs'] > 0,
-            (matchup_stats['Runs'] / matchup_stats['Outs']).round(1),
-            matchup_stats['Runs'].astype(float),
-        )
-        matchup_stats['SR'] = np.where(
-            matchup_stats['Balls'] > 0,
-            ((matchup_stats['Runs'] / matchup_stats['Balls']) * self.rules["SPORT_CONSTANTS"]["percent_scale"]).round(1),
-            0.0,
-        )
+            matchup_stats["Balls"] = grouped.size()
+            matchup_stats["Avg"] = np.where(
+                matchup_stats["Outs"] > 0,
+                matchup_stats["WeightedRuns"] / matchup_stats["WeightedOuts"],
+                matchup_stats["WeightedRuns"],
+            )
+            matchup_stats["SR"] = np.where(
+                matchup_stats["WeightedBalls"] > 0,
+                (matchup_stats["WeightedRuns"] / matchup_stats["WeightedBalls"]) * percent_scale,
+                0.0,
+            )
+            matchup_stats["ThreatRating"] = self._compute_threat_rating(
+                raw_balls=matchup_stats["Balls"].astype(float),
+                raw_outs=matchup_stats["Outs"].astype(float),
+                w_avg=matchup_stats["Avg"].astype(float),
+                w_sr=matchup_stats["SR"].astype(float),
+                threat_min_balls=threat_min_balls,
+                threat_dominant_balls=threat_dominant_balls,
+                threat_dominant_sr=threat_dominant_sr,
+                threat_threat_sr_outs0=threat_threat_sr_outs0,
+                threat_threat_avg_outs1=threat_threat_avg_outs1,
+                threat_threat_sr_outs1=threat_threat_sr_outs1,
+                threat_advantage_sr=threat_advantage_sr,
+                threat_advantage_avg=threat_advantage_avg,
+                threat_watchful_avg=threat_watchful_avg,
+                threat_watchful_sr=threat_watchful_sr,
+                threat_dominated_outs=threat_dominated_outs,
+                threat_dominated_avg=threat_dominated_avg,
+                threat_bunny_outs=threat_bunny_outs,
+                threat_bunny_avg=threat_bunny_avg,
+            )
+            matchup_stats["Runs"] = matchup_stats["Runs"].round(0)
+            matchup_stats["Avg"] = matchup_stats["Avg"].round(1)
+            matchup_stats["SR"] = matchup_stats["SR"].round(1)
+            return matchup_stats.reset_index().rename(columns={"bowler": "Bowler"})[
+                ["Bowler", "Balls", "Runs", "Outs", "Avg", "SR", "ThreatRating"]
+            ]
 
-        result = matchup_stats.rename(columns={'bowler': 'Bowler'})
-        result['Runs'] = result['Runs'].astype(int)
-        result['Balls'] = result['Balls'].astype(int)
-        result['Outs'] = result['Outs'].astype(int)
-        return result[['Bowler', 'Style', 'IsBunny', 'Runs', 'Balls', 'Outs', 'Avg', 'SR']].to_dict('records')
+        def _build_phase_stats(phase_key: str, prefix: str, overall_df: pd.DataFrame) -> pd.DataFrame:
+            phase_output = overall_df[["Bowler"]].copy()
+            phase_output[f"{prefix}Balls"] = 0
+            phase_output[f"{prefix}Runs"] = 0
+            phase_output[f"{prefix}Outs"] = 0
+            phase_output[f"{prefix}Avg"] = None
+            phase_output[f"{prefix}SR"] = None
+            phase_output[f"{prefix}ThreatRating"] = "NEW MATCHUP"
+
+            phase_bounds = self.rules["phases"].get(phase_key)
+            if "over_num" not in batter_df.columns or phase_bounds is None:
+                return phase_output
+
+            over_num = pd.to_numeric(batter_df["over_num"], errors="coerce")
+            phase_df = batter_df[over_num.between(int(phase_bounds[0]), int(phase_bounds[1]))]
+            if phase_df.empty:
+                return phase_output
+
+            aggregated = _aggregate_matchup_window(phase_df).rename(
+                columns={
+                    "Balls": f"{prefix}Balls",
+                    "Runs": f"{prefix}Runs",
+                    "Outs": f"{prefix}Outs",
+                    "Avg": f"{prefix}Avg",
+                    "SR": f"{prefix}SR",
+                    "ThreatRating": f"{prefix}ThreatRating",
+                }
+            )
+            phase_output = phase_output.drop(
+                columns=[
+                    f"{prefix}Balls",
+                    f"{prefix}Runs",
+                    f"{prefix}Outs",
+                    f"{prefix}Avg",
+                    f"{prefix}SR",
+                    f"{prefix}ThreatRating",
+                ]
+            ).merge(aggregated, how="left", on="Bowler")
+            phase_output[f"{prefix}Balls"] = phase_output[f"{prefix}Balls"].fillna(0).astype(int)
+            phase_output[f"{prefix}Runs"] = phase_output[f"{prefix}Runs"].fillna(0).astype(int)
+            phase_output[f"{prefix}Outs"] = phase_output[f"{prefix}Outs"].fillna(0).astype(int)
+            phase_output[f"{prefix}ThreatRating"] = (
+                phase_output[f"{prefix}ThreatRating"].fillna("NEW MATCHUP").astype(str)
+            )
+            phase_avg = pd.to_numeric(phase_output[f"{prefix}Avg"], errors="coerce").round(1)
+            phase_sr = pd.to_numeric(phase_output[f"{prefix}SR"], errors="coerce").round(1)
+            phase_output[f"{prefix}Avg"] = phase_avg.where(phase_output[f"{prefix}Balls"] > 0, np.nan)
+            phase_output[f"{prefix}SR"] = phase_sr.where(phase_output[f"{prefix}Balls"] > 0, np.nan)
+            phase_output.loc[phase_output[f"{prefix}Balls"] == 0, f"{prefix}Avg"] = None
+            phase_output.loc[phase_output[f"{prefix}Balls"] == 0, f"{prefix}SR"] = None
+            return phase_output
+
+        overall = _aggregate_matchup_window(batter_df)
+        overall["Style"] = overall["Bowler"].map(self.style_map).fillna("Other")
+        overall["Confidence"] = np.select(
+            [
+                overall["Balls"] >= float(confidence_5_min),
+                overall["Balls"] >= float(confidence_4_min),
+                overall["Balls"] >= float(confidence_3_min),
+                overall["Balls"] >= float(confidence_2_min),
+            ],
+            [5, 4, 3, 2],
+            default=1,
+        ).astype(int)
+
+        dismissal_stats = pd.DataFrame(
+            {
+                "Bowler": overall["Bowler"],
+                "DismissalStructural": 0,
+                "DismissalCaught": 0,
+                "DismissalOther": 0,
+            }
+        )
+        if "wicket_type" in batter_df.columns:
+            dismissal_df = batter_df[batter_df["_is_out"] == 1].copy()
+            if not dismissal_df.empty:
+                structural_mask = dismissal_df["wicket_type"].isin(["bowled", "lbw"])
+                caught_mask = dismissal_df["wicket_type"].isin(["caught", "caught and bowled"])
+                dismissal_df["_dismissal_structural"] = structural_mask.astype(int)
+                dismissal_df["_dismissal_caught"] = caught_mask.astype(int)
+                dismissal_df["_dismissal_other"] = (~(structural_mask | caught_mask)).astype(int)
+                dismissal_stats = dismissal_df.groupby("bowler", sort=True, dropna=False).agg(
+                    DismissalStructural=("_dismissal_structural", "sum"),
+                    DismissalCaught=("_dismissal_caught", "sum"),
+                    DismissalOther=("_dismissal_other", "sum"),
+                ).reset_index().rename(columns={"bowler": "Bowler"})
+
+        result = overall[
+            ["Bowler", "Style", "Balls", "Runs", "Outs", "Avg", "SR", "ThreatRating", "Confidence"]
+        ].copy()
+        result = result.merge(dismissal_stats, how="left", on="Bowler")
+
+        for phase_key, prefix in (
+            ("powerplay", "PP_"),
+            ("middle", "Mid_"),
+            ("death", "Death_"),
+        ):
+            result = result.merge(_build_phase_stats(phase_key, prefix, overall), how="left", on="Bowler")
+
+        result["Runs"] = result["Runs"].astype(int)
+        result["Balls"] = result["Balls"].astype(int)
+        result["Outs"] = result["Outs"].astype(int)
+        result["Avg"] = pd.to_numeric(result["Avg"], errors="coerce").round(1).astype(float)
+        result["SR"] = pd.to_numeric(result["SR"], errors="coerce").round(1).astype(float)
+        result["ThreatRating"] = result["ThreatRating"].astype(str)
+        result["Confidence"] = result["Confidence"].astype(int)
+        result["DismissalStructural"] = result["DismissalStructural"].fillna(0).astype(int)
+        result["DismissalCaught"] = result["DismissalCaught"].fillna(0).astype(int)
+        result["DismissalOther"] = result["DismissalOther"].fillna(0).astype(int)
+        result["IsBunny"] = result["ThreatRating"].eq("BUNNY")
+
+        return result[
+            [
+                "Bowler",
+                "Style",
+                "Balls",
+                "Runs",
+                "Outs",
+                "Avg",
+                "SR",
+                "ThreatRating",
+                "Confidence",
+                "DismissalStructural",
+                "DismissalCaught",
+                "DismissalOther",
+                "PP_Balls",
+                "PP_Runs",
+                "PP_Outs",
+                "PP_Avg",
+                "PP_SR",
+                "PP_ThreatRating",
+                "Mid_Balls",
+                "Mid_Runs",
+                "Mid_Outs",
+                "Mid_Avg",
+                "Mid_SR",
+                "Mid_ThreatRating",
+                "Death_Balls",
+                "Death_Runs",
+                "Death_Outs",
+                "Death_Avg",
+                "Death_SR",
+                "Death_ThreatRating",
+                "IsBunny",
+            ]
+        ].to_dict("records")
 
     def _generate_comparison_payload(
         self,

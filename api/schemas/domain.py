@@ -51,6 +51,29 @@ class MatchupStatsSchema(BaseModel):
     avg: float
     sr: float
     is_bunny: bool
+    threat_rating: Optional[str] = None
+    confidence: Optional[int] = None
+    dismissal_structural: Optional[int] = None
+    dismissal_caught: Optional[int] = None
+    dismissal_other: Optional[int] = None
+    pp_balls: Optional[int] = None
+    pp_runs: Optional[int] = None
+    pp_outs: Optional[int] = None
+    pp_avg: Optional[float] = None
+    pp_sr: Optional[float] = None
+    pp_threat_rating: Optional[str] = None
+    mid_balls: Optional[int] = None
+    mid_runs: Optional[int] = None
+    mid_outs: Optional[int] = None
+    mid_avg: Optional[float] = None
+    mid_sr: Optional[float] = None
+    mid_threat_rating: Optional[str] = None
+    death_balls: Optional[int] = None
+    death_runs: Optional[int] = None
+    death_outs: Optional[int] = None
+    death_avg: Optional[float] = None
+    death_sr: Optional[float] = None
+    death_threat_rating: Optional[str] = None
     highlight_flags: Optional[Dict[str, bool]] = None
     derived_badges: Optional[List[str]] = None
     cell_tones: Optional[Dict[str, str]] = None
