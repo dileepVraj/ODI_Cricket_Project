@@ -16,28 +16,29 @@
 
 /* ── CSS Custom Properties (Design Tokens) ───────────────────────────── */
 :root {
-  --font-text: "Cascadia Code", "Cascadia Mono", Consolas, "Courier New", ui-monospace, monospace;
+  --font-text: var(--font-inter), "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-numeric: "Segoe UI", "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Code", "Cascadia Mono", Consolas, ui-monospace, monospace;
 
   /* Background layers (darkest → lightest) */
-  --bg-deepest: #050816;
-  --bg-base: #0A0E27;
-  --bg-surface: #0F172A;
-  --bg-elevated: #151D35;
-  --bg-hover: #1A2340;
-  --bg-active: #1E293B;
+  --bg-deepest: #0F1214;
+  --bg-base: #181C1F;
+  --bg-surface: #1F2428;
+  --bg-elevated: #252B30;
+  --bg-hover: #2C333A;
+  --bg-active: #313840;
 
   /* Accent palette */
-  --accent-primary: #3B82F6;
-  /* Electric Blue */
-  --accent-secondary: #8B5CF6;
-  /* Purple */
-  --accent-tertiary: #06B6D4;
-  /* Cyan */
-  --accent-glow: rgba(59, 130, 246, 0.15);
-  --accent-glow-strong: rgba(59, 130, 246, 0.30);
-  --accent-secondary-glow: rgba(139, 92, 246, 0.15);
-  --accent-tertiary-glow: rgba(6, 182, 212, 0.15);
+  --accent-primary: #52B523;
+  /* bet365 Green */
+  --accent-secondary: #3D8B1A;
+  /* Deeper Green */
+  --accent-tertiary: #74C940;
+  /* Lighter Green */
+  --accent-glow: rgba(82, 181, 35, 0.12);
+  --accent-glow-strong: rgba(82, 181, 35, 0.25);
+  --accent-secondary-glow: rgba(61, 139, 26, 0.12);
+  --accent-tertiary-glow: rgba(116, 201, 64, 0.10);
   --tier-elite-glow: rgba(34, 197, 94, 0.15);
 
   /* Semantic colors (4-tier badge system) */
@@ -57,23 +58,23 @@
   --text-disabled: #475569;
 
   /* Border colors */
-  --border-subtle: rgba(148, 163, 184, 0.08);
-  --border-default: rgba(148, 163, 184, 0.12);
-  --border-strong: rgba(148, 163, 184, 0.20);
-  --border-accent: rgba(59, 130, 246, 0.30);
+  --border-subtle: rgba(156, 163, 175, 0.07);
+  --border-default: rgba(156, 163, 175, 0.12);
+  --border-strong: rgba(156, 163, 175, 0.22);
+  --border-accent: rgba(82, 181, 35, 0.35);
 
   /* Semantic banner tokens (caution / info / danger) */
   --bg-caution: rgba(245, 158, 11, 0.08);
   --border-caution: rgba(245, 158, 11, 0.25);
-  --bg-info: rgba(59, 130, 246, 0.08);
-  --border-info: rgba(59, 130, 246, 0.25);
+  --bg-info: rgba(82, 181, 35, 0.08);
+  --border-info: rgba(82, 181, 35, 0.25);
   --bg-danger: rgba(239, 68, 68, 0.08);
   --border-danger: rgba(239, 68, 68, 0.25);
 
   /* Glassmorphism */
-  --glass-bg: rgba(15, 23, 42, 0.60);
+  --glass-bg: rgba(31, 36, 40, 0.95);
   --glass-border: rgba(148, 163, 184, 0.10);
-  --glass-blur: 16px;
+  --glass-blur: 0px;
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -81,7 +82,7 @@
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
   --shadow-sidebar: 1px 0 12px rgba(0, 0, 0, 0.2);
   --shadow-card-deep: 0 8px 22px rgba(2, 8, 23, 0.2);
-  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
+  --shadow-glow: 0 0 16px rgba(82, 181, 35, 0.12);
 
   /* Spacing / sizing */
   --sidebar-width: 260px;
@@ -162,8 +163,8 @@ textarea {
 
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
@@ -176,7 +177,6 @@ textarea {
 .glass-card-hover:hover {
   border-color: var(--border-accent);
   box-shadow: var(--shadow-glow);
-  transform: translateY(-1px);
 }
 
 /* ── Gradient Text ───────────────────────────────────────────────────── */
@@ -198,7 +198,7 @@ textarea {
 /* ── Buttons ─────────────────────────────────────────────────────────── */
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-primary), #2563EB);
+  background: var(--accent-primary);
   color: white;
   border: none;
   padding: 8px 20px;
@@ -207,12 +207,11 @@ textarea {
   font-size: 0.875rem;
   cursor: pointer;
   transition: all var(--transition-fast);
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 2px 6px rgba(82, 181, 35, 0.20);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
-  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(82, 181, 35, 0.30);
 }
 
 .btn-ghost {
@@ -299,11 +298,11 @@ textarea {
 
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 0 rgba(82, 181, 35, 0);
   }
 
   50% {
-    box-shadow: 0 0 16px 4px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 16px 4px rgba(82, 181, 35, 0.15);
   }
 }
 
@@ -363,7 +362,7 @@ textarea {
 }
 
 .format-tab.active {
-  color: var(--accent-primary);
+  color: #FFFFFF;
   background: var(--accent-glow);
   border-color: var(--border-accent);
   font-weight: 600;
@@ -397,7 +396,7 @@ textarea {
 }
 
 .sidebar-item.active {
-  color: var(--accent-primary);
+  color: #FFFFFF;
   background: var(--accent-glow);
   border-color: var(--border-accent);
   font-weight: 600;
@@ -480,7 +479,7 @@ textarea {
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: var(--accent-primary);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -489,12 +488,11 @@ textarea {
   font-family: inherit;
   cursor: pointer;
   transition: all var(--transition-fast);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 2px 6px rgba(82, 181, 35, 0.20);
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-glow), var(--shadow-lg);
+  box-shadow: 0 3px 10px rgba(82, 181, 35, 0.30);
 }
 
 .btn-primary:disabled {
@@ -578,8 +576,8 @@ textarea {
 
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
@@ -592,7 +590,6 @@ textarea {
 .glass-card-hover:hover {
   border-color: var(--border-strong);
   box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
 }
 
 /* ── Animations ──────────────────────────────────────────────────────── */
