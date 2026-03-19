@@ -32,6 +32,27 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-142 - Visual polish on MatchupTable card layout
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-141
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Visual polish pass on MatchupTable.tsx. Added explicit hex (RGB) for contrast,
+SR fallback lookup for advantage bar, and BUNNY tag styling. Refined batter
+header weight and padding. Verified via Playwright screenshot.
+
+### Acceptance Criteria
+AC-1: Cards visually distinct with explicit RGB contrast.
+AC-2: Advantage bar shows colored fill with SR fallback.
+AC-3: Batter header weighted and padded (14px 16px).
+AC-4: Stats row layout (5 columns, 0 for zero).
+AC-5: BUNNY amber tag styled correctly.
+AC-6: Gates F1/F2/F3 and Gate 6 PASS.
+AC-7: Visual verification via Playwright screenshot PASS.
 ## TASK-141 - Rewrite MatchupTable as batter-grouped card layout
 **Type:** frontend-modification
 **Scope:** frontend

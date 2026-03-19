@@ -19,6 +19,9 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-142 - Visual polish on MatchupTable card layout - CLOSED 2026-03-19
+  Applied visual polish to MatchupTable.tsx (contrast, advantage bar, BUNNY tag).
+  Verified via Gates F1/F2/F3 and visual verification via Playwright. PASS.
 - TASK-141 - Rewrite MatchupTable as batter-grouped card layout - CLOSED 2026-03-18
   Rewrote MatchupTable.tsx into a card-based layout grouped by batter.
   Added collapsible headers, advantage bars, and BUNNY tags driven by API payload.
