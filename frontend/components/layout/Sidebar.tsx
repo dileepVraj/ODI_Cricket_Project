@@ -5,6 +5,7 @@
 
 import type { ManifestCategory } from "@/lib/api";
 import { useAppContext } from "@/lib/context";
+import { stripEmoji } from "@/lib/utils";
 import {
     BarChart3,
     Building2,
@@ -108,18 +109,18 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
     return (
         <aside
             id="sidebar"
-            className={`animate-slide-in [width:${sidebarWidth}] [min-width:${sidebarWidth}] [background:var(--bg-surface)] [border-right:1px_solid_var(--border-subtle)] [backdrop-filter:blur(12px)] [display:flex] [flex-direction:column] [flex-shrink:0] [transition:width_var(--transition-normal),_min-width_var(--transition-normal)] [overflow-y:auto] [overflow-x:hidden] [box-shadow:var(--shadow-sidebar)] [z-index:40]`}
+            className={`animate-slide-in [width:${sidebarWidth}] [min-width:${sidebarWidth}] [background:var(--bg-surface)] [border-right:1px_solid_var(--border-subtle)] [display:flex] [flex-direction:column] [flex-shrink:0] [transition:width_var(--transition-normal),_min-width_var(--transition-normal)] [overflow-y:auto] [overflow-x:hidden] [box-shadow:var(--shadow-sidebar)] [z-index:40]`}
         >
             <div className="[padding:12px_8px] [flex:1]">
                 <button
                     id="sidebar-dashboard"
                     className={`sidebar-item ${activeCategory === dashboardItem.key ? "active" : ""} [width:100%] [border:none] ${isCollapsed ? "[justify-content:center]" : ""}`}
                     onClick={() => onCategorySelect(dashboardItem.key)}
-                    title={isCollapsed ? dashboardItem.label : undefined}
-                    aria-label={dashboardItem.label}
+                    title={isCollapsed ? stripEmoji(dashboardItem.label) : undefined}
+                    aria-label={stripEmoji(dashboardItem.label)}
                 >
                     <dashboardItem.Icon size={18} className="[flex-shrink:0]" />
-                    {!isCollapsed && <span>{dashboardItem.label}</span>}
+                    {!isCollapsed && <span>{stripEmoji(dashboardItem.label)}</span>}
                 </button>
 
                 {isCollapsed && (
@@ -151,14 +152,14 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
                                         id={`sidebar-${cat.key}`}
                                         className={`sidebar-item ${activeCategory === cat.key ? "active" : ""} [width:100%] [border:none] ${isCollapsed ? "[justify-content:center]" : ""}`}
                                         onClick={() => onCategorySelect(cat.key)}
-                                        title={isCollapsed ? cat.label : cat.description}
-                                        aria-label={cat.label}
+                                        title={isCollapsed ? stripEmoji(cat.label) : cat.description}
+                                        aria-label={stripEmoji(cat.label)}
                                     >
                                         <Icon size={16} className="[flex-shrink:0]" />
                                         {!isCollapsed && (
                                             <>
                                                 <span className="[flex:1] [text-align:left] [overflow:hidden] [text-overflow:ellipsis] [white-space:nowrap]">
-                                                    {cat.label}
+                                                    {stripEmoji(cat.label)}
                                                 </span>
                                                 <span className="fn-count">{fnCount}</span>
                                             </>

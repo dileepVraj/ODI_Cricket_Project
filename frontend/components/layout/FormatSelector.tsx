@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppContext } from "@/lib/context";
+import { stripEmoji } from "@/lib/utils";
 import { Activity, Zap } from "lucide-react";
 
 export default function FormatSelector() {
@@ -12,18 +13,15 @@ export default function FormatSelector() {
             className="format-selector [height:var(--format-selector-height)] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_20px] [position:sticky] [top:0px] [z-index:50]"
         >
             <div className="[display:flex] [align-items:center] [gap:10px]">
-                <div className="[width:32px] [height:32px] [border-radius:var(--radius-md)] [background:linear-gradient(135deg,_var(--accent-primary),_var(--accent-secondary))] [display:flex] [align-items:center] [justify-content:center]">
-                    <Activity size={18} className="[color:var(--text-primary)]" />
+                <div className="[width:28px] [height:28px] [border-radius:var(--radius-md)] [background:var(--bg-elevated)] [border:1px_solid_var(--border-default)] [display:flex] [align-items:center] [justify-content:center]">
+                    <Activity size={16} className="[color:var(--text-primary)]" />
                 </div>
                 <div>
                     <h1
-                        className="gradient-text [font-size:1rem] [font-weight:800] [letter-spacing:-0.02em]"
+                        className="[color:var(--text-primary)] [font-size:0.95rem] [font-weight:700] [letter-spacing:-0.01em]"
                     >
                         Vantage
                     </h1>
-                    <span className="[font-size:0.65rem] [color:var(--text-disabled)] [font-weight:500] [letter-spacing:0.05em] [text-transform:uppercase]">
-                        Strategic Algo Exchange
-                    </span>
                 </div>
             </div>
 
@@ -37,8 +35,7 @@ export default function FormatSelector() {
                         disabled={!fmt.has_manifest}
                         title={fmt.has_manifest ? fmt.label : `${fmt.label} - coming soon`}
                     >
-                        <span className="[font-size:1rem]">{fmt.icon}</span>
-                        <span>{fmt.label}</span>
+                        <span>{stripEmoji(fmt.label)}</span>
                     </button>
                 ))}
             </nav>

@@ -21,12 +21,12 @@
   --font-mono: "Cascadia Code", "Cascadia Mono", Consolas, ui-monospace, monospace;
 
   /* Background layers (darkest → lightest) */
-  --bg-deepest: #0F1214;
-  --bg-base: #181C1F;
-  --bg-surface: #1F2428;
-  --bg-elevated: #252B30;
-  --bg-hover: #2C333A;
-  --bg-active: #313840;
+  --bg-deepest: #111417;
+  --bg-base: #161A1D;
+  --bg-surface: #1C2127;
+  --bg-elevated: #222930;
+  --bg-hover: #29313A;
+  --bg-active: #2F3844;
 
   /* Accent palette */
   --accent-primary: #52B523;
@@ -35,8 +35,8 @@
   /* Deeper Green */
   --accent-tertiary: #74C940;
   /* Lighter Green */
-  --accent-glow: rgba(82, 181, 35, 0.12);
-  --accent-glow-strong: rgba(82, 181, 35, 0.25);
+  --accent-glow: rgba(82, 181, 35, 0.08);
+  --accent-glow-strong: rgba(82, 181, 35, 0.18);
   --accent-secondary-glow: rgba(61, 139, 26, 0.12);
   --accent-tertiary-glow: rgba(116, 201, 64, 0.10);
   --tier-elite-glow: rgba(34, 197, 94, 0.15);
@@ -52,16 +52,16 @@
   /* Red — danger */
 
   /* Text hierarchy */
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --text-disabled: #475569;
+  --text-primary: #DCE3EA;
+  --text-secondary: #7E8C9A;
+  --text-muted: #4E5B68;
+  --text-disabled: #384450;
 
   /* Border colors */
-  --border-subtle: rgba(156, 163, 175, 0.07);
-  --border-default: rgba(156, 163, 175, 0.12);
-  --border-strong: rgba(156, 163, 175, 0.22);
-  --border-accent: rgba(82, 181, 35, 0.35);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-accent: rgba(82, 181, 35, 0.28);
 
   /* Semantic banner tokens (caution / info / danger) */
   --bg-caution: rgba(245, 158, 11, 0.08);
@@ -85,11 +85,11 @@
   --shadow-glow: 0 0 16px rgba(82, 181, 35, 0.12);
 
   /* Spacing / sizing */
-  --sidebar-width: 260px;
-  --sidebar-collapsed-width: 64px;
-  --topbar-height: 56px;
-  --format-selector-height: 56px;
-  --context-bar-height: 64px;
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 60px;
+  --topbar-height: 48px;
+  --format-selector-height: 48px;
+  --context-bar-height: 52px;
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -345,10 +345,10 @@ textarea {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 5px 12px;
   border-radius: var(--radius-md);
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -363,13 +363,13 @@ textarea {
 
 .format-tab.active {
   color: #FFFFFF;
-  background: var(--accent-glow);
-  border-color: var(--border-accent);
+  background: rgba(82, 181, 35, 0.10);
+  border-color: rgba(82, 181, 35, 0.22);
   font-weight: 600;
 }
 
 .format-tab.disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
@@ -379,10 +379,10 @@ textarea {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: var(--radius-md);
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -415,12 +415,12 @@ textarea {
 
 .sidebar-group-label {
   padding: 6px 14px;
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-disabled);
-  margin-top: 16px;
+  color: var(--text-secondary);
+  margin-top: 20px;
 }
 
 .sidebar-group-label:first-child {
@@ -433,9 +433,9 @@ textarea {
   background: var(--bg-elevated);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  padding: 8px 12px;
+  padding: 5px 10px;
   color: var(--text-primary);
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   font-family: inherit;
   transition: all var(--transition-fast);
   outline: none;
@@ -468,8 +468,8 @@ textarea {
 }
 
 .sidebar-item.active .fn-count {
-  background: var(--accent-primary);
-  color: white;
+  background: rgba(82, 181, 35, 0.15);
+  color: var(--accent-primary);
 }
 
 /* ── Buttons ─────────────────────────────────────────────────────────── */

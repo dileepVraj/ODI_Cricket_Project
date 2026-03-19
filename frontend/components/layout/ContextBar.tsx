@@ -2,7 +2,7 @@
 
 import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
 import { useAppContext } from "@/lib/context";
-import { SlidersHorizontal } from "lucide-react";
+import { stripEmoji } from "@/lib/utils";
 
 export default function ContextBar() {
     const {
@@ -60,8 +60,6 @@ export default function ContextBar() {
             id="context-bar"
             className="animate-fade-in [height:var(--context-bar-height)] [background:var(--bg-surface)] [border-bottom:1px_solid_var(--border-subtle)] [display:flex] [align-items:center] [padding:0_20px] [gap:12px] [overflow:visible] [position:relative] [z-index:45]"
         >
-            <SlidersHorizontal size={16} className="[color:var(--text-disabled)] [flex-shrink:0]" />
-
             {fieldEntries.map(([key, field]) => {
                 if (field.type === "dropdown") {
                     let dropdownOptions = field.options || [];
@@ -140,9 +138,9 @@ function DropdownField({
         <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:140px]">
             <label
                 htmlFor={`context-${fieldKey}`}
-                className="[font-size:0.65rem] [font-weight:600] [color:var(--text-disabled)] [text-transform:uppercase] [letter-spacing:0.05em]"
+                className="[font-size:0.62rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]"
             >
-                {label}
+                {stripEmoji(label)}
             </label>
             <select
                 id={`context-${fieldKey}`}
@@ -180,8 +178,8 @@ function ComboboxField({
     return (
         <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:170px]">
             <label className="[display:flex] [flex-direction:column] [gap:2px]">
-                <span className="[font-size:0.65rem] [font-weight:600] [color:var(--text-disabled)] [text-transform:uppercase] [letter-spacing:0.05em]">
-                    {label}
+                <span className="[font-size:0.62rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]">
+                    {stripEmoji(label)}
                 </span>
                 <AccessibleCombobox
                     value={value}
@@ -213,9 +211,9 @@ function SliderField({
         <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:130px]">
             <label
                 htmlFor={`context-${fieldKey}`}
-                className="[font-size:0.65rem] [font-weight:600] [color:var(--text-disabled)] [text-transform:uppercase] [letter-spacing:0.05em]"
+                className="[font-size:0.62rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]"
             >
-                {label}:{" "}
+                {stripEmoji(label)}:{" "}
                 <span className="[color:var(--accent-primary)] [font-weight:700]">{value}</span>
             </label>
             <div className="[display:flex] [align-items:center] [gap:8px]">
