@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-149 - Matchup card UI upgrade — confidence dots, dismissal mode line, phase breakdown strip - CLOSED 2026-03-19
+  Added confidence dots (1-5), dismissal mode breakdown line, and phase-wise
+  threat breakdown strip (PP/MID/DT). Added PhaseBadge helper. Fixed Rule
+  2.2C-R3 violations with useMemo for styles. Gates F1/F2/F3 PASS.
+
 - TASK-148 - Frontend flag migration — 9-tier ThreatRating read from API - CLOSED 2026-03-19
   Migrated flag logic from frontend to backend. Deleted computeThreatRating(),
   updated ThreatRating type to 9 values, updated colour/style maps and legend.
@@ -413,7 +418,7 @@ None
 
 ## Queue (in order)
 1. TASK-148 — Matchup flag migration frontend B1 — CLOSED 2026-03-19
-2. TASK-149 — Matchup new UI elements frontend B2 — READY
+2. TASK-149 — Matchup new UI elements frontend B2 — CLOSED 2026-03-19
 3. TASK-012 — Token optimisation (parked — monitor first, from 2026-03-03)
 
 ## Icebox

@@ -32,6 +32,20 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-149 - Matchup card UI upgrade — confidence dots, dismissal mode line, phase breakdown strip
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-148
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Added three new UI elements to MatchupCard: 1-5 confidence dots (rating-colored),
+dismissal mode breakdown (e.g., 2 B/LBW · 1c), and a phase breakdown strip
+(PP/MID/DT badges). Updated layout to flex-direction:column. Added PhaseBadge
+helper component. All styles wrapped in useMemo to satisfy Rule 2.2C-R3.
+
 ## TASK-148 - Frontend flag migration — 9-tier ThreatRating from API, delete computeThreatRating()
 **Type:** frontend-modification
 **Scope:** frontend
