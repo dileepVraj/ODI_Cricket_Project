@@ -32,6 +32,22 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-150 - Design system overhaul — bet365 green theme, Inter font, flat surfaces
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Redesigned the application design system from a deep navy / electric-blue monospace
+theme to a bet365-inspired professional dark theme. Swapped body font to Inter
+(sans-serif), replaced electric-blue accent palette with bet365 green (#52B523),
+shifted backgrounds to warm charcoal (#181C1F), neutralized borders to warm grey,
+and removed glassmorphism blur effects. Updated button primary style to solid
+green. All changes implemented in globals.css and layout.tsx (for font loading).
+
 ## TASK-149 - Matchup card UI upgrade — confidence dots, dismissal mode line, phase breakdown strip
 **Type:** frontend-modification
 **Scope:** frontend

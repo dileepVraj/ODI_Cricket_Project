@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-150 - Design system overhaul — bet365 green theme, Inter font, flat surfaces - CLOSED 2026-03-19
+  Redesigned design system from deep navy/electric-blue to bet365 dark green
+  theme. Swapped body font to Inter, replaced blue accents with #52B523 green,
+  shifted backgrounds to #181C1F charcoal, and removed glassmorphism blur.
+  Updated globals.css and layout.tsx. Bouncer PASS.
+
 - TASK-149 - Matchup card UI upgrade — confidence dots, dismissal mode line, phase breakdown strip - CLOSED 2026-03-19
   Added confidence dots (1-5), dismissal mode breakdown line, and phase-wise
   threat breakdown strip (PP/MID/DT). Added PhaseBadge helper. Fixed Rule
