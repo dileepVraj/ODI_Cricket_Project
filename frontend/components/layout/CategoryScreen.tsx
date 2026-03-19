@@ -84,10 +84,6 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         <div className="[display:flex] [justify-content:space-between] [align-items:flex-start] [margin-bottom:16px] [flex-wrap:wrap] [gap:12px]">
           <div>
             <h3 className="[font-size:1.05rem] [font-weight:700] [color:var(--text-primary)] [margin-bottom:4px]">{activeFn.label}</h3>
-            <div className="[display:flex] [gap:6px] [flex-wrap:wrap] [font-size:0.75rem]">
-              <span className="badge badge-strong">{activeFn.output_type}</span>
-              <span className="[padding:2px_8px] [border-radius:9999px] [background:var(--bg-active)] [color:var(--text-muted)]">{activeFn.engine_class}.{activeFn.engine_method}</span>
-            </div>
           </div>
           <div className="[display:flex] [gap:8px] [align-items:center]">
             {effectiveRequiredContext.map((key) => {
@@ -115,8 +111,15 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
             ))}
           </div>
         ) : (
-          <button id={`execute-${activeFn.key}`} aria-label="Execute analysis" className={`btn-primary [margin-bottom:20px] [display:flex] [align-items:center] [gap:8px] ${isLoading || !canRun ? "[opacity:0.5] [cursor:not-allowed]" : "[opacity:1] [cursor:pointer]"}`} onClick={() => runExecute()} disabled={isLoading || !canRun}>
-            {isLoading ? ( <><Loader2 size={16} className="animate-spin" />Executing...</> ) : !canRun ? ( <><AlertCircle size={16} />{!canExecute ? "Fill Required Fields" : !squadReady ? "Select Squads" : `Missing ${missingExtraInputs[0]}`}</> ) : ( <><Zap size={16} />Execute Analysis</> )}
+          <button id={`execute-${activeFn.key}`} aria-label="Execute analysis" className={`${result !== null && !isLoading ? 'btn-ghost' : 'btn-primary'} [margin-bottom:20px] [display:flex] [align-items:center] [gap:8px] ${isLoading || !canRun ? "[opacity:0.5] [cursor:not-allowed]" : "[opacity:1] [cursor:pointer]"}`} onClick={() => runExecute()} disabled={isLoading || !canRun}>
+            {isLoading
+              ? (<><Loader2 size={16} className="animate-spin" />Executing...</>)
+              : !canRun
+              ? (<><AlertCircle size={16} />{!canExecute ? "Fill Required Fields" : !squadReady ? "Select Squads" : `Missing ${missingExtraInputs[0]}`}</>)
+              : result !== null
+              ? (<>Re-run</>)
+              : (<><Zap size={16} />Execute Analysis</>)
+            }
           </button>
         )}
         {error && <ExecuteErrorPanel error={error} onRetry={() => runExecute(activeView)} />}

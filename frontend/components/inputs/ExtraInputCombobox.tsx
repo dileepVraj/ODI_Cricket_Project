@@ -125,7 +125,7 @@ export default function ExtraInputCombobox({
                     ? `Loading ${label.toLowerCase()} options...`
                     : options.length === 0
                         ? "No players available."
-                        : `${options.length} player options ready`;
+                        : "";
 
     return (
         <div className="[display:flex] [flex-direction:column] [gap:6px]">
