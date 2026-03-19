@@ -50,7 +50,11 @@ function useSquadPanelController(args: SquadPanelControllerArgs): SquadPanelCont
     const validTeam = isValidTeam(team);
 
     useEffect(() => {
-        if (!validTeam) return setAvailablePlayers([]) || setLoadError(null);
+        if (!validTeam) {
+            setAvailablePlayers([]);
+            setLoadError(null);
+            return;
+        }
         let cancelled = false;
         setIsLoadingPlayers(true);
         setLoadError(null);

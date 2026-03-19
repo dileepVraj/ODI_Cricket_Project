@@ -25,7 +25,10 @@ const MatchAuditSection = lazy(() => import("./MatchAuditSection"));
 interface FunctionRendererProps {
     outputType: string;
     data: unknown;
+    homeXI?: string[];
+    awayXI?: string[];
 }
+
 type JsonRecord = Record<string, unknown>;
 type JsonRecordArray = JsonRecord[];
 interface EnrichedDataResult {
@@ -82,7 +85,8 @@ function renderWithAudit(
 }
 function getSuspenseFallback(): ReactNode { return <div className="skeleton" aria-hidden="true">&nbsp;</div>; }
 
-export default function FunctionRenderer({ outputType, data }: FunctionRendererProps) {
+export default function FunctionRenderer(props: FunctionRendererProps) {
+    const { outputType, data, homeXI, awayXI } = props;
     if (data === null || data === undefined) {
         return (
             <Suspense fallback={<div className="skeleton [height:2rem]" />}>
@@ -226,7 +230,11 @@ export default function FunctionRenderer({ outputType, data }: FunctionRendererP
         case "matchup_table":
             if (isJsonRecordArray(mainData)) {
                 renderedOutput = wrapRenderer(
-                    <MatchupTable data={mainData} />,
+                    <MatchupTable 
+                        data={mainData} 
+                        homeXI={homeXI} 
+                        awayXI={awayXI} 
+                    />,
                     "Unable to render matchup table."
                 );
             }
