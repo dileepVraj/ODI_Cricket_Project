@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-146:** Pre-existing Gate 4 serialization violations fixed - 4 .to_dict row guards added.
-2. **TASK-145:** MatchupCard redesigned with left danger strip (rating-colored), bowling type badge (style-colored), and THREAT RATING badge. Removed legacy BUNNY tag and advantage bar.
-3. **TASK-144:** MatchupTable restructured with split two-column layout, legend strip, batter danger summary, and computeThreatRating() helper.
-4. **TASK-143:** SquadBuilder redesigned with compact collapsed chip bar; auto-collapse when squads loaded, expand to full layout on click.
-5. **TASK-142:** Visual polish on MatchupTable card layout; explicit RGB for contrast, SR fallback lookup, and BUNNY tag styling refined.
+1. **TASK-147:** Matchup engine upgraded — 9-tier ThreatRating, recency weighting, phase-wise stats (PP/Mid/Death), dismissal mode breakdown, confidence score 1-5.
+2. **TASK-146:** Pre-existing Gate 4 serialization violations fixed — 4 .to_dict row guards added.
+3. **TASK-145:** MatchupCard redesigned with left danger strip (rating-colored), bowling type badge (style-colored), and THREAT RATING badge. Removed legacy BUNNY tag and advantage bar.
+4. **TASK-144:** MatchupTable restructured with split two-column layout, legend strip, batter danger summary, and computeThreatRating() helper.
+5. **TASK-143:** SquadBuilder redesigned with compact collapsed chip bar; auto-collapse when squads loaded, expand to full layout on click.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*

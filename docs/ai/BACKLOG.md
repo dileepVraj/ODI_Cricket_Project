@@ -32,6 +32,23 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-147 - Matchup engine upgrade — 9-tier ThreatRating, recency weighting, phase stats, dismissal mode
+**Type:** new-feature
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-146
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Upgraded _matchup_single_batter() in player_engine.py to produce recency-weighted
+stats (4-bucket exponential decay), 9-tier ThreatRating via vectorized np.select,
+confidence score 1-5, dismissal mode breakdown (structural/caught/other), and
+phase-wise stats + ThreatRating for PP/Mid/Death phases. Added MatchupRowExtended
+TypedDict and 23 new Optional fields in MatchupStatsSchema.
+
+---
+
 ## TASK-146 - Fix pre-existing Gate 4 serialization violations - 4 .to_dict row guards
 **Type:** validator-fix
 **Scope:** backend

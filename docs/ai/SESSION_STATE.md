@@ -16,13 +16,15 @@ Claude Code MCPs installed 2026-03-10 (6 servers).
 None.
 
 ## In Progress
-- TASK-147 - Matchup engine upgrade (pending commit)
+- Nothing currently in progress
 
 ## Last Completed
-- TASK-146 - Fix pre-existing Gate 4 serialization violations - CLOSED 2026-03-19
-  Added `.head(500)` guards at four `.to_dict("records")` call sites in
-  matchup_engine.py, enrichment.py, and squad_service.py.
-  Verified via Gates 1/2/4/5/6 and compliance_bouncer. PASS.
+- TASK-147 - Matchup engine upgrade: 9-tier ThreatRating, recency weighting, phase stats, dismissal mode - CLOSED 2026-03-19
+  Upgraded _matchup_single_batter() with recency-weighted stats, 9-tier ThreatRating
+  (vectorized np.select), confidence 1-5, dismissal mode breakdown, PP/Mid/Death phase stats.
+  Added MatchupRowExtended TypedDict and 23 new Optional fields in MatchupStatsSchema.
+  Verified via Gates 1/2/3/4/5/6 and compliance_bouncer. PASS.
+
 
 - TASK-145 - MatchupCard redesign ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â danger strip, bowling badge, threat rating badge - CLOSED 2026-03-19
   Redesigned MatchupCard in MatchupTable.tsx with an 8px left danger strip (rating-colored),
@@ -402,14 +404,12 @@ None.
   SkeletonLoader, FunctionRenderer, page.tsx, CategoryScreen, border-radius tokens.
 
 ## Active Task
-TASK-147 - Matchup engine upgrade (pending commit)
+None
 
 ## Queue (in order)
-1. TASK-146 — Fix pre-existing Gate 4 serialization violations (gate fix) — READY
-2. TASK-147 — Matchup engine upgrade: 9-tier ThreatRating, recency weighting, phase stats, dismissal mode — DEPENDS ON TASK-146
-3. TASK-148 — Matchup flag migration frontend B1 — DEPENDS ON TASK-147
-4. TASK-149 — Matchup new UI elements frontend B2 — DEPENDS ON TASK-148
-5. TASK-012 — Token optimisation (parked — monitor first, from 2026-03-03)
+1. TASK-148 — Matchup flag migration frontend B1 — READY (DEPENDS ON TASK-147 which is now CLOSED)
+2. TASK-149 — Matchup new UI elements frontend B2 — DEPENDS ON TASK-148
+3. TASK-012 — Token optimisation (parked — monitor first, from 2026-03-03)
 
 ## Icebox
 - ICE-001 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â MCP Integration (broader) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â revisit Phase 12 scoping
