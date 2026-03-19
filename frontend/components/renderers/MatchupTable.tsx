@@ -7,20 +7,7 @@ import { Crosshair, ChevronDown, ChevronUp } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
 import { MatchupRow, toMatchupRows } from "@/lib/comparison-types";
 interface MatchupTableProps { data: Record<string, unknown>[]; homeXI?: string[]; awayXI?: string[]; homeTeamName?: string; awayTeamName?: string; }
-type ThreatRating = "BUNNY" | "THREAT" | "CAUTION" | "SAFE" | "LOW DATA" | "CONTESTED";
-function computeThreatRating(row: MatchupRow): ThreatRating {
-    const balls = typeof row["Balls"] === "number" ? row["Balls"] : parseFloat(String(row["Balls"] ?? "0"));
-    const avg = typeof row["Avg"] === "number" ? row["Avg"] : parseFloat(String(row["Avg"] ?? "0"));
-    const sr = typeof row["SR"] === "number" ? row["SR"] : parseFloat(String(row["SR"] ?? "0"));
-    const outs = typeof row["Outs"] === "number" ? row["Outs"] : parseFloat(String(row["Outs"] ?? "0"));
-    if (Number.isNaN(balls) || balls < 10) return "LOW DATA";
-    const dismissalPct = balls > 0 ? (outs / balls) * 100 : 0;
-    if (outs >= 2 && (avg < 20 || dismissalPct > 35)) return "BUNNY";
-    if (sr > 105 && avg > 28 && balls >= 15) return "THREAT";
-    if (sr > 95 || avg > 25) return "CAUTION";
-    if (outs >= 1 && sr < 80) return "SAFE";
-    return "CONTESTED";
-}
+type ThreatRating = "NEW MATCHUP" | "LOW DATA" | "BUNNY" | "DOMINATED" | "WATCHFUL" | "CONTESTED" | "ADVANTAGE" | "THREAT" | "DOMINANT";
 
 function getBowlingBadgeColor(style: string): string {
   if (style.includes("Leg Spin"))  return "var(--accent-secondary)";
@@ -32,30 +19,39 @@ function getBowlingBadgeColor(style: string): string {
 }
 
 const THREAT_STRIP_COLORS: Record<ThreatRating, string> = {
-  BUNNY:      "var(--tier-danger)",
-  THREAT:     "var(--tier-caution)",
-  CAUTION:    "var(--tier-caution)",
-  SAFE:       "var(--tier-elite)",
-  "LOW DATA": "var(--text-disabled)",
-  CONTESTED:  "var(--bg-active)",
+  "NEW MATCHUP": "var(--text-disabled)",
+  "LOW DATA":    "var(--text-disabled)",
+  BUNNY:         "var(--tier-danger)",
+  DOMINATED:     "var(--tier-danger)",
+  WATCHFUL:      "var(--tier-caution)",
+  CONTESTED:     "var(--bg-active)",
+  ADVANTAGE:     "var(--tier-strong)",
+  THREAT:        "var(--tier-caution)",
+  DOMINANT:      "var(--tier-elite)",
 };
 
 const THREAT_BADGE_STYLES: Record<ThreatRating, { bg: string; text: string; border: string }> = {
-  BUNNY:      { bg: "var(--bg-danger)", text: "var(--tier-danger)", border: "var(--tier-danger)" },
-  THREAT:     { bg: "var(--bg-caution)", text: "var(--tier-caution)", border: "var(--tier-caution)" },
-  CAUTION:    { bg: "var(--bg-caution)", text: "var(--tier-caution)", border: "var(--border-caution)" },
-  SAFE:       { bg: "rgba(34, 197, 94, 0.12)", text: "var(--tier-elite)", border: "rgba(34, 197, 94, 0.20)" },
-  "LOW DATA": { bg: "var(--bg-elevated)", text: "var(--text-disabled)", border: "var(--border-default)" },
-  CONTESTED:  { bg: "var(--bg-deepest)", text: "var(--text-muted)", border: "var(--bg-active)" },
+  "NEW MATCHUP": { bg: "var(--bg-elevated)",            text: "var(--text-disabled)", border: "var(--border-default)" },
+  "LOW DATA":    { bg: "var(--bg-elevated)",            text: "var(--text-disabled)", border: "var(--border-default)" },
+  BUNNY:         { bg: "var(--bg-danger)",              text: "var(--tier-danger)",   border: "var(--tier-danger)" },
+  DOMINATED:     { bg: "var(--bg-danger)",              text: "var(--tier-danger)",   border: "var(--tier-danger)" },
+  WATCHFUL:      { bg: "var(--bg-caution)",             text: "var(--tier-caution)",  border: "var(--tier-caution)" },
+  CONTESTED:     { bg: "var(--bg-deepest)",             text: "var(--text-muted)",    border: "var(--bg-active)" },
+  ADVANTAGE:     { bg: "rgba(0, 200, 170, 0.10)",       text: "var(--tier-strong)",   border: "rgba(0, 200, 170, 0.25)" },
+  THREAT:        { bg: "var(--bg-caution)",             text: "var(--tier-caution)",  border: "var(--tier-caution)" },
+  DOMINANT:      { bg: "rgba(34, 197, 94, 0.12)",       text: "var(--tier-elite)",    border: "rgba(34, 197, 94, 0.20)" },
 };
 
 const LEGEND_ITEMS: Array<{ label: string; color: string }> = [
-  { label: "BUNNY", color: "var(--tier-danger)" },
-  { label: "THREAT", color: "var(--tier-caution)" },
-  { label: "CAUTION", color: "var(--tier-caution)" },
-  { label: "SAFE", color: "var(--tier-elite)" },
-  { label: "LOW DATA", color: "var(--text-disabled)" },
-  { label: "CONTESTED", color: "var(--text-muted)" }
+  { label: "NEW MATCHUP", color: "var(--text-disabled)" },
+  { label: "LOW DATA",    color: "var(--text-disabled)" },
+  { label: "BUNNY",       color: "var(--tier-danger)" },
+  { label: "DOMINATED",   color: "var(--tier-danger)" },
+  { label: "WATCHFUL",    color: "var(--tier-caution)" },
+  { label: "CONTESTED",   color: "var(--text-muted)" },
+  { label: "ADVANTAGE",   color: "var(--tier-strong)" },
+  { label: "THREAT",      color: "var(--tier-caution)" },
+  { label: "DOMINANT",    color: "var(--tier-elite)" },
 ];
 
 function LegendStrip() {
@@ -74,11 +70,14 @@ function LegendStrip() {
     );
 }
 
+const THREAT_ORDER: ThreatRating[] = ["BUNNY", "DOMINATED", "THREAT", "DOMINANT", "WATCHFUL", "ADVANTAGE", "CONTESTED", "LOW DATA", "NEW MATCHUP"];
 function computeDangerSummary(rows: MatchupRow[]): Array<{ rating: ThreatRating; count: number }> {
     const counts: Partial<Record<ThreatRating, number>> = {};
-    rows.forEach(row => { const r = computeThreatRating(row); counts[r] = (counts[r] ?? 0) + 1; });
-    const ORDER: ThreatRating[] = ["BUNNY", "THREAT", "CAUTION", "SAFE", "LOW DATA", "CONTESTED"];
-    return ORDER.filter(r => (counts[r] ?? 0) > 0).map(r => ({ rating: r, count: counts[r]! }));
+    rows.forEach(row => {
+        const r = (row["threat_rating"] as ThreatRating | undefined) ?? "LOW DATA";
+        counts[r] = (counts[r] ?? 0) + 1;
+    });
+    return THREAT_ORDER.filter(r => (counts[r] ?? 0) > 0).map(r => ({ rating: r, count: counts[r]! }));
 }
 
 export default function MatchupTable({ data, homeXI, awayXI, homeTeamName, awayTeamName }: MatchupTableProps) {
@@ -150,7 +149,7 @@ function MatchupCard({ row }: { row: MatchupRow }) {
   const balls  = row["Balls"] === null || row["Balls"] === undefined ? "-" : String(row["Balls"]);
   const outs   = row["Outs"]  === null || row["Outs"]  === undefined ? 0   : Number(row["Outs"]);
 
-  const rating = useMemo(() => computeThreatRating(row), [row]);
+  const rating: ThreatRating = useMemo(() => (row["threat_rating"] as ThreatRating | undefined) ?? "LOW DATA", [row]);
 
   const visualProps = useMemo(() => ({
     strip: { backgroundColor: THREAT_STRIP_COLORS[rating] },
@@ -208,7 +207,7 @@ function MatchupCard({ row }: { row: MatchupRow }) {
           className="[display:flex] [align-items:center] [padding:4px_10px] [border-radius:var(--radius-sm)] [border:1px_solid] [flex-shrink:0]"
         >
           <span className="[font-size:0.7rem] [font-weight:700] [text-transform:uppercase] [letter-spacing:0.05em] [white-space:nowrap]">
-            {rating === "LOW DATA" ? "LOW DATA" : rating}
+            {rating}
           </span>
         </div>
 
