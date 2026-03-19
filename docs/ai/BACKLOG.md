@@ -32,6 +32,30 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-144 - MatchupTable split layout, legend strip, batter danger summary header
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-143
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Restructured MatchupTable to render a split two-column layout (home team batters
+left, away team batters right), added a legend strip above the results, and
+updated batter group headers to include a danger summary strip. Added
+computeThreatRating() pure function for danger assessment.
+
+### Acceptance Criteria
+AC-1: Legend strip with 6 colored dot items - SATISFIED
+AC-2: Two-column layout, home left / away right - SATISFIED
+AC-3: Batter split correct (home in left, away in right) - SATISFIED
+AC-4: Batter group danger summary strip - SATISFIED
+AC-5: Individual cards unchanged - SATISFIED
+AC-6: Prop threading correct (optional only) - SATISFIED
+AC-7: Gates F1/F2/F3 PASS - SATISFIED
+AC-8: Empty state in column with no data - SATISFIED
+
 ## TASK-143 - SquadBuilder redesigned with compact collapsed chip bar
 **Type:** frontend-modification
 **Scope:** frontend

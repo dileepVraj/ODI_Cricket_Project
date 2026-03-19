@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-144 - MatchupTable split layout, legend strip, batter danger summary header - CLOSED 2026-03-19
+  Restructured MatchupTable to render a split two-column layout (home vs away
+  batters), added a legend strip above results, and updated batter group
+  headers to include a danger summary strip. Added computeThreatRating()
+  pure helper for danger assessment.
+
 - TASK-143 - SquadBuilder redesigned with compact collapsed chip bar - CLOSED 2026-03-19
   Redesigned SquadBuilder.tsx to display as a compact collapsed chip bar by default
   when both squads are loaded. Added auto-collapse logic and chevron toggle.
