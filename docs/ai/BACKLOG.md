@@ -32,6 +32,20 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-153 - Player Matchups component redesign — 12 targeted fixes
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-152
+**Created:** 2026-03-20
+**Status:** CLOSED - 2026-03-20
+
+### Description
+Redesigned Player Matchups component: removed dev artefacts, added batter filter, 
+defaulted to collapsed rows, updated legend to single-line with footnote, 
+implemented ghost "Re-run" button, and improved phase badges/stats typography.
+Extracted MatchupCard and PhaseBadge to separate file to satisfy 300-line limit.
+
 ## TASK-152 - Remove DashboardScreen welcome screen — app defaults to first manifest category on load
 **Type:** frontend-modification
 **Scope:** frontend

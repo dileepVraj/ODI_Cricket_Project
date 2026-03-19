@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-153 - Player Matchups component redesign — dev artefacts removed, Re-run button, collapsed default — CLOSED 2026-03-20
+  Redesigned Player Matchups with 12 targeted fixes. Added batter filter, 
+  ghost "Re-run" button, single-line legend, font-numeric stats.
+  Extracted MatchupCard and PhaseBadge to resolve 300-line limit violation.
+  Gates F1/F2/F3 and bouncer PASS.
+
 - TASK-152 - Remove DashboardScreen welcome screen — app defaults to first manifest category on load - CLOSED 2026-03-20
   Removed DashboardScreen, StatCard, and STAT_CARD_VARIANT from page.tsx.
   Updated app to land directly on the first manifest category (Venue Intelligence) 
