@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-143 - SquadBuilder redesigned with compact collapsed chip bar - CLOSED 2026-03-19
+  Redesigned SquadBuilder.tsx to display as a compact collapsed chip bar by default
+  when both squads are loaded. Added auto-collapse logic and chevron toggle.
+  Verified via Gates F1/F2/F3 and final compliance bouncer. PASS.
+
 - TASK-142 - Visual polish on MatchupTable card layout - CLOSED 2026-03-19
   Applied visual polish to MatchupTable.tsx (contrast, advantage bar, BUNNY tag).
   Verified via Gates F1/F2/F3 and visual verification via Playwright. PASS.

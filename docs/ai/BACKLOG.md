@@ -32,6 +32,29 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-143 - SquadBuilder redesigned with compact collapsed chip bar
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-19
+**Status:** CLOSED - 2026-03-19
+
+### Description
+Redesigned SquadBuilder.tsx to display as a compact collapsed chip bar by default
+when both squads are loaded. The bar shows team names and player name chips in a
+single horizontal row (~56px tall) with a chevron toggle to expand. Expanded
+state remains the existing full layout.
+
+### Acceptance Criteria
+AC-1: Collapsed bar ~56px, team names + chips + chevron.
+AC-2: Chip colors match design spec (rgb(30,42,56) bg, rgb(26,39,64) border).
+AC-3: Auto-collapse when both squads non-empty.
+AC-4: Toggle works on click.
+AC-5: Expanded state identical to before.
+AC-6: Gates F1/F2/F3 PASS.
+AC-7: Visual verification via Playwright (BLOCKED - environment issue).
+
 ## TASK-142 - Visual polish on MatchupTable card layout
 **Type:** frontend-modification
 **Scope:** frontend

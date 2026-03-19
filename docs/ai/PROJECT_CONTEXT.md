@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
+1. **TASK-143:** SquadBuilder redesigned with compact collapsed chip bar; auto-collapse when squads loaded, expand to full layout on click.
 1. **TASK-142:** Visual polish on MatchupTable card layout; explicit RGB for contrast, SR fallback lookup, and BUNNY tag styling refined.
 1. **TASK-141:** Rewrite MatchupTable as batter-grouped card layout; advantage bar and bunny tags driven by pre-computed API signals.
 2. **TASK-140:** Gemini CLI MCP config created â€” filesystem, context7, playwright, sequential-thinking registered in .gemini/settings.json
 3. **TASK-139:** get_matchups dispatches to bulk team analysis when no batter selected; player_name input made optional in Squad Battle matchups.
-4. **TASK-138:** Added analyze_dual_squad_matrix to PlayerEngine so Tactical Matrix returns both team rows via a single engine call.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*
