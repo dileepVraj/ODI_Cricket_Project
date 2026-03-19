@@ -3,9 +3,9 @@
  */
 "use client";
 import React, { useMemo, useState } from "react";
-import { Crosshair, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
+import { Crosshair, ChevronDown, ChevronUp } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
-import { MatchupRow, toMatchupRows, ToneToken } from "@/lib/comparison-types";
+import { MatchupRow, toMatchupRows } from "@/lib/comparison-types";
 interface MatchupTableProps { data: Record<string, unknown>[]; homeXI?: string[]; awayXI?: string[]; homeTeamName?: string; awayTeamName?: string; }
 type ThreatRating = "BUNNY" | "THREAT" | "CAUTION" | "SAFE" | "LOW DATA" | "CONTESTED";
 function computeThreatRating(row: MatchupRow): ThreatRating {
@@ -21,7 +21,43 @@ function computeThreatRating(row: MatchupRow): ThreatRating {
     if (outs >= 1 && sr < 80) return "SAFE";
     return "CONTESTED";
 }
-const LEGEND_ITEMS: Array<{ label: string; color: string }> = [ { label: "BUNNY", color: "var(--tier-danger)" }, { label: "THREAT", color: "rgb(249, 115, 22)" }, { label: "CAUTION", color: "var(--tier-caution)" }, { label: "SAFE", color: "var(--tier-elite)" }, { label: "LOW DATA", color: "rgb(107, 114, 128)" }, { label: "CONTESTED", color: "var(--text-muted)" } ];
+
+function getBowlingBadgeColor(style: string): string {
+  if (style.includes("Leg Spin"))  return "var(--accent-secondary)";
+  if (style.includes("Off Spin"))  return "var(--accent-primary)";
+  if (style.includes("Slow Left-Arm") || style.includes("Left-Arm Orth") || style.toUpperCase().includes("ORTH")) return "var(--tier-strong)";
+  if (style.toUpperCase().includes("MED")) return "var(--tier-caution)";
+  if (style.toUpperCase().includes("FAST")) return "var(--tier-danger)";
+  return "var(--text-muted)";
+}
+
+const THREAT_STRIP_COLORS: Record<ThreatRating, string> = {
+  BUNNY:      "var(--tier-danger)",
+  THREAT:     "var(--tier-caution)",
+  CAUTION:    "var(--tier-caution)",
+  SAFE:       "var(--tier-elite)",
+  "LOW DATA": "var(--text-disabled)",
+  CONTESTED:  "var(--bg-active)",
+};
+
+const THREAT_BADGE_STYLES: Record<ThreatRating, { bg: string; text: string; border: string }> = {
+  BUNNY:      { bg: "var(--bg-danger)", text: "var(--tier-danger)", border: "var(--tier-danger)" },
+  THREAT:     { bg: "var(--bg-caution)", text: "var(--tier-caution)", border: "var(--tier-caution)" },
+  CAUTION:    { bg: "var(--bg-caution)", text: "var(--tier-caution)", border: "var(--border-caution)" },
+  SAFE:       { bg: "rgba(34, 197, 94, 0.12)", text: "var(--tier-elite)", border: "rgba(34, 197, 94, 0.20)" },
+  "LOW DATA": { bg: "var(--bg-elevated)", text: "var(--text-disabled)", border: "var(--border-default)" },
+  CONTESTED:  { bg: "var(--bg-deepest)", text: "var(--text-muted)", border: "var(--bg-active)" },
+};
+
+const LEGEND_ITEMS: Array<{ label: string; color: string }> = [
+  { label: "BUNNY", color: "var(--tier-danger)" },
+  { label: "THREAT", color: "var(--tier-caution)" },
+  { label: "CAUTION", color: "var(--tier-caution)" },
+  { label: "SAFE", color: "var(--tier-elite)" },
+  { label: "LOW DATA", color: "var(--text-disabled)" },
+  { label: "CONTESTED", color: "var(--text-muted)" }
+];
+
 function LegendStrip() {
     return (
         <div className="[display:flex] [align-items:center] [gap:16px] [padding:8px_0] [border-bottom:1px_solid_rgb(26,39,64)] [margin-bottom:16px] [flex-wrap:wrap]">
@@ -29,7 +65,7 @@ function LegendStrip() {
                 <React.Fragment key={item.label}>
                     {i > 0 && <span className="[color:rgb(71,85,105)] [font-size:10px]">·</span>}
                     <div className="[display:flex] [align-items:center] [gap:6px]">
-                        <div style={{ backgroundColor: item.color, width: "8px" }} className="[width:8px] [height:8px] [border-radius:50%] [flex-shrink:0]" />
+                        <div style={{ backgroundColor: item.color }} className="[width:8px] [height:8px] [border-radius:50%] [flex-shrink:0]" />
                         <span className="[font-size:11px] [color:rgb(100,116,139)] [font-weight:500] [text-transform:uppercase] [letter-spacing:0.04em]">{item.label}</span>
                     </div>
                 </React.Fragment>
@@ -37,13 +73,14 @@ function LegendStrip() {
         </div>
     );
 }
-const THREAT_COLORS: Record<ThreatRating, string> = { BUNNY: "var(--tier-danger)", THREAT: "rgb(249, 115, 22)", CAUTION: "var(--tier-caution)", SAFE: "var(--tier-elite)", "LOW DATA": "rgb(107, 114, 128)", CONTESTED: "var(--text-muted)" };
+
 function computeDangerSummary(rows: MatchupRow[]): Array<{ rating: ThreatRating; count: number }> {
     const counts: Partial<Record<ThreatRating, number>> = {};
     rows.forEach(row => { const r = computeThreatRating(row); counts[r] = (counts[r] ?? 0) + 1; });
     const ORDER: ThreatRating[] = ["BUNNY", "THREAT", "CAUTION", "SAFE", "LOW DATA", "CONTESTED"];
     return ORDER.filter(r => (counts[r] ?? 0) > 0).map(r => ({ rating: r, count: counts[r]! }));
 }
+
 export default function MatchupTable({ data, homeXI, awayXI, homeTeamName, awayTeamName }: MatchupTableProps) {
     const rows = useMemo(() => toMatchupRows(data || []), [data]);
     const batterGroups = useMemo(() => {
@@ -79,6 +116,7 @@ export default function MatchupTable({ data, homeXI, awayXI, homeTeamName, awayT
         </div>
     );
 }
+
 function MatchupBatterGroup({ batter, rows, isExpanded, onToggle }: { batter: string; rows: MatchupRow[]; isExpanded: boolean; onToggle: () => void; }) {
     const summary = useMemo(() => computeDangerSummary(rows), [rows]);
     const borderLeft = isExpanded ? "[border-left:3px_solid_rgb(0,200,170)]" : "[border-left:3px_solid_transparent]";
@@ -95,7 +133,7 @@ function MatchupBatterGroup({ batter, rows, isExpanded, onToggle }: { batter: st
                 </div>
                 {!isExpanded && (
                     <div className="[display:flex] [align-items:center] [gap:8px] [flex-wrap:wrap] [margin-left:24px]">
-                        {summary.map((item, i) => ( <React.Fragment key={item.rating}>{i > 0 && <span className="[color:rgb(71,85,105)] [font-size:10px]">·</span>}<span style={{ color: THREAT_COLORS[item.rating] }} className="[font-size:11px] [font-weight:600] [text-transform:uppercase]">{item.count} {item.rating}</span></React.Fragment> ))}
+                        {summary.map((item, i) => ( <React.Fragment key={item.rating}>{i > 0 && <span className="[color:rgb(71,85,105)] [font-size:10px]">·</span>}<span style={{ color: THREAT_STRIP_COLORS[item.rating] }} className="[font-size:11px] [font-weight:600] [text-transform:uppercase]">{item.count} {item.rating}</span></React.Fragment> ))}
                     </div>
                 )}
             </button>
@@ -103,42 +141,78 @@ function MatchupBatterGroup({ batter, rows, isExpanded, onToggle }: { batter: st
         </div>
     );
 }
+
 function MatchupCard({ row }: { row: MatchupRow }) {
-    const batter = String(row["Batter"] ?? row["BATTER"] ?? "Unknown"), bowler = String(row["Bowler"] ?? row["BOWLER"] ?? "Unknown"), style = String(row["Style"] ?? row["STYLE"] ?? "");
-    const isBunny = row.highlight_flags?.bunny_alert === true || row["IsBunny"] === true || row["is_bunny"] === true;
-    const adv = getAdvantageProps(row.cell_tones?.["SR"], row["SR"]);
-    const stats = [ { label: "RUNS", value: row["Runs"] }, { label: "BALLS", value: row["Balls"] }, { label: "OUTS", value: row["Outs"] }, { label: "AVG", value: row["Avg"] }, { label: "SR", value: row["SR"] } ];
-    return (
-        <div className={`[padding:12px] [border:1px_solid_rgb(48,54,61)] [border-radius:6px] [background:rgb(22,27,34)] [display:flex] [flex-direction:column] [gap:10px] [transition:all_var(--transition-fast)] hover:[border-color:rgb(139,148,158)]`}>
-            <div className="[display:flex] [align-items:center] [justify-content:space-between] [gap:8px]">
-                <div className="[display:flex] [align-items:center] [gap:8px] [flex-wrap:wrap]"><span className="[font-size:0.9rem] [color:rgb(240,246,252)] [font-weight:700]">{batter} <span className="[color:rgb(139,148,158)] [font-weight:400] [margin:0_2px]">vs</span> <span className="[font-weight:500]">{bowler}</span></span>{style && <StyleTag style={style} />}</div>
-                {isBunny && <div className="[display:flex] [align-items:center] [gap:4px] [padding:2px_8px] [border-radius:4px] [background:rgb(45,31,0)] [border:1px_solid_rgb(245,158,11)] [color:rgb(245,158,11)] [font-size:0.65rem] [font-weight:700] [text-transform:uppercase] [letter-spacing:0.05em]"><AlertTriangle size={10} />BUNNY</div>}
+  const bowler = String(row["Bowler"] ?? row["BOWLER"] ?? "Unknown");
+  const style  = String(row["Style"]  ?? row["STYLE"]  ?? "");
+  const avg    = row["Avg"]   === null || row["Avg"]   === undefined ? "-" : String(row["Avg"]);
+  const sr     = row["SR"]    === null || row["SR"]    === undefined ? "-" : String(row["SR"]);
+  const balls  = row["Balls"] === null || row["Balls"] === undefined ? "-" : String(row["Balls"]);
+  const outs   = row["Outs"]  === null || row["Outs"]  === undefined ? 0   : Number(row["Outs"]);
+
+  const rating = useMemo(() => computeThreatRating(row), [row]);
+
+  const visualProps = useMemo(() => ({
+    strip: { backgroundColor: THREAT_STRIP_COLORS[rating] },
+    badge: {
+      backgroundColor: THREAT_BADGE_STYLES[rating].bg,
+      color: THREAT_BADGE_STYLES[rating].text,
+      borderColor: THREAT_BADGE_STYLES[rating].border
+    },
+    bowling: { backgroundColor: getBowlingBadgeColor(style) }
+  }), [rating, style]);
+
+  return (
+    <div className="[display:flex] [border:1px_solid_var(--border-strong)] [border-radius:var(--radius-sm)] [overflow:hidden] [background:var(--bg-surface)] [transition:border-color_var(--transition-fast)] hover:[border-color:var(--text-disabled)]">
+
+      {/* Left danger strip */}
+      <div style={visualProps.strip} className="[width:8px] [flex-shrink:0]" />
+
+      {/* Main content */}
+      <div className="[flex:1] [padding:10px_12px] [display:flex] [align-items:center] [justify-content:space-between] [gap:12px] [min-height:64px]">
+
+        {/* Left: bowler + bowling badge */}
+        <div className="[display:flex] [flex-direction:column] [gap:4px] [min-width:0]">
+          <span className="[font-size:0.875rem] [font-weight:700] [color:var(--text-primary)] [white-space:nowrap] [overflow:hidden] [text-overflow:ellipsis]">
+            {bowler}
+          </span>
+          {style && (
+            <div
+              style={visualProps.bowling}
+              className="[display:inline-flex] [align-items:center] [padding:2px_8px] [border-radius:9999px] [width:fit-content]"
+            >
+              <span className="[font-size:10px] [font-weight:600] [color:white] [text-transform:uppercase] [letter-spacing:0.03em] [white-space:nowrap]">
+                {style}
+              </span>
             </div>
-            <div className="[display:grid] [grid-template-columns:repeat(5,1fr)] [gap:4px]">{stats.map((s) => ( <div key={s.label} className="[display:flex] [flex-direction:column] [gap:2px]"><span className="[font-size:0.6rem] [font-weight:600] [color:rgb(139,148,158)] [text-transform:uppercase]">{s.label}</span><span className="[font-size:0.9rem] [color:rgb(240,246,252)] font-numeric">{s.value === null || s.value === undefined ? "-" : String(s.value)}</span></div> ))}</div>
-            <div className="[display:flex] [flex-direction:column] [gap:4px]"><div className="[width:100%] [height:4px] [background:rgb(33,38,45)] [border-radius:2px] [overflow:hidden]"><div style={{ width: adv.width, backgroundColor: adv.backgroundColor }} className="[height:100%] [transition:width_0.3s_ease]" /></div><span style={{ color: adv.backgroundColor }} className="[font-size:0.6rem] [font-weight:600] [text-transform:uppercase] [letter-spacing:0.04em]">{adv.label}</span></div>
+          )}
         </div>
-    );
-}
-function StyleTag({ style }: { style: string }) {
-    const dotClass = getStyleDotClass(style);
-    return ( <div className="[display:inline-flex] [align-items:center] [gap:6px] [padding:2px_8px] [background:rgb(28,33,40)] [border-radius:12px] [border:1px_solid_rgb(48,54,61)] [font-size:0.65rem] [font-weight:600] [color:rgb(139,148,158)] [text-transform:uppercase] [letter-spacing:0.03em]"><div className={`[width:6px] [height:6px] [border-radius:50%] ${dotClass}`} />{style}</div> );
-}
-function getStyleDotClass(style: string) {
-    if (style.includes("Leg Spin")) return "[background:rgb(245,158,11)]";
-    if (style.includes("Off Spin")) return "[background:rgb(0,200,170)]";
-    if (style.includes("Fast") || style.includes("Med")) return "[background:rgb(248,81,73)]";
-    return "[background:rgb(139,148,158)]";
-}
-function getAdvantageProps(srTone: ToneToken | undefined, srRaw: unknown): { width: string; backgroundColor: string; label: string } {
-    if (srTone === "elite") return { width: "90%", backgroundColor: "rgb(0, 200, 170)", label: "Batter Advantage" };
-    if (srTone === "strong") return { width: "70%", backgroundColor: "rgb(0, 200, 170)", label: "Batter Advantage" };
-    if (srTone === "caution") return { width: "40%", backgroundColor: "rgb(248, 81, 73)", label: "Bowler Advantage" };
-    if (srTone === "danger") return { width: "20%", backgroundColor: "rgb(248, 81, 73)", label: "Bowler Advantage" };
-    const sr = typeof srRaw === "number" ? srRaw : parseFloat(String(srRaw ?? ""));
-    if (!Number.isNaN(sr)) {
-        if (sr >= 130) return { width: "70%", backgroundColor: "rgb(0, 200, 170)", label: "Batter Advantage" };
-        if (sr >= 100) return { width: "50%", backgroundColor: "rgb(48, 54, 61)", label: "Contested" };
-        return { width: "40%", backgroundColor: "rgb(248, 81, 73)", label: "Bowler Advantage" };
-    }
-    return { width: "50%", backgroundColor: "rgb(48, 54, 61)", label: "Contested" };
+
+        {/* Center: stats */}
+        <div className="[display:flex] [flex-direction:column] [gap:2px] [flex:1] [min-width:0]">
+          <span className="[font-size:0.8rem] [color:var(--text-secondary)] [white-space:nowrap]">
+            AVG <span className="[color:var(--text-primary)] [font-weight:600]">{avg}</span>
+            <span className="[margin:0_6px] [color:var(--text-disabled)]">·</span>
+            SR <span className="[color:var(--text-primary)] [font-weight:600]">{sr}</span>
+            <span className="[margin:0_6px] [color:var(--text-disabled)]">·</span>
+            <span className="[color:var(--text-secondary)]">{balls} balls</span>
+          </span>
+          <span className="[font-size:0.72rem] [color:var(--text-muted)]">
+            {outs} {outs === 1 ? "out" : "outs"}
+          </span>
+        </div>
+
+        {/* Right: threat rating badge */}
+        <div
+          style={visualProps.badge}
+          className="[display:flex] [align-items:center] [padding:4px_10px] [border-radius:var(--radius-sm)] [border:1px_solid] [flex-shrink:0]"
+        >
+          <span className="[font-size:0.7rem] [font-weight:700] [text-transform:uppercase] [letter-spacing:0.05em] [white-space:nowrap]">
+            {rating === "LOW DATA" ? "LOW DATA" : rating}
+          </span>
+        </div>
+
+      </div>
+    </div>
+  );
 }
