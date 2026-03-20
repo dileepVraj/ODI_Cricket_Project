@@ -1,6 +1,6 @@
 # Session State
-**Last Updated:** 2026-03-19
-**Current Phase:** Phase 10 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Engine Layer Refactoring + Frontend Remediation.
+**Last Updated:** 2026-03-20
+**Current Phase:** Phase 10 — Engine Layer Refactoring + Frontend Remediation.
 Frontend compliance sprint COMPLETE 2026-03-09 (TASK-058 through TASK-072).
 Compliance remediation sprint COMPLETE 2026-03-10 (TASK-073 through TASK-087).
 Team engine COMPLIANT 2026-03-05. Player engine COMPLIANT 2026-03-06.
@@ -19,6 +19,11 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-154 - Design system overhaul — blue chrome tokens, terminal panels, sharp radius — CLOSED 2026-03-20
+  Redesigned design system to blue chrome tokens (#2563EB), terminal panels, 
+  sharp radius (2-4px), and underline tabs. Separated UI chrome from data signals.
+  Gates F1/F2/F3 and bouncer PASS. Fixed pre-existing MatchupCard/Table violations.
+
 - TASK-153 - Player Matchups component redesign — dev artefacts removed, Re-run button, collapsed default — CLOSED 2026-03-20
   Redesigned Player Matchups with 12 targeted fixes. Added batter filter, 
   ghost "Re-run" button, single-line legend, font-numeric stats.

@@ -32,6 +32,21 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-154 - Design system overhaul — blue chrome tokens, terminal panels, sharp radius, underline tabs
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-20
+**Status:** CLOSED - 2026-03-20
+
+### Description
+Redesigned the application design system to a Bloomberg Terminal cockpit aesthetic.
+Swapped primary accent from green to professional blue (#2563EB), separating chrome
+from data signals. Collapsed border-radius scale to 2-4px, introduced flat
+.terminal-panel class, converted active tabs to underline indicators, and tightened
+context bar sizing. Green remains exclusively for positive data signals.
+
 ## TASK-153 - Player Matchups component redesign — 12 targeted fixes
 **Type:** frontend-modification
 **Scope:** frontend
