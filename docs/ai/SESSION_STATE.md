@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-157 - Schema cleanup + directional mask + venue wiring — CLOSED 2026-03-20
+  Removed 4 dead fields from MatchupStatsSchema (is_bunny, highlight_flags, derived_badges,
+  cell_tones). Added 17 new optional fields for upcoming engine stats. Added venue_id
+  passthrough and directional mask in context_builder get_matchups branch. Added
+  optional_context: ["venue"] to matchups manifest function. Bouncer PASS.
+
 - TASK-156 - MatchupTable dense blotter layout — 40px rows, phase color bar, format-tab tabs — CLOSED 2026-03-20
   Redesigned MatchupTable to a dense blotter layout with 40px rows and 4px 
   worst-phase color bars. Removed avatar icons. Converted direction tabs to 

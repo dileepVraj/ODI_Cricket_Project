@@ -32,6 +32,14 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-157 - Schema cleanup + directional mask + venue wiring
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** NONE
+**Created:** 2026-03-20
+**Status:** Closed — 2026-03-20
+
 ## TASK-156 - MatchupTable dense blotter layout — 40px rows, phase color bar, format-tab tabs
 **Type:** frontend-modification
 **Scope:** frontend

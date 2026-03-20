@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-156:** MatchupTable redesigned to dense blotter layout — 40px rows with 4px worst-phase color bar, format-tab direction tabs, terminal-panel container.
-2. **TASK-155:** Removed glass-card shell from CategoryScreen, replaced banners with muted inline text, removed AlertCircle from disabled button.
-3. **TASK-154:** Swapped accent tokens to blue chrome (#2563EB), collapsed radius scale to 2-4px, added .terminal-panel class, underline tabs.
-4. **TASK-153:** Player Matchups redesign — dev artefacts removed, Re-run button, collapsed default, legend single-line, font-numeric stats, phase badges upgraded.
-5. **TASK-152:** Remove DashboardScreen welcome screen — app defaults to first manifest category on load.
+1. **TASK-157:** Schema cleanup — removed 4 dead fields from MatchupStatsSchema, added 17 new matchup stat fields; directional mask + venue_id passthrough in context_builder; venue optional_context in matchups manifest function.
+2. **TASK-156:** MatchupTable redesigned to dense blotter layout — 40px rows with 4px worst-phase color bar, format-tab direction tabs, terminal-panel container.
+3. **TASK-155:** Removed glass-card shell from CategoryScreen, replaced banners with muted inline text, removed AlertCircle from disabled button.
+4. **TASK-154:** Swapped accent tokens to blue chrome (#2563EB), collapsed radius scale to 2-4px, added .terminal-panel class, underline tabs.
+5. **TASK-153:** Player Matchups redesign — dev artefacts removed, Re-run button, collapsed default, legend single-line, font-numeric stats, phase badges upgraded.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*
