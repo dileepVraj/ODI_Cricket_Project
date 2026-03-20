@@ -32,6 +32,14 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-158 - Engine upgrade — new matchup stats, innings split, VenueFiltered, column validation
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-157
+**Created:** 2026-03-20
+**Status:** Closed — 2026-03-20
+
 ## TASK-157 - Schema cleanup + directional mask + venue wiring
 **Type:** modification
 **Scope:** backend

@@ -19,6 +19,13 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-158 - Engine upgrade — MatchCount, BoundaryRate, DotBallRate, innings split, VenueFiltered, column validation — CLOSED 2026-03-20
+  Extended _matchup_single_batter: added MatchCount, BoundaryBalls, BoundaryRate, DotBalls,
+  DotBallRate to _aggregate_matchup_window. Added PP/Mid/Death_MatchCount to phase stats.
+  Added _build_innings_stats helper for Inn1/Inn2 splits. Added VenueFiltered bool param.
+  Removed IsBunny. ConfigurationError on missing required cols, warning on optional.
+  Registered all new literals in ENGINE_LITERAL_REGISTRY. Bouncer PASS.
+
 - TASK-157 - Schema cleanup + directional mask + venue wiring — CLOSED 2026-03-20
   Removed 4 dead fields from MatchupStatsSchema (is_bunny, highlight_flags, derived_badges,
   cell_tones). Added 17 new optional fields for upcoming engine stats. Added venue_id
