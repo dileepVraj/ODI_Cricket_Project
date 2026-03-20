@@ -3,10 +3,10 @@
  */
 "use client";
 import React, { useMemo, useState } from "react";
-import { ChevronDown, ChevronUp, User } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
 import { MatchupRow, toMatchupRows, ThreatRating } from "@/lib/comparison-types";
-import { MatchupCard, PhaseBadge } from "./MatchupCard";
+import { MatchupCard, PhaseBadge, THREAT_STRIP_COLORS } from "./MatchupCard";
 
 interface MatchupTableProps {
   data: Record<string, unknown>[];
@@ -21,6 +21,21 @@ const PHASE_KEYS = [
   { label: "MID", key: "Mid_ThreatRating" },
   { label: "DT",  key: "Death_ThreatRating" },
 ] as const;
+
+const PHASE_SEVERITY_ORDER: ThreatRating[] = [
+  "BUNNY", "DOMINATED", "WATCHFUL", "CONTESTED", "THREAT", "ADVANTAGE", "DOMINANT", "NEW MATCHUP", "LOW DATA",
+];
+
+function worstPhaseColor(summary: Array<{ label: string; rating: ThreatRating }>): string {
+  if (summary.length === 0) return "var(--border-subtle)";
+  let worst = summary[0].rating;
+  for (const { rating } of summary) {
+    const wi = PHASE_SEVERITY_ORDER.indexOf(worst);
+    const ri = PHASE_SEVERITY_ORDER.indexOf(rating);
+    if (ri !== -1 && (wi === -1 || ri < wi)) worst = rating;
+  }
+  return THREAT_STRIP_COLORS[worst] ?? "var(--border-subtle)";
+}
 
 function computePhaseSummary(rows: MatchupRow[]): Array<{ label: string; rating: ThreatRating }> {
   return PHASE_KEYS.flatMap(({ label, key }) => {
@@ -113,10 +128,10 @@ export default function MatchupTable({ data, homeXI, awayXI, homeTeamName, awayT
   const awayLabel     = `${awayTeamName ?? "Away"} Batters vs ${homeTeamName ?? "Home"} Bowlers`;
 
   return (
-    <div className="[display:flex] [flex-direction:column] [border:1px_solid_var(--border-subtle)] [border-radius:var(--radius-md)] [overflow:hidden] [background:var(--bg-deepest)]">
+    <div className="terminal-panel [display:flex] [flex-direction:column] [overflow:hidden]">
 
       {/* Tab switcher */}
-      <div className="[display:grid] [grid-template-columns:1fr_1fr] [border-bottom:1px_solid_var(--border-subtle)]">
+      <div className="[display:flex] [border-bottom:1px_solid_var(--border-subtle)]">
         {(["home", "away"] as const).map((tab) => {
           const isActive = activeTab === tab;
           const label    = tab === "home" ? homeLabel : awayLabel;
@@ -124,17 +139,9 @@ export default function MatchupTable({ data, homeXI, awayXI, homeTeamName, awayT
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`[padding:12px_20px] [text-align:left] [border-bottom:2px_solid] [transition:all_150ms] ${
-                isActive
-                  ? "[border-color:var(--accent-primary)] [background:rgba(80,180,34,0.05)]"
-                  : "[border-color:transparent] hover:[background:rgba(255,255,255,0.03)]"
-              }`}
+              className={`format-tab ${isActive ? "active" : ""}`}
             >
-              <p className={`[font-size:0.78rem] [font-weight:700] [text-transform:uppercase] [letter-spacing:0.04em] ${
-                isActive ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"
-              }`}>
-                {label}
-              </p>
+              {label}
             </button>
           );
         })}
@@ -183,46 +190,36 @@ function MatchupBatterGroup({
   batter: string; rows: MatchupRow[]; isExpanded: boolean; onToggle: () => void;
 }) {
   const phaseSummary = useMemo(() => computePhaseSummary(rows), [rows]);
+  const barColor = useMemo(() => worstPhaseColor(phaseSummary), [phaseSummary]);
+  const barStyle = useMemo(() => ({ borderLeft: `4px solid ${barColor}` }), [barColor]);
 
   return (
-    <div className="[border-left:3px_solid_var(--accent-primary)] [border-bottom:1px_solid_var(--border-subtle)] [background:var(--bg-surface)] hover:[background:var(--bg-hover)] [transition:background_150ms]">
+    <div
+      style={barStyle}
+      className="[border-bottom:1px_solid_var(--border-subtle)] [background:var(--bg-surface)] hover:[background:var(--bg-hover)] [transition:background_150ms]"
+    >
       <button
         onClick={onToggle}
         aria-label={`${isExpanded ? "Collapse" : "Expand"} matchups for ${batter}`}
-        className="[width:100%] [display:flex] [align-items:center] [justify-content:space-between] [padding:10px_14px]"
+        className="[width:100%] [display:flex] [align-items:center] [gap:10px] [padding:8px_12px] [min-height:40px]"
       >
-        {/* Avatar + name + phase badges */}
-        <div className="[display:flex] [align-items:center] [gap:12px]">
-          <div className="[width:40px] [height:40px] [border-radius:4px] [background:rgba(255,255,255,0.05)] [border:1px_solid_var(--border-default)] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0]">
-            <User size={18} className="[color:var(--text-muted)]" />
+        <span className="[font-size:0.82rem] [font-weight:600] [color:var(--text-primary)] [flex:1] [text-align:left] [white-space:nowrap] [overflow:hidden] [text-overflow:ellipsis]">
+          {batter}
+        </span>
+        {phaseSummary.length > 0 && (
+          <div className="[display:flex] [gap:4px] [flex-wrap:nowrap] [flex-shrink:0]">
+            {phaseSummary.map(({ label, rating }) => (
+              <PhaseBadge key={label} label={label} rating={rating} />
+            ))}
           </div>
-          <div className="[display:flex] [flex-direction:column] [gap:4px] [text-align:left]">
-            <h3 className="[font-size:0.92rem] [font-weight:700] [color:var(--text-primary)]">{batter}</h3>
-            {phaseSummary.length > 0 && (
-              <div className="[display:flex] [gap:4px] [flex-wrap:wrap]">
-                {phaseSummary.map(({ label, rating }) => (
-                  <PhaseBadge key={label} label={label} rating={rating} />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right: active label + count + chevron */}
-        <div className="[display:flex] [align-items:center] [gap:12px] [flex-shrink:0]">
-          {isExpanded && (
-            <span className="[font-size:11px] [font-weight:700] [color:var(--accent-primary)] [text-transform:uppercase] [letter-spacing:0.04em]">
-              Active Matchup
-            </span>
-          )}
-          <span className="[font-size:11px] [font-weight:500] [color:var(--text-muted)] [text-transform:uppercase]">
-            {rows.length} matchups
-          </span>
-          {isExpanded
-            ? <ChevronUp size={16} className="[color:var(--text-muted)]" />
-            : <ChevronDown size={16} className="[color:var(--text-muted)]" />
-          }
-        </div>
+        )}
+        <span className="[font-size:0.72rem] [color:var(--text-muted)] [flex-shrink:0] [white-space:nowrap]">
+          {rows.length} matchups
+        </span>
+        {isExpanded
+          ? <ChevronUp size={16} className="[color:var(--text-muted)] [flex-shrink:0]" />
+          : <ChevronDown size={16} className="[color:var(--text-muted)] [flex-shrink:0]" />
+        }
       </button>
 
       {isExpanded && (

@@ -7,7 +7,7 @@ import { BarChart2 } from "lucide-react";
 import { MatchupRow, ThreatRating } from "@/lib/comparison-types";
 import { stripEmoji } from "@/lib/utils";
 
-const THREAT_STRIP_COLORS: Record<ThreatRating, string> = {
+export const THREAT_STRIP_COLORS: Record<ThreatRating, string> = {
   "NEW MATCHUP": "var(--text-disabled)",
   "LOW DATA":    "var(--text-disabled)",
   BUNNY:         "var(--tier-danger)",
@@ -100,7 +100,7 @@ export function MatchupCard({ row }: { row: MatchupRow }) {
   );
 
   return (
-    <div className="[display:flex] [align-items:center] [justify-content:space-between] [padding:10px_16px_10px_12px] hover:[background:rgba(255,255,255,0.03)] [transition:background_150ms]">
+    <div className="[display:flex] [align-items:center] [justify-content:space-between] [padding:10px_12px] hover:[background:rgba(255,255,255,0.03)] [transition:background_150ms]">
 
       {/* Left: type abbr · bowler name · stats */}
       <div className="[display:flex] [align-items:center] [gap:12px]">
@@ -112,7 +112,7 @@ export function MatchupCard({ row }: { row: MatchupRow }) {
         <span className="[font-size:0.9rem] [font-weight:600] [color:var(--text-primary)] [white-space:nowrap]">
           {bowler}
         </span>
-        <div className="[display:flex] [align-items:center] [gap:12px] font-numeric [font-size:11px] [color:var(--text-muted)]">
+        <div className="[display:flex] [align-items:center] [gap:12px] font-numeric [font-size:0.78rem] [color:var(--text-muted)]">
           <span>AVG <span className="[color:var(--text-primary)] [font-weight:600]">{avg}</span></span>
           <span>SR  <span className="[color:var(--text-primary)] [font-weight:600]">{sr}</span></span>
           <span>BALLS <span className="[color:var(--text-primary)] [font-weight:600]">{balls}</span></span>
@@ -124,7 +124,7 @@ export function MatchupCard({ row }: { row: MatchupRow }) {
         {!isLowData && (
           <span
             style={pillStyle}
-            className="[padding:2px_10px] [border-radius:9999px] [font-size:9px] [font-weight:900] [text-transform:uppercase] [letter-spacing:0.04em] [white-space:nowrap]"
+            className="[padding:2px_10px] [border-radius:9999px] [font-size:0.72rem] [font-weight:900] [text-transform:uppercase] [letter-spacing:0.04em] [white-space:nowrap]"
           >
             {rating}
           </span>
