@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-156 - MatchupTable dense blotter layout — 40px rows, phase color bar, format-tab tabs — CLOSED 2026-03-20
+  Redesigned MatchupTable to a dense blotter layout with 40px rows and 4px 
+  worst-phase color bars. Removed avatar icons. Converted direction tabs to 
+  .format-tab style. Container moved to .terminal-panel.
+  Gates F1/F2/F3 and bouncer PASS.
+
 - TASK-155 - CategoryScreen redesign — kill banners, remove glass-card shell, strip disabled button icon — CLOSED 2026-03-20
   Removed glass-card shell from CategoryScreen, replaced banners with muted 
   inline text lines, and stripped AlertCircle icon from disabled execute button.

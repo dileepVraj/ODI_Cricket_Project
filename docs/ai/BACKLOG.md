@@ -32,6 +32,21 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-156 - MatchupTable dense blotter layout — 40px rows, phase color bar, format-tab tabs
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-155
+**Created:** 2026-03-20
+**Status:** CLOSED - 2026-03-20
+
+### Description
+Redesigned the MatchupTable from accordion cards to a dense blotter layout.
+Collapsed batter rows are 40px dense rows with a 4px left color bar (worst phase
+verdict color). Avatar icon removed. Direction tabs use the .format-tab underline
+style. Outer container is a .terminal-panel. Expanded bowler rows tightened.
+All TASK-153 work preserved.
+
 ## TASK-155 - CategoryScreen redesign — kill banners, remove glass-card shell, strip disabled button icon
 **Type:** frontend-modification
 **Scope:** frontend
