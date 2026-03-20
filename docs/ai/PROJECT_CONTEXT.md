@@ -45,11 +45,11 @@ Refer to the following files for full rules. Do not hallucinate patterns.
 ---
 
 ## 4. RECENT ARCHITECTURAL DECISIONS (Last 5)
-1. **TASK-154:** Swapped accent tokens to blue chrome (#2563EB), collapsed radius scale to 2-4px, added .terminal-panel class, underline tabs.
-2. **TASK-153:** Player Matchups redesign — dev artefacts removed, Re-run button, collapsed default, legend single-line, font-numeric stats, phase badges upgraded.
-3. **TASK-152:** Remove DashboardScreen welcome screen — app defaults to first manifest category on load.
-4. **TASK-151:** Shell redesign — emoji stripped, gradient removed from Vantage heading, backdrop-filter removed from sidebar, density increased across FormatSelector/Sidebar/ContextBar.
-5. **TASK-150:** Design system overhaul — migrated from deep navy/electric-blue to bet365 green charcoal theme (#52B523, #181C1F). Swapped body font to Inter (sans-serif), removed glassmorphism blur, and updated button styles to flat solid green.
+1. **TASK-155:** Removed glass-card shell from CategoryScreen, replaced banners with muted inline text, removed AlertCircle from disabled button.
+2. **TASK-154:** Swapped accent tokens to blue chrome (#2563EB), collapsed radius scale to 2-4px, added .terminal-panel class, underline tabs.
+3. **TASK-153:** Player Matchups redesign — dev artefacts removed, Re-run button, collapsed default, legend single-line, font-numeric stats, phase badges upgraded.
+4. **TASK-152:** Remove DashboardScreen welcome screen — app defaults to first manifest category on load.
+5. **TASK-151:** Shell redesign — emoji stripped, gradient removed from Vantage heading, backdrop-filter removed from sidebar, density increased across FormatSelector/Sidebar/ContextBar.
 
 ---
 *Archived history (TASK-001 to TASK-105) moved to ARCHIVE_HISTORY.md.*

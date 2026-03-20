@@ -32,6 +32,20 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-155 - CategoryScreen redesign — kill banners, remove glass-card shell, strip disabled button icon
+**Type:** frontend-modification
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-154
+**Created:** 2026-03-20
+**Status:** CLOSED - 2026-03-20
+
+### Description
+Removed the glass-card wrapper from CategoryScreen so content sits directly on the background.
+Replaced informational banners (MissingContextBanner, MissingInputsBanner) with single muted text lines.
+Removed SquadHintBanner entirely. Stripped AlertCircle icon from the disabled execute button.
+CategoryBanners.tsx remains unchanged (functions go uncalled but are not deleted).
+
 ## TASK-154 - Design system overhaul — blue chrome tokens, terminal panels, sharp radius, underline tabs
 **Type:** frontend-modification
 **Scope:** frontend

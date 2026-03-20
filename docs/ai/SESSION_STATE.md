@@ -19,6 +19,12 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-155 - CategoryScreen redesign — kill banners, remove glass-card shell, strip disabled button icon — CLOSED 2026-03-20
+  Removed glass-card shell from CategoryScreen, replaced banners with muted 
+  inline text lines, and stripped AlertCircle icon from disabled execute button.
+  CategoryBanners.tsx functions remain for future-proof isolation but are uncalled.
+  Gates F1/F2/F3 and bouncer PASS.
+
 - TASK-154 - Design system overhaul — blue chrome tokens, terminal panels, sharp radius — CLOSED 2026-03-20
   Redesigned design system to blue chrome tokens (#2563EB), terminal panels, 
   sharp radius (2-4px), and underline tabs. Separated UI chrome from data signals.
