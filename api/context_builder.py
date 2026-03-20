@@ -18,6 +18,7 @@ class DataAccessProtocol(Protocol):
         self,
         players: Optional[List[str]] = None,
         match_ids: Optional[List[str]] = None,
+        venue_id: Optional[str] = None,
     ) -> pd.DataFrame:
         ...
 
@@ -105,6 +106,7 @@ def _build_recent_player_context(
     analyzer: AnalyzerProtocol,
     players: List[str],
     years: Optional[object],
+    venue_id: Optional[str] = None,
 ) -> pd.DataFrame:
     dal = analyzer.dal
     if dal is None:
@@ -118,7 +120,7 @@ def _build_recent_player_context(
     if not clean_players:
         return pd.DataFrame()
 
-    context_df = dal.get_balls(players=clean_players)
+    context_df = dal.get_balls(players=clean_players, venue_id=venue_id or None)
     if context_df is None or context_df.empty:
         return pd.DataFrame()
 
@@ -213,7 +215,27 @@ def _inject_player_engine_context(
         players.extend([str(p) for p in (params.get("bowlers") or [])])
         players.extend([str(p) for p in (params.get("home_xi") or [])])
         players.extend([str(p) for p in (params.get("away_xi") or [])])
-        params["context_df"] = _build_recent_player_context(analyzer, players, params.get("years"))
+        venue_id = str(params.get("venue_id") or "").strip() or None
+        context_df = _build_recent_player_context(
+            analyzer, players, params.get("years"), venue_id=venue_id
+        )
+        home_xi = list(params.get("home_xi") or [])
+        away_xi = list(params.get("away_xi") or [])
+        if (
+            home_xi
+            and away_xi
+            and not context_df.empty
+            and "striker" in context_df.columns
+            and "bowler" in context_df.columns
+        ):
+            home_set = set(home_xi)
+            away_set = set(away_xi)
+            dir_mask = (
+                (context_df["striker"].isin(home_set) & context_df["bowler"].isin(away_set))
+                | (context_df["striker"].isin(away_set) & context_df["bowler"].isin(home_set))
+            )
+            context_df = context_df[dir_mask].copy()
+        params["context_df"] = context_df
         return params
 
     if method == "analyze_player_profile":

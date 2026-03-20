@@ -50,7 +50,6 @@ class MatchupStatsSchema(BaseModel):
     outs: int
     avg: float
     sr: float
-    is_bunny: bool
     threat_rating: Optional[str] = None
     confidence: Optional[int] = None
     dismissal_structural: Optional[int] = None
@@ -74,9 +73,23 @@ class MatchupStatsSchema(BaseModel):
     death_avg: Optional[float] = None
     death_sr: Optional[float] = None
     death_threat_rating: Optional[str] = None
-    highlight_flags: Optional[Dict[str, bool]] = None
-    derived_badges: Optional[List[str]] = None
-    cell_tones: Optional[Dict[str, str]] = None
+    venue_filtered: Optional[bool] = None
+    match_count: Optional[int] = None
+    boundary_balls: Optional[int] = None
+    boundary_rate: Optional[float] = None
+    dot_balls: Optional[int] = None
+    dot_ball_rate: Optional[float] = None
+    pp_match_count: Optional[int] = None
+    mid_match_count: Optional[int] = None
+    death_match_count: Optional[int] = None
+    inn1_balls: Optional[int] = None
+    inn1_avg: Optional[float] = None
+    inn1_sr: Optional[float] = None
+    inn1_threat_rating: Optional[str] = None
+    inn2_balls: Optional[int] = None
+    inn2_avg: Optional[float] = None
+    inn2_sr: Optional[float] = None
+    inn2_threat_rating: Optional[str] = None
 
 class SquadMetricsSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")

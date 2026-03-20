@@ -478,6 +478,7 @@ MANIFEST = {
                     "engine_class": "PlayerEngine",
                     "engine_method": "get_matchups",
                     "required_context": ["team_a", "team_b"],
+                    "optional_context": ["venue"],
                     "extra_inputs": {
                         "squad_builder": True,
                         "player_name": {
