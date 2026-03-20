@@ -1,141 +1,42 @@
 /**
- * MatchupCard.tsx - Individual Matchup Row (flat inline style)
+ * MatchupCard.tsx - Individual Matchup Dossier Card
  */
 "use client";
 import React, { useMemo } from "react";
-import { BarChart2 } from "lucide-react";
-import { MatchupRow, ThreatRating } from "@/lib/comparison-types";
+import { MatchupRow, ThreatRating, THREAT_BORDER_CLASSES, THREAT_TEXT_CLASSES, PILL_BG_CLASSES, PILL_TEXT_CLASSES, worstThreatFromRow } from "@/lib/comparison-types";
 import { stripEmoji } from "@/lib/utils";
 
-export const THREAT_STRIP_COLORS: Record<ThreatRating, string> = {
-  "NEW MATCHUP": "var(--text-disabled)",
-  "LOW DATA":    "var(--text-disabled)",
-  BUNNY:         "var(--tier-danger)",
-  DOMINATED:     "var(--tier-danger)",
-  WATCHFUL:      "var(--tier-caution)",
-  CONTESTED:     "var(--bg-active)",
-  ADVANTAGE:     "var(--tier-strong)",
-  THREAT:        "var(--tier-caution)",
-  DOMINANT:      "var(--tier-elite)",
+const PILL_TOOLTIPS: Record<ThreatRating, string> = {
+  BUNNY: "3+ wickets, avg < 18 — dominates", DOMINATED: "2+ wickets, avg < 22 — bowler edge", WATCHFUL: "1+ wicket, avg < 25, SR < 90 — cautious", DOMINANT: "30+ balls, 0 wickets, SR > 120 — batter dominates", THREAT: "0-1 wicket, SR > 100-105 — scoring freely", ADVANTAGE: "0-1 wicket, SR > 95 — batter edge", CONTESTED: "No decisive pattern — evenly matched", "LOW DATA": "< 20 balls — insufficient sample", "NEW MATCHUP": "No head-to-head data"
 };
 
-// Solid pill colours matching the design
-const PILL_BG: Record<ThreatRating, string> = {
-  "NEW MATCHUP": "transparent",
-  "LOW DATA":    "transparent",
-  BUNNY:         "var(--tier-danger)",
-  DOMINATED:     "var(--tier-danger)",
-  WATCHFUL:      "var(--tier-caution)",
-  CONTESTED:     "var(--tier-caution)",
-  ADVANTAGE:     "var(--accent-primary)",
-  THREAT:        "var(--tier-caution)",
-  DOMINANT:      "var(--tier-elite)",
-};
-
-const PILL_TEXT: Record<ThreatRating, string> = {
-  "NEW MATCHUP": "var(--text-disabled)",
-  "LOW DATA":    "var(--text-disabled)",
-  BUNNY:         "white",
-  DOMINATED:     "var(--bg-deepest)",
-  WATCHFUL:      "var(--bg-deepest)",
-  CONTESTED:     "var(--bg-deepest)",
-  ADVANTAGE:     "white",
-  THREAT:        "var(--bg-deepest)",
-  DOMINANT:      "var(--bg-deepest)",
-};
-
-function bowlerTypeAbbr(style: string): string {
-  const s = style.toLowerCase();
-  if (!s) return "–";
-  if (s.includes("right") && s.includes("fast"))   return "RF";
-  if (s.includes("left")  && s.includes("fast"))   return "LF";
-  if (s.includes("right") && s.includes("medium")) return "RM";
-  if (s.includes("left")  && s.includes("medium")) return "LM";
-  if (s.includes("leg spin") || s.includes("wrist spin")) return "LB";
-  if (s.includes("off spin"))                       return "OB";
-  if (s.includes("left") && (s.includes("orth") || s.includes("slow"))) return "SLA";
-  return style.substring(0, 2).toUpperCase();
-}
+function fmtNum(v: number | undefined | null): string { return (v === undefined || v === null) ? "-" : (typeof v === "number" ? v.toFixed(1) : String(v)); }
+function bdyC(r: number | undefined | null): string { return (r === undefined || r === null || r >= 0.15) ? (r && r > 0.25 ? "[color:var(--tier-elite)]" : "[color:var(--text-muted)]") : "[color:var(--tier-danger)]"; }
+function dotC(r: number | undefined | null): string { return (r === undefined || r === null) ? "[color:var(--text-muted)]" : (r > 0.45 ? "[color:var(--tier-danger)]" : (r >= 0.30 ? "[color:var(--tier-caution)]" : "[color:var(--tier-elite)]")); }
+function getAbbr(s: string): string { const l = s.toLowerCase(); if (!l) return "–"; if (l.includes("right") && l.includes("fast")) return "RF"; if (l.includes("left") && l.includes("fast")) return "LF"; if (l.includes("right") && l.includes("medium")) return "RM"; if (l.includes("left") && l.includes("medium")) return "LM"; if (l.includes("leg spin") || l.includes("wrist spin")) return "LB"; if (l.includes("off spin")) return "OB"; if (l.includes("left") && (l.includes("orth") || l.includes("slow"))) return "SLA"; return s.substring(0, 2).toUpperCase(); }
 
 export function PhaseBadge({ label, rating }: { label: string; rating: ThreatRating }) {
-  const color = THREAT_STRIP_COLORS[rating];
-  const bg = useMemo(() => {
-    return rating === "DOMINANT"                          ? "rgba(34,197,94,0.12)"
-         : rating === "THREAT" || rating === "WATCHFUL"  ? "rgba(245,158,11,0.10)"
-         : rating === "ADVANTAGE"                        ? "rgba(20,184,166,0.10)"
-         : rating === "BUNNY" || rating === "DOMINATED"  ? "rgba(239,68,68,0.10)"
-         : "var(--bg-elevated)";
-  }, [rating]);
+  const bg = rating === "DOMINANT" ? "[background:rgba(34,197,94,0.12)]" : (rating === "THREAT" || rating === "WATCHFUL" ? "[background:rgba(245,158,11,0.10)]" : (rating === "ADVANTAGE" ? "[background:rgba(20,184,166,0.10)]" : (rating === "BUNNY" || rating === "DOMINATED" ? "[background:rgba(239,68,68,0.10)]" : "[background:var(--bg-elevated)]")));
+  return <div className={`[display:inline-flex] [align-items:center] [gap:3px] [padding:2px_7px] [border-radius:4px] [border-width:1px] [border-style:solid] ${THREAT_BORDER_CLASSES[rating]} ${bg}`}><span className="[font-size:0.65rem] [font-weight:500] [color:var(--text-muted)] [text-transform:uppercase]">{label}:</span><span className={`[font-size:0.72rem] [font-weight:700] [text-transform:uppercase] ${THREAT_TEXT_CLASSES[rating]}`}>{rating}</span></div>;
+}
 
-  const styleObj = useMemo(() => ({ borderColor: color, backgroundColor: bg }), [color, bg]);
+function ConfidenceBlocks({ level, balls }: { level: number; balls: number }) {
+  const levels = [1, 2, 3, 4, 5], t = `Confidence ${level}/5 — based on ${balls} balls`;
+  return <div className="[display:flex] [gap:3px]" title={t} aria-label={t}>{levels.map(l => <div key={l} className={`[width:8px] [height:8px] [border-radius:2px] ${l <= level ? "[background:var(--accent-primary)] [border:none]" : "[background:transparent] [border:1px_solid_var(--border-subtle)]"}`} />)}</div>;
+}
 
-  return (
-    <div
-      style={styleObj}
-      className="[display:inline-flex] [align-items:center] [gap:3px] [padding:2px_7px] [border-radius:4px] [border:1px_solid]"
-    >
-      <span className="[font-size:0.65rem] [font-weight:500] [color:var(--text-muted)] [text-transform:uppercase]">{label}:</span>
-      <span style={{ color }} className="[font-size:0.72rem] [font-weight:700] [text-transform:uppercase]">{rating}</span>
-    </div>
-  );
+function ThreatPill({ rating }: { rating: ThreatRating }) {
+  const isL = rating === "LOW DATA" || rating === "NEW MATCHUP";
+  return isL ? <span title={PILL_TOOLTIPS[rating]} className="[color:var(--text-disabled)] [font-style:italic] [font-size:9px] [font-weight:700] [text-transform:uppercase]">{rating}</span> : <span title={PILL_TOOLTIPS[rating]} className={`[padding:2px_10px] [border-radius:9999px] [font-size:0.68rem] [font-weight:900] [text-transform:uppercase] [letter-spacing:0.04em] [white-space:nowrap] ${PILL_BG_CLASSES[rating]} ${PILL_TEXT_CLASSES[rating]}`}>{rating}</span>;
+}
+
+function PhaseMiniTable({ row }: { row: MatchupRow }) {
+  const p = useMemo(() => [{ l: "PP", c: "[color:rgba(37,99,235,0.7)]", b: row.PP_Balls, a: row.PP_Avg, s: row.PP_SR, r: row.PP_ThreatRating }, { l: "MID", c: "[color:var(--text-muted)]", b: row.Mid_Balls, a: row.Mid_Avg, s: row.Mid_SR, r: row.Mid_ThreatRating }, { l: "DEATH", c: "[color:rgba(245,158,11,0.7)]", b: row.Death_Balls, a: row.Death_Avg, s: row.Death_SR, r: row.Death_ThreatRating }], [row.PP_Balls, row.PP_Avg, row.PP_SR, row.PP_ThreatRating, row.Mid_Balls, row.Mid_Avg, row.Mid_SR, row.Mid_ThreatRating, row.Death_Balls, row.Death_Avg, row.Death_SR, row.Death_ThreatRating]);
+  if (!p.some(x => x.b && x.b > 0)) return <span className="[color:var(--text-disabled)] [font-style:italic] [font-size:10px]">No phase data</span>;
+  return <table className="[width:100%] [border-collapse:collapse] [font-size:9px]"><thead><tr>{["PHASE", "BALLS", "AVG", "SR", "RATING"].map(h => <th key={h} className="[text-align:left] [color:var(--text-muted)] [font-weight:700] [text-transform:uppercase] [padding-bottom:3px] [padding-right:8px]">{h}</th>)}</tr></thead><tbody>{p.filter(x => x.b && x.b > 0).map(x => <tr key={x.l}><td className={`[font-weight:700] [padding-right:8px] ${x.c}`}>{x.l}</td><td className="font-numeric [color:var(--text-primary)] [padding-right:8px]">{x.b}</td><td className="font-numeric [color:var(--text-primary)] [padding-right:8px]">{fmtNum(x.a)}</td><td className="font-numeric [color:var(--text-primary)] [padding-right:8px]">{fmtNum(x.s)}</td><td>{x.r && <span className={`[padding-left:5px] [font-weight:700] [text-transform:uppercase] [border-left-width:3px] [border-left-style:solid] ${THREAT_BORDER_CLASSES[x.r]} ${THREAT_TEXT_CLASSES[x.r]}`}>{x.r}</span>}</td></tr>)}</tbody></table>;
 }
 
 export function MatchupCard({ row }: { row: MatchupRow }) {
-  const bowler = String(row["Bowler"] ?? row["BOWLER"] ?? "Unknown");
-  const style  = stripEmoji(String(row["Style"] ?? row["STYLE"] ?? ""));
-  const avg    = row["Avg"]   === null || row["Avg"]   === undefined ? "-" : String(row["Avg"]);
-  const sr     = row["SR"]    === null || row["SR"]    === undefined ? "-" : String(row["SR"]);
-  const balls  = row["Balls"] === null || row["Balls"] === undefined ? "-" : String(row["Balls"]);
-
-  const rating: ThreatRating = useMemo(
-    () => (row["ThreatRating"] as ThreatRating | undefined) ?? "LOW DATA",
-    [row]
-  );
-
-  const isLowData = rating === "LOW DATA" || rating === "NEW MATCHUP";
-  const typeAbbr  = useMemo(() => bowlerTypeAbbr(style), [style]);
-  const pillStyle = useMemo(
-    () => ({ backgroundColor: PILL_BG[rating], color: PILL_TEXT[rating] }),
-    [rating]
-  );
-
-  return (
-    <div className="[display:flex] [align-items:center] [justify-content:space-between] [padding:10px_12px] hover:[background:rgba(255,255,255,0.03)] [transition:background_150ms]">
-
-      {/* Left: type abbr · bowler name · stats */}
-      <div className="[display:flex] [align-items:center] [gap:12px]">
-        <div className="[width:32px] [flex-shrink:0] [text-align:center]">
-          <span className="[font-size:10px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase]">
-            {typeAbbr}
-          </span>
-        </div>
-        <span className="[font-size:0.9rem] [font-weight:600] [color:var(--text-primary)] [white-space:nowrap]">
-          {bowler}
-        </span>
-        <div className="[display:flex] [align-items:center] [gap:12px] font-numeric [font-size:0.78rem] [color:var(--text-muted)]">
-          <span>AVG <span className="[color:var(--text-primary)] [font-weight:600]">{avg}</span></span>
-          <span>SR  <span className="[color:var(--text-primary)] [font-weight:600]">{sr}</span></span>
-          <span>BALLS <span className="[color:var(--text-primary)] [font-weight:600]">{balls}</span></span>
-        </div>
-      </div>
-
-      {/* Right: threat pill · low-data label · bar icon */}
-      <div className="[display:flex] [align-items:center] [gap:8px]">
-        {!isLowData && (
-          <span
-            style={pillStyle}
-            className="[padding:2px_10px] [border-radius:9999px] [font-size:0.72rem] [font-weight:900] [text-transform:uppercase] [letter-spacing:0.04em] [white-space:nowrap]"
-          >
-            {rating}
-          </span>
-        )}
-        {isLowData && (
-          <span className="[font-size:9px] [font-weight:700] [color:var(--text-disabled)] [text-transform:uppercase] [font-style:italic]">
-            Low Data
-          </span>
-        )}
-        <BarChart2 size={14} className="[color:var(--text-muted)]" />
-      </div>
-    </div>
-  );
+  const bowler = String(row.Bowler ?? "Unknown"), style = stripEmoji(String(row.Style ?? "")), rating = row.ThreatRating ?? "LOW DATA", typeAbbr = useMemo(() => getAbbr(style), [style]), barC = THREAT_BORDER_CLASSES[worstThreatFromRow(row)], b = row.Balls ?? 0, conf = Math.min(5, Math.max(0, row.Confidence ?? 0));
+  return <div className={`[background:var(--bg-elevated)] [border:1px_solid_var(--border-subtle)] [border-radius:4px] [padding:12px] [display:flex] [flex-direction:column] [gap:8px] [border-left-width:4px] [border-left-style:solid] ${barC}`}><div className="[display:flex] [align-items:center] [gap:8px]"><div className="[width:28px] [flex-shrink:0] [background:var(--bg-active)] [border-radius:3px] [text-align:center] [padding:2px_0] [font-size:9px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase]">{typeAbbr}</div><span className="[flex:1] [font-size:0.88rem] [font-weight:700] [color:var(--text-primary)] [overflow:hidden] [text-overflow:ellipsis] [white-space:nowrap]">{bowler}</span><ThreatPill rating={rating} /></div><div className="[display:flex] [justify-content:space-between]">{[{ l: "WGTD AVG", v: fmtNum(row.Avg), t: "Recency-weighted average" }, { l: "SR", v: fmtNum(row.SR) }, { l: "BALLS", v: String(row.Balls ?? "-") }].map(s => <div key={s.l} className="[display:flex] [flex-direction:column] [align-items:center]"><span title={s.t} className={`[font-size:8px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.03em] ${s.t ? "[cursor:help]" : "[cursor:default]"}`}>{s.l}</span><span className="font-numeric [font-size:0.9rem] [font-weight:700] [color:var(--text-primary)] [margin-top:1px]">{s.v}</span></div>)}</div><div className="[display:flex] [justify-content:space-between] [align-items:center]"><div className="[display:flex] [flex-direction:column] [align-items:center]"><span className="[font-size:8px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase]">BDY%</span><span className={`font-numeric [font-size:0.82rem] [font-weight:700] ${bdyC(row.BoundaryRate)}`}>{row.BoundaryRate != null ? (row.BoundaryRate * 100).toFixed(1) + "%" : "-"}</span></div><div className="[display:flex] [flex-direction:column] [align-items:center]"><span className="[font-size:8px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase]">DOT%</span><span className={`font-numeric [font-size:0.82rem] [font-weight:700] ${dotC(row.DotBallRate)}`}>{row.DotBallRate != null ? (row.DotBallRate * 100).toFixed(1) + "%" : "-"}</span></div><div className="[display:flex] [flex-direction:column] [align-items:center]"><span className="[font-size:8px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase] [margin-bottom:3px]">CONF</span><ConfidenceBlocks level={conf} balls={b} /></div><div className="[display:flex] [flex-direction:column] [align-items:center]"><span className="[font-size:8px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase]">M</span><span className="font-numeric [font-size:0.82rem] [font-weight:700] [color:var(--text-primary)]">{row.MatchCount ?? "-"}</span></div></div>{(row.Outs ?? 0) > 0 && <div className="[border-top:1px_solid_var(--border-subtle)] [padding-top:6px] [display:flex] [gap:12px]">{[{ l: "B/LBW", v: row.DismissalStructural }, { l: "CAUGHT", v: row.DismissalCaught }, { l: "OTHER", v: row.DismissalOther }].map(d => <span key={d.l}><span className="[font-size:9px] [color:var(--text-muted)] [text-transform:uppercase]">{d.l}: </span><span className="font-numeric [font-size:9px] [font-weight:700] [color:var(--text-primary)]">{d.v ?? 0}</span></span>)}</div>}<div className="[border-top:1px_solid_var(--border-subtle)] [padding-top:6px]"><PhaseMiniTable row={row} /></div>{((row.Inn1_Balls ?? 0) > 0 || (row.Inn2_Balls ?? 0) > 0) && <div className="[border-top:1px_solid_var(--border-subtle)] [padding-top:6px] [display:flex] [gap:16px]">{[{ l: "1ST INN", b: row.Inn1_Balls, a: row.Inn1_Avg, s: row.Inn1_SR }, { l: "2ND INN", b: row.Inn2_Balls, a: row.Inn2_Avg, s: row.Inn2_SR }].map(i => <div key={i.l} className="[display:flex] [flex-direction:column]"><span className="[font-size:8px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase] [margin-bottom:2px]">{i.l}</span><span className="font-numeric [font-size:9px] [color:var(--text-primary)]">AVG {i.b && i.b > 0 ? fmtNum(i.a) : "-"} · SR {i.b && i.b > 0 ? fmtNum(i.s) : "-"}</span></div>)}</div>}</div>;
 }

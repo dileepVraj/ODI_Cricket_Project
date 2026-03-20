@@ -1,236 +1,175 @@
 /**
- * MatchupTable.tsx - Batter-Grouped Card Layout (tab-based, design-matched)
+ * MatchupTable.tsx - Batter-Dossier Grid Layout
  */
 "use client";
-import React, { useMemo, useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import React, { useMemo, useState, useEffect } from "react";
 import EmptyState from "@/components/common/EmptyState";
-import { MatchupRow, toMatchupRows, ThreatRating } from "@/lib/comparison-types";
-import { MatchupCard, PhaseBadge, THREAT_STRIP_COLORS } from "./MatchupCard";
-
-interface MatchupTableProps {
-  data: Record<string, unknown>[];
-  homeXI?: string[];
-  awayXI?: string[];
-  homeTeamName?: string;
-  awayTeamName?: string;
-}
+import { 
+  MatchupRow, 
+  toMatchupRows, 
+  ThreatRating, 
+  THREAT_BORDER_CLASSES, 
+  THREAT_TEXT_CLASSES, 
+  PHASE_SEVERITY_ORDER 
+} from "@/lib/comparison-types";
+import { MatchupCard } from "./MatchupCard";
 
 const PHASE_KEYS = [
-  { label: "PP",  key: "PP_ThreatRating" },
-  { label: "MID", key: "Mid_ThreatRating" },
-  { label: "DT",  key: "Death_ThreatRating" },
+  { l: "PP", k: "PP_ThreatRating" }, 
+  { l: "MID", k: "Mid_ThreatRating" }, 
+  { l: "DT", k: "Death_ThreatRating" }
 ] as const;
 
-const PHASE_SEVERITY_ORDER: ThreatRating[] = [
-  "BUNNY", "DOMINATED", "WATCHFUL", "CONTESTED", "THREAT", "ADVANTAGE", "DOMINANT", "NEW MATCHUP", "LOW DATA",
-];
-
-function worstPhaseColor(summary: Array<{ label: string; rating: ThreatRating }>): string {
-  if (summary.length === 0) return "var(--border-subtle)";
-  let worst = summary[0].rating;
-  for (const { rating } of summary) {
-    const wi = PHASE_SEVERITY_ORDER.indexOf(worst);
-    const ri = PHASE_SEVERITY_ORDER.indexOf(rating);
-    if (ri !== -1 && (wi === -1 || ri < wi)) worst = rating;
+function getWorst(s: Array<{ l: string; r: ThreatRating }>): ThreatRating {
+  if (s.length === 0) return "LOW DATA";
+  let w = s[0].r;
+  for (const { r } of s) {
+    const wi = PHASE_SEVERITY_ORDER.indexOf(w);
+    const ri = PHASE_SEVERITY_ORDER.indexOf(r);
+    if (ri !== -1 && (wi === -1 || ri < wi)) w = r;
   }
-  return THREAT_STRIP_COLORS[worst] ?? "var(--border-subtle)";
+  return w;
 }
 
-function computePhaseSummary(rows: MatchupRow[]): Array<{ label: string; rating: ThreatRating }> {
-  return PHASE_KEYS.flatMap(({ label, key }) => {
-    const ratings = rows
-      .map(r => r[key] as ThreatRating | null | undefined)
-      .filter((r): r is ThreatRating => !!r && r !== "LOW DATA" && r !== "NEW MATCHUP");
-    if (ratings.length === 0) return [];
-    const counts: Partial<Record<ThreatRating, number>> = {};
-    ratings.forEach(r => { counts[r] = (counts[r] ?? 0) + 1; });
-    const top = (Object.entries(counts).sort((a, b) => (b[1] as number) - (a[1] as number))[0][0]) as ThreatRating;
-    return [{ label, rating: top }];
+function getSummary(r: MatchupRow[]): Array<{ l: string; r: ThreatRating }> {
+  return PHASE_KEYS.flatMap(({ l, k }) => {
+    const rs = r.map(x => x[k] as ThreatRating | undefined).filter((x): x is ThreatRating => !!x && x !== "LOW DATA" && x !== "NEW MATCHUP");
+    if (rs.length === 0) return [];
+    const c: Partial<Record<ThreatRating, number>> = {};
+    rs.forEach(x => { c[x] = (c[x] ?? 0) + 1; });
+    const top = (Object.entries(c).sort((a, b) => (b[1] as number) - (a[1] as number))[0][0]) as ThreatRating;
+    return [{ l, r: top }];
   });
 }
 
-const LEGEND_ROWS = [
-  { label: "BUNNY",     dot: "var(--tier-danger)",  text: "var(--tier-danger)",  bg: "rgba(220,38,38,0.10)",  border: "rgba(220,38,38,0.30)" },
-  { label: "DOMINATED", dot: "var(--tier-danger)",  text: "var(--tier-danger)",  bg: "rgba(248,113,113,0.10)", border: "rgba(248,113,113,0.30)" },
-  { label: "WATCHFUL",  dot: "var(--tier-caution)", text: "var(--tier-caution)", bg: "rgba(234,179,8,0.10)",  border: "rgba(234,179,8,0.30)" },
-  { label: "CONTESTED", dot: "var(--tier-caution)", text: "var(--tier-caution)", bg: "rgba(249,115,22,0.10)", border: "rgba(249,115,22,0.30)" },
-  { label: "ADVANTAGE", dot: "var(--accent-primary)", text: "var(--accent-primary)", bg: "rgba(59,130,246,0.10)", border: "rgba(59,130,246,0.30)" },
-  { label: "DOMINANT",  dot: "var(--bg-deepest)",    text: "var(--bg-deepest)",    bg: "var(--tier-elite)",     border: "var(--tier-elite)" },
+const LEGEND = [
+  { l: "BUNNY", d: "[background:var(--tier-danger)]", t: "[color:var(--tier-danger)]", b: "[background:rgba(220,38,38,0.10)]", br: "[border-color:rgba(220,38,38,0.30)]" },
+  { l: "DOMINATED", d: "[background:var(--tier-danger)]", t: "[color:var(--tier-danger)]", b: "[background:rgba(248,113,113,0.10)]", br: "[border-color:rgba(248,113,113,0.30)]" },
+  { l: "WATCHFUL", d: "[background:var(--tier-caution)]", t: "[color:var(--tier-caution)]", b: "[background:rgba(234,179,8,0.10)]", br: "[border-color:rgba(234,179,8,0.30)]" },
+  { l: "CONTESTED", d: "[background:var(--tier-caution)]", t: "[color:var(--tier-caution)]", b: "[background:rgba(249,115,22,0.10)]", br: "[border-color:rgba(249,115,22,0.30)]" },
+  { l: "ADVANTAGE", d: "[background:var(--accent-primary)]", t: "[color:var(--accent-primary)]", b: "[background:rgba(59,130,246,0.10)]", br: "[border-color:rgba(59,130,246,0.30)]" },
+  { l: "DOMINANT", d: "[background:var(--bg-deepest)]", t: "[color:var(--bg-deepest)]", b: "[background:var(--tier-elite)]", br: "[border-color:var(--tier-elite)]" }
 ];
 
-function LegendFooter() {
-  return (
-    <div className="[display:flex] [align-items:center] [justify-content:space-between] [padding:10px_16px] [border-top:1px_solid_var(--border-subtle)] [flex-wrap:wrap] [gap:8px]">
-      <div className="[display:flex] [align-items:center] [gap:4px] [overflow-x:auto] [flex-wrap:nowrap]">
-        <span className="[font-size:9px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase] [margin-right:6px] [flex-shrink:0]">
-          Legend:
-        </span>
-        {LEGEND_ROWS.map(item => (
-          <LegendItem key={item.label} item={item} />
-        ))}
-      </div>
-      <p className="[font-size:9px] [color:var(--text-muted)] [font-style:italic]">
-        * NEW MATCHUP = limited data | LOW DATA = &lt;20 balls
-      </p>
-    </div>
-  );
-}
+const T_ORDER: ThreatRating[] = ["BUNNY", "DOMINATED", "WATCHFUL", "CONTESTED", "ADVANTAGE", "THREAT", "DOMINANT"];
 
-function LegendItem({ item }: { item: typeof LEGEND_ROWS[0] }) {
-  const style = useMemo(() => ({ backgroundColor: item.bg, borderColor: item.border }), [item.bg, item.border]);
-  const dotStyle = useMemo(() => ({ backgroundColor: item.dot }), [item.dot]);
-  const textStyle = useMemo(() => ({ color: item.text }), [item.text]);
-
-  return (
-    <div
-      style={style}
-      className="[display:flex] [align-items:center] [gap:4px] [padding:2px_8px] [border-radius:4px] [border:1px_solid] [flex-shrink:0]"
-    >
-      <div style={dotStyle} className="[width:6px] [height:6px] [border-radius:50%]" />
-      <span style={textStyle} className="[font-size:9px] [font-weight:700] [text-transform:uppercase]">
-        {item.label}
-      </span>
-    </div>
-  );
-}
-export default function MatchupTable({ data, homeXI, awayXI, homeTeamName, awayTeamName }: MatchupTableProps) {
-  const [activeTab, setActiveTab]       = useState<"home" | "away">("home");
-  const [batterFilter, setBatterFilter] = useState("");
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
-
+export default function MatchupTable({ data, homeXI, awayXI, homeTeamName, awayTeamName }: { data: Record<string, unknown>[]; homeXI?: string[]; awayXI?: string[]; homeTeamName?: string; awayTeamName?: string; }) {
+  const [tab, setTab] = useState<"home" | "away">("home");
+  const [sel, setSel] = useState<string | null>(null);
   const rows = useMemo(() => toMatchupRows(data || []), [data]);
-
-  const batterGroups = useMemo(() => {
-    const groups: Record<string, MatchupRow[]> = {}, order: string[] = [];
-    rows.forEach(row => {
-      const b = String(row["Batter"] ?? row["BATTER"] ?? "Unknown");
-      if (!groups[b]) { groups[b] = []; order.push(b); }
-      groups[b].push(row);
+  
+  const grps = useMemo(() => {
+    const g: Record<string, MatchupRow[]> = {}, o: string[] = [];
+    rows.forEach(r => {
+      const b = String(r.Batter ?? "Unknown");
+      if (!g[b]) { g[b] = []; o.push(b); }
+      g[b].push(r);
     });
-    return order.map(b => ({ batter: b, rows: groups[b] }));
+    return o.map(b => ({ b, r: g[b] }));
   }, [rows]);
 
-  const homeBatterGroups = useMemo(() => {
-    const xi = homeXI ? batterGroups.filter(g => homeXI.includes(g.batter)) : batterGroups;
-    return batterFilter ? xi.filter(g => g.batter.toLowerCase().includes(batterFilter.toLowerCase())) : xi;
-  }, [batterGroups, homeXI, batterFilter]);
+  const act = useMemo(() => {
+    const xi = tab === "home" ? homeXI : awayXI;
+    return xi ? grps.filter(g => xi.includes(g.b)) : (tab === "home" ? grps : []);
+  }, [tab, grps, homeXI, awayXI]);
 
-  const awayBatterGroups = useMemo(() => {
-    const xi = awayXI ? batterGroups.filter(g => awayXI.includes(g.batter)) : [];
-    return batterFilter ? xi.filter(g => g.batter.toLowerCase().includes(batterFilter.toLowerCase())) : xi;
-  }, [batterGroups, awayXI, batterFilter]);
+  const eSel = sel && act.some(g => g.b === sel) ? sel : (act[0]?.b || null);
+  const sRows = act.find(g => g.b === eSel)?.r || [];
+  const vFil = sRows.some(r => r.VenueFiltered === true);
+  const tB = sRows.reduce((s, r) => s + (r.Balls ?? 0), 0);
+  const tM = sRows.length === 0 ? 0 : Math.max(0, ...sRows.map(r => r.MatchCount ?? 0));
+
+  const tC = useMemo(() => {
+    const c: Record<ThreatRating, number> = { BUNNY: 0, DOMINATED: 0, WATCHFUL: 0, CONTESTED: 0, ADVANTAGE: 0, THREAT: 0, DOMINANT: 0, "LOW DATA": 0, "NEW MATCHUP": 0 };
+    sRows.forEach(r => { if (r.ThreatRating) c[r.ThreatRating]++; });
+    return c;
+  }, [sRows]);
+
+  useEffect(() => { setSel(null); }, [tab]);
 
   if (!data || data.length === 0) return <EmptyState message="No matchup data available." />;
 
-  const activeGroups  = activeTab === "home" ? homeBatterGroups : awayBatterGroups;
-  const homeLabel     = `${homeTeamName ?? "Home"} Batters vs ${awayTeamName ?? "Away"} Bowlers`;
-  const awayLabel     = `${awayTeamName ?? "Away"} Batters vs ${homeTeamName ?? "Home"} Bowlers`;
-
   return (
     <div className="terminal-panel [display:flex] [flex-direction:column] [overflow:hidden]">
-
-      {/* Tab switcher */}
       <div className="[display:flex] [border-bottom:1px_solid_var(--border-subtle)]">
-        {(["home", "away"] as const).map((tab) => {
-          const isActive = activeTab === tab;
-          const label    = tab === "home" ? homeLabel : awayLabel;
+        {(["home", "away"] as const).map(t => {
+          const l = t === "home" ? `${homeTeamName ?? "Home"} Batters vs ${awayTeamName ?? "Away"} Bowlers` : `${awayTeamName ?? "Away"} Batters vs ${homeTeamName ?? "Home"} Bowlers`;
           return (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`format-tab ${isActive ? "active" : ""}`}
+            <button 
+              key={t} 
+              onClick={() => setTab(t)} 
+              aria-label={`View ${l}`} 
+              className={`format-tab ${tab === t ? "active" : ""}`}
             >
-              {label}
+              <span>{l}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Sub-header: count + filter */}
-      <div className="[display:flex] [align-items:center] [justify-content:space-between] [padding:8px_16px] [border-bottom:1px_solid_var(--border-subtle)]">
-        <span className="[font-size:0.72rem] [padding:2px_8px] [border-radius:9999px] [background:var(--bg-active)] [color:var(--text-muted)] [font-weight:500]">
-          {rows.length} matchups
-        </span>
-        <input
-          type="text"
-          placeholder="Filter batters..."
-          value={batterFilter}
-          onChange={e => setBatterFilter(e.target.value)}
-          className="context-input [max-width:180px] [height:28px] [font-size:0.82rem]"
-          aria-label="Filter batters by name"
-        />
+      <div className="[display:flex] [align-items:center] [gap:8px] [padding:6px_16px] [border-bottom:1px_solid_var(--border-subtle)] [flex-shrink:0]">
+        <span className="[font-size:0.72rem] [padding:2px_8px] [border-radius:9999px] [background:var(--bg-active)] [color:var(--text-muted)] [font-weight:500]">{rows.length} matchups</span>
+        {vFil ? <span className="[font-size:9px] [font-weight:700] [text-transform:uppercase] [padding:2px_7px] [border-radius:4px] [background:rgba(245,158,11,0.15)] [border:1px_solid_rgba(245,158,11,0.4)] [color:var(--tier-caution)]">AT VENUE</span> : <span className="[font-size:9px] [font-weight:700] [text-transform:uppercase] [padding:2px_7px] [border-radius:4px] [background:var(--bg-elevated)] [border:1px_solid_var(--border-subtle)] [color:var(--text-muted)]">ALL GROUNDS</span>}
       </div>
 
-      {/* Batter list */}
-      <div className="[flex:1] [overflow-y:auto]">
-        {activeGroups.length > 0
-          ? activeGroups.map(g => (
-              <MatchupBatterGroup
-                key={g.batter}
-                batter={g.batter}
-                rows={g.rows}
-                isExpanded={!!expandedGroups[g.batter]}
-                onToggle={() => setExpandedGroups(p => ({ ...p, [g.batter]: !p[g.batter] }))}
-              />
-            ))
-          : <div className="[padding:24px]"><EmptyState message="No matchup data for this side." /></div>
-        }
+      <div className="[display:flex] [gap:6px] [padding:8px_16px] [overflow-x:auto] [border-bottom:1px_solid_var(--border-subtle)] [flex-shrink:0] no-scrollbar">
+        {act.map(g => {
+          const r = getWorst(getSummary(g.r));
+          const iA = eSel === g.b;
+          return (
+            <button 
+              key={g.b} 
+              onClick={() => setSel(g.b)} 
+              aria-label={`Matchups for ${g.b}`} 
+              aria-pressed={iA} 
+              className={`[display:inline-flex] [align-items:center] [padding:4px_12px] [border-radius:4px] [font-size:0.78rem] [font-weight:600] [cursor:pointer] [white-space:nowrap] [flex-shrink:0] [border-left-width:3px] [border-left-style:solid] ${THREAT_BORDER_CLASSES[r]} ${iA ? "[background:var(--bg-active)] [color:var(--text-primary)] [border-top:1px_solid_rgba(37,99,235,0.5)] [border-right:1px_solid_rgba(37,99,235,0.5)] [border-bottom:1px_solid_rgba(37,99,235,0.5)]" : "[background:var(--bg-elevated)] [color:var(--text-muted)] [border-top:1px_solid_var(--border-subtle)] [border-right:1px_solid_var(--border-subtle)] [border-bottom:1px_solid_var(--border-subtle)]"}`}
+            >
+              <span>{g.b}</span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Legend footer */}
-      <LegendFooter />
-    </div>
-  );
-}
-
-function MatchupBatterGroup({
-  batter, rows, isExpanded, onToggle,
-}: {
-  batter: string; rows: MatchupRow[]; isExpanded: boolean; onToggle: () => void;
-}) {
-  const phaseSummary = useMemo(() => computePhaseSummary(rows), [rows]);
-  const barColor = useMemo(() => worstPhaseColor(phaseSummary), [phaseSummary]);
-  const barStyle = useMemo(() => ({ borderLeft: `4px solid ${barColor}` }), [barColor]);
-
-  return (
-    <div
-      style={barStyle}
-      className="[border-bottom:1px_solid_var(--border-subtle)] [background:var(--bg-surface)] hover:[background:var(--bg-hover)] [transition:background_150ms]"
-    >
-      <button
-        onClick={onToggle}
-        aria-label={`${isExpanded ? "Collapse" : "Expand"} matchups for ${batter}`}
-        className="[width:100%] [display:flex] [align-items:center] [gap:10px] [padding:8px_12px] [min-height:40px]"
-      >
-        <span className="[font-size:0.82rem] [font-weight:600] [color:var(--text-primary)] [flex:1] [text-align:left] [white-space:nowrap] [overflow:hidden] [text-overflow:ellipsis]">
-          {batter}
-        </span>
-        {phaseSummary.length > 0 && (
-          <div className="[display:flex] [gap:4px] [flex-wrap:nowrap] [flex-shrink:0]">
-            {phaseSummary.map(({ label, rating }) => (
-              <PhaseBadge key={label} label={label} rating={rating} />
-            ))}
+      {eSel && (
+        <div className="[display:flex] [align-items:flex-start] [justify-content:space-between] [padding:10px_16px] [border-bottom:1px_solid_var(--border-subtle)] [flex-shrink:0]">
+          <div className="[display:flex] [flex-direction:column]">
+            <span className="[font-size:1.05rem] [font-weight:700] [color:var(--text-primary)]">{eSel}</span>
+            <span className="[font-size:0.72rem] [color:var(--text-muted)] [margin-top:2px]">{vFil ? "AT VENUE" : "ALL GROUNDS"}:&nbsp;<span className="font-numeric [color:var(--text-primary)] [font-weight:600]">{tM}m · {tB}b</span></span>
           </div>
-        )}
-        <span className="[font-size:0.72rem] [color:var(--text-muted)] [flex-shrink:0] [white-space:nowrap]">
-          {rows.length} matchups
-        </span>
-        {isExpanded
-          ? <ChevronUp size={16} className="[color:var(--text-muted)] [flex-shrink:0]" />
-          : <ChevronDown size={16} className="[color:var(--text-muted)] [flex-shrink:0]" />
-        }
-      </button>
+          <div className="[display:flex] [gap:6px] [align-items:center] [flex-wrap:wrap] [justify-content:flex-end] [max-width:55%]">
+            {T_ORDER.filter(r => tC[r] > 0).map((r, i, a) => (
+              <React.Fragment key={r}>
+                <span className={`[font-size:9px] [font-weight:700] [text-transform:uppercase] ${THREAT_TEXT_CLASSES[r]}`}>{tC[r]} {r}</span>
+                {i < a.length - 1 && <span className="[font-size:9px] [color:var(--text-muted)]">·</span>}
+              </React.Fragment>
+            ))}
+            {T_ORDER.every(r => (tC[r] ?? 0) === 0) && <span className="[font-size:9px] [color:var(--text-muted)] [font-style:italic]">No data yet</span>}
+          </div>
+        </div>
+      )}
 
-      {isExpanded && (
-        <div className="[background:rgba(28,33,39,0.5)] [border-top:1px_solid_var(--border-subtle)]">
-          {rows.map((row, i) => (
-            <div key={i} style={i > 0 ? { borderTop: "1px solid var(--border-subtle)" } : {}}>
-              <MatchupCard row={row} />
+      <div className="[flex:1] [overflow-y:auto] [padding:12px_16px]">
+        {sRows.length > 0 ? (
+          <div className="[display:grid] [grid-template-columns:repeat(2,minmax(0,1fr))] [gap:10px] max-[640px]:[grid-template-columns:1fr]">
+            {sRows.map((r, i) => <MatchupCard key={r.Bowler ?? i} row={r} />)}
+          </div>
+        ) : (
+          <EmptyState message="No data for this batter." />
+        )}
+      </div>
+
+      <div className="[display:flex] [align-items:center] [justify-content:space-between] [padding:10px_16px] [border-top:1px_solid_var(--border-subtle)] [flex-wrap:wrap] [gap:8px]">
+        <div className="[display:flex] [align-items:center] [gap:4px] [overflow-x:auto] [flex-wrap:nowrap]">
+          <span className="[font-size:9px] [font-weight:700] [color:var(--text-muted)] [text-transform:uppercase] [margin-right:6px] [flex-shrink:0]">Legend:</span>
+          {LEGEND.map(i => (
+            <div key={i.l} className={`[display:flex] [align-items:center] [gap:4px] [padding:2px_8px] [border-radius:4px] [border-width:1px] [border-style:solid] [flex-shrink:0] ${i.b} ${i.br}`}>
+              <div className={`[width:6px] [height:6px] [border-radius:50%] ${i.d}`} />
+              <span className={`[font-size:9px] [font-weight:700] [text-transform:uppercase] ${i.t}`}>{i.l}</span>
             </div>
           ))}
         </div>
-      )}
+        <p className="[font-size:9px] [color:var(--text-muted)] [font-style:italic]">* NEW MATCHUP = limited data | LOW DATA = &lt;20 balls</p>
+      </div>
     </div>
   );
 }
