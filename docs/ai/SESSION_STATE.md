@@ -19,6 +19,14 @@ None.
 - Nothing currently in progress
 
 ## Last Completed
+- TASK-159 - Player Matchups Dossier redesign — chips bar, 2-col grid, all 47 fields surfaced — CLOSED 2026-03-20
+  Complete redesign of the Player Matchups screen using "Concept C — The Dossier" layout.
+  Replaced collapsible batter groups with a batter-chips navigation bar and a 2-column 
+  bowler card grid. Surfaced all 47 backend fields including phase mini-tables, 
+  innings splits, confidence indicators, and dismissal breakdowns. Implemented 
+  strict Tailwind-based dynamic styling to satisfy Rule 2.2C-R3.
+  Gates F1/F2/F3 and bouncer PASS.
+
 - TASK-158 - Engine upgrade — MatchCount, BoundaryRate, DotBallRate, innings split, VenueFiltered, column validation — CLOSED 2026-03-20
   Extended _matchup_single_batter: added MatchCount, BoundaryBalls, BoundaryRate, DotBalls,
   DotBallRate to _aggregate_matchup_window. Added PP/Mid/Death_MatchCount to phase stats.

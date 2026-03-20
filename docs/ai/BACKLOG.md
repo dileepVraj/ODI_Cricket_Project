@@ -32,6 +32,22 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-159 - Player Matchups Dossier redesign — chips bar, 2-col grid, all 47 fields surfaced
+**Type:** frontend-new-component
+**Scope:** frontend
+**Priority:** High
+**Depends On:** TASK-158
+**Created:** 2026-03-20
+**Status:** Closed — 2026-03-20
+
+### Description
+Complete redesign of the Player Matchups screen using "Concept C — The Dossier" layout.
+Replaced collapsible batter groups with a batter-chips navigation bar and a 2-column 
+bowler card grid. Surfaced all 47 backend fields including phase mini-tables, 
+innings splits, confidence indicators, and dismissal breakdowns. Implemented 
+strict Tailwind-based dynamic styling to satisfy Rule 2.2C-R3.
+Gates F1/F2/F3 and bouncer PASS.
+
 ## TASK-158 - Engine upgrade — new matchup stats, innings split, VenueFiltered, column validation
 **Type:** modification
 **Scope:** backend
