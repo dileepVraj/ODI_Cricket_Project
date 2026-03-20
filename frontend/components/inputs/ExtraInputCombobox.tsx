@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { fetchPlayers, fetchVenues, type VenueItem } from "@/lib/api";
+import { stripEmoji } from "@/lib/utils";
 import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
 
 interface ExtraInputFieldDefinition {
@@ -131,7 +132,7 @@ export default function ExtraInputCombobox({
         <div className="[display:flex] [flex-direction:column] [gap:6px]">
             <div className="[display:flex] [align-items:center] [justify-content:space-between]">
                 <span className="[font-size:0.8rem] [font-weight:600] [color:var(--text-secondary)]">
-                    {field.label}
+                    {stripEmoji(field.label)}
                     {field.required ? (
                         <span className="[color:var(--tier-danger)] [margin-left:4px]">*</span>
                     ) : null}

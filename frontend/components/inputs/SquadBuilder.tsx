@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { fetchPlayers } from "@/lib/api";
 import { useAppContext } from "@/lib/context";
+import { stripEmoji } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import PlayerList from "@/components/inputs/PlayerList";
 import PlayerSearch from "@/components/inputs/PlayerSearch";
@@ -95,8 +96,8 @@ export default function SquadBuilder({
     onAwayXIChange,
 }: SquadBuilderProps) {
     const { manifest } = useAppContext();
-    const homeLabel = manifest?.context_fields?.team_a?.label ?? "Team A";
-    const awayLabel = manifest?.context_fields?.team_b?.label ?? "Team B";
+    const homeLabel = stripEmoji(manifest?.context_fields?.team_a?.label ?? "Team A");
+    const awayLabel = stripEmoji(manifest?.context_fields?.team_b?.label ?? "Team B");
     const homeController = useSquadPanelController({
         formatKey,
         team: teamA,

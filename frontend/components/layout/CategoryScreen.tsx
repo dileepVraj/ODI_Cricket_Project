@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { AlertCircle, Loader2, Zap } from "lucide-react";
 import { executeFunction, type ExecuteResponse } from "@/lib/api";
 import { useAppContext } from "@/lib/context";
+import { stripEmoji } from "@/lib/utils";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import ExtraInputRenderer from "@/components/inputs/ExtraInputRenderer";
 import SquadBuilder from "@/components/inputs/SquadBuilder";
@@ -70,7 +71,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
   return (
     <div className="animate-fade-in">
       <div className="[margin-bottom:20px]">
-        <h2 className="[font-size:1.35rem] [font-weight:700] [color:var(--text-primary)] [margin-bottom:4px]">{category.label}</h2>
+        <h2 className="[font-size:1.35rem] [font-weight:700] [color:var(--text-primary)] [margin-bottom:4px]">{stripEmoji(category.label)}</h2>
         <p className="[color:var(--text-muted)] [font-size:0.85rem]">{category.description}</p>
       </div>
       <div className="[display:flex] [gap:4px] [margin-bottom:20px] [overflow-x:auto] [padding-bottom:4px]">
@@ -89,7 +90,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
             {effectiveRequiredContext.map((key) => {
               const val = contextValues[key];
               const isContextComplete = Boolean(val && val !== "" && val !== "All");
-              return ( <span key={key} className={`badge ${resolveContextBadgeClass(isContextComplete)}`}>{getContextLabel(key)}: {isContextComplete ? String(val) : "needed"}</span> );
+              return ( <span key={key} className={`badge ${resolveContextBadgeClass(isContextComplete)}`}>{stripEmoji(getContextLabel(key))}: {isContextComplete ? String(val) : "needed"}</span> );
             })}
           </div>
         </div>
@@ -127,7 +128,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
         {result && !isLoading && (
           <div aria-live="polite" className="animate-fade-in">
             <ErrorBoundary>
-              <FunctionRenderer outputType={result.output_type} data={result.data} homeXI={homeXI} awayXI={awayXI} />
+              <FunctionRenderer outputType={result.output_type} data={result.data} homeXI={homeXI} awayXI={awayXI} homeTeamName={String(contextValues.team_a || "")} awayTeamName={String(contextValues.team_b || "")} />
             </ErrorBoundary>
           </div>
         )}
