@@ -7,7 +7,7 @@ import { stripEmoji } from "@/lib/utils";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import ExtraInputRenderer from "@/components/inputs/ExtraInputRenderer";
 import SquadBuilder from "@/components/inputs/SquadBuilder";
-import { MissingContextBanner, SquadHintBanner, MissingInputsBanner, ExecuteErrorPanel } from "@/components/layout/CategoryBanners";
+import { ExecuteErrorPanel } from "@/components/layout/CategoryBanners";
 import FunctionRenderer from "@/components/renderers/FunctionRenderer";
 import SkeletonLoader from "@/components/renderers/SkeletonLoader";
 import { resolveSquadBuilderConfig, getExtraInputFields, getMissingContext, buildExecuteParams, formatExecuteError } from "@/lib/executeHelpers";
@@ -70,7 +70,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
   }
   return (
     <div className="animate-fade-in">
-      <div className="[margin-bottom:20px]">
+      <div className="[margin-bottom:12px]">
         <h2 className="[font-size:1.35rem] [font-weight:700] [color:var(--text-primary)] [margin-bottom:4px]">{stripEmoji(category.label)}</h2>
         <p className="[color:var(--text-muted)] [font-size:0.85rem]">{category.description}</p>
       </div>
@@ -81,7 +81,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
           </button>
         ))}
       </div>
-      <div className="glass-card [padding:24px]">
+      <div className="[padding-top:16px]">
         <div className="[display:flex] [justify-content:space-between] [align-items:flex-start] [margin-bottom:16px] [flex-wrap:wrap] [gap:12px]">
           <div>
             <h3 className="[font-size:1.05rem] [font-weight:700] [color:var(--text-primary)] [margin-bottom:4px]">{activeFn.label}</h3>
@@ -94,15 +94,22 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
             })}
           </div>
         </div>
-        {!canExecute && missingContext.length > 0 && <MissingContextBanner missingContextLabels={missingContext.map(getContextLabel)} />}
+        {!canExecute && (
+          <p className="[font-size:0.78rem] [color:var(--text-muted)] [margin-bottom:12px]">
+            Requires: {missingContext.map(getContextLabel).join(', ')}
+          </p>
+        )}
         {Object.keys(extraInputFields).length > 0 && activeFormat && (
           <ExtraInputRenderer formatKey={activeFormat} extraInputs={extraInputFields} contextValues={contextValues} values={extraInputValues} onChange={(key, val) => setExtraInputValues((prev) => ({ ...prev, [key]: val }))} />
         )}
         {needsSquadBuilder && activeFormat && (
           <SquadBuilder formatKey={activeFormat} teamA={String(contextValues.team_a || "")} teamB={String(contextValues.team_b || "")} maxPlayers={squadMaxPlayers} homeXI={homeXI} awayXI={awayXI} onHomeXIChange={setHomeXI} onAwayXIChange={setAwayXI} />
         )}
-        {needsSquadBuilder && canExecute && !squadReady && <SquadHintBanner />}
-        {canExecute && squadReady && missingExtraInputs.length > 0 && <MissingInputsBanner missingInputLabels={missingExtraInputs} />}
+        {canExecute && squadReady && missingExtraInputs.length > 0 && (
+          <p className="[font-size:0.78rem] [color:var(--text-muted)] [margin-bottom:12px]">
+            Requires: {missingExtraInputs.join(', ')}
+          </p>
+        )}
         {hasMultiButtons ? (
           <div className="[display:flex] [gap:8px] [margin-bottom:20px]">
             {executeBtns.map((btn) => (
@@ -116,7 +123,7 @@ export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
             {isLoading
               ? (<><Loader2 size={16} className="animate-spin" />Executing...</>)
               : !canRun
-              ? (<><AlertCircle size={16} />{!canExecute ? "Fill Required Fields" : !squadReady ? "Select Squads" : `Missing ${missingExtraInputs[0]}`}</>)
+              ? (<>{!canExecute ? "Fill Required Fields" : !squadReady ? "Select Squads" : `Missing ${missingExtraInputs[0]}`}</>)
               : result !== null
               ? (<>Re-run</>)
               : (<><Zap size={16} />Execute Analysis</>)
