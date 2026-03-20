@@ -27,6 +27,8 @@ interface FunctionRendererProps {
     data: unknown;
     homeXI?: string[];
     awayXI?: string[];
+    homeTeamName?: string;
+    awayTeamName?: string;
 }
 
 type JsonRecord = Record<string, unknown>;
@@ -42,51 +44,25 @@ function extractEnrichedData(data: unknown): EnrichedDataResult {
     if (isJsonRecord(data)) {
         const stats = data.stats;
         const matchAudit = isJsonRecordArray(data.match_audit) ? data.match_audit : null;
-        if (isJsonRecordArray(stats)) {
-            return {
-                mainData: stats,
-                matchAudit,
-            };
-        }
-        if ("match_audit" in data) {
-            return {
-                mainData: data,
-                matchAudit,
-            };
-        }
+        if (isJsonRecordArray(stats)) return { mainData: stats, matchAudit };
+        if ("match_audit" in data) return { mainData: data, matchAudit };
     }
     return { mainData: data, matchAudit: null };
 }
 function wrapRenderer(renderer: ReactNode, fallbackMessage: string): ReactNode {
-    return (
-        <ErrorBoundary fallbackMessage={fallbackMessage}>
-            {renderer}
-        </ErrorBoundary>
-    );
+    return <ErrorBoundary fallbackMessage={fallbackMessage}>{renderer}</ErrorBoundary>;
 }
 function renderMatchAudit(matchAudit: JsonRecordArray | null): ReactNode {
     if (!matchAudit) return null;
-    return wrapRenderer(
-        <MatchAuditSection records={matchAudit} />,
-        "Unable to render match audit."
-    );
+    return wrapRenderer(<MatchAuditSection records={matchAudit} />, "Unable to render match audit.");
 }
-function renderWithAudit(
-    renderer: ReactNode,
-    fallbackMessage: string,
-    matchAudit: JsonRecordArray | null
-): ReactNode {
-    return (
-        <>
-            {wrapRenderer(renderer, fallbackMessage)}
-            {renderMatchAudit(matchAudit)}
-        </>
-    );
+function renderWithAudit(renderer: ReactNode, fallbackMessage: string, matchAudit: JsonRecordArray | null): ReactNode {
+    return <>{wrapRenderer(renderer, fallbackMessage)}{renderMatchAudit(matchAudit)}</>;
 }
 function getSuspenseFallback(): ReactNode { return <div className="skeleton" aria-hidden="true">&nbsp;</div>; }
 
 export default function FunctionRenderer(props: FunctionRendererProps) {
-    const { outputType, data, homeXI, awayXI } = props;
+    const { outputType, data, homeXI, awayXI, homeTeamName, awayTeamName } = props;
     if (data === null || data === undefined) {
         return (
             <Suspense fallback={<div className="skeleton [height:2rem]" />}>
@@ -105,124 +81,70 @@ export default function FunctionRenderer(props: FunctionRendererProps) {
     switch (outputType) {
         case "report":
             if (isJsonRecord(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <ReportCard data={mainData} />,
-                    "Unable to render report output.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<ReportCard data={mainData} />, "Unable to render report output.", matchAudit);
             } else if (isJsonRecordArray(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <DataTable data={mainData} />,
-                    "Unable to render table output.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<DataTable data={mainData} />, "Unable to render table output.", matchAudit);
             }
             break;
         case "comparison_table":
             if (isJsonRecordArray(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <ComparisonTable data={mainData} />,
-                    "Unable to render comparison table.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<ComparisonTable data={mainData} />, "Unable to render comparison table.", matchAudit);
             }
             break;
         case "matrix_table":
             if (isJsonRecordArray(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <MatrixTable data={mainData} />,
-                    "Unable to render matrix table.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<MatrixTable data={mainData} />, "Unable to render matrix table.", matchAudit);
             }
             break;
         case "form_table":
             if (isJsonRecordArray(mainData)) {
-                renderedOutput = wrapRenderer(
-                    <FormTable data={mainData} />,
-                    "Unable to render form table."
-                );
+                renderedOutput = wrapRenderer(<FormTable data={mainData} />, "Unable to render form table.");
             }
             break;
         case "table":
             if (isJsonRecordArray(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <DataTable data={mainData} />,
-                    "Unable to render table output.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<DataTable data={mainData} />, "Unable to render table output.", matchAudit);
             }
             break;
         case "phase_analysis":
             if (isJsonRecord(mainData)) {
-                renderedOutput = wrapRenderer(
-                    <PhaseAnalysisCard data={mainData} />,
-                    "Unable to render phase analysis."
-                );
+                renderedOutput = wrapRenderer(<PhaseAnalysisCard data={mainData} />, "Unable to render phase analysis.");
             }
             break;
         case "venue_matchup_report":
             if (isJsonRecord(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <VenueMatchupReport data={mainData} />,
-                    "Unable to render venue matchup report.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<VenueMatchupReport data={mainData} />, "Unable to render venue matchup report.", matchAudit);
             }
             break;
         case "country_h2h_report":
             if (isJsonRecord(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <CountryH2HReport data={mainData} />,
-                    "Unable to render country H2H report.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<CountryH2HReport data={mainData} />, "Unable to render country H2H report.", matchAudit);
             }
             break;
         case "global_h2h_report":
             if (isJsonRecord(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <GlobalH2HReport data={mainData} />,
-                    "Unable to render Global H2H report.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<GlobalH2HReport data={mainData} />, "Unable to render Global H2H report.", matchAudit);
             }
             break;
         case "home_fortress":
             if (isJsonRecord(mainData)) {
-                renderedOutput = renderWithAudit(
-                    <FortressReport data={mainData} />,
-                    "Unable to render fortress report.",
-                    matchAudit
-                );
+                renderedOutput = renderWithAudit(<FortressReport data={mainData} />, "Unable to render fortress report.", matchAudit);
             }
             break;
         case "prediction_card":
             if (isJsonRecord(mainData)) {
-                renderedOutput = wrapRenderer(
-                    <PredictionCard data={mainData} />,
-                    "Unable to render prediction card."
-                );
+                renderedOutput = wrapRenderer(<PredictionCard data={mainData} />, "Unable to render prediction card.");
             }
             break;
         case "profile_card": {
             if (isJsonRecord(mainData)) {
                 const profileView = typeof mainData["_view"] === "string" ? mainData["_view"] : "";
                 if (profileView === "batting_intel") {
-                    renderedOutput = wrapRenderer(
-                        <PlayerBattingIntel data={mainData} />,
-                        "Unable to render batting intel."
-                    );
+                    renderedOutput = wrapRenderer(<PlayerBattingIntel data={mainData} />, "Unable to render batting intel.");
                 } else if (profileView === "bowling_intel") {
-                    renderedOutput = wrapRenderer(
-                        <PlayerBowlingIntel data={mainData} />,
-                        "Unable to render bowling intel."
-                    );
+                    renderedOutput = wrapRenderer(<PlayerBowlingIntel data={mainData} />, "Unable to render bowling intel.");
                 } else {
-                    renderedOutput = wrapRenderer(
-                        <PlayerProfileCard data={mainData} />,
-                        "Unable to render profile card."
-                    );
+                    renderedOutput = wrapRenderer(<PlayerProfileCard data={mainData} />, "Unable to render profile card.");
                 }
             }
             break;
@@ -230,29 +152,19 @@ export default function FunctionRenderer(props: FunctionRendererProps) {
         case "matchup_table":
             if (isJsonRecordArray(mainData)) {
                 renderedOutput = wrapRenderer(
-                    <MatchupTable 
-                        data={mainData} 
-                        homeXI={homeXI} 
-                        awayXI={awayXI} 
-                    />,
+                    <MatchupTable data={mainData} homeXI={homeXI} awayXI={awayXI} homeTeamName={homeTeamName} awayTeamName={awayTeamName} />,
                     "Unable to render matchup table."
                 );
             }
             break;
         case "download_json":
             if (isJsonRecord(mainData)) {
-                renderedOutput = wrapRenderer(
-                    <DownloadPanel data={mainData} />,
-                    "Unable to render download panel."
-                );
+                renderedOutput = wrapRenderer(<DownloadPanel data={mainData} />, "Unable to render download panel.");
             }
             break;
         case "squad_comparison":
             if (isJsonRecord(mainData)) {
-                renderedOutput = wrapRenderer(
-                    <SquadComparisonCard data={mainData} />,
-                    "Unable to render squad comparison."
-                );
+                renderedOutput = wrapRenderer(<SquadComparisonCard data={mainData} />, "Unable to render squad comparison.");
             }
             break;
     }
@@ -262,10 +174,7 @@ export default function FunctionRenderer(props: FunctionRendererProps) {
             renderedOutput = (
                 <div>
                     <FallbackBanner message="Unknown renderer" />
-                    {wrapRenderer(
-                        <DataTable data={mainData} />,
-                        "Unable to render fallback table output."
-                    )}
+                    {wrapRenderer(<DataTable data={mainData} />, "Unable to render fallback table output.")}
                     {renderMatchAudit(matchAudit)}
                 </div>
             );
@@ -273,10 +182,7 @@ export default function FunctionRenderer(props: FunctionRendererProps) {
             renderedOutput = (
                 <div>
                     <FallbackBanner message="Unknown renderer" />
-                    {wrapRenderer(
-                        <ReportCard data={mainData} />,
-                        "Unable to render fallback report output."
-                    )}
+                    {wrapRenderer(<ReportCard data={mainData} />, "Unable to render fallback report output.")}
                     {renderMatchAudit(matchAudit)}
                 </div>
             );
@@ -292,9 +198,5 @@ export default function FunctionRenderer(props: FunctionRendererProps) {
         }
     }
 
-    return (
-        <Suspense fallback={getSuspenseFallback()}>
-            {renderedOutput}
-        </Suspense>
-    );
+    return <Suspense fallback={getSuspenseFallback()}>{renderedOutput}</Suspense>;
 }

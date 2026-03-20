@@ -29,16 +29,13 @@
   --bg-active: #2F3844;
 
   /* Accent palette */
-  --accent-primary: #52B523;
-  /* bet365 Green */
-  --accent-secondary: #3D8B1A;
-  /* Deeper Green */
-  --accent-tertiary: #74C940;
-  /* Lighter Green */
-  --accent-glow: rgba(82, 181, 35, 0.08);
-  --accent-glow-strong: rgba(82, 181, 35, 0.18);
-  --accent-secondary-glow: rgba(61, 139, 26, 0.12);
-  --accent-tertiary-glow: rgba(116, 201, 64, 0.10);
+  --accent-primary:          #2563EB
+  --accent-secondary:        #1D4ED8
+  --accent-tertiary:         #3B82F6
+  --accent-glow:             rgba(37, 99, 235, 0.08)
+  --accent-glow-strong:      rgba(37, 99, 235, 0.18)
+  --accent-secondary-glow:   rgba(29, 78, 216, 0.12)
+  --accent-tertiary-glow:    rgba(59, 130, 246, 0.10)
   --tier-elite-glow: rgba(34, 197, 94, 0.15);
 
   /* Semantic colors (4-tier badge system) */
@@ -61,7 +58,7 @@
   --border-subtle: rgba(255, 255, 255, 0.05);
   --border-default: rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.16);
-  --border-accent: rgba(82, 181, 35, 0.28);
+  --border-accent:           rgba(37, 99, 235, 0.28)
 
   /* Semantic banner tokens (caution / info / danger) */
   --bg-caution: rgba(245, 158, 11, 0.08);
@@ -82,14 +79,14 @@
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
   --shadow-sidebar: 1px 0 12px rgba(0, 0, 0, 0.2);
   --shadow-card-deep: 0 8px 22px rgba(2, 8, 23, 0.2);
-  --shadow-glow: 0 0 16px rgba(82, 181, 35, 0.12);
+  --shadow-glow:             0 0 16px rgba(37, 99, 235, 0.12)
 
   /* Spacing / sizing */
   --sidebar-width: 240px;
   --sidebar-collapsed-width: 60px;
   --topbar-height: 48px;
   --format-selector-height: 48px;
-  --context-bar-height: 52px;
+  --context-bar-height: 44px;
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -97,10 +94,10 @@
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Border radius */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
 }
 
 /* ── Base Reset & Typography ─────────────────────────────────────────── */
@@ -167,7 +164,14 @@ textarea {
   -webkit-backdrop-filter: none;
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
+}
+
+.terminal-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .glass-card-hover {
@@ -202,24 +206,24 @@ textarea {
   color: white;
   border: none;
   padding: 8px 20px;
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   font-weight: 600;
   font-size: 0.875rem;
   cursor: pointer;
   transition: all var(--transition-fast);
-  box-shadow: 0 2px 6px rgba(82, 181, 35, 0.20);
+  box-shadow: none;
 }
 
 .btn-primary:hover {
-  box-shadow: 0 3px 10px rgba(82, 181, 35, 0.30);
+  box-shadow: none;
 }
 
 .btn-ghost {
   background: transparent;
   color: var(--text-secondary);
   border: 1px solid var(--border-default);
-  padding: 8px 16px;
-  border-radius: var(--radius-md);
+  padding: 5px 12px;
+  border-radius: 2px;
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
@@ -238,7 +242,7 @@ textarea {
   display: inline-flex;
   align-items: center;
   padding: 2px 10px;
-  border-radius: 9999px;
+  border-radius: 2px;
   font-weight: 600;
   font-size: 0.75rem;
   letter-spacing: 0.02em;
@@ -346,13 +350,15 @@ textarea {
   align-items: center;
   gap: 6px;
   padding: 5px 12px;
-  border-radius: var(--radius-md);
+  border-radius: 0;
   font-weight: 500;
   font-size: 0.82rem;
   color: var(--text-muted);
   cursor: pointer;
   transition: all var(--transition-fast);
-  border: 1px solid transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
   white-space: nowrap;
 }
 
@@ -363,8 +369,8 @@ textarea {
 
 .format-tab.active {
   color: #FFFFFF;
-  background: rgba(82, 181, 35, 0.10);
-  border-color: rgba(82, 181, 35, 0.22);
+  background: transparent;
+  border-bottom: 2px solid var(--accent-primary);
   font-weight: 600;
 }
 
@@ -379,14 +385,14 @@ textarea {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  border-radius: 0;
   font-weight: 500;
   font-size: 0.82rem;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
-  border: 1px solid transparent;
+  border: none;
   position: relative;
 }
 
@@ -398,19 +404,18 @@ textarea {
 .sidebar-item.active {
   color: #FFFFFF;
   background: var(--accent-glow);
-  border-color: var(--border-accent);
   font-weight: 600;
 }
 
 .sidebar-item.active::before {
   content: '';
   position: absolute;
-  left: -1px;
-  top: 6px;
-  bottom: 6px;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
   width: 3px;
   background: var(--accent-primary);
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .sidebar-group-label {
@@ -432,7 +437,7 @@ textarea {
 .context-input {
   background: var(--bg-elevated);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   padding: 5px 10px;
   color: var(--text-primary);
   font-size: 0.82rem;
@@ -460,7 +465,7 @@ textarea {
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  border-radius: 10px;
+  border-radius: 2px;
   font-size: 0.7rem;
   font-weight: 700;
   background: var(--bg-active);
@@ -482,17 +487,17 @@ textarea {
   background: var(--accent-primary);
   color: white;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   font-size: 0.85rem;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   transition: all var(--transition-fast);
-  box-shadow: 0 2px 6px rgba(82, 181, 35, 0.20);
+  box-shadow: none;
 }
 
 .btn-primary:hover:not(:disabled) {
-  box-shadow: 0 3px 10px rgba(82, 181, 35, 0.30);
+  box-shadow: none;
 }
 
 .btn-primary:disabled {
@@ -503,11 +508,11 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 5px 12px;
   background: transparent;
   color: var(--text-secondary);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border-radius: 2px;
   font-size: 0.82rem;
   font-weight: 500;
   font-family: inherit;
@@ -533,7 +538,7 @@ textarea {
   align-items: center;
   gap: 4px;
   padding: 2px 10px;
-  border-radius: 9999px;
+  border-radius: 2px;
   font-size: 0.72rem;
   font-weight: 600;
   white-space: nowrap;
@@ -580,7 +585,7 @@ textarea {
   -webkit-backdrop-filter: none;
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .glass-card-hover {

@@ -90,10 +90,10 @@ export default function ContextBar() {
                             value={String(contextValues[key] || "")}
                             onChange={(val) => setContextValue(key, val)}
                             options={getComboboxOptions(field)}
-                            placeholder={
+                            placeholder={stripEmoji(
                                 getFieldPlaceholder(field) ||
                                 `Select ${field.label.toLowerCase()}...`
-                            }
+                            )}
                             isLoading={isLoadingContext}
                         />
                     );
@@ -135,10 +135,10 @@ function DropdownField({
     isLoading: boolean;
 }) {
     return (
-        <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:140px]">
+        <div className="[display:flex] [flex-direction:column] [gap:1px] [min-width:140px]">
             <label
                 htmlFor={`context-${fieldKey}`}
-                className="[font-size:0.62rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]"
+                className="[font-size:0.58rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]"
             >
                 {stripEmoji(label)}
             </label>
@@ -176,9 +176,9 @@ function ComboboxField({
     isLoading: boolean;
 }) {
     return (
-        <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:170px]">
-            <label className="[display:flex] [flex-direction:column] [gap:2px]">
-                <span className="[font-size:0.62rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]">
+        <div className="[display:flex] [flex-direction:column] [gap:1px] [min-width:170px]">
+            <label className="[display:flex] [flex-direction:column] [gap:1px]">
+                <span className="[font-size:0.58rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]">
                     {stripEmoji(label)}
                 </span>
                 <AccessibleCombobox
@@ -208,10 +208,10 @@ function SliderField({
     max: number;
 }) {
     return (
-        <div className="[display:flex] [flex-direction:column] [gap:2px] [min-width:130px]">
+        <div className="[display:flex] [flex-direction:column] [gap:1px] [min-width:130px]">
             <label
                 htmlFor={`context-${fieldKey}`}
-                className="[font-size:0.62rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]"
+                className="[font-size:0.58rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]"
             >
                 {stripEmoji(label)}:{" "}
                 <span className="[color:var(--accent-primary)] [font-weight:700]">{value}</span>

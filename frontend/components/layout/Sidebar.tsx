@@ -140,7 +140,12 @@ export default function Sidebar({ activeCategory, onCategorySelect }: SidebarPro
 
                     return (
                         <div key={groupKey}>
-                            {!isCollapsed && <div className="sidebar-group-label">{groupLabel}</div>}
+                            {!isCollapsed && (
+                                <>
+                                    <hr className="[border:none] [border-top:1px_solid_var(--border-subtle)] [margin:8px_0_4px_0]" />
+                                    <div className="sidebar-group-label">{groupLabel}</div>
+                                </>
+                            )}
 
                             {categories.map((cat) => {
                                 const fnCount = cat.functions.length;
