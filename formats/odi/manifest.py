@@ -657,6 +657,36 @@ ENGINE_LITERAL_REGISTRY += [
     "Death_ThreatRating",
 ]
 
+ENGINE_LITERAL_REGISTRY += [
+    # TASK-158: New matchup stats column names
+    "Inn1_",
+    "Inn2_",
+    "_is_boundary",
+    "_is_wide",
+    "_is_dot",
+    "MatchCount",
+    "BoundaryBalls",
+    "BoundaryRate",
+    "DotBalls",
+    "DotBallRate",
+    "WideBalls",
+    "PP_MatchCount",
+    "Mid_MatchCount",
+    "Death_MatchCount",
+    "Inn1_Balls",
+    "Inn1_Avg",
+    "Inn1_SR",
+    "Inn1_ThreatRating",
+    "Inn2_Balls",
+    "Inn2_Avg",
+    "Inn2_SR",
+    "Inn2_ThreatRating",
+    "VenueFiltered",
+    # TASK-158: Column validation error/warning messages
+    "context_df missing required matchup columns: ",
+    "context_df missing optional matchup columns (degraded output): %s",
+]
+
 # Phase 11.2: Service literal registry for compliance-bouncer
 SERVICE_LITERAL_REGISTRY = ['match_df', 'get', "Non-fatal enrichment lookup issue for key '%s': %s", 'keys', 'Non-fatal enrichment key extraction issue: %s', 'strftime', '%Y-%m-%d', "Non-fatal date normalization issue for value '%s': %s", 'elite', 'excluded', 'caution', 'error', 'danger', 'muted', 'inn', 'score_inn', 'wickets_inn', 'wicket', 'balls_inn', 'ball', '/', ' (', '.1f', 'Included', 'status_tone', 'team_engine', 'apply_smart_filters', '_mid_str', 'match_ids', 'Opponent', 'OVERALL', 'Metric', 'Value', 'match_audit', 'inn1', 'inn2', 'bat', '2', '✅ Included', '☔ Excluded (No Result)', '☔ Excluded (Short 1st)', '☔ Excluded (Short 2nd)', '☔ Excluded', '*', 'stadium_name', 'home_team', 'opp_team', 'years_back', 'continent', 'home_xi', 'batting_players', 'away_xi', 'bowling_players', 'team_a_name', 'team_b_name', 'team_a_players', 'team_b_players', 'opposition', 'away_team', 'team_name', 'opposition_bowlers', 'batter', 'bowlers', 'get_player_profile', 'limit', 'time', 'toss', 'pitch', 'persist', 'dal', 'is_legal_ball', 'average', 'strike_rate', 'highest_score', 'centuries', 'fifties', 'CricketAPI', 'PlayerService fallback failed: ', ' [', ']', 'home_team_ref', 'Matches Played', 'Tied / No Result', ' Win %', '%', ' Last 5', '--- HOME PERFORMANCE ---', 'Total Wins', 'Won Batting 1st (Defended)', 'Won Batting 2nd (Chased)', '--- VISITOR PERFORMANCE ---', '--- VENUE AVERAGES ---', 'Overall Avg 1st Innings', 'Overall Avg 2nd Innings', 'Avg 1st Innings Winning Score', '--- BATTING 1ST (', ') ---', 'Average 1st Innings', 'Highest 1st Innings', 'Lowest 1st Innings', 'Lowest Defended Score', '--- CHASING (', 'Average 2nd Innings', 'Highest Chased', 'Avg Successful Chase', 'Avg Failed Chase', 'Overview', '---', '- ', 'row_kind', 'section', 'display_metric', 'section_label', 'section_tone', 'value_tone', 'is_zero_or_empty', 'meta', 'metric', '0', 'win %', 'India', 'Australia', 'England', 'South Africa', 'New Zealand', 'Pakistan', 'Sri Lanka', 'West Indies', 'Bangladesh', 'Afghanistan', 'Mat', 'Won', 'Lost', 'Tie/NR', 'Win %', 'form_guide', ' Avg (1st)', 'Opp Avg (1st)', 'cell_tones', 'is_overall', '% win rate', '🔹 OVERALL', 'Overall benchmark', 'Player', 'SquadComparison', 'TacticalMatrix', 'Matchups', 'PlayerStats', 'Result', 'WIN', 'TIE', 'NR', 'LOSS', 'Int64', '<NA>', '(1st)', '(2nd)', 'TeamScore', 'OppScore', 'Venue', 'Date', 'RawResult', 'ResultTone', 'ResultSymbol', 'W', 'L', 'T', 'wins', 'losses', 'ties_or_nr', 'total', 'form_summary', 'is_win', 'Result: ', '\\[(\\d+)\\]', 45, 'strong', 30, 'BAT', 'primary', 'BOWL', 'CHASE', 'secondary', 'slate', '#', '[0-9a-fA-F]{6}', 16, 255.0, 4, 360, 255, 'blue', 85, 160, 'emerald', 35, 65, 'amber', 330, 'rose', 'violet', 'batting 1st', 'visitor', 'overall', 'tertiary', '✅', '🤝', '🌧️', '❌', 'Bunny Alert', 'bunny_alert', ', ', 'player_role', 'batting_form', 'DNB', 'bowling_form', 'batting_average', 'venue_runs', 'venue_batting_activity', 'Role', 'Inns', 'Bat Form', 'Bat Avg', 'vs Opp', 'vs_opposition_average', 'Ven Inns', 'venue_innings', 'Ven Runs', 'Ven Avg', 'venue_average', 'Ven HS', 'venue_high_score', 'Bowl Form', 'Bowl Econ', 'bowling_economy', 'Ven Econ', 'venue_economy', 'Ven Wkts', 'venue_wickets', 'Ven Matches', 'venue_matches', 'Unmapped', '_raw', 'model_dump', 'Team A', 'Team B', 'metrics_a', 'metrics_b', 'Caps (Combined)', 'caps', 'Avg Caps / Player', 'avg_caps', 'Total Runs', '100s', '50s', 'Total Wickets', 'wickets', '5W Hauls', 'five_wkt_hauls', 'XI Size', 'Years Window', 'player_stats_a', 'player_stats_b', 500, 'max_rows must be a positive integer.', '[]', 'iso', 'bowled', 'caught', 'lbw', 'stumped', 'caught and bowled', 'hit wicket', 'index', 'wicket_type', 'int64', 'float64', 'object', 'last', 'rank', 'runs_num', 'is_out', 'left', 'entry', 'wides_num', 'wides', 'noballs_num', 'noballs', 'is_wkt', 'legal_ball', 'total_runs', 'legal_balls', 'wkts', 'nunique', 'bool', 'empty', 'Non-fatal team phase normalization issue: %s', '[^a-z0-9]+', '\\([^)]*\\)', 'IND_', 'PAK_', 'SL_', 'BAN_', 'AFG_', 'UAE_', 'ENG_', 'IRE_', 'SCO_', 'NED_', 'AUS_', 'NZ_', 'SA_', 'ZIM_', 'WI_', 'USA_']
 

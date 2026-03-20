@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional, Tuple
+import logging
 import pandas as pd
 import numpy as np
 from config.shared.venues import get_venue_aliases
@@ -39,6 +40,8 @@ _PHASE_CANONICAL: Dict[str, str] = {
 
 
 _PURE_BOWLER_ROLE: str = "Bowler"
+
+_logger = logging.getLogger(__name__)
 
 
 class PlayerEngine(IPlayerEngine):
@@ -545,6 +548,7 @@ class PlayerEngine(IPlayerEngine):
         home_xi: Optional[List[str]] = None,
         away_xi: Optional[List[str]] = None,
         context_df: pd.DataFrame,
+        venue_filtered: bool = False,
     ) -> List[DisplayRecord]:
         """
         Public dispatcher for Player Matchups.
@@ -561,6 +565,7 @@ class PlayerEngine(IPlayerEngine):
                 home_xi=home_xi,
                 away_xi=away_xi,
                 context_df=context_df,
+                venue_filtered=venue_filtered,
             )
 
         home_players: List[str] = list(home_xi or [])
@@ -591,6 +596,7 @@ class PlayerEngine(IPlayerEngine):
                 home_xi=home_xi,
                 away_xi=away_xi,
                 context_df=context_df,
+                venue_filtered=venue_filtered,
             )
             for row in rows:
                 combined.append({"Batter": player_name, **row})
@@ -603,6 +609,7 @@ class PlayerEngine(IPlayerEngine):
                 home_xi=home_xi,
                 away_xi=away_xi,
                 context_df=context_df,
+                venue_filtered=venue_filtered,
             )
             for row in rows:
                 combined.append({"Batter": player_name, **row})
@@ -675,6 +682,7 @@ class PlayerEngine(IPlayerEngine):
         home_xi: Optional[List[str]] = None,
         away_xi: Optional[List[str]] = None,
         context_df: pd.DataFrame,
+        venue_filtered: bool = False,
     ) -> List[DisplayRecord]:
         """
         Headless logic for Batter vs Bowlers.
@@ -730,8 +738,18 @@ class PlayerEngine(IPlayerEngine):
 
         base_df = context_df
         required_cols = {"striker", "bowler", "runs_off_bat", "player_dismissed"}
-        if not required_cols.issubset(set(base_df.columns)):
-            return []
+        missing_required = required_cols - set(base_df.columns)
+        if missing_required:
+            raise ConfigurationError(
+                f"context_df missing required matchup columns: {missing_required}"
+            )
+        optional_cols = {"over_num", "wicket_type", "start_date", "innings", "wides", "match_id"}
+        missing_optional = optional_cols - set(base_df.columns)
+        if missing_optional:
+            _logger.warning(
+                "context_df missing optional matchup columns (degraded output): %s",
+                missing_optional,
+            )
 
         batter_df = base_df[
             (base_df["striker"] == batter)
@@ -769,6 +787,17 @@ class PlayerEngine(IPlayerEngine):
         batter_df["_weighted_runs"] = batter_df["_runs_off_bat_num"] * batter_df["_weight"]
         batter_df["_weighted_outs"] = batter_df["_is_out"].astype(float) * batter_df["_weight"]
 
+        batter_df["_is_boundary"] = (batter_df["_runs_off_bat_num"] >= 4).astype(int)
+        if "wides" in batter_df.columns:
+            _wides_num = pd.to_numeric(batter_df["wides"], errors="coerce").fillna(0)
+            batter_df["_is_wide"] = (_wides_num > 0).astype(int)
+            batter_df["_is_dot"] = (
+                (batter_df["_runs_off_bat_num"] == 0) & (_wides_num == 0)
+            ).astype(int)
+        else:
+            batter_df["_is_wide"] = 0
+            batter_df["_is_dot"] = (batter_df["_runs_off_bat_num"] == 0).astype(int)
+
         def _aggregate_matchup_window(window_df: pd.DataFrame) -> pd.DataFrame:
             if window_df.empty:
                 return pd.DataFrame(
@@ -780,6 +809,11 @@ class PlayerEngine(IPlayerEngine):
                         "Avg",
                         "SR",
                         "ThreatRating",
+                        "MatchCount",
+                        "BoundaryBalls",
+                        "BoundaryRate",
+                        "DotBalls",
+                        "DotBallRate",
                     ]
                 )
 
@@ -790,8 +824,15 @@ class PlayerEngine(IPlayerEngine):
                 WeightedBalls=("_weight", "sum"),
                 WeightedRuns=("_weighted_runs", "sum"),
                 WeightedOuts=("_weighted_outs", "sum"),
+                BoundaryBalls=("_is_boundary", "sum"),
+                DotBalls=("_is_dot", "sum"),
+                WideBalls=("_is_wide", "sum"),
             )
             matchup_stats["Balls"] = grouped.size()
+            if "match_id" in window_df.columns:
+                matchup_stats["MatchCount"] = grouped["match_id"].nunique()
+            else:
+                matchup_stats["MatchCount"] = 0
             matchup_stats["Avg"] = np.where(
                 matchup_stats["Outs"] > 0,
                 matchup_stats["WeightedRuns"] / matchup_stats["WeightedOuts"],
@@ -822,11 +863,25 @@ class PlayerEngine(IPlayerEngine):
                 threat_bunny_outs=threat_bunny_outs,
                 threat_bunny_avg=threat_bunny_avg,
             )
+            matchup_stats["BoundaryRate"] = np.where(
+                matchup_stats["Balls"] > 0,
+                matchup_stats["BoundaryBalls"] / matchup_stats["Balls"],
+                0.0,
+            ).round(3)
+            _dot_denom = (matchup_stats["Balls"] - matchup_stats["WideBalls"]).clip(lower=0)
+            matchup_stats["DotBallRate"] = np.where(
+                _dot_denom > 0,
+                matchup_stats["DotBalls"] / _dot_denom,
+                0.0,
+            ).round(3)
             matchup_stats["Runs"] = matchup_stats["Runs"].round(0)
             matchup_stats["Avg"] = matchup_stats["Avg"].round(1)
             matchup_stats["SR"] = matchup_stats["SR"].round(1)
             return matchup_stats.reset_index().rename(columns={"bowler": "Bowler"})[
-                ["Bowler", "Balls", "Runs", "Outs", "Avg", "SR", "ThreatRating"]
+                [
+                    "Bowler", "Balls", "Runs", "Outs", "Avg", "SR", "ThreatRating",
+                    "MatchCount", "BoundaryBalls", "BoundaryRate", "DotBalls", "DotBallRate",
+                ]
             ]
 
         def _build_phase_stats(phase_key: str, prefix: str, overall_df: pd.DataFrame) -> pd.DataFrame:
@@ -837,6 +892,7 @@ class PlayerEngine(IPlayerEngine):
             phase_output[f"{prefix}Avg"] = None
             phase_output[f"{prefix}SR"] = None
             phase_output[f"{prefix}ThreatRating"] = "NEW MATCHUP"
+            phase_output[f"{prefix}MatchCount"] = 0
 
             phase_bounds = self.rules["phases"].get(phase_key)
             if "over_num" not in batter_df.columns or phase_bounds is None:
@@ -847,7 +903,7 @@ class PlayerEngine(IPlayerEngine):
             if phase_df.empty:
                 return phase_output
 
-            aggregated = _aggregate_matchup_window(phase_df).rename(
+            _phase_agg = _aggregate_matchup_window(phase_df).rename(
                 columns={
                     "Balls": f"{prefix}Balls",
                     "Runs": f"{prefix}Runs",
@@ -855,8 +911,16 @@ class PlayerEngine(IPlayerEngine):
                     "Avg": f"{prefix}Avg",
                     "SR": f"{prefix}SR",
                     "ThreatRating": f"{prefix}ThreatRating",
+                    "MatchCount": f"{prefix}MatchCount",
                 }
             )
+            _phase_keep = [
+                "Bowler",
+                f"{prefix}Balls", f"{prefix}Runs", f"{prefix}Outs",
+                f"{prefix}Avg", f"{prefix}SR", f"{prefix}ThreatRating",
+                f"{prefix}MatchCount",
+            ]
+            aggregated = _phase_agg[[c for c in _phase_keep if c in _phase_agg.columns]]
             phase_output = phase_output.drop(
                 columns=[
                     f"{prefix}Balls",
@@ -865,11 +929,13 @@ class PlayerEngine(IPlayerEngine):
                     f"{prefix}Avg",
                     f"{prefix}SR",
                     f"{prefix}ThreatRating",
+                    f"{prefix}MatchCount",
                 ]
             ).merge(aggregated, how="left", on="Bowler")
             phase_output[f"{prefix}Balls"] = phase_output[f"{prefix}Balls"].fillna(0).astype(int)
             phase_output[f"{prefix}Runs"] = phase_output[f"{prefix}Runs"].fillna(0).astype(int)
             phase_output[f"{prefix}Outs"] = phase_output[f"{prefix}Outs"].fillna(0).astype(int)
+            phase_output[f"{prefix}MatchCount"] = phase_output[f"{prefix}MatchCount"].fillna(0).astype(int)
             phase_output[f"{prefix}ThreatRating"] = (
                 phase_output[f"{prefix}ThreatRating"].fillna("NEW MATCHUP").astype(str)
             )
@@ -880,6 +946,52 @@ class PlayerEngine(IPlayerEngine):
             phase_output.loc[phase_output[f"{prefix}Balls"] == 0, f"{prefix}Avg"] = None
             phase_output.loc[phase_output[f"{prefix}Balls"] == 0, f"{prefix}SR"] = None
             return phase_output
+
+        def _build_innings_stats(innings_num: int, prefix: str, overall_df: pd.DataFrame) -> pd.DataFrame:
+            inn_output = overall_df[["Bowler"]].copy()
+            inn_output[f"{prefix}Balls"] = 0
+            inn_output[f"{prefix}Avg"] = None
+            inn_output[f"{prefix}SR"] = None
+            inn_output[f"{prefix}ThreatRating"] = "NEW MATCHUP"
+
+            if "innings" not in batter_df.columns:
+                return inn_output
+
+            innings_col = pd.to_numeric(batter_df["innings"], errors="coerce")
+            inn_df = batter_df[innings_col == innings_num]
+            if inn_df.empty:
+                return inn_output
+
+            aggregated = _aggregate_matchup_window(inn_df).rename(
+                columns={
+                    "Balls": f"{prefix}Balls",
+                    "Avg": f"{prefix}Avg",
+                    "SR": f"{prefix}SR",
+                    "ThreatRating": f"{prefix}ThreatRating",
+                }
+            )
+            keep_cols = [
+                "Bowler",
+                f"{prefix}Balls",
+                f"{prefix}Avg",
+                f"{prefix}SR",
+                f"{prefix}ThreatRating",
+            ]
+            aggregated = aggregated[[c for c in keep_cols if c in aggregated.columns]]
+            inn_output = inn_output.drop(
+                columns=[f"{prefix}Balls", f"{prefix}Avg", f"{prefix}SR", f"{prefix}ThreatRating"]
+            ).merge(aggregated, how="left", on="Bowler")
+            inn_output[f"{prefix}Balls"] = inn_output[f"{prefix}Balls"].fillna(0).astype(int)
+            inn_output[f"{prefix}ThreatRating"] = (
+                inn_output[f"{prefix}ThreatRating"].fillna("NEW MATCHUP").astype(str)
+            )
+            inn_avg = pd.to_numeric(inn_output[f"{prefix}Avg"], errors="coerce").round(1)
+            inn_sr = pd.to_numeric(inn_output[f"{prefix}SR"], errors="coerce").round(1)
+            inn_output[f"{prefix}Avg"] = inn_avg.where(inn_output[f"{prefix}Balls"] > 0, np.nan)
+            inn_output[f"{prefix}SR"] = inn_sr.where(inn_output[f"{prefix}Balls"] > 0, np.nan)
+            inn_output.loc[inn_output[f"{prefix}Balls"] == 0, f"{prefix}Avg"] = None
+            inn_output.loc[inn_output[f"{prefix}Balls"] == 0, f"{prefix}SR"] = None
+            return inn_output
 
         overall = _aggregate_matchup_window(batter_df)
         overall["Style"] = overall["Bowler"].map(self.style_map).fillna("Other")
@@ -917,7 +1029,10 @@ class PlayerEngine(IPlayerEngine):
                 ).reset_index().rename(columns={"bowler": "Bowler"})
 
         result = overall[
-            ["Bowler", "Style", "Balls", "Runs", "Outs", "Avg", "SR", "ThreatRating", "Confidence"]
+            [
+                "Bowler", "Style", "Balls", "Runs", "Outs", "Avg", "SR", "ThreatRating", "Confidence",
+                "MatchCount", "BoundaryBalls", "BoundaryRate", "DotBalls", "DotBallRate",
+            ]
         ].copy()
         result = result.merge(dismissal_stats, how="left", on="Bowler")
 
@@ -928,6 +1043,9 @@ class PlayerEngine(IPlayerEngine):
         ):
             result = result.merge(_build_phase_stats(phase_key, prefix, overall), how="left", on="Bowler")
 
+        result = result.merge(_build_innings_stats(1, "Inn1_", overall), how="left", on="Bowler")
+        result = result.merge(_build_innings_stats(2, "Inn2_", overall), how="left", on="Bowler")
+
         result["Runs"] = result["Runs"].astype(int)
         result["Balls"] = result["Balls"].astype(int)
         result["Outs"] = result["Outs"].astype(int)
@@ -935,10 +1053,20 @@ class PlayerEngine(IPlayerEngine):
         result["SR"] = pd.to_numeric(result["SR"], errors="coerce").round(1).astype(float)
         result["ThreatRating"] = result["ThreatRating"].astype(str)
         result["Confidence"] = result["Confidence"].astype(int)
+        result["MatchCount"] = result["MatchCount"].fillna(0).astype(int)
+        result["BoundaryBalls"] = result["BoundaryBalls"].fillna(0).astype(int)
+        result["BoundaryRate"] = pd.to_numeric(result["BoundaryRate"], errors="coerce").fillna(0.0).round(3)
+        result["DotBalls"] = result["DotBalls"].fillna(0).astype(int)
+        result["DotBallRate"] = pd.to_numeric(result["DotBallRate"], errors="coerce").fillna(0.0).round(3)
         result["DismissalStructural"] = result["DismissalStructural"].fillna(0).astype(int)
         result["DismissalCaught"] = result["DismissalCaught"].fillna(0).astype(int)
         result["DismissalOther"] = result["DismissalOther"].fillna(0).astype(int)
-        result["IsBunny"] = result["ThreatRating"].eq("BUNNY")
+        result["PP_MatchCount"] = result["PP_MatchCount"].fillna(0).astype(int)
+        result["Mid_MatchCount"] = result["Mid_MatchCount"].fillna(0).astype(int)
+        result["Death_MatchCount"] = result["Death_MatchCount"].fillna(0).astype(int)
+        result["Inn1_Balls"] = result["Inn1_Balls"].fillna(0).astype(int)
+        result["Inn2_Balls"] = result["Inn2_Balls"].fillna(0).astype(int)
+        result["VenueFiltered"] = bool(venue_filtered)
 
         return result[
             [
@@ -951,6 +1079,11 @@ class PlayerEngine(IPlayerEngine):
                 "SR",
                 "ThreatRating",
                 "Confidence",
+                "MatchCount",
+                "BoundaryBalls",
+                "BoundaryRate",
+                "DotBalls",
+                "DotBallRate",
                 "DismissalStructural",
                 "DismissalCaught",
                 "DismissalOther",
@@ -960,19 +1093,30 @@ class PlayerEngine(IPlayerEngine):
                 "PP_Avg",
                 "PP_SR",
                 "PP_ThreatRating",
+                "PP_MatchCount",
                 "Mid_Balls",
                 "Mid_Runs",
                 "Mid_Outs",
                 "Mid_Avg",
                 "Mid_SR",
                 "Mid_ThreatRating",
+                "Mid_MatchCount",
                 "Death_Balls",
                 "Death_Runs",
                 "Death_Outs",
                 "Death_Avg",
                 "Death_SR",
                 "Death_ThreatRating",
-                "IsBunny",
+                "Death_MatchCount",
+                "Inn1_Balls",
+                "Inn1_Avg",
+                "Inn1_SR",
+                "Inn1_ThreatRating",
+                "Inn2_Balls",
+                "Inn2_Avg",
+                "Inn2_SR",
+                "Inn2_ThreatRating",
+                "VenueFiltered",
             ]
         ].to_dict("records")
 
