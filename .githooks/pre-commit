@@ -60,10 +60,12 @@ if echo "$STAGED" | grep -qE "serializers|schemas/"; then
 fi
 
 # ── GATE F1 — frontend-lint-sentinel ───────────────────────────────────
-# Trigger: any frontend/ .tsx or .ts file staged
-if echo "$STAGED" | grep -qE "frontend/.*\.(tsx|ts)$"; then
+# Trigger: any frontend/ .tsx, .ts, or .css file staged
+# Scans ONLY staged files — not the full frontend directory.
+STAGED_FRONTEND=$(echo "$STAGED" | grep -E "frontend/.*\.(tsx|ts|css)$")
+if [ -n "$STAGED_FRONTEND" ]; then
     echo "GATE F1 — frontend-lint-sentinel: TRIGGERED"
-    python core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/scripts/run_frontend_lint.py --root .
+    python core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/scripts/run_frontend_lint.py --root . --files $STAGED_FRONTEND
     if [ $? -ne 0 ]; then
         echo "GATE F1 FAILED — frontend lint violation. Commit blocked."
         exit 1
@@ -73,9 +75,11 @@ fi
 
 # ── GATE F2 — frontend-paradigm-sentinel ───────────────────────────────
 # Trigger: any frontend/ .tsx or .ts file staged
-if echo "$STAGED" | grep -qE "frontend/.*\.(tsx|ts)$"; then
+# Scans ONLY staged files — not the full frontend directory.
+STAGED_FRONTEND_TS=$(echo "$STAGED" | grep -E "frontend/.*\.(tsx|ts)$")
+if [ -n "$STAGED_FRONTEND_TS" ]; then
     echo "GATE F2 — frontend-paradigm-sentinel: TRIGGERED"
-    python core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/scripts/run_frontend_paradigm.py --root .
+    python core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/scripts/run_frontend_paradigm.py --root . --files $STAGED_FRONTEND_TS
     if [ $? -ne 0 ]; then
         echo "GATE F2 FAILED — frontend paradigm violation. Commit blocked."
         exit 1

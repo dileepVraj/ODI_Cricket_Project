@@ -566,10 +566,17 @@ def collect_files(root: Path) -> list[Path]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Frontend Lint Sentinel")
     parser.add_argument("--root", default=".", help="Project root directory")
+    parser.add_argument("--files", nargs="*", help="Explicit file list to scan (staged files only)")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
-    files = collect_files(root)
+    if args.files:
+        files = sorted(
+            Path(f).resolve() for f in args.files
+            if Path(f).suffix in {".tsx", ".ts", ".css"} and Path(f).exists()
+        )
+    else:
+        files = collect_files(root)
 
     if not files:
         print("WARN: No frontend files found — verify --root is correct")

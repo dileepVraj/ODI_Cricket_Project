@@ -7,8 +7,7 @@
 
 import { useState, useMemo } from "react";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
-import EmptyState from "@/components/common/EmptyState";
-import { DataRow, toDataRows } from "@/lib/comparison-types";
+import { type DataRow, toDataRows } from "@/lib/comparison-types";
 
 interface DataTableProps {
     data: Record<string, unknown>[];
@@ -30,6 +29,7 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
     const [sortCol, setSortCol] = useState<string | null>(null);
     const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
     const [page, setPage] = useState(0);
+
     const hasRows = Array.isArray(data) && data.length > 0;
     const rows = useMemo(() => (hasRows ? toDataRows(data) : []), [data, hasRows]);
     const allColumns = useMemo(() => (hasRows ? Object.keys(data[0]) : []), [data, hasRows]);
@@ -49,10 +49,7 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
         event: React.KeyboardEvent<HTMLTableCellElement>,
         col: string
     ): void {
-        if (event.key !== "Enter" && event.key !== " ") {
-            return;
-        }
-
+        if (event.key !== "Enter" && event.key !== " ") return;
         event.preventDefault();
         handleSort(col);
     }
@@ -72,7 +69,7 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
     }, [rows, sortCol, sortDir]);
 
     if (!hasRows) {
-        return <EmptyState message="No table data available." />;
+        return <p className="data-empty">No table data available.</p>;
     }
 
     const totalPages = Math.ceil(sorted.length / pageSize);
@@ -80,64 +77,75 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
 
     return (
         <div>
-            {title && (
-                <h4 className="[font-size:0.85rem] [font-weight:600] [color:var(--text-secondary)] [margin-bottom:12px] [text-transform:uppercase] [letter-spacing:0.04em]">
-                    {title}
-                </h4>
-            )}
-            <div className="[overflow-x:auto]">
-                <table className="[width:100%] [border-collapse:collapse] [font-size:0.825rem]">
+            {title && <h4 className="data-table-title">{title}</h4>}
+            <div className="data-table-wrapper">
+                <table className="data-table">
                     <thead>
                         <tr>
-                            {columns.map((col) => (
-                                <th
-                                    key={col}
-                                    onClick={() => handleSort(col)}
-                                    onKeyDown={(event) => handleHeaderKeyDown(event, col)}
-                                    role="button"
-                                    tabIndex={0}
-                                    aria-sort={
-                                        sortCol === col
-                                            ? sortDir === "asc"
-                                                ? "ascending"
-                                                : "descending"
-                                            : "none"
-                                    }
-                                    className={`[padding:10px_12px] [border-bottom:2px_solid_var(--border-default)] [font-weight:600] [text-transform:uppercase] [font-size:0.7rem] [letter-spacing:0.05em] [white-space:nowrap] [cursor:pointer] [user-select:none] [transition:color_var(--transition-fast)] ${isNumericColumn(data, col) ? "[text-align:right]" : "[text-align:left]"} ${sortCol === col ? "[color:var(--accent-primary)]" : "[color:var(--text-muted)]"}`}
-                                >
-                                    <span className="[display:inline-flex] [align-items:center] [gap:4px]">
-                                        {col}
-                                        {sortCol === col ? (
-                                            sortDir === "asc" ? <ChevronUp size={12} /> : <ChevronDown size={12} />
-                                        ) : (
-                                            <ChevronsUpDown size={10} className="[opacity:0.3]" />
-                                        )}
-                                    </span>
-                                </th>
-                            ))}
+                            {columns.map((col) => {
+                                const isNumCol = isNumericColumn(data, col);
+                                const thClass = [
+                                    "data-header",
+                                    isNumCol ? "data-header-right" : "data-header-left",
+                                    sortCol === col ? "data-header-active" : "",
+                                ].join(" ").trim();
+                                return (
+                                    <th
+                                        key={col}
+                                        onClick={() => handleSort(col)}
+                                        onKeyDown={(e) => handleHeaderKeyDown(e, col)}
+                                        role="button"
+                                        tabIndex={0}
+                                        aria-sort={
+                                            sortCol === col
+                                                ? sortDir === "asc"
+                                                    ? "ascending"
+                                                    : "descending"
+                                                : "none"
+                                        }
+                                        className={thClass}
+                                    >
+                                        <span className="data-header-inner">
+                                            {col}
+                                            {sortCol === col ? (
+                                                sortDir === "asc"
+                                                    ? <ChevronUp size={12} />
+                                                    : <ChevronDown size={12} />
+                                            ) : (
+                                                <ChevronsUpDown size={10} />
+                                            )}
+                                        </span>
+                                    </th>
+                                );
+                            })}
                         </tr>
                     </thead>
                     <tbody>
                         {paged.map((row, i) => {
                             const isOverallRow = String(row["Opponent"] ?? "").includes("OVERALL");
+                                const trClass = [
+                                    "data-row",
+                                    "data-row-zebra",
+                                    isOverallRow ? "data-row-active" : "",
+                                ].join(" ").trim();
                             return (
                                 <tr
                                     key={i}
-                                    className={`[border-bottom:1px_solid_var(--border-subtle)] [transition:background_var(--transition-fast)] ${isOverallRow ? "[background:var(--accent-glow)]" : "[background:transparent]"}`}
-                                    onMouseEnter={(e) => {
-                                        if (!isOverallRow) e.currentTarget.style.background = "var(--bg-hover)";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = isOverallRow ? "var(--accent-glow)" : "transparent";
-                                    }}
+                                    className={trClass}
                                 >
                                     {columns.map((col) => {
                                         const val = row[col];
                                         const isNum = isNumericValue(val);
+                                        const tdClass = [
+                                            isNum ? "data-cell-numeric" : "data-cell",
+                                            isOverallRow ? "font-bold" : "",
+                                        ].join(" ").trim();
+                                        const cellStyle = { color: getCellColor(row, col, val) };
                                         return (
                                             <td
                                                 key={col}
-                                                className={`[padding:10px_12px] [white-space:nowrap] ${isNum ? "[text-align:right] font-numeric" : "[text-align:left]"} ${isOverallRow ? "[font-weight:700]" : "[font-weight:400]"} [color:${getCellColor(row, col, val)}]`}
+                                                className={tdClass}
+                                                style={cellStyle}
                                             >
                                                 {formatCell(col, val)}
                                             </td>
@@ -151,22 +159,24 @@ export default function DataTable({ data, pageSize = 15, title }: DataTableProps
             </div>
 
             {totalPages > 1 && (
-                <div className="[display:flex] [justify-content:space-between] [align-items:center] [margin-top:12px] [font-size:0.78rem] [color:var(--text-muted)]">
+                <div className="data-table-footer">
                     <span>
-                        Showing {page * pageSize + 1}-{Math.min((page + 1) * pageSize, sorted.length)} of {sorted.length}
+                        Showing {page * pageSize + 1}–{Math.min((page + 1) * pageSize, sorted.length)} of {sorted.length}
                     </span>
-                    <div className="[display:flex] [gap:4px]">
+                    <div className="data-table-pagination">
                         <button
-                            className={`btn-ghost [padding:4px_10px] [font-size:0.75rem] ${page === 0 ? "[opacity:0.4]" : "[opacity:1]"}`}
+                            className="btn-ghost"
                             onClick={() => setPage((p) => Math.max(0, p - 1))}
                             disabled={page === 0}
+                            aria-label="Previous page"
                         >
                             Prev
                         </button>
                         <button
-                            className={`btn-ghost [padding:4px_10px] [font-size:0.75rem] ${page >= totalPages - 1 ? "[opacity:0.4]" : "[opacity:1]"}`}
+                            className="btn-ghost"
                             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                             disabled={page >= totalPages - 1}
+                            aria-label="Next page"
                         >
                             Next
                         </button>
@@ -188,11 +198,11 @@ function isNumericValue(val: unknown): boolean {
 
 function getCellColor(row: DataRow, col: string, val: unknown): string {
     const tone = row.cell_tones?.[col];
-    if (tone === "elite") return "var(--tier-elite)";
-    if (tone === "strong") return "var(--tier-strong)";
+    if (tone === "elite")   return "var(--tier-elite)";
+    if (tone === "strong")  return "var(--tier-strong)";
     if (tone === "caution") return "var(--tier-caution)";
-    if (tone === "danger") return "var(--tier-danger)";
-    if (tone === "muted") return "var(--text-disabled)";
+    if (tone === "danger")  return "var(--tier-danger)";
+    if (tone === "muted")   return "var(--text-disabled)";
     if (val === null || val === undefined) return "var(--text-disabled)";
     return "var(--text-primary)";
 }
@@ -207,11 +217,7 @@ function formatCell(col: string, val: unknown): string {
             .map((item) => {
                 if (item === null || item === undefined) return "-";
                 if (typeof item === "object") {
-                    try {
-                        return JSON.stringify(item);
-                    } catch {
-                        return String(item);
-                    }
+                    try { return JSON.stringify(item); } catch { return String(item); }
                 }
                 return String(item);
             })
