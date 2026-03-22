@@ -53,6 +53,7 @@ export function Button({
     <button
       className={`btn-${variant} ${className}`.trim()}
       aria-label={ariaLabel}
+      aria-busy={isLoading || undefined}
       disabled={disabled || isLoading}
       {...rest}
     >
