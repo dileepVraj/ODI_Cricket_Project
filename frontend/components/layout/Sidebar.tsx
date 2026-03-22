@@ -3,42 +3,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
-    BarChart3,
-    Building2,
     ChevronLeft,
     ChevronRight,
-    Globe2,
-    Handshake,
     Home,
     LayoutGrid,
-    Rocket,
-    Swords,
-    Target,
-    User,
     type LucideIcon,
 } from "lucide-react";
 import { useAppContext } from "@/lib/context";
+import { resolveIcon } from "@/lib/icons";
 import { Tooltip } from "@/components/common/Tooltip";
 import { stripEmoji } from "@/lib/utils";
 import type { ManifestCategory } from "@/lib/api";
-
-// ── Icon registry ────────────────────────────────────────────────────────
-
-const ICON_MAP: Record<string, LucideIcon> = {
-    stadium:     Building2,
-    handshake:   Handshake,
-    "bar-chart": BarChart3,
-    globe:       Globe2,
-    user:        User,
-    swords:      Swords,
-    target:      Target,
-    rocket:      Rocket,
-    default:     LayoutGrid,
-};
-
-function resolveIcon(iconKey: string, fallback: LucideIcon = LayoutGrid): LucideIcon {
-    return ICON_MAP[iconKey] ?? fallback;
-}
 
 // ── Grouping helpers ─────────────────────────────────────────────────────
 
