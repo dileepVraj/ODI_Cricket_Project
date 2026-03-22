@@ -37,8 +37,9 @@ function toSquadMetrics(raw: Record<string, unknown> | null): SquadMetrics | nul
         return null;
     }
 
+    const safeRaw = raw;
     function toMetricValue(key: keyof SquadMetrics): number {
-        const value = Number(raw[key]);
+        const value = Number(safeRaw[key]);
         return Number.isNaN(value) ? 0 : value;
     }
 
@@ -121,25 +122,25 @@ export default function SquadComparisonCard({ data }: SquadComparisonCardProps) 
                             </div>
                         ))}
 
-                        <div className="[border-right:1px_solid_var(--border-subtle)] [border-bottom:1px_solid_var(--border-subtle)] [padding:16px] [color:var(--accent-primary)] text-sm font-bold uppercase tracking-[0.14em]">
+                        <div className="[border-right:1px_solid_var(--border-subtle)] [border-bottom:1px_solid_var(--border-subtle)] [padding:16px] [color:var(--accent-ui)] text-sm font-bold uppercase tracking-[0.14em]">
                             {teamAName}
                         </div>
                         {METRIC_KEYS.map((metricKey) => (
                             <div
                                 key={`a-${metricKey}`}
-                                className="[border-bottom:1px_solid_var(--border-subtle)] [padding:16px_10px] text-center [color:var(--accent-primary)] text-lg font-black font-numeric"
+                                className="[border-bottom:1px_solid_var(--border-subtle)] [padding:16px_10px] text-center [color:var(--accent-ui)] text-lg font-black font-numeric"
                             >
                                 {String(metricsA[metricKey])}
                             </div>
                         ))}
 
-                        <div className="[border-right:1px_solid_var(--border-subtle)] [padding:16px] [color:var(--accent-secondary)] text-sm font-bold uppercase tracking-[0.14em]">
+                        <div className="[border-right:1px_solid_var(--border-subtle)] [padding:16px] [color:var(--accent-data)] text-sm font-bold uppercase tracking-[0.14em]">
                             {teamBName}
                         </div>
                         {METRIC_KEYS.map((metricKey) => (
                             <div
                                 key={`b-${metricKey}`}
-                                className="[padding:16px_10px] text-center [color:var(--accent-secondary)] text-lg font-black font-numeric"
+                                className="[padding:16px_10px] text-center [color:var(--accent-data)] text-lg font-black font-numeric"
                             >
                                 {String(metricsB[metricKey])}
                             </div>

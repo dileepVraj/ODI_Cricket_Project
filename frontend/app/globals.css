@@ -1181,3 +1181,49 @@ textarea {
   color: var(--text-disabled);
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Empty State ─────────────────────────────────────────────────────── */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-12) var(--space-6);
+}
+
+.empty-state-icon {
+  color: var(--text-muted);
+}
+
+.empty-state-title {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.empty-state-text {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* ── Fallback Banner ─────────────────────────────────────────────────── */
+
+.fallback-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-caution);
+  border: 1px solid var(--border-caution);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--tier-caution);
+  margin-bottom: var(--space-3);
+}

@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { AlertCircle, Loader2, Zap } from "lucide-react";
 import { executeFunction, type ExecuteResponse } from "@/lib/api";
 import { useAppContext } from "@/lib/context";
@@ -23,7 +24,14 @@ function EmptyCategoryState({ title, message }: { title: string; message: string
   );
 }
 export function CategoryScreen({ categoryKey }: { categoryKey: string }) {
-  const { manifest, activeFormat, contextValues, venues } = useAppContext();
+  const { manifest, activeFormat, venues } = useAppContext();
+  const searchParams = useSearchParams();
+  const contextValues: Record<string, string> = useMemo(() => {
+    if (!manifest) return {};
+    return Object.fromEntries(
+      Object.keys(manifest.context_fields).map((k) => [k, searchParams.get(k) ?? ""])
+    );
+  }, [manifest, searchParams]);
   const [activeTab, setActiveTab] = useState(0);
   const [result, setResult] = useState<ExecuteResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
