@@ -38,13 +38,19 @@ export default function ContextBar() {
 
     const fieldEntries = Object.entries(manifest.context_fields);
 
+    // On the dashboard route, show only team context — no venue, years, or region.
+    const DASHBOARD_FIELDS = new Set(["team_a", "team_b"]);
+    const visibleEntries = pathname === "/"
+        ? fieldEntries.filter(([key]) => DASHBOARD_FIELDS.has(key))
+        : fieldEntries;
+
     return (
         <div
             className="context-bar animate-fade-in"
             role="toolbar"
             aria-label="Analysis filters"
         >
-            {fieldEntries.map(([key, field]) => {
+            {visibleEntries.map(([key, field]) => {
                 const value = searchParams.get(key) ?? "";
 
                 if (field.type === "dropdown") {
