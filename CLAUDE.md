@@ -1,7 +1,7 @@
 # AGENTS.MD — Governing Law for AI Agents
 
-**Version:** 3.0
-**Last Updated:** 2026-03-14
+**Version:** 3.1
+**Last Updated:** 2026-03-20
 **Status:** SUPREME DIRECTIVE — all prior versions superseded
 **Core Directive:** "Assume data is dirty, boundaries are strict, and trust is zero."
 **Project:** Cricket Algo-Trading Platform
@@ -9,24 +9,29 @@
 
 ---
 
-## PART 0: DUAL-AGENT WORKFLOW
+## PART 0: TWO-AGENT WORKFLOW
 
-This project uses two agents with distinct roles. Read this part first regardless of which agent you are.
+This project uses two agents with distinct, non-overlapping roles. Read this part first regardless of which agent you are.
 
 ---
 
 ### The Two Agents
 
-**Claude** — Planning & Verification Agent
-- Role: Think, plan, write task prompts, verify reports, maintain handoff context
-- Does NOT execute implementation tasks (engines, calculators, API, components)
-- CAN make small direct tweaks (see Small Tweak Rule below)
+**Claude** — Planning, Verification & Frontend Execution Agent
+- Role: Think, plan, write task prompts, verify backend reports, execute all frontend tasks directly, maintain handoff context
+- Three modes of operation:
+  1. **Architect** — reads files, writes plans, writes taskFile.md for Codex
+  2. **Frontend Engineer** — implements frontend tasks directly (no CLI invocation needed)
+  3. **Verifier** — reviews Codex reports and implementation quality
+- Owns: `frontend/` (direct execution) + all `workflow/` files
+- CAN make small direct tweaks to backend config/docs (see Small Tweak Rule below)
 - Reads this file for PART 0 + PART 1 (Claude Bootstrap section)
 
-**Codex** — Execution Agent
-- Role: Implement tasks written by Claude, run gates, commit, write reports
+**Codex** — Backend Execution Agent
+- Role: Implement backend tasks written by Claude, run gates, commit, write reports
 - Reads this file in full — all parts apply
 - Receives work exclusively via `workflow/taskFile.md`
+- Owns: `api/`, `core/`, `formats/`, `scripts/`, `tests/`
 
 ---
 
@@ -36,53 +41,205 @@ This project uses two agents with distinct roles. Read this part first regardles
 |---|---|---|
 | `workflow/plan.md` | Claude | Plan for current idea — awaits human approval |
 | `workflow/tasks.md` | Claude | Task breakdown after plan is approved |
-| `workflow/taskFile.md` | Claude | Active task prompt for Codex — one task at a time |
+| `workflow/taskFile.md` | Claude | Active task prompt for Codex — one task at a time (frontend tasks executed directly by Claude, no taskFile needed) |
 | `workflow/taskFileTemplate.md` | Reference | Template Claude follows when writing taskFile.md |
-| `workflow/report.md` | Codex | Task completion report — human presents to Claude for verification |
+| `workflow/report.md` | Codex or Claude | Task completion report — Codex writes for backend tasks; Claude writes for frontend tasks |
 | `workflow/handoff.md` | Claude | ≤25 line context brief — human pastes at start of new session |
 
 ---
 
 ### The Workflow Cycle
 
+**Single-agent tasks (Scope: backend only):**
 ```
-1. IDEA
-   Human brings idea (bug fix / feature / refactor / small task) to Claude.
-
-2. PLAN
-   Claude reads only the relevant files needed to understand the scope.
-   Claude writes plan to workflow/plan.md.
-   Human reviews — approves or iterates. No tasks are written until plan is approved.
-
-3. TASK BREAKDOWN
-   Claude writes workflow/tasks.md — splits plan into discrete tasks.
-   Each task = one Codex session.
-
-4. TASK WRITE
-   Claude writes one task prompt into workflow/taskFile.md
-   following workflow/taskFileTemplate.md exactly.
-   Task prompt MUST include READ FIRST with exact standards file paths.
-
-5. CODEX EXECUTES
-   Human triggers Codex. Codex reads workflow/taskFile.md.
-   Codex implements, runs gates, commits, writes workflow/report.md, prints terminal summary.
-
-6. UNBLOCK (if needed)
-   If Codex is blocked — human pastes the blocker to Claude.
-   Claude diagnoses and provides a resolution path.
-   Human relays resolution to Codex.
-
-7. VERIFY
-   Human presents workflow/report.md to Claude.
-   Claude checks: gates passed, acceptance criteria met, no violations.
-   If PASS → Claude gives green signal + overwrites workflow/handoff.md.
-   If FAIL → Claude flags the issue — human decides next action.
-
-8. NEXT TASK / CONTEXT RESET
-   Human /clears Claude context.
-   New session starts with: "Read workflow/handoff.md" to restore context.
-   Repeat from step 1 or 4 for next task.
+1. IDEA        → Human brings idea to Claude.
+2. PLAN        → Claude reads relevant files, writes workflow/plan.md (DRAFT).
+                  Human approves or iterates.
+3. BREAKDOWN   → Claude writes workflow/tasks.md.
+4. TASK WRITE  → Claude writes one task to workflow/taskFile.md. Sets Agent: Codex.
+5. EXECUTE     → Claude invokes Codex via CLI (see CLI Orchestration Protocol).
+                  Codex executes, commits, writes workflow/report.md.
+6. UNBLOCK     → If Codex writes BLOCKED: Claude reads the blocker, diagnoses,
+                  resolves directly (Small Tweak Rule) or explains to human.
+                  Human relays resolution to Codex if needed.
+7. REVIEW+VERIFY → Claude dispatches `backend-auditor` and `verify` agents in parallel.
+                  backend-auditor: reads every modified file, audits all architectural
+                  laws, coding standards, and hard prohibitions (CLAUDE.md Parts 2, 5, 8).
+                  verify: reads workflow/report.md, checks acceptance criteria, validates
+                  all report fields, cross-checks commit hashes in git log.
+                  Both must return PASS before proceeding.
+                  Either FAIL → Claude flags exact issue. Human decides next action.
+9. RESET       → Human /clears Claude. New session: "Read workflow/handoff.md".
 ```
+
+**Single-agent tasks (Scope: frontend only):**
+```
+1. IDEA        → Human brings idea to Claude.
+2. PLAN        → Claude reads relevant frontend files, writes workflow/plan.md (DRAFT).
+                  Human approves or iterates.
+3. BREAKDOWN   → Claude writes workflow/tasks.md.
+4. EXECUTE     → Claude executes the frontend task directly (no CLI invocation).
+                  Claude implements the components, runs frontend gates (F1–F4),
+                  commits the work, writes workflow/report.md.
+5. SELF-AUDIT  → Claude runs the frontend self-audit checklist (see Claude Bootstrap)
+                  before marking the task complete.
+6. VERIFY      → Claude reviews its own report against acceptance criteria.
+                  PASS → green signal + update handoff.md + inform human.
+                  FAIL → Claude flags the issue and resolves before completing.
+7. RESET       → Human /clears Claude. New session: "Read workflow/handoff.md".
+```
+
+**Multi-agent tasks (Scope: both backend + frontend) — Two-Phase Mode:**
+```
+DEFAULT SEQUENCE: Codex (backend) first → Claude (frontend) second.
+Reason: frontend needs the API contracts and TypeScript types that Codex defines.
+
+1. IDEA        → Human brings idea to Claude.
+2. PLAN        → Claude writes plan.md. Human approves.
+3. BREAKDOWN   → Claude splits into Phase A (backend/Codex) + Phase B (frontend/Claude).
+4. ORCHESTRATE → Claude runs the full two-phase sequence:
+
+   PHASE A — Codex (backend):
+   a. Claude writes Phase A task to workflow/taskFile.md.
+   b. Claude invokes Codex via CLI (see CLI Commands below).
+   c. Claude dispatches `backend-auditor` and `verify` agents in parallel for Phase A.
+      backend-auditor audits all modified files against laws, standards, prohibitions.
+      verify checks acceptance criteria and validates all report fields.
+   d. Both agents must return PASS to clear Phase A.
+   e. If PHASE A FAILS → stop. Inform human with exact failure. Do not proceed to Phase B.
+
+   PHASE B — Claude (frontend):
+   f. Claude executes the frontend task directly (no CLI invocation).
+   g. Claude implements components, runs self-audit checklist, runs gates F1–F4, commits.
+   h. Claude writes workflow/report.md for Phase B.
+   i. Claude reviews its own Phase B implementation against acceptance criteria.
+   j. If PHASE B FAILS → flag the issue. Phase A work is already committed.
+
+5. COMPLETE    → Both phases PASS: Claude updates handoff.md, reports full summary to human.
+6. RESET       → Human /clears Claude. New session: "Read workflow/handoff.md".
+```
+
+---
+
+### CLI Orchestration Protocol
+
+Applies to backend tasks only. Claude invokes Codex via PowerShell CLI.
+Frontend tasks are executed directly by Claude — no CLI invocation needed.
+Human does not manually trigger agent sessions.
+
+**Sequencing Rule (multi-phase tasks):**
+Default order is defined in The Workflow Cycle above (Codex first, Claude second).
+- EXCEPTION: Claude (frontend) first → Codex (backend) second, ONLY IF:
+  - Frontend change is entirely on an existing, stable API (no new endpoints, no type changes)
+  - Backend change is independent (e.g. engine optimisation that does not affect any API contract)
+  - Claude explicitly states the justification when writing the plan.
+
+**CLI Commands:**
+
+Frontend tasks — Claude executes directly. No CLI invocation. No taskFile needed.
+
+Invoke Codex (backend tasks — single-agent or Phase A):
+```powershell
+codex exec --full-auto -C "C:\Cricket_Project_Stable" "Read CLAUDE.md. Then read workflow/taskFile.md and execute the backend task."
+```
+
+The `Orchestration` field in taskFile.md tells Codex whether this is SOLO or MULTI-PHASE-A.
+
+**Bash timeout:** Always set timeout to 1800000ms (30 minutes) when invoking agent CLIs.
+The default 2-minute timeout will kill the agent mid-task.
+
+**Pre-call snapshot — MANDATORY before every CLI invocation:**
+Before calling the CLI, Claude MUST capture the current state of report.md:
+```bash
+# Record last-modified timestamp before invoking agent
+stat -c "%Y %n" workflow/report.md 2>/dev/null || echo "report.md does not exist"
+```
+Store this snapshot. It is the baseline for post-call validation.
+
+**Post-call report validation — MANDATORY after every CLI invocation:**
+After the CLI call returns, Claude MUST run this check sequence:
+
+Step 1 — Did report.md change?
+```bash
+stat -c "%Y %n" workflow/report.md 2>/dev/null || echo "report.md missing"
+```
+Compare to pre-call snapshot.
+- If unchanged or missing → SILENT FAILURE (see Silent Failure Protocol below)
+- If changed → proceed to Step 2
+
+Step 2 — Read and validate report.md content:
+```bash
+cat workflow/report.md
+```
+Check:
+- `Agent:` field matches the agent that was invoked
+- `Status:` is present (COMPLETE or BLOCKED)
+- Both commit hashes are real (not NONE) — only required for COMPLETE
+- `workflow/taskFile.md Cleared: YES` — only required for COMPLETE
+
+Step 3 — Check git log regardless of report status:
+```bash
+git log --oneline -3
+```
+Cross-reference commit hashes in report against actual git log.
+If report claims commits exist but git log shows none since pre-call → SILENT FAILURE.
+
+**Claude's verification steps after post-call validation:**
+0. PARALLEL AUDIT (always first — before acting on the report):
+   Dispatch `backend-auditor` and `verify` agents simultaneously.
+   - backend-auditor receives: list of files from "Files Modified" in report.md + task ID.
+     It audits every file against all architectural laws, coding standards, hard prohibitions.
+   - verify receives: workflow/report.md + task acceptance criteria.
+     It checks report fields, acceptance criteria, and cross-checks commit hashes in git log.
+   Wait for both to complete. Both must return PASS before proceeding to step 1.
+   Either returns FAIL → flag the exact violation. Do not proceed.
+1. All gates PASS, commit hashes real, taskFile cleared, no scope violations → PASS
+2. Any gate FAIL or constraint violation → task FAILED — inform human with exact details
+3. Status: BLOCKED → read blocker, diagnose, inform human (see Unblock section)
+4. Silent Failure detected → Silent Failure Protocol (see below)
+
+**Report preservation:**
+After verifying Phase A, Claude saves the key Phase A data (task ID, commit hash, gate results)
+to a brief internal note before Phase B overwrites `workflow/report.md`.
+On completion, Claude presents a combined summary of both phases to the human.
+
+**Unblock during CLI orchestration:**
+If Codex writes `Status: BLOCKED` in its report:
+- Claude reads the blocker question
+- Claude resolves it directly (Small Tweak Rule) OR explains the resolution to the human
+- Human relays resolution to Codex for continuation
+- Claude does NOT automatically re-invoke the CLI until the blocker is resolved and human confirms
+Frontend tasks cannot be BLOCKED in this sense — Claude resolves its own blockers directly.
+
+**Silent Failure Protocol:**
+A silent failure occurs when the CLI returns but report.md was not written or not updated.
+This means the agent crashed, drifted, or was killed before completing.
+
+On detecting a silent failure, Claude MUST:
+
+1. Run git log to establish what actually happened:
+```bash
+git log --oneline -5
+git status --short frontend/   # or api/ depending on agent
+```
+
+2. Inform the human with this exact summary:
+   - Which agent was invoked and what task
+   - That report.md was not written (silent failure)
+   - What git log shows (commits made or not)
+   - Recommended action (one of the three below)
+
+3. Recommended actions based on git log:
+   - Commits exist, no report → agent completed work but drifted on reporting.
+     Safe to re-invoke with instruction: "The task work is done (commit: [hash]).
+     Write the report to workflow/report.md only. Do not redo the implementation."
+   - No commits, no report → agent failed before making any changes.
+     Safe to re-invoke normally — no state was changed.
+   - Partial commits exist → do NOT re-invoke automatically.
+     Human must review what was committed before deciding next action.
+
+4. Claude does NOT re-invoke the CLI automatically on a silent failure.
+   Human must explicitly confirm before Claude retries.
 
 ---
 
@@ -102,31 +259,38 @@ Before writing a plan, read only the files relevant to the idea:
 
 **3. tasks.md discipline.**
 - After plan approval, split into the minimum number of tasks needed
-- Each task must be independently executable by Codex in one session
+- Each task must be independently executable in one session (by Codex for backend, by Claude directly for frontend)
+- If a task touches both backend and frontend — split into two tasks (Phase A backend, Phase B frontend)
 - Order tasks so dependencies are respected (no task requires output from a future task)
 
-**4. taskFile.md discipline — the most important rule.**
-When writing `workflow/taskFile.md`, follow `workflow/taskFileTemplate.md` exactly.
+**4. taskFile.md discipline — applies to Codex (backend) tasks only.**
+Frontend tasks are executed directly by Claude — no taskFile needed for frontend.
+When writing `workflow/taskFile.md` for Codex, follow `workflow/taskFileTemplate.md` exactly.
+Set the `Agent` field: `Codex`.
 Every task prompt MUST include a `READ FIRST` section listing the exact standards files
 Codex must load. Use the table below to select files:
 
-| Task scope | Standards files to include in READ FIRST |
-|---|---|
-| Backend engine/calculator/service | MANDATES_1_TO_4, SYSTEM_TOPOLOGY, HIGH_IMPACT_REGISTRY, GATE_SEQUENCE, SKILLS_REGISTRY, WORKFLOW_AND_LAWS, PYTHON_STANDARDS, MEMORY_AND_THREADING |
-| team_engine.py modification | All backend files above + KNOWN_PATTERNS_KIPS |
-| Frontend component | MANDATES_1_TO_4, SYSTEM_TOPOLOGY, HIGH_IMPACT_REGISTRY, GATE_SEQUENCE, SKILLS_REGISTRY, WORKFLOW_AND_LAWS, TACTICAL_EXECUTION, UI_IMPLEMENTATION, PERF_RESILIENCE_A11Y_TESTING |
-| Both backend + frontend | All backend files + all frontend files |
+| Task scope | Agent | Standards files to include in READ FIRST |
+|---|---|---|
+| Backend engine/calculator/service | Codex | MANDATES_1_TO_4, SYSTEM_TOPOLOGY, HIGH_IMPACT_REGISTRY, GATE_SEQUENCE, SKILLS_REGISTRY, WORKFLOW_AND_LAWS, PYTHON_STANDARDS, MEMORY_AND_THREADING |
+| team_engine.py modification | Codex | All backend files above + KNOWN_PATTERNS_KIPS |
+| Frontend component | Claude (direct) | Claude reads TACTICAL_EXECUTION, UI_IMPLEMENTATION, PERF_RESILIENCE_A11Y_TESTING before executing |
+| Both backend + frontend | Phase A → Codex taskFile | Phase B → Claude executes directly |
 
-All paths are relative to `docs/guides/`. Example full path: `docs/guides/coreStandards/MANDATES_1_TO_4.md`
+All backend paths are relative to `docs/guides/`. Example: `docs/guides/coreStandards/MANDATES_1_TO_4.md`
+Frontend standards paths: `docs/guides/frontendStandards/TACTICAL_EXECUTION.md` etc.
 
 **5. Report verification.**
-When human presents `workflow/report.md`, check:
-- All triggered gates are PASS
+First: perform the implementation review defined in Step C5 (read every modified file, verify against acceptance criteria before touching the report).
+
+Then check the report fields:
+- All triggered gates are PASS (Codex: gates 1–6; Claude frontend: gates F1–F4)
 - All acceptance criteria SATISFIED
 - Bouncer post-task matches or improves baseline
 - Both commit hashes are real (not NONE)
 - PROJECT_CONTEXT.md Section 4 has exactly 5 entries
-- workflow/taskFile.md cleared — YES
+- workflow/taskFile.md cleared — YES (Codex tasks only; frontend tasks have no taskFile to clear)
+- For Claude frontend reports: `Out-of-Scope Files Touched` must be NONE (any other value is a violation)
 If all checks pass → give green signal → overwrite `workflow/handoff.md`.
 
 **6. handoff.md rules.**
@@ -136,14 +300,16 @@ If all checks pass → give green signal → overwrite `workflow/handoff.md`.
 - Write in plain text — no markdown headers, no bullet nesting
 
 **7. Small Tweak Rule.**
-Claude may execute small changes directly (without writing a taskFile for Codex) when ALL of these are true:
+Claude may execute small backend/config changes directly (without writing a taskFile for Codex) when ALL of these are true:
 - Touches ≤ 3 files
 - Does NOT touch engine, calculator, or service files in `formats/` or `core/`
 - Does NOT touch any registered file (`core/data_access.py`, `core/interfaces/team_types.py`, `api/serializers.py`)
 - Does NOT require gate validation (no bouncer run needed)
-- Examples: config edits, template updates, doc fixes, small frontend style tweaks
+- Examples: config edits, template updates, doc fixes
 
 If any condition above is NOT met → write a task for Codex instead.
+
+**Note:** Frontend work is NOT governed by the Small Tweak Rule. All frontend work — regardless of size — is executed directly by Claude as the Frontend Engineer (no taskFile, no CLI). The Small Tweak Rule only applies to backend/config files.
 
 ---
 
@@ -158,6 +324,11 @@ If any condition above is NOT met → write a task for Codex instead.
 
 Execute at the start of every Claude session, in order.
 
+**Step C0 — Load Soul**
+Read `.claude/SOUL.md` now. This is the mission grounding document for Project Vantage.
+It defines why this project exists, who the operator is, and the standard every decision must meet.
+Do this before reading handoff or state. Let the mission anchor the session.
+
 **Step C1 — Restore context**
 ```bash
 cat workflow/handoff.md
@@ -170,28 +341,74 @@ If handoff.md is empty — ask human what we're working on before proceeding.
 Identify which workflow step the human is asking for:
 - New idea → go to Plan (Step C3)
 - Plan revision → update workflow/plan.md
-- Task write → go to Task Write (Step C4)
-- Report verification → go to Verify (Step C5)
+- Backend task write → go to Task Write (Step C4)
+- Frontend task execute → go to Frontend Execute (Step C4F)
+- Report verification (Codex) → go to Verify (Step C5)
+- Frontend self-verify → go to Step C5F
 - Blocker resolution → diagnose and provide resolution path
-- Small tweak → check Small Tweak Rule (Part 0), execute if eligible
+- Small tweak (backend/config only) → check Small Tweak Rule (Part 0), execute if eligible
 
 **Step C3 — Plan**
 Read the relevant source files for the idea.
 Write plan to `workflow/plan.md`. Mark status: DRAFT.
 Present plan to human. Wait for approval. Do not proceed to Step C4 without approval.
 
-**Step C4 — Task Write**
+**Step C4 — Task Write (backend tasks → Codex)**
 If tasks.md not yet written: write `workflow/tasks.md` with task breakdown.
 Write one task prompt to `workflow/taskFile.md` following `workflow/taskFileTemplate.md`.
 Include READ FIRST with exact standards file paths (see table in Part 0 Rule 4).
 Confirm with human before handing off to Codex.
 
-**Step C5 — Verify Report**
-Read `workflow/report.md`.
-Check all items listed in Part 0 Rule 5.
-If all pass → print: "GREEN SIGNAL — TASK-XXX complete. Proceed to next task."
-Then overwrite `workflow/handoff.md` with current context (≤25 lines).
-If any check fails → list the specific failures. Do not give green signal.
+**Step C4F — Frontend Execute (Claude executes directly)**
+Read the relevant frontend source files before writing any code.
+Load the three frontend standards files before starting:
+- `docs/guides/frontendStandards/TACTICAL_EXECUTION.md`
+- `docs/guides/frontendStandards/UI_IMPLEMENTATION.md`
+- `docs/guides/frontendStandards/PERF_RESILIENCE_A11Y_TESTING.md`
+Implement the frontend task directly. Follow all standards as if you were Codex.
+On completion, run the Frontend Self-Audit Checklist (see Step C5F).
+Commit work and write `workflow/report.md` in the Part 7 format (Agent: Claude).
+
+**Step C5 — Review Implementation + Verify Report (Codex tasks)**
+Dispatch `backend-auditor` and `verify` agents in parallel. Do not read files yourself first.
+
+  backend-auditor — pass it:
+    - List of files from "Files Modified" in workflow/report.md
+    - Task ID
+    It will read every modified file and audit against all architectural laws (Part 2),
+    coding standards (Part 5), hard prohibitions (Part 8), KIP patterns, and registered
+    file rules (Part 4). Returns violations with exact file:line references.
+
+  verify — pass it:
+    - workflow/report.md
+    - Task acceptance criteria (from workflow/taskFile.md or tasks.md)
+    It will check acceptance criteria, validate all report fields per Part 0 Rule 5,
+    and cross-check commit hashes against git log.
+
+Wait for both agents to return results. Then:
+  Both PASS → print: "GREEN SIGNAL — TASK-XXX complete. Proceed to next task."
+              Overwrite `workflow/handoff.md` with current context (≤25 lines).
+  Either FAILS → list the specific failures from the agent report. Do not give green signal.
+
+**Step C5F — Frontend Self-Audit Checklist (Claude frontend tasks)**
+Before marking any frontend task complete, Claude MUST run this checklist:
+1. TOKENS — No raw hex, no raw rgba(). All colours use CSS variables from globals.css.
+2. ARBITRARY TAILWIND — No `[property:value]` syntax anywhere in any .tsx/.ts file.
+3. FONT DISCIPLINE — All numeric data uses `.font-data` / JetBrains Mono. All UI text uses Inter.
+4. NO DOMAIN LOGIC — No arithmetic or comparison on cricket data in any React component.
+5. URL STATE — All filter values (team, venue, innings) stored in URL search params, not Context.
+6. ROUTER — All navigation uses Next.js router.push() or <Link>. No window.history, no hash nav.
+7. API WRAPPER — All fetch calls go through lib/api.ts. No bare fetch() in components.
+8. ERROR BOUNDARIES — Every renderer output wrapped in Error Boundary. Shell is outside boundary.
+9. ARIA — Every icon-only button has aria-label. Result container has aria-live="polite".
+10. LAZY LOADING — Renderer components in FunctionRenderer.tsx use React.lazy().
+11. PLACEMENT — Components in correct directory (layout/ renderers/ inputs/ common/).
+12. TYPESCRIPT — No `any`. All API shapes typed in lib/types.ts with @schema JSDoc.
+13. OUT-OF-SCOPE — No files outside frontend/ modified (except doc updates explicitly required).
+14. GATES — F1 (lint-sentinel), F2 (paradigm-sentinel), F3 (type-sync-guard), F4 (visual-acceptance) all PASS.
+15. VISUAL ACCEPTANCE (F4) — Start the dev server, navigate to every route touched by the task, and screenshot the result. Compare each screenshot side-by-side against the Stitch spec or design reference. Every layout property that the spec defines (grid columns, card borders, spacing, icon rendering, tag pills, hover states) must be visually confirmed in the running browser before this check passes. A passing build or passing TypeScript is not a substitute. If anything does not match the spec → fix it before writing report.md.
+
+All 15 checks MUST PASS before writing workflow/report.md.
 
 ---
 
@@ -456,9 +673,7 @@ Do not attempt workarounds. Do not read from git history as a substitute. Stop a
 Do not run recursive directory scans (`Get-ChildItem -Recurse`, `find`, `rg --files`) across the full project.
 If a required path is not where the task prompt says it is — stop and report.
 
-**Rationale:** Codex deleted `core/` contents during a worktree task on 2026-03-03.
-Codex modified `docs/ai/` files outside task scope on 2026-03-04.
-These rules exist to prevent recurrence. Treat any violation as a critical incident.
+**Rationale:** Prior incidents with unscoped file deletion and docs/ai/ modification. Treat any violation as a critical incident.
 
 ---
 
@@ -489,7 +704,7 @@ TASK REPORT
 ===========
 Task: [one-line description]
 Date: [date]
-Agent: Codex
+Agent: [Codex / Claude]
 
 Baseline Bouncer: [PASS/FAIL — N violations]
 Post-Task Bouncer: [PASS/FAIL — N violations — matches baseline: YES/NO]
@@ -502,6 +717,7 @@ Gates Triggered:
 - GATE F1 (frontend-lint-sentinel): [TRIGGERED/SKIPPED — frontend scope only] — [PASS/FAIL]
 - GATE F2 (frontend-paradigm-sentinel): [TRIGGERED/SKIPPED — frontend scope only] — [PASS/FAIL]
 - GATE F3 (frontend-type-sync-guard): [TRIGGERED/SKIPPED — frontend scope only] — [PASS/FAIL]
+- GATE F4 (visual-acceptance): [TRIGGERED/SKIPPED — frontend scope only] — [PASS/FAIL] — routes checked: [list]
 - GATE 5 (paradigm-sentinel): TRIGGERED — [PASS/FAIL]
 - GATE 6 (compliance_bouncer): TRIGGERED — [PASS/FAIL]
 
@@ -565,7 +781,7 @@ These are sins. Any occurrence is an immediate hard fail.
 
 ---
 
-*End of AGENTS.md — Version 3.0 — 2026-03-14*
+*End of AGENTS.md — Version 3.1 — 2026-03-20*
 *Source of truth for current project state: docs/ai/SESSION_STATE.md*
 *Workflow files: workflow/ directory*
 *Standards: docs/guides/coreStandards/ | docs/guides/backendStandards/ | docs/guides/frontendStandards/*

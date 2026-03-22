@@ -436,7 +436,7 @@ textarea {
   color: var(--text-secondary);
 }
 
-/* ── Module Cards (Dashboard launchpad grid) ─────────────────────────── */
+/* ── Module Cards (Dashboard launchpad grid) ──────────────────────────── */
 
 .card-module {
   position: relative;
