@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { AppProvider } from "@/lib/context";
-import TopBar from "@/components/layout/TopBar";
-import Sidebar from "@/components/layout/Sidebar";
-import ContextBar from "@/components/layout/ContextBar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,22 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body>
-        <AppProvider>
-          <TopBar />
-          <div className="app-shell">
-            <Sidebar />
-            <div className="app-main">
-              <Suspense fallback={<div className="context-bar" aria-hidden="true" />}>
-                <ContextBar />
-              </Suspense>
-              <main className="app-content">
-                {children}
-              </main>
-            </div>
-          </div>
-        </AppProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
