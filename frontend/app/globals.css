@@ -448,6 +448,7 @@ textarea {
   border-radius: var(--radius-md);
   padding: var(--space-4);
   min-height: 160px;
+  height: 100%;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
