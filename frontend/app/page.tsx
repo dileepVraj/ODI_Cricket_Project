@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
 import { useAppContext } from "@/lib/context";
-import { resolveIcon } from "@/lib/icons";
+import { CategoryIcon } from "@/lib/icons";
 import { SkeletonBar, SkeletonBlock } from "@/components/common/Skeleton";
 import type { ManifestCategory } from "@/lib/api";
 
@@ -44,7 +44,6 @@ function getContextTags(category: ManifestCategory): string[] {
 // ── Module Card ───────────────────────────────────────────────────────
 
 function ModuleCard({ category }: { category: ManifestCategory }) {
-    const Icon = resolveIcon(category.icon);
     const isPrediction = category.group === "prediction";
     const tags = getContextTags(category);
     const iconClass = isPrediction
@@ -59,7 +58,7 @@ function ModuleCard({ category }: { category: ManifestCategory }) {
         >
             <div className="card-module-header">
                 <div className={iconClass} aria-hidden="true">
-                    <Icon size={18} />
+                    <CategoryIcon iconKey={category.icon} size={18} />
                 </div>
                 <div className="card-module-arrow" aria-hidden="true">
                     <ChevronRight size={14} />

@@ -6,7 +6,6 @@ import {
     ChevronLeft,
     ChevronRight,
     Home,
-    LayoutGrid,
     type LucideIcon,
 } from "lucide-react";
 import { useAppContext } from "@/lib/context";

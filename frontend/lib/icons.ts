@@ -1,6 +1,7 @@
 // frontend/lib/icons.ts
 // Shared icon registry — maps manifest icon string keys to Lucide components.
 // Used by Sidebar.tsx and the dashboard page.tsx.
+import React from "react";
 import {
     BarChart3,
     Building2,
@@ -60,4 +61,11 @@ export const ICON_MAP: Record<string, LucideIcon> = {
 
 export function resolveIcon(iconKey: string, fallback: LucideIcon = LayoutGrid): LucideIcon {
     return ICON_MAP[iconKey] ?? fallback;
+}
+
+// Stable wrapper component — avoids react-hooks/static-components when rendering
+// manifest icons in loops. Always renders as <CategoryIcon />, never as a dynamic var.
+export function CategoryIcon({ iconKey, size }: { iconKey: string; size?: number }): React.ReactElement {
+    const Icon = resolveIcon(iconKey);
+    return React.createElement(Icon, { size: size ?? 16 });
 }
