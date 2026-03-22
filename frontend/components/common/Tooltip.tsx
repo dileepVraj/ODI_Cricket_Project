@@ -6,9 +6,10 @@ interface TooltipProps {
   content: string;
   children: ReactNode;
   className?: string;
+  placement?: "top" | "right";
 }
 
-export function Tooltip({ content, children, className = "" }: TooltipProps) {
+export function Tooltip({ content, children, className = "", placement = "top" }: TooltipProps) {
   const [visible, setVisible] = useState(false);
 
   return (
@@ -21,7 +22,10 @@ export function Tooltip({ content, children, className = "" }: TooltipProps) {
     >
       {children}
       {visible && (
-        <span role="tooltip" className="tooltip-popup">
+        <span
+          role="tooltip"
+          className={placement === "right" ? "tooltip-popup-right" : "tooltip-popup"}
+        >
           {content}
         </span>
       )}

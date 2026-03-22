@@ -1,17 +1,12 @@
-/**
- * Sidebar.tsx - Dynamic Sidebar Navigation (Layer 3)
- */
 "use client";
 
-import type { ManifestCategory } from "@/lib/api";
-import { useAppContext } from "@/lib/context";
-import { stripEmoji } from "@/lib/utils";
+import { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
     BarChart3,
     Building2,
     ChevronLeft,
     ChevronRight,
-    ChevronsRight,
     Globe2,
     Handshake,
     Home,
@@ -22,176 +17,210 @@ import {
     User,
     type LucideIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useAppContext } from "@/lib/context";
+import { Tooltip } from "@/components/common/Tooltip";
+import { stripEmoji } from "@/lib/utils";
+import type { ManifestCategory } from "@/lib/api";
 
-const DASHBOARD_FALLBACK: { key: string; label: string; Icon: LucideIcon } = {
-    key: "dashboard",
-    label: "Dashboard",
-    Icon: Home,
-};
+// ── Icon registry ────────────────────────────────────────────────────────
 
-const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
-    stadium: Building2,
-    handshake: Handshake,
+const ICON_MAP: Record<string, LucideIcon> = {
+    stadium:     Building2,
+    handshake:   Handshake,
     "bar-chart": BarChart3,
-    globe: Globe2,
-    user: User,
-    swords: Swords,
-    target: Target,
-    rocket: Rocket,
-    default: LayoutGrid,
+    globe:       Globe2,
+    user:        User,
+    swords:      Swords,
+    target:      Target,
+    rocket:      Rocket,
+    default:     LayoutGrid,
 };
+
+function resolveIcon(iconKey: string, fallback: LucideIcon = LayoutGrid): LucideIcon {
+    return ICON_MAP[iconKey] ?? fallback;
+}
+
+// ── Grouping helpers ─────────────────────────────────────────────────────
 
 function formatGroupLabel(groupKey: string): string {
     return groupKey
         .split(/[-_]/)
         .filter(Boolean)
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(" ");
 }
 
-function groupCategories(categories: ManifestCategory[]): Array<[string, ManifestCategory[]]> {
-    const groups = new Map<string, ManifestCategory[]>();
+function groupCategories(cats: ManifestCategory[]): Array<[string, ManifestCategory[]]> {
+    const map = new Map<string, ManifestCategory[]>();
+    for (const cat of cats) {
+        const key = cat.group || cat.key;
+        const existing = map.get(key);
+        if (existing) { existing.push(cat); continue; }
+        map.set(key, [cat]);
+    }
+    return Array.from(map.entries());
+}
 
-    for (const category of categories) {
-        const groupKey = category.group || category.key;
-        const existingGroup = groups.get(groupKey);
+// ── NavItem ──────────────────────────────────────────────────────────────
 
-        if (existingGroup) {
-            existingGroup.push(category);
-            continue;
-        }
+interface NavItemProps {
+    id?: string;
+    Icon: LucideIcon;
+    label: string;
+    fnCount?: number;
+    active: boolean;
+    collapsed: boolean;
+    iconSize?: number;
+    onClick: () => void;
+}
 
-        groups.set(groupKey, [category]);
+function NavItem({ id, Icon, label, fnCount, active, collapsed, iconSize = 16, onClick }: NavItemProps) {
+    const cls = [
+        "sidebar-item",
+        active ? "sidebar-item-active" : "",
+        collapsed ? "sidebar-item-collapsed" : "",
+    ].filter(Boolean).join(" ");
+
+    const btn = (
+        <button
+            id={id}
+            className={cls}
+            onClick={onClick}
+            aria-label={label}
+            aria-current={active ? "page" : undefined}
+        >
+            <span className="sidebar-item-icon" aria-hidden="true">
+                <Icon size={iconSize} />
+            </span>
+            {!collapsed && (
+                <>
+                    <span className="sidebar-item-label">{label}</span>
+                    {fnCount !== undefined && (
+                        <span className="fn-count" aria-label={`${fnCount} functions`}>
+                            {fnCount}
+                        </span>
+                    )}
+                </>
+            )}
+        </button>
+    );
+
+    if (collapsed) {
+        return (
+            <Tooltip content={label} placement="right" className="w-full">
+                {btn}
+            </Tooltip>
+        );
     }
 
-    return Array.from(groups.entries());
+    return btn;
 }
 
-interface SidebarProps {
-    activeCategory: string;
-    onCategorySelect: (key: string) => void;
-}
+// ── Sidebar ──────────────────────────────────────────────────────────────
 
-export default function Sidebar({ activeCategory, onCategorySelect }: SidebarProps) {
+export default function Sidebar() {
+    const router   = useRouter();
+    const pathname = usePathname();
     const { manifest, isLoadingManifest } = useAppContext();
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const toggleSidebar = () => setIsCollapsed((prev) => !prev);
+
+    // Scroll active nav item into view when route changes
+    useEffect(() => {
+        const active = document.querySelector<HTMLElement>('[aria-current="page"]');
+        active?.scrollIntoView({ block: "nearest", behavior: "instant" });
+    }, [pathname]);
 
     const dashboardItem = useMemo(() => {
-        const navRoot = manifest?.navigation_root;
-        if (!navRoot) return DASHBOARD_FALLBACK;
+        const root = manifest?.navigation_root;
+        if (!root) return { key: "dashboard", label: "Dashboard", Icon: Home };
         return {
-            key: navRoot.key,
-            label: navRoot.label,
-            Icon: CATEGORY_ICON_MAP[navRoot.icon] || Home,
+            key:   root.key,
+            label: stripEmoji(root.label).trim(),
+            Icon:  resolveIcon(root.icon, Home),
         };
     }, [manifest?.navigation_root]);
 
+    const groupedCats = useMemo(
+        () => groupCategories(manifest?.categories ?? []),
+        [manifest?.categories],
+    );
+
+    const isDashboardActive = pathname === "/" || pathname === `/${dashboardItem.key}`;
+    const isActive = (key: string) =>
+        pathname === `/${key}` || pathname.startsWith(`/${key}/`);
+
+    // ── Skeleton while loading ────────────────────────────────────────────
     if (isLoadingManifest || !manifest) {
         return (
             <aside
-                id="sidebar"
-                className="[width:var(--sidebar-width)] [background:var(--bg-surface)] [border-right:1px_solid_var(--border-subtle)] [padding:12px_8px] [display:flex] [flex-direction:column] [gap:8px] [flex-shrink:0] [overflow-y:auto]"
+                className="sidebar"
+                style={{ width: "var(--sidebar-width)" }}
+                aria-label="Navigation"
+                aria-busy="true"
+                aria-live="polite"
             >
-                {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                    <div key={i} className="skeleton [height:38px] [margin-bottom:4px]" />
-                ))}
+                <div className="sidebar-nav">
+                    {Array.from({ length: 8 }, (_, i) => (
+                        <div key={i} className="skeleton h-9 mx-1 mb-1 rounded" />
+                    ))}
+                </div>
             </aside>
         );
     }
 
-    const groupedCategories = groupCategories(manifest.categories);
-    const sidebarWidth = isCollapsed
-        ? "var(--sidebar-collapsed-width)"
-        : "var(--sidebar-width)";
-
     return (
         <aside
-            id="sidebar"
-            className={`animate-slide-in [width:${sidebarWidth}] [min-width:${sidebarWidth}] [background:var(--bg-surface)] [border-right:1px_solid_var(--border-subtle)] [display:flex] [flex-direction:column] [flex-shrink:0] [transition:width_var(--transition-normal),_min-width_var(--transition-normal)] [overflow-y:auto] [overflow-x:hidden] [box-shadow:var(--shadow-sidebar)] [z-index:40]`}
+            className="sidebar animate-fade-in"
+            style={{ width: isCollapsed ? "var(--sidebar-collapsed-width)" : "var(--sidebar-width)" }}
+            aria-label="Navigation"
         >
-            <div className="[padding:12px_8px] [flex:1]">
-                <button
+            <nav className="sidebar-nav">
+
+                {/* Dashboard */}
+                <NavItem
                     id="sidebar-dashboard"
-                    className={`sidebar-item ${activeCategory === dashboardItem.key ? "active" : ""} [width:100%] [border:none] ${isCollapsed ? "[justify-content:center]" : ""}`}
-                    onClick={() => onCategorySelect(dashboardItem.key)}
-                    title={isCollapsed ? stripEmoji(dashboardItem.label) : undefined}
-                    aria-label={stripEmoji(dashboardItem.label)}
-                >
-                    <dashboardItem.Icon size={18} className="[flex-shrink:0]" />
-                    {!isCollapsed && <span>{stripEmoji(dashboardItem.label)}</span>}
-                </button>
+                    Icon={dashboardItem.Icon}
+                    label={dashboardItem.label}
+                    active={isDashboardActive}
+                    collapsed={isCollapsed}
+                    iconSize={18}
+                    onClick={() => router.push("/")}
+                />
 
-                {isCollapsed && (
-                    <button
-                        id="sidebar-expand-toggle-top"
-                        className="sidebar-item [width:100%] [border:none] [justify-content:center] [margin-top:8px] [margin-bottom:6px] [color:var(--accent-primary)] [background:var(--accent-glow)] [border-color:var(--border-accent)]"
-                        onClick={toggleSidebar}
-                        title="Expand sidebar"
-                        aria-label="Expand sidebar"
-                    >
-                        <ChevronsRight size={16} />
-                    </button>
-                )}
+                {/* Grouped module categories */}
+                {groupedCats.map(([groupKey, cats]) => (
+                    <div key={groupKey}>
+                        {!isCollapsed && (
+                            <span className="sidebar-group-label">
+                                {formatGroupLabel(groupKey)}
+                            </span>
+                        )}
+                        {cats.map((cat) => (
+                            <NavItem
+                                key={cat.key}
+                                id={`sidebar-${cat.key}`}
+                                Icon={resolveIcon(cat.icon)}
+                                label={stripEmoji(cat.label).trim()}
+                                fnCount={cat.functions.length}
+                                active={isActive(cat.key)}
+                                collapsed={isCollapsed}
+                                onClick={() => router.push(`/${cat.key}`)}
+                            />
+                        ))}
+                    </div>
+                ))}
 
-                {groupedCategories.map(([groupKey, categories]) => {
-                    const groupLabel = formatGroupLabel(groupKey);
+            </nav>
 
-                    return (
-                        <div key={groupKey}>
-                            {!isCollapsed && (
-                                <>
-                                    <hr className="[border:none] [border-top:1px_solid_var(--border-subtle)] [margin:8px_0_4px_0]" />
-                                    <div className="sidebar-group-label">{groupLabel}</div>
-                                </>
-                            )}
-
-                            {categories.map((cat) => {
-                                const fnCount = cat.functions.length;
-                                const Icon = CATEGORY_ICON_MAP[cat.icon] || CATEGORY_ICON_MAP.default;
-
-                                return (
-                                    <button
-                                        key={cat.key}
-                                        id={`sidebar-${cat.key}`}
-                                        className={`sidebar-item ${activeCategory === cat.key ? "active" : ""} [width:100%] [border:none] ${isCollapsed ? "[justify-content:center]" : ""}`}
-                                        onClick={() => onCategorySelect(cat.key)}
-                                        title={isCollapsed ? stripEmoji(cat.label) : cat.description}
-                                        aria-label={stripEmoji(cat.label)}
-                                    >
-                                        <Icon size={16} className="[flex-shrink:0]" />
-                                        {!isCollapsed && (
-                                            <>
-                                                <span className="[flex:1] [text-align:left] [overflow:hidden] [text-overflow:ellipsis] [white-space:nowrap]">
-                                                    {stripEmoji(cat.label)}
-                                                </span>
-                                                <span className="fn-count">{fnCount}</span>
-                                            </>
-                                        )}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    );
-                })}
-            </div>
-
-            <div className="[padding:8px] [border-top:1px_solid_var(--border-subtle)] [position:sticky] [bottom:0px] [background:var(--bg-surface)] [z-index:1]">
+            {/* Collapse toggle — sticky bottom */}
+            <div className="sidebar-footer">
                 <button
-                    id="sidebar-collapse-toggle"
-                    className={`sidebar-item [width:100%] [border:none] ${isCollapsed ? "[justify-content:center]" : "[justify-content:flex-start]"}`}
-                    onClick={toggleSidebar}
-                    title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    className="sidebar-collapse-btn"
+                    onClick={() => setIsCollapsed((prev) => !prev)}
                     aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                 >
-                    {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+                    {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
                     {!isCollapsed && <span>Collapse</span>}
-                    {isCollapsed && (
-                        <span className="[position:absolute] [width:1px] [height:1px] [padding:0px] [margin:-1px] [overflow:hidden] [clip:rect(0,_0,_0,_0)] [border:0px]">
-                            Expand
-                        </span>
-                    )}
                 </button>
             </div>
         </aside>
