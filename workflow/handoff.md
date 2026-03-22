@@ -8,23 +8,23 @@
 
 <!-- Claude writes context brief below this line — keep under 25 lines -->
 
-Last session: Layer 3 composites complete (2026-03-21). Commit: 44f66f3.
-Plan: plans/FRONTEND_OVERHAUL_PLAN.md. Design: Obsidian Command locked. Phase 11 in progress.
-Prior last backend task: TASK-159 Player Matchups Dossier (d0517f6). All gates PASS.
+Last completed: TASK-163 Dashboard Page — manifest-driven 3×3 module grid. GREEN SIGNAL.
+Commits: 737d14d (page.tsx), 06e1f8c (loading.tsx), eab3e77 (lint fix), 4e23707 (F4 gate), 3a22f37 (card height fix).
 
-Layer 1 DONE: globals.css — all tokens + utility classes.
+Plan: plans/FRONTEND_OVERHAUL_PLAN.md. Design system: Obsidian Command locked.
+Prior backend: TASK-159 Player Matchups Dossier (d0517f6). All gates PASS.
+
+Layer 1 DONE: globals.css — all tokens + utility classes + card-module/dashboard classes.
 Layer 2 DONE: Button, Badge, StatPill, Card, Skeleton, Divider, Tooltip, Input, Combobox.
-Layer 3 DONE (partial):
-  context.tsx rewritten — filter values removed, only manifest/formats/teams/venues/loaders remain.
-  New components/common/: FilterNotice, PageHeader, PhaseCard, PlayerCard.
-  DataTable.tsx rewritten — arbitrary Tailwind stripped, broken imports fixed.
-  globals.css extended — divider, filter-notice, page-header, phase-card, player-card,
-    data-table-header/wrapper/footer/empty utility classes added.
-  Gate fix: F1/F2 sentinels now scope to staged files only (--files arg + hook updated).
+Layer 3 DONE: TopBar, Sidebar, ContextBar, FilterNotice, PageHeader, PhaseCard, PlayerCard, DataTable.
+Layer 4 IN PROGRESS:
+  / (Dashboard) — DONE (TASK-163). F4 visual gate now mandatory on all frontend tasks.
 
-Layer 3 remaining — build order:
-  1. TopBar (wordmark + format label). Read old layout/FormatSelector.tsx for format-tab classes.
-  2. Sidebar: port icon map + groupCategories from old Sidebar.tsx, strip arbitrary Tailwind,
-     replace onCategorySelect with router.push(). Read old Sidebar.tsx first.
-  3. ContextBar (hardest): dynamic manifest fields, useSearchParams + router.replace for all
-     filter values. No Context. Read old ContextBar.tsx first.
+Process additions this session:
+  CLAUDE.md: F4 Visual Acceptance gate added (C5F item 15 + Part 7 report field).
+  Turbopack Windows HMR fix: make real content edit to globals.css to trigger Fast Refresh.
+
+Next task: Button primitive (Layer 2 gap) → Landing Page (/landing or pre-shell route)
+  → Phase Analysis page (/venue_intelligence or category key route).
+  Agreed order: Button → Landing Page → Phase Analysis.
+  Landing page spec not yet written — needs Stitch mockup first.
