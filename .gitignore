@@ -1,3 +1,6 @@
+# Git Worktrees
+.worktrees/
+
 # Python
 __pycache__/
 *.pyc
@@ -42,3 +45,10 @@ run_task.py
 
 # Temporary AI scratch
 docs/ai/recon/
+new_requirement_idea.md
+screenshots/
+ideation/
+
+# Stray root-level npm artifacts (npm run from wrong directory)
+/package.json
+/package-lock.json
