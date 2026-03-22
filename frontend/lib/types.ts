@@ -162,3 +162,64 @@ export function toFormRows(rows: ReadonlyArray<Record<string, unknown>>): FormRo
         return row;
     });
 }
+
+// ── Landing Page — Format Selection Types & Constants ────────────────────────
+
+/** @schema-exempt — frontend-only landing page selection, no Pydantic equivalent */
+export type LandingGender = "mens" | "womens";
+
+/** @schema-exempt — frontend-only landing page selection, no Pydantic equivalent */
+export type LandingCategory = "internationals" | "domestic";
+
+/** @schema-exempt — frontend-only landing page format slug, no Pydantic equivalent */
+export type LandingFormatSlug =
+  | "odi" | "t20i" | "test"
+  | "ipl" | "bbl" | "psl" | "cpl" | "the-hundred"
+  | "wbbl" | "wpl";
+
+/** @schema-exempt — frontend-only landing page format option, no Pydantic equivalent */
+export interface LandingFormatOption {
+  label: string;
+  slug: LandingFormatSlug;
+}
+
+/** @schema-exempt — static format options for landing page selector */
+export const LANDING_FORMAT_OPTIONS: Record<LandingGender, Record<LandingCategory, LandingFormatOption[]>> = {
+  mens: {
+    internationals: [
+      { label: "ODI", slug: "odi" },
+      { label: "T20I", slug: "t20i" },
+      { label: "Test", slug: "test" },
+    ],
+    domestic: [
+      { label: "IPL", slug: "ipl" },
+      { label: "BBL", slug: "bbl" },
+      { label: "PSL", slug: "psl" },
+      { label: "CPL", slug: "cpl" },
+      { label: "The Hundred", slug: "the-hundred" },
+    ],
+  },
+  womens: {
+    internationals: [
+      { label: "ODI", slug: "odi" },
+      { label: "T20I", slug: "t20i" },
+      { label: "Test", slug: "test" },
+    ],
+    domestic: [
+      { label: "WBBL", slug: "wbbl" },
+      { label: "WPL", slug: "wpl" },
+    ],
+  },
+};
+
+/** @schema-exempt — display labels for landing gender selection */
+export const LANDING_GENDER_LABELS: Record<LandingGender, string> = {
+  mens: "Men's",
+  womens: "Women's",
+};
+
+/** @schema-exempt — display labels for landing category selection */
+export const LANDING_CATEGORY_LABELS: Record<LandingCategory, string> = {
+  internationals: "Internationals",
+  domestic: "Domestic Leagues",
+};
