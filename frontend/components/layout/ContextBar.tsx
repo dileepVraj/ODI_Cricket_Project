@@ -1,114 +1,103 @@
 "use client";
 
-import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
+import { useCallback } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useAppContext } from "@/lib/context";
-import { stripEmoji } from "@/lib/utils";
+import { Combobox } from "@/components/common/Combobox";
+
+// ── Main Component ──────────────────────────────────────────────────────
 
 export default function ContextBar() {
-    const {
-        manifest,
-        contextValues,
-        setContextValue,
-        teams,
-        venues,
-        isLoadingContext,
-        isLoadingManifest,
-    } = useAppContext();
+    const { manifest, teams, venues, isLoadingManifest, isLoadingContext } = useAppContext();
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const setParam = useCallback(
+        (key: string, value: string) => {
+            const params = new URLSearchParams(searchParams.toString());
+            if (value) {
+                params.set(key, value);
+            } else {
+                params.delete(key);
+            }
+            router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+        },
+        [searchParams, pathname, router],
+    );
 
     if (isLoadingManifest || !manifest) {
         return (
-            <div
-                id="context-bar"
-                className="[height:var(--context-bar-height)] [background:var(--bg-surface)] [border-bottom:1px_solid_var(--border-subtle)] [display:flex] [align-items:center] [padding:0_20px] [gap:12px]"
-            >
+            <div className="context-bar" role="toolbar" aria-label="Analysis filters">
                 {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="skeleton [width:140px] [height:36px]" />
+                    <div key={i} className="skeleton w-36 h-9" />
                 ))}
             </div>
         );
     }
 
-    const fields = manifest.context_fields;
-    const fieldEntries = Object.entries(fields);
-    const teamFieldKeys = new Set(
-        fieldEntries
-            .filter(([, field]) => field.type === "dropdown" && field.source === "teams")
-            .map(([key]) => key)
-    );
-    const venueOptions = venues.map((venue) => ({
-        label: venue.label,
-        value: venue.id,
-    }));
-
-    const getFieldPlaceholder = (field: (typeof fields)[string]): string | undefined => {
-        return typeof field.placeholder === "string" ? field.placeholder : undefined;
-    };
-
-    const getComboboxOptions = (field: (typeof fields)[string]) => {
-        if (field.source === "venues") {
-            return venueOptions;
-        }
-
-        return (field.options || []).map((option) => ({
-            label: option,
-            value: option,
-        }));
-    };
+    const fieldEntries = Object.entries(manifest.context_fields);
 
     return (
         <div
-            id="context-bar"
-            className="animate-fade-in [height:var(--context-bar-height)] [background:var(--bg-surface)] [border-bottom:1px_solid_var(--border-subtle)] [display:flex] [align-items:center] [padding:0_20px] [gap:12px] [overflow:visible] [position:relative] [z-index:45]"
+            className="context-bar animate-fade-in"
+            role="toolbar"
+            aria-label="Analysis filters"
         >
             {fieldEntries.map(([key, field]) => {
+                const value = searchParams.get(key) ?? "";
+
                 if (field.type === "dropdown") {
-                    let dropdownOptions = field.options || [];
-
-                    if (teamFieldKeys.has(key)) {
-                        // TODO: drive entirely from manifest when team selector primitive is available.
-                        dropdownOptions = ["All", ...teams];
-                    }
-
+                    const options =
+                        field.source === "teams"
+                            ? teams
+                            : (field.options ?? []);
                     return (
                         <DropdownField
                             key={key}
                             fieldKey={key}
                             label={field.label}
-                            value={String(contextValues[key] || "")}
-                            onChange={(val) => setContextValue(key, val)}
-                            options={dropdownOptions}
+                            value={value}
+                            onChange={(val) => setParam(key, val)}
+                            options={options}
                             isLoading={isLoadingContext}
                         />
                     );
                 }
 
                 if (field.type === "combobox") {
+                    const options =
+                        field.source === "venues"
+                            ? venues.map((v) => ({ label: v.label, value: v.id }))
+                            : (field.options ?? []).map((o) => ({ label: o, value: o }));
+                    const placeholder =
+                        typeof field.placeholder === "string"
+                            ? field.placeholder
+                            : `Select ${field.label.toLowerCase()}...`;
                     return (
                         <ComboboxField
                             key={key}
                             label={field.label}
-                            value={String(contextValues[key] || "")}
-                            onChange={(val) => setContextValue(key, val)}
-                            options={getComboboxOptions(field)}
-                            placeholder={stripEmoji(
-                                getFieldPlaceholder(field) ||
-                                `Select ${field.label.toLowerCase()}...`
-                            )}
-                            isLoading={isLoadingContext}
+                            value={value}
+                            onChange={(val) => setParam(key, val)}
+                            options={options}
+                            placeholder={isLoadingContext ? "Loading..." : placeholder}
+                            disabled={isLoadingContext}
                         />
                     );
                 }
 
                 if (field.type === "slider") {
+                    const numValue = value ? Number(value) : (field.default ?? 5);
                     return (
                         <SliderField
                             key={key}
                             fieldKey={key}
                             label={field.label}
-                            value={Number(contextValues[key]) || field.default || 5}
-                            onChange={(val) => setContextValue(key, val)}
-                            min={field.min || 1}
-                            max={field.max || 50}
+                            value={numValue}
+                            onChange={(val) => setParam(key, String(val))}
+                            min={field.min ?? 1}
+                            max={field.max ?? 50}
                         />
                     );
                 }
@@ -118,6 +107,8 @@ export default function ContextBar() {
         </div>
     );
 }
+
+// ── Sub-components ──────────────────────────────────────────────────────
 
 function DropdownField({
     fieldKey,
@@ -135,21 +126,19 @@ function DropdownField({
     isLoading: boolean;
 }) {
     return (
-        <div className="[display:flex] [flex-direction:column] [gap:1px] [min-width:140px]">
-            <label
-                htmlFor={`context-${fieldKey}`}
-                className="[font-size:0.58rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]"
-            >
-                {stripEmoji(label)}
+        <div className="context-field min-w-36">
+            <label htmlFor={`ctx-${fieldKey}`} className="context-field-label">
+                {label}
             </label>
             <select
-                id={`context-${fieldKey}`}
-                className="context-input [cursor:pointer] [appearance:auto]"
+                id={`ctx-${fieldKey}`}
+                className="context-input"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 disabled={isLoading}
+                aria-label={label}
             >
-                <option value="">Select...</option>
+                <option value="">All</option>
                 {options.map((opt) => (
                     <option key={opt} value={opt}>
                         {opt}
@@ -166,28 +155,25 @@ function ComboboxField({
     onChange,
     options,
     placeholder,
-    isLoading,
+    disabled,
 }: {
     label: string;
     value: string;
     onChange: (val: string) => void;
     options: { label: string; value: string }[];
     placeholder: string;
-    isLoading: boolean;
+    disabled: boolean;
 }) {
     return (
-        <div className="[display:flex] [flex-direction:column] [gap:1px] [min-width:170px]">
-            <label className="[display:flex] [flex-direction:column] [gap:1px]">
-                <span className="[font-size:0.58rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]">
-                    {stripEmoji(label)}
-                </span>
-                <AccessibleCombobox
-                    value={value}
-                    onChange={onChange}
-                    options={isLoading ? [] : options}
-                    placeholder={isLoading ? "Loading..." : placeholder}
-                />
-            </label>
+        <div className="context-field min-w-44">
+            <span className="context-field-label">{label}</span>
+            <Combobox
+                value={value}
+                onChange={onChange}
+                options={options}
+                placeholder={placeholder}
+                disabled={disabled}
+            />
         </div>
     );
 }
@@ -208,26 +194,27 @@ function SliderField({
     max: number;
 }) {
     return (
-        <div className="[display:flex] [flex-direction:column] [gap:1px] [min-width:130px]">
-            <label
-                htmlFor={`context-${fieldKey}`}
-                className="[font-size:0.58rem] [font-weight:600] [color:var(--text-muted)] [text-transform:uppercase] [letter-spacing:0.06em]"
-            >
-                {stripEmoji(label)}:{" "}
-                <span className="[color:var(--accent-primary)] [font-weight:700]">{value}</span>
+        <div className="context-field min-w-36">
+            <label htmlFor={`ctx-${fieldKey}`} className="context-field-label">
+                {label}:{" "}
+                <span className="context-field-slider-value">{value}</span>
             </label>
-            <div className="[display:flex] [align-items:center] [gap:8px]">
-                <span className="[font-size:0.7rem] [color:var(--text-disabled)]">{min}</span>
+            <div className="flex items-center gap-2">
+                <span className="context-field-slider-bound">{min}</span>
                 <input
-                    id={`context-${fieldKey}`}
+                    id={`ctx-${fieldKey}`}
                     type="range"
                     min={min}
                     max={max}
                     value={value}
                     onChange={(e) => onChange(Number(e.target.value))}
-                    className="[flex:1] [accent-color:var(--accent-primary)] [cursor:pointer]"
+                    className="context-range"
+                    aria-label={`${label}: ${value}`}
+                    aria-valuemin={min}
+                    aria-valuemax={max}
+                    aria-valuenow={value}
                 />
-                <span className="[font-size:0.7rem] [color:var(--text-disabled)]">{max}</span>
+                <span className="context-field-slider-bound">{max}</span>
             </div>
         </div>
     );
