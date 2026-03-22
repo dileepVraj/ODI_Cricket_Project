@@ -1,2 +1,2 @@
 export { ErrorBoundary } from "./ErrorBoundary";
-export { AccessibleCombobox } from "./AccessibleCombobox";
+export { Combobox } from "./Combobox";

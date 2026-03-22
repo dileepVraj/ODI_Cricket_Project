@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { fetchPlayers, fetchVenues, type VenueItem } from "@/lib/api";
 import { stripEmoji } from "@/lib/utils";
-import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
+import { Combobox } from "@/components/common/Combobox";
 
 interface ExtraInputFieldDefinition {
     type: string;
@@ -149,7 +149,7 @@ export default function ExtraInputCombobox({
                 ) : null}
             </div>
 
-            <AccessibleCombobox
+            <Combobox
                 value={value}
                 onChange={onChange}
                 options={allOptions}

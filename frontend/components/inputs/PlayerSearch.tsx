@@ -1,6 +1,6 @@
 "use client";
 
-import { AccessibleCombobox } from "@/components/common/AccessibleCombobox";
+import { Combobox } from "@/components/common/Combobox";
 
 interface PlayerSearchProps {
     contextLabel: string;
@@ -55,7 +55,7 @@ export default function PlayerSearch(props: PlayerSearchProps) {
 
     return (
         <div className="[display:flex] [flex-direction:column] [gap:10px] [margin-bottom:12px]">
-            <AccessibleCombobox
+            <Combobox
                 value=""
                 onChange={onSelectPlayer}
                 options={options}
