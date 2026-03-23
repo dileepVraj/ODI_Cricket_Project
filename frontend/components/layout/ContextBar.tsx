@@ -5,6 +5,11 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useAppContext } from "@/lib/context";
 import { Combobox } from "@/components/common/Combobox";
 
+// Strip leading emoji + trailing space from manifest labels before display
+function stripEmoji(label: string): string {
+    return label.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}]\uFE0F?\s*/u, "");
+}
+
 // ── Main Component ──────────────────────────────────────────────────────
 
 export default function ContextBar() {
@@ -62,7 +67,7 @@ export default function ContextBar() {
                         <DropdownField
                             key={key}
                             fieldKey={key}
-                            label={field.label}
+                            label={stripEmoji(field.label)}
                             value={value}
                             onChange={(val) => setParam(key, val)}
                             options={options}
@@ -76,19 +81,21 @@ export default function ContextBar() {
                         field.source === "venues"
                             ? venues.map((v) => ({ label: v.label, value: v.id }))
                             : (field.options ?? []).map((o) => ({ label: o, value: o }));
+                    const cleanLabel = stripEmoji(field.label);
                     const placeholder =
                         typeof field.placeholder === "string"
                             ? field.placeholder
-                            : `Select ${field.label.toLowerCase()}...`;
+                            : `Select ${cleanLabel.toLowerCase()}...`;
                     return (
                         <ComboboxField
                             key={key}
-                            label={field.label}
+                            label={cleanLabel}
                             value={value}
                             onChange={(val) => setParam(key, val)}
                             options={options}
                             placeholder={isLoadingContext ? "Loading..." : placeholder}
                             disabled={isLoadingContext}
+                            tooltip={`Select ${cleanLabel.toLowerCase()}`}
                         />
                     );
                 }
@@ -99,11 +106,28 @@ export default function ContextBar() {
                         <SliderField
                             key={key}
                             fieldKey={key}
-                            label={field.label}
+                            label={stripEmoji(field.label)}
                             value={numValue}
                             onChange={(val) => setParam(key, String(val))}
                             min={field.min ?? 1}
                             max={field.max ?? 50}
+                        />
+                    );
+                }
+
+                if (field.type === "number") {
+                    const defaultVal = typeof field.default === "number" ? field.default : 5;
+                    const numValue = value ? Number(value) : defaultVal;
+                    return (
+                        <NumberField
+                            key={key}
+                            fieldKey={key}
+                            label={stripEmoji(field.label)}
+                            value={numValue}
+                            onChange={(val) => setParam(key, String(val))}
+                            min={field.min ?? 1}
+                            max={field.max ?? 50}
+                            defaultVal={defaultVal}
                         />
                     );
                 }
@@ -162,6 +186,7 @@ function ComboboxField({
     options,
     placeholder,
     disabled,
+    tooltip,
 }: {
     label: string;
     value: string;
@@ -169,6 +194,7 @@ function ComboboxField({
     options: { label: string; value: string }[];
     placeholder: string;
     disabled: boolean;
+    tooltip?: string;
 }) {
     return (
         <div className="context-field min-w-44">
@@ -179,6 +205,53 @@ function ComboboxField({
                 options={options}
                 placeholder={placeholder}
                 disabled={disabled}
+                tooltip={tooltip}
+            />
+        </div>
+    );
+}
+
+function NumberField({
+    fieldKey,
+    label,
+    value,
+    onChange,
+    min,
+    max,
+    defaultVal,
+}: {
+    fieldKey: string;
+    label: string;
+    value: number;
+    onChange: (val: number) => void;
+    min: number;
+    max: number;
+    defaultVal: number;
+}) {
+    return (
+        <div className="context-field min-w-24">
+            <label htmlFor={`ctx-${fieldKey}`} className="context-field-label">
+                {label}
+            </label>
+            <input
+                id={`ctx-${fieldKey}`}
+                type="number"
+                min={min}
+                max={max}
+                value={value}
+                onChange={(e) => {
+                    const raw = Number(e.target.value);
+                    if (!e.target.value) return;
+                    const clamped = Math.min(max, Math.max(min, raw));
+                    onChange(clamped);
+                }}
+                onBlur={(e) => {
+                    if (!e.target.value || isNaN(Number(e.target.value))) {
+                        onChange(defaultVal);
+                    }
+                }}
+                className="context-input"
+                aria-label={`${label}: enter a value between ${min} and ${max}`}
             />
         </div>
     );

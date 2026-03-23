@@ -23,6 +23,7 @@ interface ComboboxProps {
   label?: string;
   error?: string;
   disabled?: boolean;
+  tooltip?: string;
 }
 
 export function Combobox({
@@ -33,6 +34,7 @@ export function Combobox({
   label,
   error,
   disabled = false,
+  tooltip,
 }: ComboboxProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -135,6 +137,7 @@ export function Combobox({
           className={`context-input ${errorClass}`.trim()}
           value={displayValue}
           placeholder={placeholder}
+          title={tooltip}
           disabled={disabled}
           onClick={handleInputClick}
           onChange={handleChange}

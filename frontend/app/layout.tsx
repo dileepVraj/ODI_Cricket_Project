@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "./styles/layout.css";
+import "./styles/components.css";
+import "./styles/cards.css";
+import "./styles/inputs.css";
+import "./styles/data.css";
+import "./styles/landing.css";
 
 const inter = Inter({
   subsets: ["latin"],
