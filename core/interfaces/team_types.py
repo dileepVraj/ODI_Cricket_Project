@@ -346,6 +346,41 @@ class VenuePercentBreakdown(TypedDict):
     tie_nr: int
 
 
+class VenueBiasCI(TypedDict):
+    lower: int
+    upper: int
+
+
+class VenueScoreStats(TypedDict):
+    min: int
+    max: int
+    median: int
+    std: int
+
+
+class VenueScoreDistribution(TypedDict):
+    inn1: VenueScoreStats
+    inn2: VenueScoreStats
+
+
+class VenueScoreExtremes(TypedDict):
+    lowest_defended: int | None
+    highest_chased: int | None
+
+
+class VenueBiasTrend(TypedDict):
+    direction: str
+    recent_pct: int | None
+    historical_pct: int | None
+
+
+class VenueTossIntelligence(TypedDict):
+    chose_bat_win_pct: int | None
+    chose_bowl_win_pct: int | None
+    toss_match_count: int
+    data_available: bool
+
+
 class VenueBiasReport(TypedDict):
     venue_id: str
     period: int
@@ -360,6 +395,12 @@ class VenueBiasReport(TypedDict):
     percent_breakdown: VenuePercentBreakdown
     highlight_flags: SectionHighlightFlags
     derived_badges: list[str]
+    confidence_interval: VenueBiasCI
+    sample_reliability: str
+    score_distribution: VenueScoreDistribution | None
+    score_extremes: VenueScoreExtremes
+    bias_trend: VenueBiasTrend
+    toss_intelligence: VenueTossIntelligence
     MATCH_IDS: str | None
     raw_matches: str
 
