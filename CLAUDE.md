@@ -60,7 +60,7 @@ Frontend is never governed by this rule — Claude always executes frontend dire
 - `docs/guides/frontendStandards/UI_IMPLEMENTATION.md`
 - `docs/guides/frontendStandards/PERF_RESILIENCE_A11Y_TESTING.md`
 
-**C5F — Frontend Self-Audit (all 15 must pass before writing report.md):**
+**C5F — Frontend Self-Audit (all 16 must pass before writing report.md):**
 1. TOKENS — CSS variables only, no raw hex/rgba
 2. ARBITRARY TAILWIND — No `[property:value]` syntax in any .tsx/.ts
 3. FONT DISCIPLINE — Numeric data: `.font-data`/JetBrains Mono. UI text: Inter
@@ -76,6 +76,7 @@ Frontend is never governed by this rule — Claude always executes frontend dire
 13. OUT-OF-SCOPE — No files outside `frontend/` modified (except explicit doc updates)
 14. GATES — F1 lint, F2 paradigm, F3 type-sync, F4 visual-acceptance all PASS
 15. VISUAL ACCEPTANCE — Dev server running, every touched route screenshotted, compared to spec
+16. SRP — Every file in `frontend/components/` is ≤300 lines. Run `wc -l` on every file you touched. Anything over 300 must be split before committing.
 
 ---
 

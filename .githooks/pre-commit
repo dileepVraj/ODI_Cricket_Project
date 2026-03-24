@@ -73,6 +73,28 @@ if [ -n "$STAGED_FRONTEND" ]; then
     echo "GATE F1 — PASS"
 fi
 
+# ── SRP CHECK — component line-count guard ────────────────────────────
+# Trigger: any frontend/components/ .tsx file staged
+# Rule: no component file may exceed 300 lines (TACTICAL_EXECUTION.md §4)
+STAGED_COMPONENTS=$(echo "$STAGED" | grep -E "frontend/components/.*\.tsx$")
+if [ -n "$STAGED_COMPONENTS" ]; then
+    SRP_FAIL=0
+    for f in $STAGED_COMPONENTS; do
+        if [ -f "$f" ]; then
+            LINES=$(wc -l < "$f")
+            if [ "$LINES" -gt 300 ]; then
+                echo "[SRP VIOLATION] $f: $LINES lines (max 300 — split into focused components)"
+                SRP_FAIL=1
+            fi
+        fi
+    done
+    if [ "$SRP_FAIL" -ne 0 ]; then
+        echo "SRP CHECK FAILED — component exceeds 300-line limit. Commit blocked."
+        exit 1
+    fi
+    echo "SRP CHECK — PASS"
+fi
+
 # ── GATE F2 — frontend-paradigm-sentinel ───────────────────────────────
 # Trigger: any frontend/ .tsx or .ts file staged
 # Scans ONLY staged files — not the full frontend directory.
