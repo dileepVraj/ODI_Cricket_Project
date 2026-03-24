@@ -76,7 +76,7 @@ Frontend is never governed by this rule — Claude always executes frontend dire
 13. OUT-OF-SCOPE — No files outside `frontend/` modified (except explicit doc updates)
 14. GATES — F1 lint, F2 paradigm, F3 type-sync, F4 visual-acceptance all PASS
 15. VISUAL ACCEPTANCE — Dev server running, every touched route screenshotted, compared to spec
-16. SRP — Every file in `frontend/components/` is ≤300 lines. Run `wc -l` on every file you touched. Anything over 300 must be split before committing.
+16. SRP — Run `wc -l` on every file you touched in `frontend/components/`. If any file exceeds 300 lines, STOP and perform a full SRP analysis before committing: (a) list every distinct responsibility the file holds, (b) extract each into a dedicated file with a clean prop interface, (c) apply the "describe without and" test to every resulting file. Merely moving lines to stay under 300 is a Hard Fail — the split must be structurally justified.
 
 ---
 

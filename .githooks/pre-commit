@@ -83,13 +83,18 @@ if [ -n "$STAGED_COMPONENTS" ]; then
         if [ -f "$f" ]; then
             LINES=$(wc -l < "$f")
             if [ "$LINES" -gt 300 ]; then
-                echo "[SRP VIOLATION] $f: $LINES lines (max 300 — split into focused components)"
+                echo "[SRP VIOLATION] $f: $LINES lines"
+                echo "  300 lines is a signal, not the goal. Required action:"
+                echo "  1. List every distinct responsibility this file holds"
+                echo "  2. Extract each into a dedicated file with clean prop interfaces"
+                echo "  3. Apply the 'describe without and' test to every resulting file"
+                echo "  Merely moving lines to stay under 300 is a Hard Fail."
                 SRP_FAIL=1
             fi
         fi
     done
     if [ "$SRP_FAIL" -ne 0 ]; then
-        echo "SRP CHECK FAILED — component exceeds 300-line limit. Commit blocked."
+        echo "SRP CHECK FAILED — perform structural SRP analysis. Commit blocked."
         exit 1
     fi
     echo "SRP CHECK — PASS"

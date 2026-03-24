@@ -14,13 +14,29 @@ All communication with the backend MUST flow through the standardized wrappers i
 **Hard Fail:** Any `fetch()` call found outside `lib/api.ts`.
 
 **2. Strict Tailwind CSS:**
-All styling MUST be implemented using Tailwind CSS utility classes. The use of React inline `style={{}}` attributes is forbidden except for values that are computed at runtime (e.g., dynamic chart coordinates or progress bar widths). Use of arbitrary value syntax (e.g., `[padding:24px]`) is permitted and encouraged for high-precision layouts to avoid custom CSS bloat.
+All styling MUST be implemented using standard Tailwind CSS utility classes referencing design tokens from `globals.css`. The use of React inline `style={{}}` attributes is forbidden except for values that are computed at runtime (e.g., dynamic chart coordinates or progress bar widths). Use of arbitrary value syntax (e.g., `[padding:24px]`, `[display:flex]`, `[color:#6366F1]`) is strictly forbidden — it bypasses the token system, produces unreadable code, and defeats the purpose of Tailwind. Use named CSS custom properties (`var(--token-name)`) via the token system instead.
+**Hard Fail:** Any arbitrary Tailwind value syntax `[property:value]` found in any `.tsx` or `.ts` file.
 
 **3. Global App State Purity:**
-The application MUST use React Context (`useAppContext()` from `lib/context.tsx`) as the exclusive mechanism for global state. Introduction of external state management libraries (Redux, Zustand, MobX, Jotai) is forbidden unless explicitly approved by the architect. Local Component State (`useState`) is permitted ONLY for concerns that are strictly local to the UI (e.g., `activeTab`, `isExpanded`, `isLoading`).
+The application uses two approved mechanisms for global state:
+- **URL Search Params** — REQUIRED for all filter/context values (Home Team, Away Team, Venue, Innings, Match Count). These MUST live in the URL so they persist across page navigation, support deep linking, and survive refresh. Use Next.js `useSearchParams()` and `router.replace()` to read and write these values.
+- **React Context (`useAppContext()`)** — REQUIRED for app-level state that is NOT filter data: manifest data, available formats, active format, teams list, venues list, loading states.
+Introduction of external state management libraries (Redux, Zustand, MobX, Jotai) is forbidden unless explicitly approved by the architect. Local Component State (`useState`) is permitted ONLY for concerns that are strictly local to the UI (e.g., `activeTab`, `isExpanded`, `isLoading`).
+**Hard Fail:** Any filter/context value (team, venue, innings, match count) stored in React Context instead of URL search params.
 
 **4. Component Modularity & SRP:**
-Individual React components MUST NOT exceed a 300-line limit. If a component exceeds this threshold, it MUST be decomposed into focused sub-components. Follow the "Describe without and" test: if you cannot describe a component's responsibility without using the word "and", it violates the Single Responsibility Principle. Components MUST be placed in the appropriate `components/` subdirectory based on their role (`layout/`, `renderers/`, `inputs/`).
+The Single Responsibility Principle is the primary law. The 300-line limit is a signal that triggers mandatory SRP analysis — it is not the goal. A 290-line file that does two things is a violation. A 310-line file with one clear responsibility must still be analysed, not merely truncated.
+
+When a file breaches 300 lines or fails the responsibility test, the agent MUST perform a full structural deconstruction:
+
+- **Logical Decoupling:** Identify every distinct responsibility the file holds (state management, data transformation, UI rendering, execution orchestration, etc.). Each responsibility that can stand alone becomes a candidate for extraction into a dedicated file.
+- **Cohesion Audit:** For each extracted module, verify it handles exactly one part of the pipeline. If a module cannot be described without the word "and", it has not been split correctly.
+- **Interface Design:** Define clean prop boundaries between the orchestrator and its sub-components. Props must be explicit — no implicit coupling through shared mutable state or context side-effects.
+- **Describe Without "And" Test:** If you cannot describe a component's responsibility in one sentence without using "and", it violates SRP. This test applies to every file before and after the split.
+
+Merely moving lines into a new file to stay under 300 is a Hard Fail. The result must be structurally cleaner, not just numerically smaller.
+
+Components MUST be placed in the appropriate `components/` subdirectory based on their role (`layout/`, `renderers/`, `inputs/`, `common/`).
 
 **5. No Domain Logic (Pre-Computed Payload Mandate):**
 React components MUST remain "Visual-Deaf." They are forbidden from performing cricket domain logic, statistical formulas, or deriving UI states from raw numbers. No `val.match()` for string parsing, no `if (n < 3)` for sample size checks, and no badge colour derivation. All such decisions MUST be pre-computed by the Python backend and delivered as explicit flags or tagged primitives.
@@ -36,9 +52,13 @@ The UI MUST be a dynamic reflection of the backend manifest. Hardcoding function
 **8. Standardized Error Handling:**
 Every call to `executeFunction()` MUST be wrapped in a `try/catch` block. Errors MUST be processed by a dedicated formatter (e.g., `formatExecuteError`) to provide user-friendly feedback. React components are forbidden from rendering raw `err.message` or technical stack traces from the backend.
 
-**9. Hash-Based Navigation Pattern:**
-Switching between analysis categories MUST be handled via hash-based deep linking using `window.history.replaceState()`. This allows users to bookmark specific analysis screens without polluting the browser's back-stack or triggering full page reloads. Avoid using Next.js `router.push()` for internal view transitions that do not change the base page.
-**Alignment:** URL state management and context sync pattern — bidirectional sync with window.history.replaceState() as established in frontend/lib/context.tsx. No back-stack pollution.
+**9. Page-Based Navigation Pattern:**
+The application uses Next.js App Router with nested layouts for all navigation. Each analysis module is a dedicated route (e.g., `/phase-analysis`, `/venue-intel`, `/player/[id]`). Navigation MUST use Next.js `router.push()` or `<Link>` components — never `window.history.replaceState()` or hash-based navigation.
+- The persistent shell (TopBar, Sidebar, ContextBar) lives in `app/layout.tsx` and never unmounts
+- Each module is a `page.tsx` under its own route folder
+- Filter state (team, venue, innings) travels with navigation via URL search params — `router.push('/phase-analysis?home=India&away=Australia&venue=MCG')`
+- Sidebar `onCategorySelect` calls `router.push()` to the module route, not a state setter
+**Hard Fail:** Any `window.history.replaceState()`, `window.location.hash`, or hash-based navigation pattern in any component file.
 
 **10. Async Effect Cancellation:**
 Every `useEffect` hook performing asynchronous operations (API calls) MUST implement a cancellation guard (e.g., `let cancelled = false`). The cleanup function MUST set this guard to `true`. Every state setter within the async path MUST check the guard before execution to prevent memory leaks and race conditions on unmounted components.
