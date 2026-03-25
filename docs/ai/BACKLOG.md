@@ -32,6 +32,20 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-163 - Register venue_bias_card output type in manifest
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-162
+**Created:** 2026-03-25
+**Status:** Closed - 2026-03-25
+
+### Description
+Added `venue_bias_card` to `output_types` list in `formats/odi/manifest.py`.
+Updated `venue_bias` function entry: `output_type` changed from `report` to
+`venue_bias_card`; `output_schema.fields` and `discover_bullets` updated to
+reflect the enriched payload. Gates 3/5/6 PASS.
+
 ## TASK-162 - Wire enrichment helpers into _build_bias_report
 **Type:** modification
 **Scope:** backend

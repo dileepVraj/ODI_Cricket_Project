@@ -20,11 +20,11 @@ Phase 11 â€” Frontend Full Rebuild. Layer by layer per `plans/FRONTEND_OVER
 
 ## Last Completed (5 tasks)
 
+- **TASK-163** — Register venue_bias_card in manifest; update venue_bias output_type + discover_bullets. Gates 3/5/6 PASS. Commit: 90b7bc9. (2026-03-25)
 - **TASK-162** - Wire enrichment helpers into `_build_bias_report` - VenueBiasReport now returns confidence interval, sample reliability, score distribution, score extremes, bias trend, and toss intelligence end-to-end; enrichment and regression pytest suites pass; boundary-sentinel, duckdb-lint-ops, paradigm-sentinel, and bouncer PASS. (2026-03-25)
 - **TASK-161** - Venue bias enrichment helpers - 7 helper functions added in `venue_calculator.py`; helper pytest file passes; boundary-sentinel, duckdb-lint-ops, paradigm-sentinel, and bouncer PASS. (2026-03-25)
 - **TASK-160** â€” VenueBiasReport TypedDict enrichment â€” 6 new TypedDicts + 6 new fields on VenueBiasReport; test scaffold yields ImportError. Commit: 0eaa853. (2026-03-24)
 - **Landing Page** â€” `/landing` route, standalone shell, cricket geometry SVG, genderâ†’categoryâ†’format cascade, Enter Vantage CTA. Commits: e0450d7, 2951d53, b46e662, c3ae4db.
-- **Button loading state** â€” isLoading + loadingLabel + aria-busy primitive (Layer 2 gap). Commits: 08f8bed, 9cf7bdf.
 
 ---
 
