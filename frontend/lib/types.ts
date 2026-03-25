@@ -223,3 +223,66 @@ export const LANDING_CATEGORY_LABELS: Record<LandingCategory, string> = {
   internationals: "Internationals",
   domestic: "Domestic Leagues",
 };
+
+/** @schema VenueBiasCI — mirrors Python VenueBiasCI TypedDict */
+export interface VenueBiasCI {
+  lower: number;
+  upper: number;
+}
+
+/** @schema VenueScoreStats — mirrors Python VenueScoreStats TypedDict */
+export interface VenueScoreStats {
+  min: number;
+  max: number;
+  median: number;
+  std: number;
+}
+
+/** @schema VenueScoreDistribution — mirrors Python VenueScoreDistribution TypedDict */
+export interface VenueScoreDistribution {
+  inn1: VenueScoreStats;
+  inn2: VenueScoreStats;
+}
+
+/** @schema VenueScoreExtremes — mirrors Python VenueScoreExtremes TypedDict */
+export interface VenueScoreExtremes {
+  lowest_defended: number | null;
+  highest_chased: number | null;
+}
+
+/** @schema VenueBiasTrend — mirrors Python VenueBiasTrend TypedDict */
+export interface VenueBiasTrend {
+  direction: "STRENGTHENING" | "WEAKENING" | "STABLE" | "INSUFFICIENT_DATA";
+  recent_pct: number | null;
+  historical_pct: number | null;
+}
+
+/** @schema VenueTossIntelligence — mirrors Python VenueTossIntelligence TypedDict */
+export interface VenueTossIntelligence {
+  chose_bat_win_pct: number | null;
+  chose_bowl_win_pct: number | null;
+  toss_match_count: number;
+  data_available: boolean;
+}
+
+/** @schema VenueBiasData — mirrors Python VenueBiasReport TypedDict (enriched) */
+export interface VenueBiasData {
+  venue_id: string;
+  period: number;
+  total_matches: number;
+  bat1_wins: number;
+  chase_wins: number;
+  bat1_win_pct: number;
+  chase_win_pct: number;
+  bias_verdict: string;
+  avg_1st_inn: string | number | null;
+  avg_2nd_inn: string | number | null;
+  percent_breakdown: { bat_first: number; chase: number; tie_nr: number };
+  highlight_flags: { has_strong_bias: boolean };
+  confidence_interval: VenueBiasCI;
+  sample_reliability: "LOW_SAMPLE" | "MODERATE" | "RELIABLE";
+  score_distribution: VenueScoreDistribution | null;
+  score_extremes: VenueScoreExtremes;
+  bias_trend: VenueBiasTrend;
+  toss_intelligence: VenueTossIntelligence;
+}
