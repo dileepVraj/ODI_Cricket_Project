@@ -1,6 +1,6 @@
 # BACKLOG.md
 **Purpose:** Project planning board — all scheduled, in-review, and icebox tasks.
-**Last Updated:** 2026-03-19
+**Last Updated:** 2026-03-25
 **Maintained by:** Human Architect
 **Do NOT attach to AI agents** — use SESSION_STATE.md for agent context.
 
@@ -32,6 +32,21 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-162 - Wire enrichment helpers into _build_bias_report
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-161
+**Created:** 2026-03-25
+**Status:** Closed - 2026-03-25
+
+### Description
+Wired the 7 venue-bias enrichment helpers into `_build_bias_report` in
+`core/calculators/team/venue_calculator.py` and appended the end-to-end
+integration test in `tests/test_venue_bias_enrichment.py`. The enrichment suite,
+match-pack regression suite, boundary-sentinel, duckdb-lint-ops,
+paradigm-sentinel, and compliance bouncer all passed.
+
 ## TASK-161 - Venue bias enrichment helpers with tests
 **Type:** modification
 **Scope:** backend
