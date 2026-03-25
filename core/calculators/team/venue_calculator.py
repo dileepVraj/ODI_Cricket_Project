@@ -548,18 +548,32 @@ def _build_bias_report(
     chase_pct: int,
 ) -> VenueBiasReport:
     venue_id = VenueService._resolve_venue_output_label(valid_results, context["stadium_id"])
+    total = int(valid_results["match_id"].nunique())
     tie_nr_pct = max(0, context["percent_scale"] - bat1_pct - chase_pct)
-    report: VenueBiasReport = {
-        "venue_id": venue_id, "period": context["years_back"], "total_matches": int(valid_results["match_id"].nunique()),
-        "bat1_wins": bat1_wins, "chase_wins": chase_wins, "bat1_win_pct": bat1_pct, "chase_win_pct": chase_pct,
-        "bias_verdict": _bias_verdict(bat1_pct, chase_pct, context["bias_win_pct_min"]),
-        "avg_1st_inn": _normalize_none_marker(ReportBuilder._get_avg_with_count(valid_stats, "score_inn1")),
-        "avg_2nd_inn": _normalize_none_marker(ReportBuilder._get_avg_with_count(valid_stats, "score_inn2")),
-        "percent_breakdown": {"bat_first": bat1_pct, "chase": chase_pct, "tie_nr": tie_nr_pct},
-        "highlight_flags": {"has_strong_bias": abs(bat1_pct - chase_pct) >= context["strong_bias_gap_min"]},
-        "derived_badges": [], "MATCH_IDS": ",".join(valid_results["match_id"].astype(str).unique().tolist()) or None,
-        "raw_matches": SerializationService.serialize_raw_matches(valid_results),
-    }
+    report_values = [
+        venue_id,
+        context["years_back"],
+        total,
+        bat1_wins,
+        chase_wins,
+        bat1_pct,
+        chase_pct,
+        _bias_verdict(bat1_pct, chase_pct, context["bias_win_pct_min"]),
+        _normalize_none_marker(ReportBuilder._get_avg_with_count(valid_stats, "score_inn1")),
+        _normalize_none_marker(ReportBuilder._get_avg_with_count(valid_stats, "score_inn2")),
+        {"bat_first": bat1_pct, "chase": chase_pct, "tie_nr": tie_nr_pct},
+        {"has_strong_bias": abs(bat1_pct - chase_pct) >= context["strong_bias_gap_min"]},
+        [],
+        _wilson_confidence_interval(bat1_wins, total),
+        _sample_reliability(total),
+        _score_distribution(valid_stats),
+        _score_extremes(valid_results),
+        _bias_trend(valid_results, context["percent_scale"]),
+        _toss_intelligence(valid_results, context["percent_scale"]),
+        ",".join(valid_results["match_id"].astype(str).unique().tolist()) or None,
+        SerializationService.serialize_raw_matches(valid_results),
+    ]
+    report = cast(VenueBiasReport, dict(zip(VenueBiasReport.__annotations__, report_values)))
     return report
 
 

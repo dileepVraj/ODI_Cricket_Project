@@ -220,3 +220,61 @@ def test_toss_intelligence_mixed_decisions():
     assert result["data_available"] is True
     assert result["chose_bat_win_pct"] == 100
     assert result["chose_bowl_win_pct"] == 100
+
+
+# -- Full payload integration ------------------------------------------------
+
+def _make_full_df() -> pd.DataFrame:
+    """12-match dataset with toss data, scores, and dates spanning 3 years."""
+    rows = []
+    for i in range(12):
+        bat_first_wins = i % 3 != 0  # 8 bat-first wins, 4 chase wins
+        rows.append({
+            "match_id": i,
+            "winner": "TeamA" if bat_first_wins else "TeamB",
+            "team_bat_1": "TeamA",
+            "team_bat_2": "TeamB",
+            "score_inn1": 240 + i * 5,
+            "score_inn2": 220 + i * 4,
+            "balls_inn1": 300,
+            "balls_inn2": 280,
+            "toss_winner": "TeamA",
+            "toss_decision": "bat" if i % 2 == 0 else "field",
+            "start_date": pd.Timestamp("2021-01-01") + pd.Timedelta(days=i * 60),
+            "venue": "Test Ground",
+            "venue_id": "test_ground",
+        })
+    return pd.DataFrame(rows)
+
+
+def test_full_bias_report_has_enriched_fields():
+    from core.calculators.team.venue_calculator import calculate_venue_bias_payload
+
+    df = _make_full_df()
+    ctx = {
+        "stadium_id": "test_ground",
+        "years_back": 5,
+        "reference_date": pd.Timestamp("2024-01-01"),
+        "min_balls_for_completed_innings": 200,
+        "percent_scale": 100,
+        "bias_win_pct_min": 55,
+        "strong_bias_gap_min": 15,
+    }
+    result = calculate_venue_bias_payload(df, ctx)
+    report = result["report"]
+    assert report is not None
+    assert "confidence_interval" in report
+    assert "lower" in report["confidence_interval"]
+    assert "upper" in report["confidence_interval"]
+    assert "sample_reliability" in report
+    assert report["sample_reliability"] == "MODERATE"  # 12 matches
+    assert "score_distribution" in report
+    assert report["score_distribution"] is not None
+    assert "inn1" in report["score_distribution"]
+    assert "score_extremes" in report
+    assert "lowest_defended" in report["score_extremes"]
+    assert "highest_chased" in report["score_extremes"]
+    assert "bias_trend" in report
+    assert report["bias_trend"]["direction"] in ("STRENGTHENING", "WEAKENING", "STABLE", "INSUFFICIENT_DATA")
+    assert "toss_intelligence" in report
+    assert report["toss_intelligence"]["data_available"] is True
