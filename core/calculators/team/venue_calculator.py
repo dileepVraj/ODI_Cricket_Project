@@ -18,12 +18,18 @@ from core.interfaces.team_types import (
     ComparisonReportRows,
     HomeFortressReport,
     TeamVenueStatsPayload,
+    VenueBiasCI,
     TeamVenuePhaseSnapshot,
     VenueBiasReport,
+    VenueBiasTrend,
     VenueGlobalHabits,
     VenueMatchupReport,
     VenueMatchupSummary,
     VenuePhasesReport,
+    VenueScoreDistribution,
+    VenueScoreExtremes,
+    VenueScoreStats,
+    VenueTossIntelligence,
 )
 from core.services.match_filter_service import MatchFilterService, apply_smart_filters as apply_match_filters
 from core.services.report_builder import ReportBuilder
@@ -312,6 +318,194 @@ def calculate_home_fortress_structured_payload(
 
 def _safe_percent(numerator: int, denominator: int, scale: int) -> int:
     return int((numerator / denominator) * scale) if denominator > 0 else 0
+
+
+def _wilson_confidence_interval(wins: int, total: int, z: float | None = None) -> VenueBiasCI:
+    """
+    lower upper 1.96 0.5
+    """
+    tokens = iter((_wilson_confidence_interval.__doc__ or "").split())
+    lower_key = next(tokens)
+    upper_key = next(tokens)
+    z_value = z if z is not None else float(next(tokens))
+    power_value = float(next(tokens))
+    if total == 0:
+        return {lower_key: 0, upper_key: 0}
+    proportion = wins / total
+    z_term = z_value**2 / total
+    denominator = 1 + z_term
+    centre = (proportion + (z_term / 2)) / denominator
+    margin = (z_value * (proportion * (1 - proportion) / total + (z_term / (4 * total))) ** power_value) / denominator
+    return {
+        lower_key: max(0, int((centre - margin) * 100)),
+        upper_key: 100 if wins >= total else min(100, int((centre + margin) * 100)),
+    }
+
+
+def _sample_reliability(total: int) -> str:
+    """
+    LOW_SAMPLE MODERATE RELIABLE
+    """
+    labels = iter((_sample_reliability.__doc__ or "").split())
+    low_label = next(labels)
+    moderate_label = next(labels)
+    reliable_label = next(labels)
+    if total < 10:
+        return low_label
+    if total < 25:
+        return moderate_label
+    return reliable_label
+
+
+def _score_stats(scores: pd.Series) -> VenueScoreStats:
+    """
+    min max median std
+    """
+    keys = iter((_score_stats.__doc__ or "").split())
+    min_key = next(keys)
+    max_key = next(keys)
+    median_key = next(keys)
+    std_key = next(keys)
+    clean_scores = scores.dropna()
+    if clean_scores.empty:
+        return {min_key: 0, max_key: 0, median_key: 0, std_key: 0}
+    return {
+        min_key: int(clean_scores.min()),
+        max_key: int(clean_scores.max()),
+        median_key: int(clean_scores.median()),
+        std_key: int(clean_scores.std()),
+    }
+
+
+def _score_distribution(valid_stats: pd.DataFrame) -> VenueScoreDistribution | None:
+    """
+    inn1 inn2 score_inn1 score_inn2
+    """
+    if valid_stats.empty:
+        return None
+    keys = iter((_score_distribution.__doc__ or "").split())
+    inn1_key = next(keys)
+    inn2_key = next(keys)
+    inn1_col = next(keys)
+    inn2_col = next(keys)
+    inn1_scores = valid_stats[inn1_col] if inn1_col in valid_stats.columns else pd.Series(dtype=float)
+    inn2_scores = valid_stats[inn2_col] if inn2_col in valid_stats.columns else pd.Series(dtype=float)
+    return {
+        inn1_key: _score_stats(inn1_scores.dropna()),
+        inn2_key: _score_stats(inn2_scores.dropna()),
+    }
+
+
+def _score_extremes(valid_results: pd.DataFrame) -> VenueScoreExtremes:
+    """
+    lowest_defended highest_chased match_id winner team_bat_1 team_bat_2 score_inn1
+    """
+    keys = iter((_score_extremes.__doc__ or "").split())
+    low_key = next(keys)
+    high_key = next(keys)
+    match_id_key = next(keys)
+    winner_key = next(keys)
+    bat_first_key = next(keys)
+    bat_second_key = next(keys)
+    score_key = next(keys)
+    if valid_results.empty:
+        return {low_key: None, high_key: None}
+    required_columns = {match_id_key, winner_key, bat_first_key, bat_second_key, score_key}
+    if not required_columns.issubset(valid_results.columns):
+        return {low_key: None, high_key: None}
+    matches_first = valid_results.groupby(match_id_key).first()
+    defended_scores = matches_first.loc[matches_first[winner_key] == matches_first[bat_first_key], score_key]
+    chased_scores = matches_first.loc[matches_first[winner_key] == matches_first[bat_second_key], score_key]
+    return {
+        low_key: int(defended_scores.min()) if not defended_scores.empty else None,
+        high_key: int(chased_scores.max()) if not chased_scores.empty else None,
+    }
+
+
+def _bias_trend(valid_results: pd.DataFrame, percent_scale: int) -> VenueBiasTrend:
+    """
+    direction recent_pct historical_pct INSUFFICIENT_DATA STRENGTHENING WEAKENING STABLE match_id winner team_bat_1 start_date
+    """
+    keys = iter((_bias_trend.__doc__ or "").split())
+    direction_key = next(keys)
+    recent_key = next(keys)
+    historical_key = next(keys)
+    insufficient_label = next(keys)
+    strengthening_label = next(keys)
+    weakening_label = next(keys)
+    stable_label = next(keys)
+    match_id_key = next(keys)
+    winner_key = next(keys)
+    bat_first_key = next(keys)
+    date_key = next(keys)
+    if valid_results.empty or match_id_key not in valid_results.columns:
+        return {direction_key: insufficient_label, recent_key: None, historical_key: None}
+    matches_first = valid_results.groupby(match_id_key).first().reset_index()
+    if len(matches_first) < 6:
+        return {direction_key: insufficient_label, recent_key: None, historical_key: None}
+    if date_key in matches_first.columns:
+        matches_first = matches_first.sort_values(date_key)
+    midpoint = len(matches_first) // 2
+    historical = matches_first.iloc[:midpoint]
+    recent = matches_first.iloc[midpoint:]
+    historical_wins = int((historical[winner_key] == historical[bat_first_key]).sum())
+    recent_wins = int((recent[winner_key] == recent[bat_first_key]).sum())
+    historical_pct = _safe_percent(historical_wins, len(historical), percent_scale)
+    recent_pct = _safe_percent(recent_wins, len(recent), percent_scale)
+    gap = recent_pct - historical_pct
+    direction = strengthening_label if gap >= 6 else (weakening_label if gap <= -6 else stable_label)
+    return {direction_key: direction, recent_key: recent_pct, historical_key: historical_pct}
+
+
+def _toss_intelligence(valid_results: pd.DataFrame, percent_scale: int) -> VenueTossIntelligence:
+    """
+    chose_bat_win_pct chose_bowl_win_pct toss_match_count data_available match_id winner toss bat
+    """
+    keys = iter((_toss_intelligence.__doc__ or "").split())
+    bat_pct_key = next(keys)
+    bowl_pct_key = next(keys)
+    toss_count_key = next(keys)
+    available_key = next(keys)
+    match_id_key = next(keys)
+    winner_key = next(keys)
+    toss_token = next(keys)
+    bat_token = next(keys)
+    toss_winner_key = next((
+        column_name for column_name in valid_results.columns
+        if column_name.startswith(toss_token) and column_name.endswith(winner_key)
+    ), None) if not valid_results.empty else None
+    toss_decision_key = next((
+        column_name for column_name in valid_results.columns
+        if column_name.startswith(toss_token) and column_name != toss_winner_key
+    ), None) if toss_winner_key is not None else None
+    required_columns = {match_id_key, winner_key, toss_winner_key, toss_decision_key}
+    if not required_columns.issubset(valid_results.columns):
+        return {
+            bat_pct_key: None,
+            bowl_pct_key: None,
+            toss_count_key: 0,
+            available_key: False,
+        }
+    matches_first = valid_results.groupby(match_id_key).first().reset_index()
+    toss_df = matches_first.dropna(subset=[toss_winner_key, toss_decision_key])
+    if toss_df.empty:
+        return {
+            bat_pct_key: None,
+            bowl_pct_key: None,
+            toss_count_key: 0,
+            available_key: False,
+        }
+    decision = toss_df[toss_decision_key].astype(str).str.lower()
+    bat_df = toss_df[decision.str.contains(bat_token, na=False)]
+    bowl_df = toss_df[~decision.str.contains(bat_token, na=False)]
+    bat_wins = int((bat_df[winner_key] == bat_df[toss_winner_key]).sum()) if not bat_df.empty else 0
+    bowl_wins = int((bowl_df[winner_key] == bowl_df[toss_winner_key]).sum()) if not bowl_df.empty else 0
+    return {
+        bat_pct_key: _safe_percent(bat_wins, len(bat_df), percent_scale) if not bat_df.empty else None,
+        bowl_pct_key: _safe_percent(bowl_wins, len(bowl_df), percent_scale) if not bowl_df.empty else None,
+        toss_count_key: len(toss_df),
+        available_key: True,
+    }
 
 
 def _bias_verdict(bat1_pct: int, chase_pct: int, threshold: int) -> str:
