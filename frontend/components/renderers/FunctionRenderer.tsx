@@ -20,6 +20,7 @@ const VenueMatchupReport = lazy(() => import("./VenueMatchupReport"));
 const CountryH2HReport = lazy(() => import("./CountryH2HReport"));
 const GlobalH2HReport = React.lazy(() => import("./GlobalH2HReport"));
 const FortressReport = lazy(() => import("./FortressReport"));
+const VenueBiasCard = lazy(() => import("./VenueBiasCard"));
 const SquadComparisonCard = lazy(() => import("./SquadComparisonCard"));
 const MatchAuditSection = lazy(() => import("./MatchAuditSection"));
 interface FunctionRendererProps {
@@ -129,6 +130,11 @@ export default function FunctionRenderer(props: FunctionRendererProps) {
         case "home_fortress":
             if (isJsonRecord(mainData)) {
                 renderedOutput = renderWithAudit(<FortressReport data={mainData} />, "Unable to render fortress report.", matchAudit);
+            }
+            break;
+        case "venue_bias_card":
+            if (isJsonRecord(mainData)) {
+                renderedOutput = renderWithAudit(<VenueBiasCard data={mainData} />, "Unable to render venue bias card.", matchAudit);
             }
             break;
         case "prediction_card":
