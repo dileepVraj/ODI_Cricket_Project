@@ -32,6 +32,19 @@ and remove from this file.
 
 
 ## BACKLOG
+## TASK-161 - Venue bias enrichment helpers with tests
+**Type:** modification
+**Scope:** backend
+**Priority:** High
+**Depends On:** TASK-160
+**Created:** 2026-03-25
+**Status:** Closed - 2026-03-25
+
+### Description
+Implemented the 7 venue bias enrichment helpers in `core/calculators/team/venue_calculator.py`
+and appended the helper unit suite in `tests/test_venue_bias_enrichment.py`.
+Scoped pytest, boundary-sentinel, duckdb-lint-ops, paradigm-sentinel, and the
+compliance bouncer all passed.
 ## TASK-159 - Player Matchups Dossier redesign — chips bar, 2-col grid, all 47 fields surfaced
 **Type:** frontend-new-component
 **Scope:** frontend
