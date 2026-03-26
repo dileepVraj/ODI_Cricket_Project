@@ -27,9 +27,12 @@ from core.interfaces.team_types import (
     VenueMatchupSummary,
     VenuePhasesReport,
     VenueScoreDistribution,
+    VenueScoreBand,
+    VenueScoreBanding,
     VenueScoreExtremes,
     VenueScoreStats,
     VenueTossIntelligence,
+    VenueTossLossRecovery,
 )
 from core.services.match_filter_service import MatchFilterService, apply_smart_filters as apply_match_filters
 from core.services.report_builder import ReportBuilder
@@ -422,7 +425,7 @@ def _score_extremes(valid_results: pd.DataFrame) -> VenueScoreExtremes:
     }
 
 
-def _bias_trend(valid_results: pd.DataFrame, percent_scale: int) -> VenueBiasTrend:
+def _bias_trend(valid_results: pd.DataFrame, percent_scale: int, reference_date: pd.Timestamp | None = None) -> VenueBiasTrend:
     """
     direction recent_pct historical_pct INSUFFICIENT_DATA STRENGTHENING WEAKENING STABLE match_id winner team_bat_1 start_date
     """
@@ -438,28 +441,34 @@ def _bias_trend(valid_results: pd.DataFrame, percent_scale: int) -> VenueBiasTre
     winner_key = next(keys)
     bat_first_key = next(keys)
     date_key = next(keys)
-    if valid_results.empty or match_id_key not in valid_results.columns:
-        return {direction_key: insufficient_label, recent_key: None, historical_key: None}
+    _empty = {direction_key: insufficient_label, recent_key: None, historical_key: None}
+    if valid_results.empty or match_id_key not in valid_results.columns or date_key not in valid_results.columns:
+        return _empty
     matches_first = valid_results.groupby(match_id_key).first().reset_index()
-    if len(matches_first) < 6:
-        return {direction_key: insufficient_label, recent_key: None, historical_key: None}
-    if date_key in matches_first.columns:
-        matches_first = matches_first.sort_values(date_key)
-    midpoint = len(matches_first) // 2
-    historical = matches_first.iloc[:midpoint]
-    recent = matches_first.iloc[midpoint:]
-    historical_wins = int((historical[winner_key] == historical[bat_first_key]).sum())
-    recent_wins = int((recent[winner_key] == recent[bat_first_key]).sum())
-    historical_pct = _safe_percent(historical_wins, len(historical), percent_scale)
-    recent_pct = _safe_percent(recent_wins, len(recent), percent_scale)
+    dates = pd.to_datetime(matches_first[date_key], errors="coerce")
+    if dates.isna().all():
+        return _empty
+    ref = reference_date if reference_date is not None else dates.max()
+    recent_cutoff = ref - pd.DateOffset(years=3)
+    historical_cutoff = ref - pd.DateOffset(years=6)
+    recent_mask = (dates > recent_cutoff).values
+    historical_mask = ((dates > historical_cutoff) & (dates <= recent_cutoff)).values
+    recent_df = matches_first[recent_mask]
+    historical_df = matches_first[historical_mask]
+    if len(recent_df) < 8 or len(historical_df) < 8:
+        return _empty
+    recent_wins = int((recent_df[winner_key] == recent_df[bat_first_key]).sum())
+    historical_wins = int((historical_df[winner_key] == historical_df[bat_first_key]).sum())
+    recent_pct = _safe_percent(recent_wins, len(recent_df), percent_scale)
+    historical_pct = _safe_percent(historical_wins, len(historical_df), percent_scale)
     gap = recent_pct - historical_pct
-    direction = strengthening_label if gap >= 6 else (weakening_label if gap <= -6 else stable_label)
+    direction = strengthening_label if gap >= 12 else (weakening_label if gap <= -12 else stable_label)
     return {direction_key: direction, recent_key: recent_pct, historical_key: historical_pct}
 
 
 def _toss_intelligence(valid_results: pd.DataFrame, percent_scale: int) -> VenueTossIntelligence:
     """
-    chose_bat_win_pct chose_bowl_win_pct toss_match_count data_available match_id winner toss bat
+    chose_bat_win_pct chose_bowl_win_pct toss_match_count data_available match_id winner toss_winner toss_decision bat
     """
     keys = iter((_toss_intelligence.__doc__ or "").split())
     bat_pct_key = next(keys)
@@ -468,44 +477,126 @@ def _toss_intelligence(valid_results: pd.DataFrame, percent_scale: int) -> Venue
     available_key = next(keys)
     match_id_key = next(keys)
     winner_key = next(keys)
-    toss_token = next(keys)
+    toss_winner_key = next(keys)
+    toss_decision_key = next(keys)
     bat_token = next(keys)
-    toss_winner_key = next((
-        column_name for column_name in valid_results.columns
-        if column_name.startswith(toss_token) and column_name.endswith(winner_key)
-    ), None) if not valid_results.empty else None
-    toss_decision_key = next((
-        column_name for column_name in valid_results.columns
-        if column_name.startswith(toss_token) and column_name != toss_winner_key
-    ), None) if toss_winner_key is not None else None
+    _unavailable: VenueTossIntelligence = {
+        bat_pct_key: None,
+        bowl_pct_key: None,
+        "chose_bat_count": 0,
+        "chose_bowl_count": 0,
+        toss_count_key: 0,
+        available_key: False,
+    }
     required_columns = {match_id_key, winner_key, toss_winner_key, toss_decision_key}
-    if not required_columns.issubset(valid_results.columns):
-        return {
-            bat_pct_key: None,
-            bowl_pct_key: None,
-            toss_count_key: 0,
-            available_key: False,
-        }
+    if valid_results.empty or not required_columns.issubset(valid_results.columns):
+        return _unavailable
     matches_first = valid_results.groupby(match_id_key).first().reset_index()
     toss_df = matches_first.dropna(subset=[toss_winner_key, toss_decision_key])
     if toss_df.empty:
-        return {
-            bat_pct_key: None,
-            bowl_pct_key: None,
-            toss_count_key: 0,
-            available_key: False,
-        }
+        return _unavailable
     decision = toss_df[toss_decision_key].astype(str).str.lower()
     bat_df = toss_df[decision.str.contains(bat_token, na=False)]
     bowl_df = toss_df[~decision.str.contains(bat_token, na=False)]
+    min_group = 12
     bat_wins = int((bat_df[winner_key] == bat_df[toss_winner_key]).sum()) if not bat_df.empty else 0
     bowl_wins = int((bowl_df[winner_key] == bowl_df[toss_winner_key]).sum()) if not bowl_df.empty else 0
     return {
-        bat_pct_key: _safe_percent(bat_wins, len(bat_df), percent_scale) if not bat_df.empty else None,
-        bowl_pct_key: _safe_percent(bowl_wins, len(bowl_df), percent_scale) if not bowl_df.empty else None,
+        bat_pct_key: _safe_percent(bat_wins, len(bat_df), percent_scale) if len(bat_df) >= min_group else None,
+        bowl_pct_key: _safe_percent(bowl_wins, len(bowl_df), percent_scale) if len(bowl_df) >= min_group else None,
+        "chose_bat_count": len(bat_df),
+        "chose_bowl_count": len(bowl_df),
         toss_count_key: len(toss_df),
         available_key: True,
     }
+
+
+def _toss_loss_recovery(valid_results: pd.DataFrame, percent_scale: int) -> VenueTossLossRecovery:
+    """
+    forced_bat_win_pct forced_bowl_win_pct forced_bat_count forced_bowl_count data_available match_id winner team_bat_1 team_bat_2 toss_winner toss_decision field bat 12
+    """
+    keys = iter((_toss_loss_recovery.__doc__ or "").split())
+    forced_bat_pct_key = next(keys)
+    forced_bowl_pct_key = next(keys)
+    forced_bat_count_key = next(keys)
+    forced_bowl_count_key = next(keys)
+    available_key = next(keys)
+    match_id_key = next(keys)
+    winner_key = next(keys)
+    bat_first_key = next(keys)
+    bat_second_key = next(keys)
+    toss_winner_key = next(keys)
+    toss_decision_key = next(keys)
+    field_token = next(keys)
+    bat_token = next(keys)
+    min_group = int(next(keys))
+    _unavailable: VenueTossLossRecovery = {
+        forced_bat_pct_key: None,
+        forced_bowl_pct_key: None,
+        forced_bat_count_key: 0,
+        forced_bowl_count_key: 0,
+        available_key: False,
+    }
+    required_columns = {match_id_key, winner_key, bat_first_key, bat_second_key, toss_winner_key, toss_decision_key}
+    if valid_results.empty or not required_columns.issubset(valid_results.columns):
+        return _unavailable
+    matches_first = valid_results.groupby(match_id_key).first().reset_index()
+    toss_df = matches_first.dropna(subset=[toss_winner_key, toss_decision_key])
+    if toss_df.empty:
+        return _unavailable
+    decision = toss_df[toss_decision_key].astype(str).str.lower()
+    forced_bat_df = toss_df[decision.str.contains(field_token, na=False)]
+    forced_bowl_df = toss_df[decision.str.contains(bat_token, na=False)]
+    forced_bat_wins = int((forced_bat_df[winner_key] == forced_bat_df[bat_first_key]).sum()) if not forced_bat_df.empty else 0
+    forced_bowl_wins = int((forced_bowl_df[winner_key] == forced_bowl_df[bat_second_key]).sum()) if not forced_bowl_df.empty else 0
+    return {
+        forced_bat_pct_key: _safe_percent(forced_bat_wins, len(forced_bat_df), percent_scale) if len(forced_bat_df) >= min_group else None,
+        forced_bowl_pct_key: _safe_percent(forced_bowl_wins, len(forced_bowl_df), percent_scale) if len(forced_bowl_df) >= min_group else None,
+        forced_bat_count_key: len(forced_bat_df),
+        forced_bowl_count_key: len(forced_bowl_df),
+        available_key: bool(len(toss_df)),
+    }
+
+
+def _score_banding(valid_stats: pd.DataFrame, percent_scale: int) -> VenueScoreBanding | None:
+    """
+    inn1_bands total label count pct score_inn1 <200 200-249 250-299 300+ 200 250 300
+    """
+    keys = iter((_score_banding.__doc__ or "").split())
+    bands_key = next(keys)
+    total_key = next(keys)
+    label_key = next(keys)
+    count_key = next(keys)
+    pct_key = next(keys)
+    inn1_col = next(keys)
+    under_200_label = next(keys)
+    band_200_249_label = next(keys)
+    band_250_299_label = next(keys)
+    band_300_plus_label = next(keys)
+    lower_mid = int(next(keys))
+    upper_mid = int(next(keys))
+    upper_high = int(next(keys))
+    if valid_stats.empty or inn1_col not in valid_stats.columns:
+        return None
+    scores = valid_stats[inn1_col].dropna()
+    if scores.empty:
+        return None
+    total = len(scores)
+    band_definitions = [
+        (under_200_label, scores < lower_mid),
+        (band_200_249_label, (scores >= lower_mid) & (scores < upper_mid)),
+        (band_250_299_label, (scores >= upper_mid) & (scores < upper_high)),
+        (band_300_plus_label, scores >= upper_high),
+    ]
+    inn1_bands: list[VenueScoreBand] = [
+        {
+            label_key: label,
+            count_key: int(mask.sum()),
+            pct_key: _safe_percent(int(mask.sum()), total, percent_scale),
+        }
+        for label, mask in band_definitions
+    ]
+    return {bands_key: inn1_bands, total_key: total}
 
 
 def _bias_verdict(bat1_pct: int, chase_pct: int, threshold: int) -> str:
@@ -533,9 +624,10 @@ def calculate_venue_bias_payload(match_df: pd.DataFrame, context: VenueBiasConte
     bat1_wins = int((matches_won["winner"] == matches_won["team_bat_1"]).sum())
     chase_wins = int((matches_won["winner"] == matches_won["team_bat_2"]).sum())
     total = int(valid_results["match_id"].nunique())
-    bat1_pct = _safe_percent(bat1_wins, total, context["percent_scale"])
-    chase_pct = _safe_percent(chase_wins, total, context["percent_scale"])
-    return {"report": _build_bias_report(valid_results, valid_stats, context, bat1_wins, chase_wins, bat1_pct, chase_pct)}
+    decided = bat1_wins + chase_wins
+    bat1_pct = _safe_percent(bat1_wins, decided, context["percent_scale"])
+    chase_pct = _safe_percent(chase_wins, decided, context["percent_scale"])
+    return {"report": _build_bias_report(valid_results, valid_stats, context, bat1_wins, chase_wins, bat1_pct, chase_pct, decided)}
 
 
 def _build_bias_report(
@@ -546,10 +638,11 @@ def _build_bias_report(
     chase_wins: int,
     bat1_pct: int,
     chase_pct: int,
+    decided: int,
 ) -> VenueBiasReport:
     venue_id = VenueService._resolve_venue_output_label(valid_results, context["stadium_id"])
     total = int(valid_results["match_id"].nunique())
-    tie_nr_pct = max(0, context["percent_scale"] - bat1_pct - chase_pct)
+    tie_nr = total - decided
     report_values = [
         venue_id,
         context["years_back"],
@@ -561,15 +654,17 @@ def _build_bias_report(
         _bias_verdict(bat1_pct, chase_pct, context["bias_win_pct_min"]),
         _normalize_none_marker(ReportBuilder._get_avg_with_count(valid_stats, "score_inn1")),
         _normalize_none_marker(ReportBuilder._get_avg_with_count(valid_stats, "score_inn2")),
-        {"bat_first": bat1_pct, "chase": chase_pct, "tie_nr": tie_nr_pct},
+        {"bat_first": bat1_pct, "chase": chase_pct, "tie_nr": tie_nr},
         {"has_strong_bias": abs(bat1_pct - chase_pct) >= context["strong_bias_gap_min"]},
         [],
-        _wilson_confidence_interval(bat1_wins, total),
+        _wilson_confidence_interval(bat1_wins, decided),
         _sample_reliability(total),
         _score_distribution(valid_stats),
         _score_extremes(valid_results),
-        _bias_trend(valid_results, context["percent_scale"]),
+        _bias_trend(valid_results, context["percent_scale"], context["reference_date"]),
         _toss_intelligence(valid_results, context["percent_scale"]),
+        _toss_loss_recovery(valid_results, context["percent_scale"]),
+        _score_banding(valid_stats, context["percent_scale"]),
         ",".join(valid_results["match_id"].astype(str).unique().tolist()) or None,
         SerializationService.serialize_raw_matches(valid_results),
     ]
@@ -607,8 +702,9 @@ def _empty_match_intel(home_team: str, opp_team: str) -> VenueMatchupReport:
 
 
 def _summary_payload(summary_df: pd.DataFrame, home_team: str, percent_scale: int) -> VenueMatchupSummary:
-    matches = len(summary_df)
-    winner_series = summary_df["winner"].astype(str).str.lower().str.strip()
+    unique_df = summary_df.groupby("match_id").first() if "match_id" in summary_df.columns else summary_df
+    matches = len(unique_df)
+    winner_series = unique_df["winner"].astype(str).str.lower().str.strip()
     home_wins = int((winner_series == home_team.lower().strip()).sum())
     tie_nr = int(winner_series.isin(["tie", "no result", "nan", "none"]).sum())
     decisions = matches - tie_nr
@@ -623,10 +719,15 @@ def _team_intel(
 ) -> TeamVenueStatsPayload:
     stats = calculate_team_metrics(df=summary_df, team_name=team_name, competitive_threshold=competitive_threshold)
     team_wins = summary_df[summary_df["winner"] == team_name]
+    team_wins_first = (
+        team_wins.groupby("match_id").first()
+        if "match_id" in team_wins.columns and not team_wins.empty
+        else team_wins
+    )
     payload: TeamVenueStatsPayload = {
-        "wins": len(team_wins),
-        "defended": int((team_wins["team_bat_1"] == team_name).sum()),
-        "chased": int((team_wins["team_bat_2"] == team_name).sum()),
+        "wins": len(team_wins_first),
+        "defended": int((team_wins_first["team_bat_1"] == team_name).sum()),
+        "chased": int((team_wins_first["team_bat_2"] == team_name).sum()),
         "bat1": {
             "avg": stats["avg_1st"],
             "high": stats["high_1st"],
