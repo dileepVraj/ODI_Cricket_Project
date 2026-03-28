@@ -46,6 +46,13 @@ agents/workflow/taskFile.md
 agents/workflow/designBrief.md
 agents/workflow/scope.json
 agents/workflow/pre_call_state.json
+agents/workflow/assertion.py
+
+# Deprecated workflow files (v4 pipeline — no longer written)
+agents/workflow/handoff.md
+agents/workflow/plan.md
+agents/workflow/report.md
+agents/workflow/tasks.md
 
 # Legacy paths (kept for safety)
 taskFile.md

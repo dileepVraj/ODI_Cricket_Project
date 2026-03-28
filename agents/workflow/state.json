@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "last_completed_task": "TASK-166",
+  "last_commit": "65ddf0b",
+  "gate_baseline_violations": 0,
+  "active": {
+    "task_id": null,
+    "phase": null,
+    "agent": null,
+    "invoked_at": null,
+    "pre_call_commit": null
+  },
+  "dirty_files": [],
+  "standing_notices": [],
+  "next": "ready"
+}
