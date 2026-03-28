@@ -80,7 +80,7 @@ def main() -> int:
     lib_dir = root / "frontend" / "lib"
     if not lib_dir.exists():
         if args.json:
-            print(json.dumps({"gate": "GATEF3", "status": "PASS", "violations": [], "violation_count": 0}))
+            print(json.dumps({"gate": "GATEF3", "triggered": True, "status": "PASS", "violations": [], "violation_count": 0}))
             return 0
         print("WARN: frontend/lib/ not found — skipping type sync check")
         return 0
@@ -92,7 +92,7 @@ def main() -> int:
 
     if not lib_files:
         if args.json:
-            print(json.dumps({"gate": "GATEF3", "status": "PASS", "violations": [], "violation_count": 0}))
+            print(json.dumps({"gate": "GATEF3", "triggered": True, "status": "PASS", "violations": [], "violation_count": 0}))
             return 0
         print("WARN: No .ts files found in frontend/lib/ — skipping type sync check")
         return 0
@@ -111,6 +111,7 @@ def main() -> int:
             json.dumps(
                 {
                     "gate": "GATEF3",
+                    "triggered": True,
                     "status": "PASS" if not violations else "FAIL",
                     "violations": violations,
                     "violation_count": len(violations),

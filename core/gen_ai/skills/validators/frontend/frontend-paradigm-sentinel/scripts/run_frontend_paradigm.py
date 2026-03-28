@@ -293,7 +293,7 @@ def main() -> int:
 
     if not files:
         if args.json:
-            print(json.dumps({"gate": "GATEF2", "status": "PASS", "violations": [], "violation_count": 0}))
+            print(json.dumps({"gate": "GATEF2", "triggered": True, "status": "PASS", "violations": [], "violation_count": 0}))
             return 0
         print("WARN: No frontend files found — verify --root is correct")
         return 0
@@ -314,6 +314,7 @@ def main() -> int:
             json.dumps(
                 {
                     "gate": "GATEF2",
+                    "triggered": True,
                     "status": "PASS" if not violations else "FAIL",
                     "violations": violations,
                     "violation_count": len(violations),

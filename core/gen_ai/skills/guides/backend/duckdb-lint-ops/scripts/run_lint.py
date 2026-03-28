@@ -155,6 +155,7 @@ def main() -> int:
     if args.json:
         output = {
             "gate": "GATE2",
+            "triggered": True,
             "status": "PASS" if not violations else "FAIL",
             "violations": [
                 {

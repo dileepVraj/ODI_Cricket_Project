@@ -1,7 +1,7 @@
 # Gate Sequence & Compliance Rules
 # Part of: coreStandards
 # Always load — required for every task completion
-# Contains: Gates 1–6 (backend) + Gates F1–F3 (frontend) with full command syntax
+# Contains: Gates 1–6 (backend) + Gates F1–F4 (frontend) with full command syntax
 # Source: ENGINEERING_STANDARDS_BACKEND.md Part 4 + ENGINEERING_STANDARDS_FRONTEND.md Part 4.3
 
 ---
@@ -19,7 +19,7 @@ From this phase onward, **no code may be committed** unless `core/utils/complian
 ```
 PASS: 100% compliance
 ```
-This is GATE 6 in the gate sequence below. Gates 1–5 must pass before GATE 6 is reached.
+This is GATE 6 in the gate sequence below. Gates 1–5P must pass before GATE 6 is reached.
 
 Blocking command:
 ```powershell
@@ -107,6 +107,25 @@ Pass condition: zero memory bombs, zero high-latency recursive serialization pat
 
 ---
 
+**GATE 5S — semgrep-security**
+Trigger: any modification to `core/`, `api/`, or `formats/` Python files.
+Requires `semgrep` MCP configured in `.mcp.json`. Codex invokes via MCP tool `security_check`.
+Pass condition: zero injection, hardcoded-secret, unsafe-eval, or unsafe-deserialization findings.
+Optional JSON output: append `--json` flag if invoking as subprocess (MCP invocation returns JSON natively).
+
+---
+
+**GATE 5T — python-type-check**
+Trigger: any Python file modified.
+```powershell
+python core/utils/python_type_check.py --root .
+```
+Optional JSON output: append `--json` to emit structured output.
+Pass condition: zero ruff violations, zero mypy errors in `core/`.
+SKIPPED gracefully if ruff/mypy not installed.
+
+---
+
 **GATE F1 — frontend-lint-sentinel**
 Trigger: any modification to `frontend/` files.
 Path: `core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/`
@@ -140,11 +159,23 @@ Pass condition: zero `@schema` JSDoc violations.
 
 ---
 
-**GATE 5 — paradigm-sentinel (meta-gate)**
+**GATE F4 — next-devtools-check**
+Trigger: always (frontend tasks).
+```powershell
+python core/utils/next_devtools_check.py --root .
+```
+Pass condition: zero new runtime errors vs pre-task baseline (requires dev server).
+Currently always SKIPPED — next-devtools MCP not yet configured.
+
+---
+
+**GATE 5P — paradigm-sentinel (meta-gate)**
 Trigger: always — runs after all primary gates pass.
-Follow instructions in:
-`core/gen_ai/skills/validators/backend/paradigm-sentinel/SKILL.md`
-Pass condition: zero violations across all paradigm checks including boundary scan, DAL bypass probe, and bouncer gate.
+```powershell
+python core/utils/paradigm_sentinel.py --root .
+```
+Optional JSON output: append `--json` to emit structured output.
+Pass condition: zero combined violations from GATE 1 and GATE 6.
 
 ---
 
@@ -171,8 +202,8 @@ The bouncer is a final gate — not a substitute for the skill gates. All applic
 
 | Task type | Gates required |
 |---|---|
-| Backend engine/calculator/service | GATE 1 (if core/ touched), GATE 2, GATE 3 (if manifest/engine), GATE 4 (if serializer), GATE 5, GATE 6 |
-| Frontend component | GATE F1, GATE F2, GATE F3 (if lib/types.ts), GATE 5, GATE 6 |
+| Backend engine/calculator/service | GATE 1 (if core/ touched), GATE 2, GATE 3 (if manifest/engine), GATE 4 (if serializer), GATE 5S, GATE 5T, GATE 5P, GATE 6 |
+| Frontend component | GATE F1, GATE F2, GATE F3 (if lib/types.ts), GATE F4, GATE 5P, GATE 6 |
 | Full-stack task | All applicable backend gates + all applicable frontend gates |
 
 ---

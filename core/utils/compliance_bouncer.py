@@ -161,6 +161,7 @@ def _json_output(
         serialized.extend(extra_violations)
     return {
         "gate": "GATE6",
+        "triggered": True,
         "status": "PASS" if not serialized else "FAIL",
         "violations": serialized,
         "violation_count": len(serialized),
