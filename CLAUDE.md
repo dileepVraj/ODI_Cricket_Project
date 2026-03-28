@@ -1,99 +1,204 @@
-# CLAUDE.md — Agent Bootstrap v3.3
+# CLAUDE.md — Architect v5.0
 **Project:** Cricket Algo-Trading Platform | **Root:** `C:\Cricket_Project_Stable\`
-**Core Directive:** "Assume data is dirty, boundaries are strict, and trust is zero."
-
-> **If you are Codex:** Read `docs/ai/CODEX_BOOTSTRAP.md` now. That file contains your full bootstrap, all architectural laws, gates, coding standards, report format, and hard prohibitions. Do not proceed without it.
+**Pipeline spec:** `agents/redesign/spec.md` | **Failure modes:** spec.md Section 2
 
 ---
 
-## TWO-AGENT ROLES
+## BOOTSTRAP — every session, in order
 
-**Claude** — Planning, Verification & Frontend Execution
-Owns `frontend/` (executes directly) + all `workflow/` files. Writes plans, task prompts, and handoff. Invokes Codex for backend tasks via CLI.
-
-**Codex** — Backend Execution
-Owns `api/`, `core/`, `formats/`, `scripts/`, `tests/`. Receives work via `workflow/taskFile.md` only.
-
-Workflow files: `workflow/plan.md` | `workflow/tasks.md` | `workflow/taskFile.md` | `workflow/report.md` | `workflow/handoff.md`
-
----
-
-## WORKFLOW CYCLES
-
-**Frontend only:** IDEA → [Brainstorm] → PLAN → EXECUTE (Claude direct) → VERIFY (C5) → RESET
-**Backend only:** IDEA → [Brainstorm] → PLAN → TASK WRITE (C4) → CLI invoke Codex → VERIFY (C5) → RESET
-**Full-stack:** Backend phase (Codex) first → Frontend phase (Claude direct) second — default order.
-
-Brainstorm required for new features/pages/overhauls. Skip for bug fixes, minor tweaks, clear specs.
-Skill: `core/gen_ai/skills/.system/brainstorm-intake/SKILL.md`
-
-**Invoke Codex (backend tasks only):**
-```powershell
-codex exec --full-auto -C "C:\Cricket_Project_Stable" "Read CLAUDE.md. Then read workflow/taskFile.md and execute the backend task."
+**B1 — Read state**
+```bash
+cat agents/workflow/state.json
 ```
-Timeout: 1800000ms. Full CLI protocol (pre/post snapshot, silent failure): `docs/ai/CLI_ORCHESTRATION.md`
+- `active.task_id` is null → idle, ready for new task
+- `active.task_id` not null → task was in progress. Read `agents/workflow/reports/<task_id>*.json`.
+  Compare `active.pre_call_commit` against `git log --oneline -1`.
+  Determine: COMPLETE / BLOCKED / SILENT FAILURE. Follow spec.md Section 2.
 
-**Small Tweak Rule** — Claude may edit backend/config directly when ALL true:
-<=3 files, not engine/calculator/service, not a registered file (`core/data_access.py`, `core/interfaces/team_types.py`, `api/serializers.py`), no gate validation needed.
-Frontend is never governed by this rule — Claude always executes frontend directly.
+**B2 — Classify request**
+- New feature / overhaul → B3 (brainstorm) then B4 (plan)
+- Bug fix / clear spec → B5 (taskFile) directly
+- Frontend with design scope → B6 (designBrief) then B5
+- Function guide → B6 (Gemini implements)
+- Verify only → B8
+
+**B3 — Brainstorm** *(new features / overhauls only)*
+Invoke `core/gen_ai/skills/.system/brainstorm-intake/SKILL.md`. Mandatory for any task
+touching a new calculator, engine, endpoint, or major UI overhaul. Not skippable.
+
+**B4 — Plan**
+Read relevant source files. Write `agents/workflow/plan.md`. Wait for human approval.
+For frontend tasks with design scope: proceed to B6 after approval.
+
+**B5 — TaskFile**
+Write `agents/workflow/taskFile.md` per `agents/workflow/taskFileTemplate.md`.
+For calculator/engine/service tasks: Verification Matrix must be fully filled before
+writing the taskFile. Blank cells = task not ready. Do not assign.
+Confirm with human before invoking.
+
+**B6 — DesignBrief for Gemini**
+Write `agents/workflow/designBrief.md`. Must include:
+- Feature context and trading significance
+- Exact API schema fields (extracted from source — no assumptions)
+- Design token reference (globals.css variables)
+- Existing component patterns to match
+- Mode: design OR guide
+Invoke Gemini. Review with human. On approval → extract Stitch HTML for B5 (design mode)
+or proceed to B8 (guide mode).
+
+**B7 — Invoke agents**
+
+*Write to state.json before every invocation:*
+```json
+"active": {
+  "task_id": "TASK-XXX",
+  "phase": "SOLO | MULTI-PHASE-A | MULTI-PHASE-C",
+  "agent": "Codex | Gemini",
+  "invoked_at": "<ISO timestamp>",
+  "pre_call_commit": "<git log --oneline -1 hash>"
+}
+```
+
+*Codex:*
+```powershell
+codex exec -s danger-full-access --output-schema agents/workflow/report-schema.json -C "C:\Cricket_Project_Stable" "Read AGENTS.md. Then read agents/workflow/taskFile.md and execute the task."
+```
+Timeout: 1800000ms.
+
+*Gemini:*
+```bash
+gemini -p "Read GEMINI.md. Then read agents/workflow/designBrief.md and execute." --yolo
+```
+
+**B8 — Post-call validation**
+
+Step 1 — Silent failure check:
+Read `agents/workflow/state.json` active.pre_call_commit. Compare against `git log --oneline -1`.
+No new commit + no updated report → F1 (silent failure). Follow spec.md F1 protocol.
+
+Step 2 — Validate report:
+Read `agents/workflow/reports/TASK-XXX.json`.
+Validate against `agents/workflow/report-schema.json`.
+Schema invalid → treat as F1.
+
+Step 3 — Green signal check (ALL must be true):
+- `status`: COMPLETE
+- All triggered gates: `"status": "PASS"`
+- `reviewer.verdict`: PASS
+- `reviewer.assertion.match`: true (or null for non-calculator tasks)
+- `taskfile_cleared`: true
+- `commit` exists in `git log --oneline -5`
+- `violations_delta` ≤ 0
+
+Any condition false → identify failure mode from spec.md Section 2. Do not give green signal.
+
+Step 4 — Implementation spot-check:
+Read every file in `files_modified`. Verify implementation matches task intent.
+For calculator tasks: trace one field from the Verification Matrix against the actual code.
+This is a spot-check — primary QA was the Reviewer subagent.
+
+Step 5 — Green signal:
+Update `agents/workflow/state.json`:
+```json
+{
+  "last_completed_task": "TASK-XXX",
+  "last_commit": "<commit hash>",
+  "gate_baseline_violations": <post_task_violations>,
+  "active": { "task_id": null, "phase": null, "agent": null, "invoked_at": null, "pre_call_commit": null },
+  "next": "ready"
+}
+```
+Inform human. Human /clears.
 
 ---
 
-## CLAUDE BOOTSTRAP — run in order every session
+## SMALL TWEAK RULE (Claude direct edits)
 
-**C0** Read `.claude/SOUL.md` first. Mission grounding before everything else.
-**C1** `cat workflow/handoff.md` then `cat docs/ai/SESSION_STATE.md`. If handoff empty → ask human.
-**C2** Identify request type:
-  - New feature / overhaul → C2B then C3
-  - Bug fix / tweak / clear spec → C3 directly
-  - Backend task write → C4 | Frontend execute → C4F | Verify → C5 | Broken → systematic-debugging skill
-**C2B** Invoke `core/gen_ai/skills/.system/brainstorm-intake/SKILL.md`. Confirm spec before writing plan.
-**C3** Read relevant files. Write `workflow/plan.md` (DRAFT). Wait for human approval before C4.
-**C4** Write `workflow/tasks.md` if needed. Write `workflow/taskFile.md` per `workflow/taskFileTemplate.md`. Include READ FIRST with standards paths. Confirm before invoking Codex.
-**C4F** Load frontend standards below. Read relevant source files. Implement directly. Run C5F checklist. Commit. Write `workflow/report.md`. Then dispatch C5.
-**C5** Dispatch `verification-agent`: `core/gen_ai/skills/.system/verification-agent/SKILL.md`
-  Pass: task ID, scope, files modified, acceptance criteria.
-  PASS → update `workflow/handoff.md`. FAIL → fix + re-dispatch (max 3 rounds).
+Claude may edit files directly when ALL true:
+- Fix is in `agents/workflow/` files (taskFile, designBrief, scope.json, state.json, plan.md)
+  OR pure config/doc files (CLAUDE.md, AGENTS.md, GEMINI.md, soul files)
+- NEVER inside `core/` `api/` `formats/` `frontend/` — regardless of how small
+- No gate validation needed
 
-**Frontend standards (load before every C4F):**
-- `docs/guides/frontendStandards/TACTICAL_EXECUTION.md`
-- `docs/guides/frontendStandards/UI_IMPLEMENTATION.md`
-- `docs/guides/frontendStandards/PERF_RESILIENCE_A11Y_TESTING.md`
+This rule resolves F4 (BLOCKED) when the blocker is a workflow file clarification.
+For code-level blockers: relay to human. Human answers. Claude updates taskFile. Re-invoke.
 
-**C5F — Frontend Self-Audit (all 16 must pass before writing report.md):**
-1. TOKENS — CSS variables only, no raw hex/rgba
-2. ARBITRARY TAILWIND — No `[property:value]` syntax in any .tsx/.ts
-3. FONT DISCIPLINE — Numeric data: `.font-data`/JetBrains Mono. UI text: Inter
-4. NO DOMAIN LOGIC — No cricket arithmetic in React components
-5. URL STATE — Filters in URL search params, not Context
-6. ROUTER — Next.js router.push() or `<Link>` only
-7. API WRAPPER — All fetch via `lib/api.ts`, no bare fetch()
-8. ERROR BOUNDARIES — Every renderer output wrapped; shell is outside boundary
-9. ARIA — Icon-only buttons: aria-label. Result container: aria-live="polite"
-10. LAZY LOADING — Renderer components in FunctionRenderer.tsx use React.lazy()
-11. PLACEMENT — Components in correct directory (layout/ renderers/ inputs/ common/)
-12. TYPESCRIPT — No `any`. API shapes typed in lib/types.ts with @schema JSDoc
-13. OUT-OF-SCOPE — No files outside `frontend/` modified (except explicit doc updates)
-14. GATES — F1 lint, F2 paradigm, F3 type-sync, F4 visual-acceptance all PASS
-15. VISUAL ACCEPTANCE — Dev server running, every touched route screenshotted, compared to spec
-16. SRP — Run `wc -l` on every file you touched in `frontend/components/`. If any file exceeds 300 lines, STOP and perform a full SRP analysis before committing: (a) list every distinct responsibility the file holds, (b) extract each into a dedicated file with a clean prop interface, (c) apply the "describe without and" test to every resulting file. Merely moving lines to stay under 300 is a Hard Fail — the split must be structurally justified.
+---
+
+## MULTI-PHASE SEQUENCING
+
+Default: Backend (Codex) → Design (Gemini, if needed) → Frontend (Codex).
+HARD RULE: No phase starts before previous phase is verified green.
+
+Phase A report: `agents/workflow/reports/TASK-XXX-phase-A.json`
+Phase C report: `agents/workflow/reports/TASK-XXX-phase-C.json`
 
 ---
 
 ## STANDARDS REFERENCE TABLE
 
+**Pipeline & Architecture**
 | Topic | File |
 |---|---|
-| Architectural Laws (Laws 1-7) | `docs/guides/coreStandards/MANDATES_1_TO_4.md` |
-| Gate Sequence (Gates 1-6, F1-F4) | `docs/guides/coreStandards/GATE_SEQUENCE.md` |
-| High-Impact File Registry | `docs/guides/coreStandards/HIGH_IMPACT_REGISTRY.md` |
-| System Topology | `docs/guides/coreStandards/SYSTEM_TOPOLOGY.md` |
-| Workflow Laws + Definition of Done | `docs/guides/coreStandards/WORKFLOW_AND_LAWS.md` |
-| Python Standards + Hard Prohibitions | `docs/guides/backendStandards/PYTHON_STANDARDS.md` |
-| Memory & Threading | `docs/guides/backendStandards/MEMORY_AND_THREADING.md` |
-| Known Patterns (KIPs) | `docs/guides/backendStandards/KNOWN_PATTERNS_KIPS.md` |
-| Report Format + taskFile Template | `workflow/taskFileTemplate.md` |
-| CLI Orchestration Protocol | `docs/ai/CLI_ORCHESTRATION.md` |
-| Codex Full Bootstrap | `docs/ai/CODEX_BOOTSTRAP.md` |
+| Full pipeline spec (all decisions, all sessions) | `agents/redesign/spec.md` |
+| Pipeline guarantees (G1–G10) | `agents/redesign/spec.md` Section 1 |
+| Failure modes + escalation paths (F1–F8) | `agents/redesign/spec.md` Section 2 |
+| Agent capabilities + MCP servers | `agents/redesign/spec.md` Section 0 |
+| Verification & gate layer | `agents/redesign/spec.md` Section 4 |
+| State + handoff mechanism | `agents/redesign/spec.md` Section 5 |
+| Session journal (decisions made per session) | `agents/redesign/journal.md` |
 
-*Source of truth: `docs/ai/SESSION_STATE.md` | Workflow: `workflow/` | Standards: `docs/guides/`*
+**Workflow Files**
+| Topic | File |
+|---|---|
+| TaskFile template | `agents/workflow/taskFileTemplate.md` |
+| Session state (replaces handoff.md) | `agents/workflow/state.json` |
+| Report JSON schema | `agents/workflow/report-schema.json` |
+| Completed task reports | `agents/workflow/reports/` |
+| DesignBrief template | `agents/workflow/designBrief.md` |
+
+**Codex Skills**
+| Topic | File |
+|---|---|
+| Pre-task setup (baseline, scope, assertion) | `agents/skills/codex/pre-task.md` |
+| Reviewer subagent (independent AC check) | `agents/skills/codex/reviewer.md` |
+| Commit + structured report | `agents/skills/codex/commit-report.md` |
+| Scope enforcement pre-commit hook | `agents/skills/codex/scope-guard.md` |
+
+**Gemini Skills**
+| Topic | File |
+|---|---|
+| Full-codebase consistency audit | `agents/skills/gemini/consistency-audit.md` |
+| Persist approved design decisions | `agents/skills/gemini/save-design-decisions.md` |
+| Guide page quality check | `agents/skills/gemini/guide-quality.md` |
+
+**Core Standards (load per task scope)**
+| Topic | File |
+|---|---|
+| Architectural Laws (Mandates 1–4) | `docs/guides/coreStandards/MANDATES_1_TO_4.md` |
+| Gate sequence scripts + paths | `docs/guides/coreStandards/GATE_SEQUENCE.md` |
+| High-impact file registry | `docs/guides/coreStandards/HIGH_IMPACT_REGISTRY.md` |
+| System topology (layer map) | `docs/guides/coreStandards/SYSTEM_TOPOLOGY.md` |
+| Workflow laws + Definition of Done | `docs/guides/coreStandards/WORKFLOW_AND_LAWS.md` |
+| Skills registry (gate script paths) | `docs/guides/coreStandards/SKILLS_REGISTRY.md` |
+
+**Backend Standards**
+| Topic | File |
+|---|---|
+| Python standards + hard prohibitions | `docs/guides/backendStandards/PYTHON_STANDARDS.md` |
+| Memory & threading rules | `docs/guides/backendStandards/MEMORY_AND_THREADING.md` |
+| Known patterns (KIPs) | `docs/guides/backendStandards/KNOWN_PATTERNS_KIPS.md` |
+
+**Frontend Standards**
+| Topic | File |
+|---|---|
+| Frontend execution protocol | `docs/guides/frontendStandards/TACTICAL_EXECUTION.md` |
+| UI implementation standards | `docs/guides/frontendStandards/UI_IMPLEMENTATION.md` |
+| Perf / accessibility / testing | `docs/guides/frontendStandards/PERF_RESILIENCE_A11Y_TESTING.md` |
+
+**Agent Souls (read when grounding a decision)**
+| Topic | File |
+|---|---|
+| Architect soul | `agents/souls/architect.md` |
+| Executor soul | `agents/souls/executor.md` |
+| Designer soul | `agents/souls/designer.md` |
