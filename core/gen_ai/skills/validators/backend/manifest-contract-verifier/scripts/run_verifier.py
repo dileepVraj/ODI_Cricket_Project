@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List
@@ -62,6 +63,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Verify manifest -> engine contracts using AST parsing.")
     parser.add_argument("--root", default=".", help="Project root")
     parser.add_argument("--manifest", required=True, help="Manifest path, e.g. formats/odi/manifest.py")
+    parser.add_argument("--json", action="store_true", default=False, help="Emit structured JSON output instead of prose")
     return parser.parse_args()
 
 
@@ -213,12 +215,46 @@ def main() -> int:
     try:
         manifest = _load_manifest_dict(manifest_path)
     except (OSError, SyntaxError, ValueError) as exc:
+        if args.json:
+            output = {
+                "gate": "GATE3",
+                "status": "FAIL",
+                "violations": [
+                    {
+                        "file": str(manifest_path.relative_to(root)) if manifest_path.is_absolute() else str(manifest_path),
+                        "line": None,
+                        "rule": "MANIFEST_PARSE_ERROR",
+                        "message": f"cannot parse manifest: {exc}",
+                    }
+                ],
+                "violation_count": 1,
+            }
+            print(json.dumps(output))
+            return 1
         print(f"Fail: cannot parse manifest: {exc}")
         return 1
 
     format_dir = manifest_path.parent
     class_registry = _collect_class_methods(format_dir)
     violations = verify_contracts(manifest, class_registry)
+
+    if args.json:
+        output = {
+            "gate": "GATE3",
+            "status": "PASS" if not violations else "FAIL",
+            "violations": [
+                {
+                    "file": None,
+                    "line": None,
+                    "rule": v.rule,
+                    "message": f"{v.where}: {v.message}",
+                }
+                for v in violations
+            ],
+            "violation_count": len(violations),
+        }
+        print(json.dumps(output))
+        return 0 if not violations else 1
 
     if not violations:
         print("Pass")

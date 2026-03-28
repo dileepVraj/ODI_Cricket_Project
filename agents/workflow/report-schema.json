@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TaskReport",
+  "description": "Structured report emitted by Codex or Gemini after every task. Used with codex exec --output-schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task_id", "date", "agent", "status", "commit", "baseline_violations", "post_task_violations", "violations_delta", "gates", "reviewer", "acs", "files_modified", "scope_violations", "blockers_hit", "taskfile_cleared"],
+  "properties": {
+    "task_id":              { "type": "string", "description": "e.g. TASK-166" },
+    "date":                 { "type": "string", "description": "ISO date YYYY-MM-DD" },
+    "agent":                { "type": "string", "enum": ["Codex", "Gemini"] },
+    "status":               { "type": "string", "enum": ["COMPLETE", "BLOCKED"] },
+    "commit":               { "anyOf": [{ "type": "string" }, { "type": "null" }], "description": "Real git hash. null only when BLOCKED." },
+    "baseline_violations":  { "type": "integer" },
+    "post_task_violations": { "type": "integer" },
+    "violations_delta":     { "type": "integer", "description": "Must be 0 or negative for COMPLETE." },
+    "gates": {
+      "type": "array",
+      "description": "One entry per gate that was evaluated.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate_id", "triggered", "status", "violations"],
+        "properties": {
+          "gate_id":   { "type": "string", "description": "e.g. GATE1, GATEF1, GATE6" },
+          "triggered": { "type": "boolean" },
+          "status":    { "type": "string", "enum": ["PASS", "FAIL", "SKIPPED"] },
+          "violations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["file", "line", "rule", "message"],
+              "properties": {
+                "file":    { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+                "line":    { "anyOf": [{ "type": "integer" }, { "type": "null" }] },
+                "rule":    { "type": "string" },
+                "message": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verdict", "acs", "assertion", "scope_clean", "out_of_scope_files", "issues"],
+      "properties": {
+        "verdict":   { "type": "string", "enum": ["PASS", "FAIL", "NOT_RUN"] },
+        "acs":       { "type": "array", "items": { "type": "string" } },
+        "assertion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ran", "expected", "actual", "match", "raw_output"],
+          "properties": {
+            "ran":        { "type": "boolean" },
+            "expected":   { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+            "actual":     { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+            "match":      { "anyOf": [{ "type": "boolean" }, { "type": "null" }] },
+            "raw_output": { "type": "string" }
+          }
+        },
+        "scope_clean":        { "type": "boolean" },
+        "out_of_scope_files": { "type": "array", "items": { "type": "string" } },
+        "issues":             { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "acs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "reason"],
+        "properties": {
+          "id":     { "type": "string" },
+          "status": { "type": "string", "enum": ["SATISFIED", "FAILED", "UNKNOWN"] },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "files_modified":   { "type": "array", "items": { "type": "string" } },
+    "scope_violations": { "type": "array", "items": { "type": "string" } },
+    "blockers_hit": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["blocker", "blocker_context"],
+        "properties": {
+          "blocker":         { "type": "string" },
+          "blocker_context": { "type": "string" }
+        }
+      }
+    },
+    "taskfile_cleared": { "type": "boolean", "description": "Must be true for COMPLETE." }
+  }
+}

@@ -72,6 +72,7 @@ Trigger: any modification to `core/` files.
 ```powershell
 python core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py --root . --paths core/
 ```
+Optional JSON output: append `--json` to emit structured `{"gate":"...","status":"PASS|FAIL","violations":[...],"violation_count":N}`.
 Pass condition: zero cross-layer import violations, zero `self.dal` usage outside DAL, zero `duckdb.connect()` outside `core/data_access.py`.
 
 ---
@@ -81,6 +82,7 @@ Trigger: any modification to `calculators/`, `engines/`, or `services/`.
 ```powershell
 python core/gen_ai/skills/guides/backend/duckdb-lint-ops/scripts/run_lint.py --root .
 ```
+Optional JSON output: append `--json` to emit structured `{"gate":"...","status":"PASS|FAIL","violations":[...],"violation_count":N}`.
 Pass condition: zero `.iterrows()` / `.itertuples()` violations.
 
 ---
@@ -90,6 +92,7 @@ Trigger: any modification to `manifest.py` or any engine file in `formats/`.
 ```powershell
 python core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py --root . --manifest formats/odi/manifest.py
 ```
+Optional JSON output: append `--json` to emit structured `{"gate":"...","status":"PASS|FAIL","violations":[...],"violation_count":N}`.
 Pass condition: all `engine_class` / `engine_method` contracts verified, all `required_context` fields map to valid engine parameters.
 
 ---
@@ -99,6 +102,7 @@ Trigger: any modification to `api/serializers.py` or engine return types.
 ```powershell
 python core/gen_ai/skills/validators/backend/serialization-guard/scripts/run_lint.py --root . --paths api/serializers.py --max-record-rows 500
 ```
+Optional JSON output: append `--json` to emit structured `{"gate":"...","status":"PASS|FAIL","violations":[...],"violation_count":N}`.
 Pass condition: zero memory bombs, zero high-latency recursive serialization patterns.
 
 ---
@@ -109,6 +113,7 @@ Path: `core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/`
 ```powershell
 python core/gen_ai/skills/validators/frontend/frontend-lint-sentinel/scripts/run_frontend_lint.py --root .
 ```
+Optional JSON output: append `--json` to emit structured `{"gate":"...","status":"PASS|FAIL","violations":[...],"violation_count":N}`.
 Pass condition: zero violations across all 12 lint checks (raw fetch, type safety, CSS tokens, icon library, accessibility, test framework).
 
 ---
@@ -119,6 +124,7 @@ Path: `core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/`
 ```powershell
 python core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/scripts/run_frontend_paradigm.py --root .
 ```
+Optional JSON output: append `--json` to emit structured `{"gate":"...","status":"PASS|FAIL","violations":[...],"violation_count":N}`.
 Pass condition: zero architectural paradigm violations (domain logic, SRP, placement contract, external state libs).
 
 ---
@@ -129,6 +135,7 @@ Path: `core/gen_ai/skills/validators/frontend/frontend-type-sync-guard/`
 ```powershell
 python core/gen_ai/skills/validators/frontend/frontend-type-sync-guard/scripts/run_type_sync.py --root .
 ```
+Optional JSON output: append `--json` to emit structured `{"gate":"...","status":"PASS|FAIL","violations":[...],"violation_count":N}`.
 Pass condition: zero `@schema` JSDoc violations.
 
 ---
@@ -146,6 +153,7 @@ Trigger: always — last step before every commit.
 ```powershell
 python core/utils/compliance_bouncer.py --root .
 ```
+Optional JSON output: append `--json` to emit structured `{"gate":"...","status":"PASS|FAIL","violations":[...],"violation_count":N}`.
 Pass condition: `PASS: 100% compliance`.
 
 ---

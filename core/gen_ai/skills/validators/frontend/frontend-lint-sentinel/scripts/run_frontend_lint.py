@@ -5,6 +5,7 @@ Scans all .tsx and .ts files under frontend/ for 12 rule violations.
 Usage: python run_frontend_lint.py --root <project_root>
 """
 
+import json
 import re
 import sys
 import argparse
@@ -14,6 +15,7 @@ from pathlib import Path
 EXCLUDED_DIRS = {"node_modules", ".next", "dist", "build", ".turbo", "coverage"}
 DEFINED_CSS_TOKEN_CACHE: dict[Path, set[str]] = {}
 CSS_TOKEN_ERROR_CACHE: dict[Path, str] = {}
+RULE_PREFIX_PATTERN = re.compile(r"^\[(?P<rule>[A-Z0-9.\- ]+)\]\s*(?P<message>.*)$")
 
 
 def _offset_to_line_col(text: str, offset: int) -> tuple[int, int]:
@@ -551,6 +553,21 @@ def scan_file(path: Path) -> list[tuple[int, int, str]]:
     return hits
 
 
+def _json_violation(path: Path, root: Path, line: int, message: str) -> dict[str, object]:
+    match = RULE_PREFIX_PATTERN.match(message)
+    rule = "VIOLATION"
+    clean_message = message
+    if match:
+        rule = match.group("rule").replace(" ", "_")
+        clean_message = match.group("message") or message
+    return {
+        "file": str(path.relative_to(root)),
+        "line": line if line > 0 else None,
+        "rule": rule,
+        "message": clean_message,
+    }
+
+
 def collect_files(root: Path) -> list[Path]:
     frontend_dir = root / "frontend"
     if not frontend_dir.exists():
@@ -567,6 +584,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Frontend Lint Sentinel")
     parser.add_argument("--root", default=".", help="Project root directory")
     parser.add_argument("--files", nargs="*", help="Explicit file list to scan (staged files only)")
+    parser.add_argument("--json", action="store_true", default=False, help="Emit structured JSON output instead of prose")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -579,6 +597,9 @@ def main() -> int:
         files = collect_files(root)
 
     if not files:
+        if args.json:
+            print(json.dumps({"gate": "GATEF1", "status": "PASS", "violations": [], "violation_count": 0}))
+            return 0
         print("WARN: No frontend files found — verify --root is correct")
         return 0
 
@@ -587,6 +608,24 @@ def main() -> int:
         hits = scan_file(f)
         if hits:
             all_violations[f] = hits
+
+    if args.json:
+        violations = [
+            _json_violation(path, root, line, msg)
+            for path, hits in sorted(all_violations.items())
+            for line, _col, msg in hits
+        ]
+        print(
+            json.dumps(
+                {
+                    "gate": "GATEF1",
+                    "status": "PASS" if not violations else "FAIL",
+                    "violations": violations,
+                    "violation_count": len(violations),
+                }
+            )
+        )
+        return 0 if not violations else 1
 
     if not all_violations:
         print("PASS: zero violations")

@@ -1,6 +1,9 @@
 # Git Worktrees
 .worktrees/
 
+# Secrets
+.gemini/settings.json
+
 # Python
 __pycache__/
 *.pyc
@@ -38,7 +41,13 @@ Thumbs.db
 frontend/.next/
 frontend/tsconfig.tsbuildinfo
 
-# Task files
+# Agent workflow files (transient — not committed)
+agents/workflow/taskFile.md
+agents/workflow/designBrief.md
+agents/workflow/scope.json
+agents/workflow/pre_call_state.json
+
+# Legacy paths (kept for safety)
 taskFile.md
 taskFileTemplate.md
 run_task.py

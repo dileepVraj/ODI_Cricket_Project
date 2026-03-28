@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List
@@ -37,6 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Boundary sentinel for core/ layer leakage checks.")
     parser.add_argument("--root", default=".", help="Project root")
     parser.add_argument("--paths", nargs="*", default=None, help="Optional specific files/directories")
+    parser.add_argument("--json", action="store_true", default=False, help="Emit structured JSON output instead of prose")
     return parser.parse_args()
 
 
@@ -180,6 +182,24 @@ def main() -> int:
         if "core" not in rel_parts:
             continue
         violations.extend(lint_file(file_path))
+
+    if args.json:
+        output = {
+            "gate": "GATE1",
+            "status": "PASS" if not violations else "FAIL",
+            "violations": [
+                {
+                    "file": str(v.path.relative_to(root)) if v.path.is_absolute() else str(v.path),
+                    "line": v.line,
+                    "rule": v.rule,
+                    "message": v.message,
+                }
+                for v in violations
+            ],
+            "violation_count": len(violations),
+        }
+        print(json.dumps(output))
+        return 0 if not violations else 1
 
     if not violations:
         print("Pass")

@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import json
 import re
 import sys
 from dataclasses import dataclass
@@ -135,6 +136,35 @@ class Violation:
     rule: str
     message: str
     code: str
+
+
+def _violation_json(root: Path, violation: Violation) -> dict[str, object]:
+    try:
+        file_value = str(violation.file.relative_to(root))
+    except ValueError:
+        file_value = str(violation.file)
+    return {
+        "file": file_value,
+        "line": violation.line if violation.line > 0 else None,
+        "rule": violation.rule,
+        "message": violation.message,
+    }
+
+
+def _json_output(
+    root: Path,
+    violations: list[Violation],
+    extra_violations: list[dict[str, object]] | None = None,
+) -> dict[str, object]:
+    serialized = [_violation_json(root, violation) for violation in violations]
+    if extra_violations:
+        serialized.extend(extra_violations)
+    return {
+        "gate": "GATE6",
+        "status": "PASS" if not serialized else "FAIL",
+        "violations": serialized,
+        "violation_count": len(serialized),
+    }
 
 
 def _literal_key(value: object) -> tuple[str, str] | None:
@@ -253,12 +283,12 @@ def _safe_parse(path: Path) -> tuple[ast.AST | None, list[str], str | None]:
         return None, lines, f"SyntaxError: {exc}"
 
 
-def _collect_manifest_literals(root: Path) -> set[tuple[str, str]]:
+def _collect_manifest_literals(root: Path, quiet: bool = False) -> set[tuple[str, str]]:
     allowed: set[tuple[str, str]] = set()
     for manifest_path in _iter_manifest_files(root):
         tree, _, parse_err = _safe_parse(manifest_path)
         if tree is None:
-            if parse_err:
+            if parse_err and not quiet:
                 logger.warning(f"[WARN] Could not parse manifest {manifest_path}: {parse_err}")
             continue
         for node in ast.walk(tree):
@@ -628,12 +658,30 @@ def _scan_constitutional(root: Path, scoped_paths: list[Path] | None = None) -> 
     return violations
 
 
-def run(root: Path, raw_paths: list[str] | None = None) -> int:
+def run(root: Path, raw_paths: list[str] | None = None, emit_json: bool = False) -> int:
     scoped_paths = _resolve_scan_paths(root, raw_paths or [])
-    allowed_literals = _collect_manifest_literals(root)
+    allowed_literals = _collect_manifest_literals(root, quiet=emit_json)
     if not allowed_literals:
+        if emit_json:
+            print(
+                json.dumps(
+                    _json_output(
+                        root,
+                        [],
+                        [
+                            {
+                                "file": None,
+                                "line": None,
+                                "rule": "MANIFEST_DISCOVERY_FAILURE",
+                                "message": "No manifest literals discovered. Cannot run Zero-Literal rule safely.",
+                            }
+                        ],
+                    )
+                )
+            )
+            return 1
         logger.error("FAIL: No manifest literals discovered. Cannot run Zero-Literal rule safely.")
-        return 2
+        return 1
 
     if scoped_paths:
         target_files = scoped_paths
@@ -641,12 +689,34 @@ def run(root: Path, raw_paths: list[str] | None = None) -> int:
         target_files = sorted(_iter_python_files(root))
 
     if (raw_paths or []) and not target_files:
+        if emit_json:
+            print(
+                json.dumps(
+                    _json_output(
+                        root,
+                        [],
+                        [
+                            {
+                                "file": None,
+                                "line": None,
+                                "rule": "EMPTY_SCOPE",
+                                "message": "No Python files matched --paths scope.",
+                            }
+                        ],
+                    )
+                )
+            )
+            return 1
         logger.error("FAIL: No Python files matched --paths scope.")
-        return 2
+        return 1
 
     all_violations = _scan_constitutional(root, scoped_paths or None)
     for path in target_files:
         all_violations.extend(_scan_file(path, allowed_literals))
+
+    if emit_json:
+        print(json.dumps(_json_output(root, all_violations)))
+        return 0 if not all_violations else 1
 
     if not all_violations:
         logger.info(f"PASS: 100% compliance across {len(target_files)} file(s).")
@@ -672,8 +742,9 @@ def main() -> int:
         default=[],
         help="Optional Python files/directories to restrict scan scope",
     )
+    parser.add_argument("--json", action="store_true", default=False, help="Emit structured JSON output instead of prose")
     args = parser.parse_args()
-    return run(Path(args.root).resolve(), args.paths)
+    return run(Path(args.root).resolve(), args.paths, emit_json=args.json)
 
 
 if __name__ == "__main__":
