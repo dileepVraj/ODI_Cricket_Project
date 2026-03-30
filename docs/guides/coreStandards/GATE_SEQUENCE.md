@@ -77,6 +77,23 @@ Pass condition: zero cross-layer import violations, zero `self.dal` usage outsid
 
 ---
 
+**GATE-C — contract-regression**
+Trigger: any modification to `core/calculators/`, `core/services/`, or `formats/*/engines/`.
+```bash
+python -m pytest tests/contracts/ -x -q --tb=short
+```
+Pass condition: all existing contract tests pass. Zero regressions in previously verified calculator/engine/service functions.
+
+If GATE-C fails:
+- Failure means this task changed the output of a function that had a verified contract.
+- If the change is intentional (contract update): the contract file MUST be in FILES IN SCOPE
+  and MUST be updated to reflect the new expected output before commit.
+- If the change is unintentional: the implementation has introduced a regression. Fix it.
+
+If `tests/contracts/` is empty or does not exist → SKIPPED (no contracts yet).
+
+---
+
 **GATE 2 — duckdb-lint-ops (DOD lint only)**
 Trigger: any modification to `calculators/`, `engines/`, or `services/`.
 ```powershell
@@ -137,6 +154,15 @@ Pass condition: zero violations across all 12 lint checks (raw fetch, type safet
 
 ---
 
+**SRP-CHECK — component line-count guard**
+Trigger: any modification to `frontend/components/*.tsx` files.
+Enforced by: `.githooks/pre-commit` SRP CHECK section.
+Pass condition: no component file exceeds 300 lines. 300 lines is a signal to decompose, not a target.
+Failure requires structural SRP analysis — not line-shuffling. Apply the "describe without and" test to each resulting file.
+Note: SRP-CHECK is in the hook but has no standalone script. It does not emit JSON gate output. Report it as `{"gate_id": "SRP-CHECK", "triggered": true, "status": "PASS", "violations": []}` after confirming component line counts.
+
+---
+
 **GATE F2 — frontend-paradigm-sentinel**
 Trigger: always — after GATE F1 passes (frontend tasks only).
 Path: `core/gen_ai/skills/validators/frontend/frontend-paradigm-sentinel/`
@@ -159,13 +185,13 @@ Pass condition: zero `@schema` JSDoc violations.
 
 ---
 
-**GATE F4 — next-devtools-check**
-Trigger: always (frontend tasks).
-```powershell
-python core/utils/next_devtools_check.py --root .
-```
+**GATE F4 — next-devtools-check** *(dormant)*
+Trigger: frontend tasks — but currently always SKIPPED.
+Status: dormant until next-devtools MCP is configured.
+Do NOT include in `gates_triggered` in pre_call_state.json — it will never produce a real result.
+When activated: `python core/utils/next_devtools_check.py --root .`
 Pass condition: zero new runtime errors vs pre-task baseline (requires dev server).
-Currently always SKIPPED — next-devtools MCP not yet configured.
+Activation: add to `.githooks/pre-commit` GATE F4 dormant section and remove the comment block.
 
 ---
 
@@ -176,6 +202,7 @@ python core/utils/paradigm_sentinel.py --root .
 ```
 Optional JSON output: append `--json` to emit structured output.
 Pass condition: zero combined violations from GATE 1 and GATE 6.
+Note: the hook calls `paradigm_sentinel.py`, not `run_sentinel.py`. Do not confuse with GATE 1.
 
 ---
 
@@ -202,8 +229,8 @@ The bouncer is a final gate — not a substitute for the skill gates. All applic
 
 | Task type | Gates required |
 |---|---|
-| Backend engine/calculator/service | GATE 1 (if core/ touched), GATE 2, GATE 3 (if manifest/engine), GATE 4 (if serializer), GATE 5S, GATE 5T, GATE 5P, GATE 6 |
-| Frontend component | GATE F1, GATE F2, GATE F3 (if lib/types.ts), GATE F4, GATE 5P, GATE 6 |
+| Backend engine/calculator/service | GATE-C (if calculators/services/engines touched), GATE 1 (if core/ touched), GATE 2, GATE 3 (if manifest/engine), GATE 4 (if serializer), GATE 5S, GATE 5T, GATE 5P, GATE 6 |
+| Frontend component | GATE F1, SRP-CHECK (if components/*.tsx), GATE F2, GATE F3 (if lib/types.ts), GATE 5P, GATE 6 |
 | Full-stack task | All applicable backend gates + all applicable frontend gates |
 
 ---

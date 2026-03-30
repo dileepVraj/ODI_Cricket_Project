@@ -48,17 +48,30 @@
       "required": ["verdict", "acs", "assertion", "scope_clean", "out_of_scope_files", "issues"],
       "properties": {
         "verdict":   { "type": "string", "enum": ["PASS", "FAIL", "NOT_RUN"] },
-        "acs":       { "type": "array", "items": { "type": "string" } },
+        "acs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "status", "reason"],
+            "properties": {
+              "id":     { "type": "string" },
+              "status": { "type": "string", "enum": ["SATISFIED", "FAILED", "UNKNOWN"] },
+              "reason": { "type": "string", "description": "Must name specific code — never 'looks correct'" }
+            }
+          }
+        },
         "assertion": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["ran", "expected", "actual", "match", "raw_output"],
+          "required": ["ran", "expected", "actual", "match", "pre_impl_output", "raw_output"],
           "properties": {
-            "ran":        { "type": "boolean" },
-            "expected":   { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-            "actual":     { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-            "match":      { "anyOf": [{ "type": "boolean" }, { "type": "null" }] },
-            "raw_output": { "type": "string" }
+            "ran":              { "type": "boolean" },
+            "expected":         { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+            "actual":           { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+            "match":            { "anyOf": [{ "type": "boolean" }, { "type": "null" }] },
+            "pre_impl_output":  { "type": "string", "description": "Raw terminal output from running assertion BEFORE implementation. Must show failure. Empty string only for non-calculator tasks." },
+            "raw_output":       { "type": "string", "description": "Raw terminal output from running assertion AFTER implementation." }
           }
         },
         "scope_clean":        { "type": "boolean" },

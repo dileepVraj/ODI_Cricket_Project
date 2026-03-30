@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_wait_for",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/health)",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_select_option",
+      "mcp__playwright__browser_console_messages",
+      "WebSearch",
+      "mcp__stitch__create_project",
+      "Bash(codex exec:*)",
+      "Bash(gemini:*)",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_evaluate",
+      "mcp__stitch__generate_screen_from_text",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_drag"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "export PATH=$PATH:\"/c/Program Files/Go/bin\" && pgrep -f cloudbet-mcp.exe > /dev/null || (nohup \"C:/Cricket_Project_Stable/.mcp-servers/sports-mcp-server/cloudbet-mcp.exe\" > \"C:/Cricket_Project_Stable/.mcp-servers/sports-mcp-server/cloudbet.log\" 2>&1 &)",
+            "statusMessage": "Starting Cloudbet MCP server...",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

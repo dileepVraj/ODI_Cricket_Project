@@ -1,9 +1,59 @@
-#!/bin/sh
+#!/bin/bash
 # Cricket Algo-Trading Platform — pre-commit gate sequence
 # Gates run in order. Any FAIL blocks the commit.
 # Dormant gates are commented out — activate when their phase ships.
 
 STAGED=$(git diff --cached --name-only)
+
+# ── SCOPE GUARD ─────────────────────────────────────────────────────────
+# Active during Codex tasks only (scope.json present). Human commits always pass.
+SCOPE_FILE="agents/workflow/scope.json"
+if [ -f "$SCOPE_FILE" ]; then
+    ALLOWED=$(python -c "
+import json
+with open('$SCOPE_FILE') as f:
+    data = json.load(f)
+for p in data.get('allowed_files', []):
+    print(p)
+")
+    VIOLATIONS=()
+    while IFS= read -r file; do
+        if [ -z "$file" ]; then continue; fi
+        FOUND=false
+        while IFS= read -r allowed; do
+            if [ "$file" = "$allowed" ]; then
+                FOUND=true
+                break
+            fi
+        done <<< "$ALLOWED"
+        if [ "$FOUND" = false ]; then
+            VIOLATIONS+=("$file")
+        fi
+    done <<< "$STAGED"
+
+    FINAL_VIOLATIONS=()
+    for v in "${VIOLATIONS[@]}"; do
+        # Always allow workflow files (pipeline state) and contract files (assertion graduates)
+        if [[ "$v" != agents/workflow/* ]] && [[ "$v" != tests/contracts/* ]]; then
+            FINAL_VIOLATIONS+=("$v")
+        fi
+    done
+
+    if [ ${#FINAL_VIOLATIONS[@]} -gt 0 ]; then
+        echo ""
+        echo "SCOPE GUARD — COMMIT REJECTED"
+        echo "The following files are not in agents/workflow/scope.json:"
+        for v in "${FINAL_VIOLATIONS[@]}"; do
+            echo "  - $v"
+        done
+        echo ""
+        echo "If scope needs to expand: Claude updates scope.json and re-authorises."
+        TASK_ID=$(python -c "import json; d=json.load(open('$SCOPE_FILE')); print(d.get('task_id','unknown'))")
+        echo "Task ID: $TASK_ID"
+        echo ""
+        exit 1
+    fi
+fi
 
 # ── GATE 1 — boundary-sentinel ─────────────────────────────────────────
 # Trigger: any core/ file staged
@@ -15,6 +65,24 @@ if echo "$STAGED" | grep -q "core/"; then
         exit 1
     fi
     echo "GATE 1 — PASS"
+fi
+
+# ── GATE C — contract-regression ───────────────────────────────────────
+# Trigger: any core/calculators/, core/services/, or formats/*/engines/ file staged
+if echo "$STAGED" | grep -qE "core/calculators/|core/services/|formats/.*engines/"; then
+    if [ -d "tests/contracts" ] && [ "$(find tests/contracts -maxdepth 1 -name '*.py' | head -1)" ]; then
+        echo "GATE C — contract-regression: TRIGGERED"
+        python -m pytest tests/contracts/ -x -q --tb=short
+        if [ $? -ne 0 ]; then
+            echo "GATE C FAILED — contract regression detected. Commit blocked."
+            echo "  Intentional change: update the contract file and include it in FILES IN SCOPE."
+            echo "  Unintentional change: the implementation introduced a regression. Fix it."
+            exit 1
+        fi
+        echo "GATE C — PASS"
+    else
+        echo "GATE C — no contracts yet, SKIPPED"
+    fi
 fi
 
 # ── GATE 2 — duckdb-lint-ops ───────────────────────────────────────────
@@ -59,6 +127,38 @@ if echo "$STAGED" | grep -qE "serializers|schemas/"; then
     echo "GATE 4 — PASS"
 fi
 
+# ── GATE 5S — semgrep-security ─────────────────────────────────────────
+# Trigger: any core/, api/, or formats/ Python file staged
+# Authoritative check is Codex's semgrep MCP. This is the hook-time enforcement layer.
+# Skipped gracefully if semgrep CLI is not installed.
+STAGED_PYTHON_BACKEND=$(echo "$STAGED" | grep -E "^(core|api|formats)/.*\.py$")
+if [ -n "$STAGED_PYTHON_BACKEND" ]; then
+    if command -v semgrep >/dev/null 2>&1; then
+        echo "GATE 5S — semgrep-security: TRIGGERED"
+        semgrep --config=auto --error --quiet $STAGED_PYTHON_BACKEND
+        if [ $? -ne 0 ]; then
+            echo "GATE 5S FAILED — security violation. Commit blocked."
+            exit 1
+        fi
+        echo "GATE 5S — PASS"
+    else
+        echo "GATE 5S — semgrep CLI not found, SKIPPED (Codex MCP check still applies)"
+    fi
+fi
+
+# ── GATE 5T — python-type-check ────────────────────────────────────────
+# Trigger: any Python file staged
+# Skipped gracefully if ruff/mypy not installed (python_type_check.py handles this).
+if echo "$STAGED" | grep -q "\.py$"; then
+    echo "GATE 5T — python-type-check: TRIGGERED"
+    python core/utils/python_type_check.py --root .
+    if [ $? -ne 0 ]; then
+        echo "GATE 5T FAILED — ruff/mypy violation. Commit blocked."
+        exit 1
+    fi
+    echo "GATE 5T — PASS"
+fi
+
 # ── GATE F1 — frontend-lint-sentinel ───────────────────────────────────
 # Trigger: any frontend/ .tsx, .ts, or .css file staged
 # Scans ONLY staged files — not the full frontend directory.
@@ -73,9 +173,12 @@ if [ -n "$STAGED_FRONTEND" ]; then
     echo "GATE F1 — PASS"
 fi
 
-# ── SRP CHECK — component line-count guard ────────────────────────────
+# ── SRP CHECK — Single Responsibility Principle guard ─────────────────
 # Trigger: any frontend/components/ .tsx file staged
-# Rule: no component file may exceed 300 lines (TACTICAL_EXECUTION.md §4)
+# Rule: every file, function, and class must have a single responsibility.
+#       Files over 300 lines are a signal of SRP violation — not because
+#       line count is the rule, but because a file that long almost certainly
+#       does more than one thing. (TACTICAL_EXECUTION.md §4)
 STAGED_COMPONENTS=$(echo "$STAGED" | grep -E "frontend/components/.*\.tsx$")
 if [ -n "$STAGED_COMPONENTS" ]; then
     SRP_FAIL=0
@@ -126,14 +229,14 @@ if echo "$STAGED" | grep -q "frontend/"; then
     echo "GATE F3 — PASS"
 fi
 
-# ── GATE 5 — paradigm-sentinel (meta-gate, always runs) ────────────────
-echo "GATE 5 — paradigm-sentinel: TRIGGERED (always-on)"
-python core/gen_ai/skills/validators/backend/boundary-sentinel/scripts/run_sentinel.py --root .
+# ── GATE 5P — paradigm-sentinel (meta-gate, always runs) ───────────────
+echo "GATE 5P — paradigm-sentinel: TRIGGERED (always-on)"
+python core/utils/paradigm_sentinel.py --root .
 if [ $? -ne 0 ]; then
-    echo "GATE 5 FAILED — paradigm violation. Commit blocked."
+    echo "GATE 5P FAILED — combined paradigm violation. Commit blocked."
     exit 1
 fi
-echo "GATE 5 — PASS"
+echo "GATE 5P — PASS"
 
 # ── GATE 6 — compliance_bouncer (always runs) ──────────────────────────
 echo "GATE 6 — compliance_bouncer: TRIGGERED (always-on)"
@@ -145,6 +248,18 @@ fi
 echo "GATE 6 — PASS"
 
 # ── DORMANT GATES ───────────────────────────────────────────────────────
+# GATE F4 — next-devtools-check (dormant — activate when next-devtools MCP configured)
+# Trigger: any frontend/ file staged
+# if echo "$STAGED" | grep -q "frontend/"; then
+#     echo "GATE F4 — next-devtools-check: TRIGGERED"
+#     python core/utils/next_devtools_check.py --root .
+#     if [ $? -ne 0 ]; then
+#         echo "GATE F4 FAILED — runtime errors detected. Commit blocked."
+#         exit 1
+#     fi
+#     echo "GATE F4 — PASS"
+# fi
+
 # GATE 3.5 — event-state-linter (activate Phase 12 when core/live/ ships)
 # Trigger: any core/live/ or api/live/ file staged
 # if echo "$STAGED" | grep -qE "core/live/|api/live/"; then

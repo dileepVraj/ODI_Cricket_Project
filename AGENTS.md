@@ -47,10 +47,11 @@ Run every gate in `pre_call_state.json` `gates_triggered`, in order.
 Each gate outputs JSON to stdout. Fix failures before running the next gate.
 Gate FAIL after 3 fix attempts → write BLOCKED report.
 
-**Backend gates:**
+**Backend gates (run in this order):**
 | Gate ID | Script | Triggers when |
 |---|---|---|
 | GATE1 | `core/utils/boundary_sentinel.py` | Any `core/` file modified |
+| GATE-C | `python -m pytest tests/contracts/ -x -q --tb=short` | Any `core/calculators/` `core/services/` `formats/*/engines/` modified — regression check against all previous verified contracts |
 | GATE2 | `core/utils/duckdb_lint_ops.py` | Any `calculators/` `engines/` `services/` modified |
 | GATE3 | `core/utils/manifest_contract_verifier.py` | Any `manifest.py` or engine modified |
 | GATE4 | `core/utils/serialization_guard.py` | Any `api/serializers.py` or engine return type modified |
@@ -59,20 +60,27 @@ Gate FAIL after 3 fix attempts → write BLOCKED report.
 | GATE5P | `core/utils/paradigm_sentinel.py` | Always |
 | GATE6 | `core/utils/compliance_bouncer.py` | Always — last |
 
-**Frontend gates:**
+**Frontend gates (run in this order):**
 | Gate ID | Tool | Triggers when |
 |---|---|---|
 | GATEF1 | eslint MCP | Any `.tsx` `.ts` modified |
-| GATEF2 | `core/utils/frontend_paradigm_sentinel.py` | Always after F1 |
-| GATEF3 | `npx tsc --noEmit` | Always |
-| GATEF4 | next-devtools MCP `get_errors` | Always (SKIPPED if dev server not running) |
+| SRP-CHECK | line-count check in pre-commit hook | Any `frontend/components/` `.tsx` modified — every file, function, and class must have a single responsibility. Files over 300 lines are flagged as a signal of SRP violation, not because line count is the rule but because a file that long almost certainly does more than one thing. Merely shuffling lines to stay under 300 is a hard fail. |
+| GATEF2 | `core/utils/frontend_paradigm_sentinel.py` | Any `.tsx` `.ts` modified |
+| GATEF3 | `npx tsc --noEmit` | Any `frontend/` file modified |
+| GATEF4 | next-devtools MCP `get_errors` | **DORMANT** — activate when next-devtools MCP configured |
 
-### Phase 5 — Spawn REVIEWER subagent
-Read and execute `agents/skills/codex/reviewer.md`.
-Pass to Reviewer: taskFile.md, all FILES IN SCOPE, assertion.py output.
-REVIEWER returns JSON verdict.
+### Phase 5 — Invoke REVIEWER subagent
+Read `agents/skills/codex/reviewer.md` in full and follow it exactly.
 
-REVIEWER FAIL → fix the specific AC that failed → back to Phase 3.
+Summary:
+1. Collect: taskFile contents, all FILES IN SCOPE contents, assertion raw output,
+   expected assertion value, git diff --cached file list
+2. Use `spawn_agent` — reference `$codex-reviewer` in the initial prompt
+3. Pass all inputs explicitly in the message (format defined in reviewer.md Step 2)
+4. Use `wait_agent` — receive one JSON verdict
+5. Do NOT review the work yourself. Do NOT reuse a prior subagent instance.
+
+REVIEWER FAIL → fix the specific failure → re-run affected gates → spawn NEW subagent.
 Max 3 total rounds (Phase 3 → Phase 4 → Phase 5). Round 3 FAIL → BLOCKED report.
 REVIEWER PASS → Phase 6.
 
@@ -101,7 +109,7 @@ Deletes assertion.py.
 | `semgrep` | Security scan (GATE5S) |
 | `python-lft` | ruff + mypy (GATE5T) |
 | `mcp-server-git` | Controlled git operations |
-| `stitch` | **NOT available to Codex.** Stitch HTML is embedded in taskFile.md by the Architect. |
+| `stitch` | **Read-only. Frontend tasks only.** Query the Stitch project to clarify design intent when the taskFile HTML is ambiguous. Never improvise based on what you see — if the design is structurally incompatible with the codebase, BLOCK with a specific question. |
 
 ---
 

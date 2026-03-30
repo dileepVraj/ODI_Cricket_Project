@@ -13,7 +13,7 @@
 ### CODEX — Executor
 
 **Model:** Configured model (OpenAI or compatible)
-**Invocation:** `codex exec --full-auto --output-schema agents/workflow/report-schema.json`
+**Invocation:** `codex exec -s danger-full-access --output-schema agents/workflow/report-schema.json`
 **Context window:** ~128K tokens
 **Strengths:** CI/automation, structured JSON output, parallel subagents, OTel observability
 
@@ -39,6 +39,7 @@
 | `semgrep` | Security scan on Python files before commit |
 | `python-lft` | ruff + mypy from inside agent loop |
 | `mcp-server-git` | Controlled git operations as discrete tools |
+| `stitch` | **Read-only. Frontend tasks only.** Query design project to clarify intent when taskFile HTML is ambiguous. Structural incompatibility → BLOCK, never improvise. |
 
 **Skills (Codex — defined in `agents/skills/codex/`):**
 - `pre-task` — baseline bouncer, scope.json write, standards load
@@ -68,9 +69,9 @@
 | `context7` | Up-to-date library docs |
 | `playwright` | Visual verification screenshots |
 | `sequential-thinking` | Structured multi-step reasoning |
-| `jcodemunch` | Code exploration in `frontend/` |
-| `duckdb` (motherduck) | Read schema/data when designing data-grounded UIs |
-| `stitch` | `@davideast/stitch-mcp` — create and iterate on Stitch designs |
+| `jcodemunch` | Code exploration — read actual symbols, API fields, component patterns before designing |
+| `duckdb` | Read live data schema when designing data-grounded UIs |
+| `stitch` | Create and iterate on Stitch designs |
 | `github` | Query existing PRs, check component patterns in history |
 | `next-devtools` | Live Next.js runtime errors during guide implementation |
 | `eslint` | Lint guide page TypeScript during guide implementation |
@@ -84,23 +85,45 @@
 
 ### SECTION 0C — REVIEWER SUBAGENT (inside Codex)
 
-This is the solution to G2 (no self-grading). Codex natively supports spawning subagents
-with independent context. After implementation, the main Codex agent spawns a REVIEWER
-subagent with a clean context — no knowledge of how the implementation was written.
+**Role:** Mechanical pre-commit verification — not logic auditing.
+Logic correctness is Claude's job in B8 Step 4 (post-commit logic audit).
+The Reviewer and Claude have different jobs. Both are required.
 
-**What the Reviewer subagent receives:**
-- The taskFile (the spec: ACs, Verification Matrix, FILES IN SCOPE)
-- The implemented files (read fresh — not from main agent's memory)
-- The throwaway assertion script and its raw output
+**How the Reviewer subagent is created:**
+The CODEX-REVIEWER is a permanent reusable skill installed at
+`~/.codex/skills/codex-reviewer/`. Its identity and rules live there — not embedded
+in the main agent's prompt. The main Codex agent spawns a fresh subagent via
+`spawn_agent`, references `$codex-reviewer` in the initial prompt, and passes all
+required context explicitly. It then uses `wait_agent` to receive the JSON verdict.
+The subagent has no shared memory with the main agent and no independent filesystem
+access — everything it needs is passed in the initial message.
 
-**What the Reviewer subagent does:**
-1. Reads the spec independently
-2. Reads every implemented file independently
-3. Checks each AC: satisfied or not — with a one-line reason
-4. Reads assertion output: does actual output match expected?
-5. Checks scope: did any file outside FILES IN SCOPE get modified?
-6. Returns structured JSON verdict:
+**What the Reviewer subagent receives (in its initial message):**
+- Full contents of taskFile.md (the spec: ACs, Verification Matrix, FILES IN SCOPE)
+- Full contents of every file in FILES IN SCOPE (passed as text — not read from disk)
+- Raw terminal output from the assertion run after implementation
+- The list of files actually modified (from git diff --cached)
 
+**What the Reviewer subagent checks (mechanical only):**
+1. AC coverage: does code exist that addresses each AC? (structure, not correctness)
+2. Assertion output: does raw terminal output match expected value?
+3. Scope: did any file outside FILES IN SCOPE get modified?
+
+**What the Reviewer subagent does NOT check:**
+- Whether formulas produce mathematically correct results
+- Whether logic matches the Verification Matrix row by row
+- Whether computed values are trading-correct
+
+Those checks are Claude's B8 Step 4 responsibility.
+
+**Why this split:**
+The Reviewer is the same model family as Codex. Model homogeneity means it cannot
+reliably catch subtle logical errors in code it reads after Codex wrote it — both
+will find the same plausible-looking wrong answer convincing. What it CAN reliably
+catch are structural failures: missing code, out-of-scope edits, wrong assertion output.
+Claude is a genuinely different model. Claude owns logic correctness.
+
+**Returns structured JSON verdict:**
 ```json
 {
   "verdict": "PASS | FAIL",
@@ -113,12 +136,6 @@ subagent with a clean context — no knowledge of how the implementation was wri
   "issues": []
 }
 ```
-
-**Why this solves G2:**
-- The Reviewer has genuinely different context than the Implementer
-- It cannot be influenced by the implementation choices it didn't make
-- The verdict is in the report before Claude ever sees it
-- Claude's post-call review becomes a spot-check, not the primary verification
 
 **Hard rules for the Reviewer subagent:**
 - Read-only. No file writes, no shell commands, no commits.
@@ -166,6 +183,12 @@ is written to a file. After invocation, that file is read and compared automatic
 If nothing changed — no new commit, no updated report — the pipeline stops and alerts.
 This detection must never rely on Claude's in-session memory.
 
+**Race condition note:** Claude writes `pre_call_commit` to state.json before invoking Codex.
+Codex independently records the same hash in `pre_call_state.json` during pre-task. If a human
+commits between these two writes, the hashes will diverge. B8 Step 1 is authoritative —
+use state.json's `pre_call_commit`. If state.json hash ≠ pre_call_state.json hash, flag the
+discrepancy to the human before accepting the report.
+
 *Research basis: GitHub Squad's pre/post state snapshot. Cognition: "context engineering
 over architecture" — the system must engineer its own failure detection.*
 
@@ -199,17 +222,20 @@ must make the assertion pass — if it fails, the function is wrong, not the ass
 
 Order is non-negotiable:
   1. Verification Matrix filled (Claude, before taskFile is written)
-  2. Assertion script written (Codex, before function is implemented)
+  2. Assertion script written (Claude, before taskFile is assigned to Codex)
   3. Function implemented (Codex, to make assertion pass)
   4. Assertion run — raw output embedded in report
-  5. Assertion script deleted
+  5. Assertion moved to tests/contracts/ as a permanent regression contract
 
 "The code looks correct" is not a passing criterion.
-No test suite. No pytest gate. Verification is per-task, ephemeral, and execution-based.
+Per-task assertions formalise the matrix row before implementation. After the task,
+they graduate into tests/contracts/ and are regression-checked on every future task
+that touches the same layer (GATE-C). This prevents stale Golden Master drift —
+each contract was red before its function existed, so it tests what the code *should* do.
 
 *Research basis: "The bottleneck is no longer generation. It's verification." — Osmani.
-Deliberately no persistent test suite — deleted tests were stale Golden Master artifacts
-that described what code did, not what it should do. Per-task assertions replace them.*
+TDD forces correct behaviour specification before implementation. Contracts persist because
+they encode verified invariants, not observed behaviour.*
 
 ---
 
@@ -324,7 +350,8 @@ and decides. The human is involved only when Claude cannot resolve without a dec
 | F4 | BLOCKED | Yes | Claude resolves or presents to human | No limit on questions |
 | F5 | Scope violation | Terminal for that commit | Claude diagnoses, human authorises scope change | 0 retries |
 | F6 | Partial phase | Terminal | Claude presents options, human decides | 0 retries |
-| F7 | AC mismatch | Yes (once) | Claude rewrites spec, re-invokes once | 1 round |
+| F7A | AC mismatch — Architect error | Yes (twice) | Claude rewrites AC, re-invokes. Round 2 fail → escalate to human | 2 rounds |
+| F7B | AC mismatch — Implementation gap | Yes | Routes to F2/F3 protocol — Codex fixes, no spec rewrite | 3 rounds |
 | F8 | Context loss | Terminal for task | Human reviews git log, decides | 0 retries |
 
 ---
@@ -456,8 +483,10 @@ Claude reads the hook output (which files were out of scope):
           Human decides: discard changes, or investigate why Codex went out of scope.
 ```
 
-**Zero retries on scope violation.** The commit was rejected — no partial state exists.
-Codex re-runs with corrected scope after Claude updates scope.json.
+**Zero retries without scope correction.** The F5 table entry "0 retries" means Codex
+does not retry the same scope — not that it cannot re-invoke after Claude explicitly
+expands scope.json. The commit was rejected, no partial state exists, and Codex
+re-runs only after Claude updates scope.json and explicitly re-authorises.
 
 ---
 
@@ -484,31 +513,70 @@ confirmed-correct output based on a downstream failure. Human makes this call.
 
 ---
 
-### F7 — AC Mismatch
+### F7A — AC Mismatch (Architect Error)
 
-**What it is:** Gates pass, assertion passes, but Claude's implementation review finds
-the code does not satisfy the intent of an AC. The implementation is structurally
-correct but wrong for the task. This is an Architect error — the spec was ambiguous
-enough to permit a wrong-but-plausible implementation.
+**What it is:** The Reviewer returned FAILED or UNKNOWN on an AC, but the reason
+is not a missing or broken implementation — the criterion itself is ambiguous,
+untestable, or doesn't give enough to verify against.
+
+**How to identify F7A (decision rule):**
+- Reviewer returns `"status": "UNKNOWN"` → F7A. Criterion is untestable as written.
+- Reviewer returns `"status": "FAILED"` but cannot name specific code that violates it → F7A.
+- Reviewer returns `"status": "FAILED"` and names specific code → F7B (see below). Do not rewrite the spec.
 
 **Resolution path:**
 ```
-Claude identifies exactly which AC failed and why the implementation misses it.
-Claude rewrites that AC (and any related Verification Matrix rows) to be unambiguous.
-Claude re-invokes Codex once with the corrected spec.
+Round 1:
+  Claude identifies the ambiguous AC.
+  Claude rewrites it to be unambiguous — binary, specific, testable.
+  Claude updates related Verification Matrix rows if affected.
+  Claude re-invokes Codex with the corrected taskFile.
 
-If the second attempt also misses the intent:
-  → Terminal. Claude presents to human:
-      - What the AC was trying to express
-      - What both implementations produced
-      - Whether the AC itself needs fundamental rethinking
-  → Human clarifies intent. Claude rebuilds the relevant spec section from scratch.
-  → New task invocation (not a retry of the original task).
+Round 2 (if still failing):
+  → Terminal. Claude writes BLOCKED report with blocker_type: "F7A-ESCALATED".
+  Report must embed all three versions:
+    - original_ac: the AC as first written
+    - rewritten_ac: Claude's round-1 rewrite
+    - codex_output: what both implementations produced
+  → Claude presents to human in plain language:
+      "This AC has failed twice. Here are all three versions and what Codex built.
+       Options: [A] rewrite the AC again with your input, [B] drop this AC,
+       [C] change the implementation approach."
+  → Human decides. Claude acts on the decision.
+  → New task invocation — not a retry of the original task.
 ```
 
-**1 round only.** F7 is a spec failure, not a code failure. Three rounds of Codex
-against an ambiguous spec produces three different wrong implementations.
-Claude owns this failure — it wrote the ambiguous spec.
+**2 rounds max.** An AC that survives two rewrites and still fails is a spec design
+problem, not a wording problem. Human input is required.
+
+---
+
+### F7B — AC Mismatch (Implementation Gap)
+
+**What it is:** The Reviewer returned FAILED on an AC, the criterion is clear and
+testable, and the Reviewer named specific code that fails to satisfy it.
+This is not a spec problem — Codex simply didn't implement it correctly.
+
+**How to identify F7B:**
+- Reviewer returns `"status": "FAILED"` AND names specific code or behaviour that violates it.
+- The AC itself is binary, specific, and unambiguous.
+
+**Resolution path:**
+```
+Route to F2/F3 protocol:
+  Round 1: Codex reads Reviewer failure reason → fixes implementation → Reviewer re-runs.
+  Round 2: Same. Claude reads both failure outputs for pattern.
+  Round 3: Same. If still failing:
+    → Terminal. Claude presents to human:
+        - The AC (unchanged — it was correct)
+        - What Codex implemented across all 3 rounds
+        - Whether there is a data, dependency, or architecture blocker
+    → Human decides.
+
+Do NOT rewrite the AC. The spec is correct. The implementation is wrong.
+```
+
+**3 rounds max.** Same retry budget as F2/F3.
 
 ---
 
@@ -605,6 +673,7 @@ Triggered by which layers the task touches (set in pre_call_state.json).
 | Gate | ID | Trigger | What it checks |
 |---|---|---|---|
 | boundary-sentinel | GATE1 | Any `core/` file modified | Layer boundary violations — domain core importing from API layer, etc. |
+| contract-regression | GATE-C | Any `core/calculators/` `core/services/` `formats/*/engines/` modified | Runs `tests/contracts/` — catches regressions in all previously verified calculator/engine/service contracts. SKIPPED if `tests/contracts/` is empty. |
 | duckdb-lint-ops | GATE2 | Any `calculators/` `engines/` `services/` modified | DuckDB operation patterns — no raw SQL strings, correct connection usage |
 | manifest-contract-verifier | GATE3 | Any `manifest.py` or engine file modified | All engine output fields registered in manifest, no ghost fields |
 | serialization-guard | GATE4 | Any `api/serializers.py` or engine return type modified | Serializer matches TypedDict, no additive-only breakage |
@@ -642,16 +711,10 @@ Pre-existing violations are noted in the report but do not block the task.
 | Gate | ID | Trigger | What it checks |
 |---|---|---|---|
 | eslint-sentinel | GATEF1 | Any `.tsx` `.ts` modified | ESLint via MCP — TypeScript lint, React rules, import order |
-| frontend-paradigm-sentinel | GATEF2 | Always after F1 | No domain logic in components, no raw hex/rgba, no arbitrary Tailwind |
-| type-sync-guard | GATEF3 | Always | `npx tsc --noEmit` — full TypeScript strict check, zero new errors |
-| next-devtools-check | GATEF4 | Always | Query Next.js MCP for live runtime errors, hydration failures, build errors |
-
-**GATEF4 detail:** Requires dev server running (`npm run dev`). Codex queries the
-`next-devtools` MCP for `get_errors` — any errors not present in the pre-task baseline
-are a FAIL. Pre-existing errors are noted but do not block.
-
-**GATEF4 exception:** If dev server is not running, GATEF4 is SKIPPED with a note.
-Claude decides whether to require a manual check before accepting the report.
+| srp-check | SRP-CHECK | Any `frontend/components/` `.tsx` modified | Single Responsibility Principle — every file, function, and class must do exactly one thing. The hook flags files over 300 lines as an automated SRP signal. 300 lines is not the rule — it is a symptom. Resolution requires listing every distinct responsibility and extracting each into its own file with clean prop interfaces. Merely moving lines to stay under 300 is a hard fail. |
+| frontend-paradigm-sentinel | GATEF2 | Any `.tsx` `.ts` modified | No domain logic in components, no raw hex/rgba, no arbitrary Tailwind |
+| type-sync-guard | GATEF3 | Any `frontend/` file modified | `npx tsc --noEmit` — full TypeScript strict check, zero new errors |
+| next-devtools-check | GATEF4 | **DORMANT** | Activate when next-devtools MCP configured. Queries live runtime errors and hydration failures. |
 
 ---
 
@@ -667,22 +730,26 @@ fixing gate violations first prevents the Reviewer from reviewing broken code.
 - Gates don't check scope. The Reviewer cross-checks FILES IN SCOPE against what was touched.
 
 **Reviewer failure after gates pass** means the code is structurally correct but wrong
-for the task. This is F7 (AC mismatch) — Claude owns the fix (rewrite the ambiguous AC).
+for the task. Apply the F7A/F7B decision rule: if the Reviewer named specific code that
+fails the AC → F7B (implementation gap, Codex fixes). If the Reviewer could not name
+specific code → F7A (ambiguous AC, Claude rewrites the spec).
 
 ---
 
 ### GATE CLASSIFICATION TABLE
 
-| Task type | Backend gates | Frontend gates |
+| Task type | Backend gates (in order) | Frontend gates (in order) |
 |---|---|---|
-| bug-fix (backend) | 1,2,3,4,5S,5T,5P,6 | — |
-| new-feature (backend) | 1,2,3,4,5S,5T,5P,6 | — |
+| bug-fix (backend) | 1,C,2,3,4,5S,5T,5P,6 | — |
+| new-feature (backend) | 1,C,2,3,4,5S,5T,5P,6 | — |
 | refactor (backend) | 5T,5P,6 | — |
-| frontend-bug-fix | — | F1,F2,F3,F4 |
-| frontend-new-component | — | F1,F2,F3,F4 |
-| full-stack | 1,2,3,4,5S,5T,5P,6 | F1,F2,F3,F4 |
+| frontend-bug-fix | — | F1,SRP,F2,F3 |
+| frontend-new-component | — | F1,SRP,F2,F3 |
+| full-stack | 1,C,2,3,4,5S,5T,5P,6 | F1,SRP,F2,F3 |
 | validator-fix | 6 | — |
 | infra/hook | 6 | — |
+
+*GATEF4 is DORMANT — omitted from all sequences until next-devtools MCP is configured.*
 
 ---
 

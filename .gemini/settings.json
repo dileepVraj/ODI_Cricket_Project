@@ -36,6 +36,26 @@
                 "-y",
                 "@modelcontextprotocol/server-sequential-thinking"
             ]
+        },
+        "stitch": {
+            "command": "node",
+            "args": [
+                "C:\\Cricket_Project_Stable\\.mcp-servers\\stitch-mcp\\bin\\stitch-mcp.js"
+            ]
+        },
+        "jcodemunch": {
+            "command": "D:\\programs\\MCP\\jcodemunch-mcp\\.jcodemunch-venv\\Scripts\\jcodemunch-mcp.exe",
+            "args": []
+        },
+        "duckdb": {
+            "command": "cmd",
+            "args": [
+                "/c",
+                "npx",
+                "-y",
+                "duckdb-mcp",
+                "C:\\Cricket_Project_Stable\\formats\\odi\\data\\odi.duckdb"
+            ]
         }
     }
 }

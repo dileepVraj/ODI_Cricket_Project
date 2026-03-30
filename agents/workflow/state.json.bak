@@ -8,8 +8,7 @@
     "phase": null,
     "agent": null,
     "invoked_at": null,
-    "pre_call_commit": null,
-    "retry_count": 0
+    "pre_call_commit": null
   },
   "abandoned_tasks": [],
   "dirty_files": [],

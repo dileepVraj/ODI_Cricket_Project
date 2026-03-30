@@ -14,8 +14,19 @@
   ],
   "reviewer": {
     "verdict": "PASS",
-    "acs": ["AC-1","AC-2","AC-3","AC-4","AC-5","AC-6","AC-7","AC-8","AC-9","AC-10"],
-    "assertion": {"ran": false, "expected": null, "actual": null, "match": null, "raw_output": "N/A — infra task"},
+    "acs": [
+      {"id": "AC-1",  "status": "SATISFIED", "reason": "core/utils/boundary_sentinel.py created, delegates via subprocess."},
+      {"id": "AC-2",  "status": "SATISFIED", "reason": "All 4 remaining wrappers created and verified."},
+      {"id": "AC-3",  "status": "SATISFIED", "reason": "paradigm_sentinel.py runs GATE1+GATE6, aggregates JSON, smoke test PASS."},
+      {"id": "AC-4",  "status": "SATISFIED", "reason": "python_type_check.py runs ruff+mypy, graceful skip if missing."},
+      {"id": "AC-5",  "status": "SATISFIED", "reason": "next_devtools_check.py always emits SKIPPED with note."},
+      {"id": "AC-6",  "status": "SATISFIED", "reason": "triggered: true added to all 8 existing gate scripts' --json output."},
+      {"id": "AC-7",  "status": "SATISFIED", "reason": "GATE_SEQUENCE.md: GATE5→GATE5P, GATE5S/GATE5T/GATEF4 added, applicability table updated."},
+      {"id": "AC-8",  "status": "SATISFIED", "reason": "All wrappers pass --json through to real scripts."},
+      {"id": "AC-9",  "status": "SATISFIED", "reason": "paradigm_sentinel.py --json returns GATE5P PASS, exit 0. Verified."},
+      {"id": "AC-10", "status": "SATISFIED", "reason": "compliance_bouncer PASS: 100% across 22 files."}
+    ],
+    "assertion": {"ran": false, "expected": null, "actual": null, "match": null, "pre_impl_output": "", "raw_output": "N/A — infra task"},
     "scope_clean": true,
     "out_of_scope_files": [],
     "issues": []
