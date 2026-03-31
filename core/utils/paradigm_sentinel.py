@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 GATE1_SCRIPT = ROOT / "utils/boundary_sentinel.py"
 GATE6_SCRIPT = ROOT / "utils/compliance_bouncer.py"
+GATE_SRP_SCRIPT = ROOT / "utils/srp_sentinel.py"
 
 
 def _parse_gate_output(stdout: str, stderr: str, gate_name: str) -> dict[str, object]:
@@ -62,6 +63,8 @@ def main() -> int:
 
     gate1 = run_gate(GATE1_SCRIPT, _gate_args(args.root, args.paths, ["core/"]), "GATE1")
     gate6 = run_gate(GATE6_SCRIPT, _gate_args(args.root, args.paths), "GATE6")
+    gate_srp = run_gate(GATE_SRP_SCRIPT, _gate_args(args.root, args.paths), "GATE_SRP")
+    srp_findings = list(gate_srp.get("violations", []))
     all_violations = list(gate1.get("violations", [])) + list(gate6.get("violations", []))
     status = "PASS" if not all_violations else "FAIL"
 
@@ -74,6 +77,7 @@ def main() -> int:
                     "status": status,
                     "violations": all_violations,
                     "violation_count": len(all_violations),
+                    "srp_advisory": srp_findings,
                 }
             )
         )
@@ -82,6 +86,7 @@ def main() -> int:
     print("GATE5P - paradigm-sentinel")
     print(f"  GATE1 (boundary): {gate1.get('status', 'FAIL')}")
     print(f"  GATE6 (bouncer): {gate6.get('status', 'FAIL')}")
+    print(f"  GATE_SRP (advisory): {len(srp_findings)} finding(s)")
     print(f"GATE5P - {status}")
     return 0 if status == "PASS" else 1
 

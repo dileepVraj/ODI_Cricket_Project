@@ -206,6 +206,30 @@ Note: the hook calls `paradigm_sentinel.py`, not `run_sentinel.py`. Do not confu
 
 ---
 
+**GATE_SRP — srp-sentinel (advisory)**
+Trigger: always — runs inside GATE5P after GATE1 and GATE6.
+Status: always PASS. Advisory only. Never blocks a commit. Always exits 0.
+```powershell
+python core/utils/srp_sentinel.py --root . --json
+```
+Optional: restrict scope with `--paths core/api/formats/odi/engines/`.
+Findings appear in GATE5P JSON output under "srp_advisory" key, and as a separate
+GATE_SRP entry (status: PASS) in the task report gates array.
+
+Signals checked (three independent static analysis signals):
+  Signal A: class method count > 20 or file function count > 20          (+1)
+  Signal B: file line count > 400                                         (+1)
+  Signal C: LCOM4 > 1 — class methods split into disjoint groups         (+2, weighted)
+  Signal D: verb clusters >= 3 — methods span 3+ responsibility verbs    (+1)
+  Signal E: import domains >= 3 — file imports from 3+ project layers    (+1)
+
+Scoring: score >= 3 → SRP_WARNING | score >= 5 → SRP_FLAG
+
+Note: SRP findings indicate scheduled refactor debt, not deployment blockers.
+Known violations registry: agents/audits/SRP_VIOLATIONS.md
+
+---
+
 **GATE 6 — compliance_bouncer (final gate)**
 Trigger: always — last step before every commit.
 ```powershell
