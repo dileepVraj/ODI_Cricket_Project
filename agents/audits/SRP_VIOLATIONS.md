@@ -39,7 +39,6 @@ This is the clean window for a structural refactor.
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
 | `core/services/squad_service.py` | 3 | TASK-TBD | Pending |
-| `core/match_pack/transformer.py` | 3 | TASK-TBD | Pending |
 | `core/calculators/team/matchup_calculator.py` | 3 | TASK-TBD | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
 | `formats/odi/manifest.py` | 4 | TASK-TBD | Pending |
@@ -111,6 +110,9 @@ transforms, HTML/emoji stripping, string parsing utilities.
 | `core/match_pack/transformers/team_transformer.py` | Team form + dominance matrix |
 | `core/match_pack/transformers/player_transformer.py` | Player stats transforms |
 | `core/match_pack/transformers/string_utils.py` | HTML/emoji stripping, string parsing |
+
+**Status: COMPLETE** â€” TASK-172b (`COMMIT_HASH_PENDING`) replaced `transformer.py`
+with a backward-compat re-export shim and removed it from the allowlist.
 
 ---
 
