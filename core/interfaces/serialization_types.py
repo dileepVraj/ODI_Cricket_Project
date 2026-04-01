@@ -60,6 +60,7 @@ MappedEngineParams: TypeAlias = dict[str, Union[str, int, float, bool, list[str]
 EnrichablePayload: TypeAlias = Union[
     list["ComparisonReportRow"],
     list["MatrixReportRow"],
+    list["TeamFormRow"],
     "VenueBiasReport",
     "VenuePhasesReport",
     "VenueMatchupReport",
@@ -76,7 +77,7 @@ class SerializedEnvelope(TypedDict, total=False):
 
 
 class EnrichedListPayload(TypedDict):
-    stats: Union[list["ComparisonReportRow"], list["MatrixReportRow"]]
+    stats: Union[list["ComparisonReportRow"], list["MatrixReportRow"], list["TeamFormRow"]]
     match_audit: list[MatchAuditRecord]
 
 
