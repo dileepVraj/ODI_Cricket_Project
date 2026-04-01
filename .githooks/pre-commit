@@ -15,7 +15,7 @@ with open('$SCOPE_FILE') as f:
     data = json.load(f)
 for p in data.get('allowed_files', []):
     print(p.strip())
-")
+" | tr -d '\r')
     VIOLATIONS=()
     while IFS= read -r file; do
         if [ -z "$file" ]; then continue; fi

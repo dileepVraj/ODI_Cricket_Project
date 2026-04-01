@@ -1,0 +1,13 @@
+{
+  "task_id": "TASK-172a",
+  "allowed_files": [
+    ".githooks/pre-commit",
+    "core/match_pack/transformer.py",
+    "core/match_pack/transformers/__init__.py",
+    "core/match_pack/transformers/string_utils.py",
+    "core/match_pack/transformers/h2h_transformer.py",
+    "core/match_pack/transformers/venue_transformer.py",
+    "core/match_pack/transformers/team_transformer.py",
+    "core/match_pack/transformers/player_transformer.py"
+  ]
+}
