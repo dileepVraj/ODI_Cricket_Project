@@ -31,6 +31,7 @@ from core.match_pack.transformer import (
     transform_player_stats,
 )
 from core.match_pack.interpreter import MatchInterpreter
+from config.shared.venues import get_country_from_venue_id, resolve_venue_id
 from formats.odi.config.players import PLAYER_ROLES, BOWLER_STYLES
 from formats.odi.config.rankings import ODI_RANKINGS
 
@@ -200,10 +201,26 @@ class MatchPackGenerator:
 
         # --- 1.3 Country H2H — SLIM ---
         print("  ├── 1.3 Country H2H (8Y)...")
-        raw_country = self._silent_call(self.bot.analyze_country_h2h, home, away, home, 8)
-        if raw_country:
-            data = transform_h2h_slim(raw_country, home, away)
-            chapter["country_h2h"] = self.interpreter.interpret_h2h(data, home, away, "In-Country, 8Y")
+        host_country = get_country_from_venue_id(resolve_venue_id(venue) or venue)
+        raw_country = None
+        if host_country:
+            raw_country = self._silent_call(self.bot.analyze_country_h2h, home, away, host_country, 8)
+        if raw_country and isinstance(raw_country, dict):
+            summary = raw_country.get("summary", {})
+            home_stats = raw_country.get("team_a", {}).get("stats", {})
+            away_stats = raw_country.get("team_b", {}).get("stats", {})
+            data = {
+                "matches_played": summary.get("matches", 0),
+                "home_wins": home_stats.get("wins", 0),
+                "away_wins": away_stats.get("wins", 0),
+                "no_result": summary.get("tie_nr", 0),
+                "home_win_pct": summary.get("win_pct", 0),
+                "home_won_batting_first": home_stats.get("defended", 0),
+                "home_won_chasing": home_stats.get("chased", 0),
+                "away_won_batting_first": away_stats.get("defended", 0),
+                "away_won_chasing": away_stats.get("chased", 0),
+            }
+            chapter["country_h2h"] = self.interpreter.interpret_h2h(data, home, away, f"In {host_country}, 8Y")
 
         # --- 1.4 Home Dominance ---
         print("  ├── 1.4 Home Dominance (4Y)...")
