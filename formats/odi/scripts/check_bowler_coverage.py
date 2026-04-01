@@ -21,8 +21,8 @@ def analyze():
     missing_all = len([b for b in unique_bowlers if b not in config_bowlers])
     missing_recent = len([b for b in recent_bowlers if b not in config_bowlers])
 
-    print(f"\nFINAL SUMMARY")
-    print(f"-------------")
+    print("\nFINAL SUMMARY")
+    print("-------------")
     print(f"All-Time Unique Bowlers: {len(unique_bowlers)}")
     print(f"Bowlers in Configuration: {len(config_bowlers)}")
     print(f"Missing (All-Time): {missing_all} ({missing_all/len(unique_bowlers):.1%})")

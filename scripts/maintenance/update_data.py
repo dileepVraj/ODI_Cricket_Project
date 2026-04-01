@@ -14,9 +14,9 @@ import sys
 
 # Add project root to sys.path for module imports.
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, ROOT)
+sys.path.insert(0, ROOT)  # noqa: E402
 
-from config.format_registry import get_format_module
+from config.format_registry import get_format_module  # noqa: E402
 
 
 def main() -> None:

@@ -1,7 +1,6 @@
 import os
 import ast
 import json
-import sys
 from typing import Any, Dict, Optional
 
 # Configuration

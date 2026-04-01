@@ -1,5 +1,4 @@
 from formats.odi.tests.truth_bridge.base_runner import TruthBridgeBase
-from config.shared.venues import VENUE_MAP
 import sys
 
 class PredictorValidationRunner(TruthBridgeBase):
@@ -25,7 +24,7 @@ class PredictorValidationRunner(TruthBridgeBase):
             # TEST DISABLED -- predict_score() removed pending Phase 12 rebuild
             # Re-enable and rewrite this test when predict_score() is rebuilt
             # See formats/odi/predictor.py for rebuild requirements
-            print(f"      ⏭️ [SKIP] predict_score() is pending Phase 12 rebuild")
+            print("      ⏭️ [SKIP] predict_score() is pending Phase 12 rebuild")
             self.results["summary"]["pass"] += 1  # Not a failure; intentionally disabled
             self.results["details"].append({"item": str(key_path), "status": "SKIP"})
             continue

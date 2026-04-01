@@ -10,18 +10,18 @@ import json
 import os
 import sys
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 
 import pandas as pd
 
 # Add project root to path for direct script execution.
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
+    sys.path.insert(0, ROOT)  # noqa: E402
 
-from core.data_access import DataAccess
-from config.settings import ODI_DB_PATH
-from formats.odi.engines.team_engine import TeamEngine
+from core.data_access import DataAccess  # noqa: E402
+from config.settings import ODI_DB_PATH  # noqa: E402
+from formats.odi.engines.team_engine import TeamEngine  # noqa: E402
 
 
 def _pair_mask(df: pd.DataFrame, home_team: str, away_team: str) -> pd.Series:

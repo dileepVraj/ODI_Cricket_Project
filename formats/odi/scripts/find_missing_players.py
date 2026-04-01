@@ -42,7 +42,7 @@ def find_missing():
     with open('missing_players_report.json', 'w') as f:
         json.dump(report, f, indent=4)
         
-    print(f"Report generated: missing_players_report.json")
+    print("Report generated: missing_players_report.json")
 
 if __name__ == "__main__":
     find_missing()

@@ -16,7 +16,6 @@ from core.match_pack.transformer import (
     transform_venue_bias,
     transform_team_form,
     transform_dominance_matrix,
-    transform_squad_comparison,
 )
 from core.match_pack.interpreter import MatchInterpreter
 

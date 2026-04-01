@@ -1,5 +1,4 @@
 import pandas as pd
-import zipfile
 import os
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)

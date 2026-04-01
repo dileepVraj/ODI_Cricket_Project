@@ -146,7 +146,7 @@ def test_json_converter_outputs_squad_status_columns(tmp_path: Path) -> None:
     expected_cols = {"player_order", "is_playing_xi", "player_status", "source"}
     assert expected_cols.issubset(set(squads_df.columns))
     assert squads_df["is_playing_xi"].isin([True, False]).all()
-    assert bool((squads_df["is_playing_xi"] == False).any())
+    assert bool((~squads_df["is_playing_xi"]).any())
 
 
 def _build_minimal_db(db_path: Path, *, duplicate_key: bool = False, unresolved_venue: bool = False) -> None:

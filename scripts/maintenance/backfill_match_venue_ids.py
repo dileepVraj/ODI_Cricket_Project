@@ -23,10 +23,10 @@ import pandas as pd
 # Add project root to path for direct script execution.
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
+    sys.path.insert(0, ROOT)  # noqa: E402
 
-from config.shared.venues import resolve_venue_id
-from config.settings import ODI_DB_PATH
+from config.shared.venues import resolve_venue_id  # noqa: E402
+from config.settings import ODI_DB_PATH  # noqa: E402
 
 
 def _count_missing(con: duckdb.DuckDBPyConnection) -> int:

@@ -98,7 +98,7 @@ class MatchInterpreter:
             dom_reasoning = f"Win rate of {win_pct}% falls within the 45-55% competitive band."
         elif win_pct == 50:
             dominance = "EVENLY_MATCHED"
-            dom_reasoning = f"Exactly 50-50 — neither team has an edge."
+            dom_reasoning = "Exactly 50-50 — neither team has an edge."
         else:
             dominance = "SLIGHT_EDGE"
             edge_team = home_team if win_pct > 50 else away_team
@@ -200,17 +200,25 @@ class MatchInterpreter:
             
             if code == "W":
                 w5 += 1
-                if rank <= 3: weight = 2.5     # Giant Killer
-                elif rank <= 7: weight = 1.5   # Quality Win
-                elif rank <= 10: weight = 1.0  # Standard Win
-                else: weight = 0.5             # Expected Win (Associates)
+                if rank <= 3:
+                    weight = 2.5  # Giant Killer
+                elif rank <= 7:
+                    weight = 1.5  # Quality Win
+                elif rank <= 10:
+                    weight = 1.0  # Standard Win
+                else:
+                    weight = 0.5  # Expected Win (Associates)
                 momentum_points += weight
                 seq_last_5.append(f"Win ({opp})")
             elif code == "L":
-                if rank <= 3: weight = -0.2    # Resistant Loss (Expected vs Top)
-                elif rank <= 7: weight = -0.8  # Competitive Loss
-                elif rank <= 10: weight = -1.5 # Upset Loss
-                else: weight = -2.5            # Momentum Killer (Lost to Associate)
+                if rank <= 3:
+                    weight = -0.2  # Resistant Loss (Expected vs Top)
+                elif rank <= 7:
+                    weight = -0.8  # Competitive Loss
+                elif rank <= 10:
+                    weight = -1.5  # Upset Loss
+                else:
+                    weight = -2.5  # Momentum Killer (Lost to Associate)
                 momentum_points += weight
                 seq_last_5.append(f"Loss ({opp})")
             else:
@@ -436,7 +444,7 @@ class MatchInterpreter:
 
             if "away" in toss_str and toss_advantage:
                 toss_alignment = "COUNTER_TOSS"
-                toss_reasoning = f"Away team won toss and made the statistically optimal choice — counter-toss scenario."
+                toss_reasoning = "Away team won toss and made the statistically optimal choice — counter-toss scenario."
 
         # Narrative
         bias_text = "batting first" if "BAT" in verdict.upper() else ("chasing" if "BOWL" in verdict.upper() else "neither side")
@@ -704,8 +712,10 @@ class MatchInterpreter:
                     if team_stats and p in team_stats:
                         stats = team_stats[p]
                         wickets = stats.get('career', {}).get('bowling', {}).get('wickets', 0)
-                        if wickets > 100: exp_rank = "VETERAN"
-                        elif wickets < 20: exp_rank = "PROSPECT"
+                        if wickets > 100:
+                            exp_rank = "VETERAN"
+                        elif wickets < 20:
+                            exp_rank = "PROSPECT"
 
                     clean_style = style.replace('⚡ ', '').replace('🌀 ', '')
                     roster.append({

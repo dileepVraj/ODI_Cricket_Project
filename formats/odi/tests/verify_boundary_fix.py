@@ -23,7 +23,7 @@ def verify_fix():
     # 2. Define cutoff (e.g., 10 years ago)
     # 🚨 CRITICAL: Use .floor('D') to ensure we don't exclude today's matches due to HH:MM:SS
     now = pd.Timestamp.now().floor('D')
-    cutoff_date = now - pd.DateOffset(years=10)
+    _ = now - pd.DateOffset(years=10)
     
     cutoff_no_fix = pd.Timestamp.now().floor('D') - pd.DateOffset(years=10)
     cutoff_with_fix = pd.Timestamp.now().floor('D') - pd.DateOffset(years=10)

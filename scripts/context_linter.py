@@ -5,7 +5,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.maintenance.context_linter import run_linter
+from scripts.maintenance.context_linter import run_linter  # noqa: E402
 
 
 if __name__ == "__main__":

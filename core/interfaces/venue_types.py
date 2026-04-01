@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Typed contracts for venue analysis payloads."""
+
+from __future__ import annotations
 
 from typing import Dict, Tuple, TypeAlias, TypedDict
 

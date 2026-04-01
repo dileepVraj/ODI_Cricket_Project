@@ -21,12 +21,12 @@ import pandas as pd
 # Ensure repository root is importable when executing as a script.
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+    sys.path.insert(0, str(REPO_ROOT))  # noqa: E402
 
-from core.calculators.performance import calculate_team_metrics
-from core.calculators.phase_engine import calculate_phase_breakdown
-from core.services.match_filter_service import apply_smart_filters
-from formats.odi.manifest import FORMAT_RULES
+from core.calculators.performance import calculate_team_metrics  # noqa: E402
+from core.calculators.phase_engine import calculate_phase_breakdown  # noqa: E402
+from core.services.match_filter_service import apply_smart_filters  # noqa: E402
+from formats.odi.manifest import FORMAT_RULES  # noqa: E402
 
 
 REFACTOR_DATE = "2026-02-23"

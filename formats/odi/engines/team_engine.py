@@ -40,7 +40,8 @@ class TeamEngine(ITeamEngine):
         return pd.Timestamp.now().floor("D")
 
     def _require_match_context(self, match_context: Optional[TeamMatchContext]) -> TeamMatchContext:
-        if isinstance(match_context, dict): return match_context
+        if isinstance(match_context, dict):
+            return match_context
         raise ConfigurationError("Missing required 'match_context'. Inject match_df/phase_df/reference_date/tactical_thresholds per request.")
 
     @staticmethod

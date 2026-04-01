@@ -18,7 +18,6 @@ Usage:
 """
 import sys
 import os
-import inspect
 import argparse
 
 # Windows console needs UTF-8 for emoji output
@@ -27,9 +26,9 @@ if sys.stdout.encoding != "utf-8":
 
 # Add project root to path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PROJECT_ROOT)
+sys.path.insert(0, PROJECT_ROOT)  # noqa: E402
 
-from config.format_registry import FORMATS, get_format_manifest, get_format_engines
+from config.format_registry import FORMATS, get_format_manifest, get_format_engines  # noqa: E402
 
 
 # ── Required fields per level ────────────────────────────────────────────
@@ -192,7 +191,7 @@ def run_validation(target_format: str = None):
         try:
             get_format_manifest(fmt)
         except (ValueError, ImportError):
-            print(f"   ⏭️  No manifest found — SKIPPED")
+            print("   ⏭️  No manifest found — SKIPPED")
             total_skipped += 1
             continue
 

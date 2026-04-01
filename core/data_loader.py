@@ -14,7 +14,6 @@ from typing import Any, Dict
 import pandas as pd
 
 from core.data_access import DataAccess
-from core.exceptions import DataIntegrityError
 
 
 def create_data_source(format_config: Dict[str, Any]) -> DataAccess:

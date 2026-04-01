@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Typed contracts for serialisation, display, and output pipelines."""
+
+from __future__ import annotations
 
 from typing import Protocol, TypeAlias, TypedDict, Union
 

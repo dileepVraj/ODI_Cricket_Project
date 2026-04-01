@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, Union
+from typing import Callable
 
 from config.shared.team_colors import TEAM_COLORS
 from core.interfaces.team_types import (
@@ -245,7 +245,7 @@ class ReportBuilder:
             known_non_decisions = int(
                 full["winner"].astype(str).str.lower().str.strip().isin(["tie", "no result", "nan", "none"]).sum()
             )
-            data_gaps = tie_nr - known_non_decisions
+            tie_nr - known_non_decisions
             pct = int((wins / decisions) * 100) if decisions > 0 else 0
 
             stats.append(
@@ -287,7 +287,7 @@ class ReportBuilder:
         total_known_non_decisions = int(
             overall_full["winner"].astype(str).str.lower().str.strip().isin(["tie", "no result", "nan", "none"]).sum()
         )
-        total_data_gaps = total_tie_nr - total_known_non_decisions
+        total_tie_nr - total_known_non_decisions
         total_pct = int((total_wins / total_decisions) * 100) if total_decisions > 0 else 0
 
         overall = pd.DataFrame(

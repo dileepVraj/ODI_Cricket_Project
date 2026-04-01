@@ -27,7 +27,7 @@ def test(name, url, method="GET", body=None, expected_status=200):
             print(f"  RESPONSE:\n{text}")
         
         if r.status_code == expected_status:
-            print(f"  ✅ PASSED")
+            print("  ✅ PASSED")
         else:
             print(f"  ❌ FAILED (expected {expected_status})")
         return r.status_code, data

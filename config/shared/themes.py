@@ -1,4 +1,3 @@
-from typing import Dict
 
 # 🎨 THEME DEFINITIONS
 # Colors now referenced from TEAM_COLORS to satisfy linter (Standard #1)

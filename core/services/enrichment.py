@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Sequence
+from typing import List, Optional, Sequence
 from core.interfaces.team_types import (
     EnrichablePayload,
     AnalyzerEngineProtocol,

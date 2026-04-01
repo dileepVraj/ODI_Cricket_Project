@@ -1,20 +1,17 @@
 import os
 import sys
-import json
-import pandas as pd
-from datetime import datetime
 
 # Add project root to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))  # noqa: E402
 
 # 🚷 HEADLESS MOCK: Prevent IPython/Jupyter overhead in Truth Bridge
-import builtins
+import builtins  # noqa: E402
 def mock_display(*args, **kwargs): pass
 builtins.display = mock_display
 builtins.HTML = lambda x: x
 
-from formats.odi.tests.truth_bridge.base_runner import TruthBridgeBase
-from config.shared.venues import VENUE_MAP
+from formats.odi.tests.truth_bridge.base_runner import TruthBridgeBase  # noqa: E402
+from config.shared.venues import VENUE_MAP  # noqa: E402
 
 class TossBiasTruthBridge(TruthBridgeBase):
     def __init__(self):
@@ -45,18 +42,19 @@ class TossBiasTruthBridge(TruthBridgeBase):
         for vid in unique_ids:
             # Extract prefix (e.g., IND from IND_MUMBAI)
             parts = vid.split('_')
-            if not parts: continue
+            if not parts:
+                continue
             code = parts[0]
             
             country_name = prefix_map.get(code, "Others")
-            if country_name not in grouped: grouped[country_name] = []
+            if country_name not in grouped:
+                grouped[country_name] = []
             grouped[country_name].append(vid)
             
         return grouped
 
     def run(self):
         SEED_MODE = os.environ.get("SEED_MODE") == "1"
-        results = {}
         
         # Reset if seeding
         if SEED_MODE and os.path.exists(self.truth_file):

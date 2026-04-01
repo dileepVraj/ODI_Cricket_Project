@@ -623,7 +623,7 @@ def calculate_venue_bias_payload(match_df: pd.DataFrame, context: VenueBiasConte
     matches_won = valid_results.groupby("match_id").first()
     bat1_wins = int((matches_won["winner"] == matches_won["team_bat_1"]).sum())
     chase_wins = int((matches_won["winner"] == matches_won["team_bat_2"]).sum())
-    total = int(valid_results["match_id"].nunique())
+    int(valid_results["match_id"].nunique())
     decided = bat1_wins + chase_wins
     bat1_pct = _safe_percent(bat1_wins, decided, context["percent_scale"])
     chase_pct = _safe_percent(chase_wins, decided, context["percent_scale"])

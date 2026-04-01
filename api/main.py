@@ -19,7 +19,7 @@ import os
 import sys
 import logging
 import io
-from typing import Dict, List, Optional, TypedDict, cast
+from typing import List, Optional, TypedDict, cast
 from contextlib import redirect_stdout
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Path, Query, Request
@@ -32,8 +32,8 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from config.format_registry import get_format_manifest, get_format_engines
-from config.settings import (
+from config.format_registry import get_format_manifest, get_format_engines  # noqa: E402
+from config.settings import (  # noqa: E402
     API_DOCS_URL,
     API_HOST,
     API_LEGACY_PREFIX,
@@ -42,22 +42,22 @@ from config.settings import (
     API_V1_PREFIX,
     CORS_ORIGINS,
 )
-from api.engine_pool import get_analyzer, get_active_formats, is_format_loaded
-from api.context_builder import (
+from api.engine_pool import get_analyzer, get_active_formats, is_format_loaded  # noqa: E402
+from api.context_builder import (  # noqa: E402
     AnalyzerProtocol,
     EngineCallParams,
     _engine_default_int,
     _inject_player_engine_context,
     _inject_team_engine_context,
 )
-from api.lifespan import run_startup_initialization
-from api.schemas import (
+from api.lifespan import run_startup_initialization  # noqa: E402
+from api.schemas import (  # noqa: E402
     ExecuteRequest, ExecuteResponse, ErrorResponse,
     ManifestResponse, TeamsResponse, VenuesResponse, PlayersResponse,
     RegionsResponse, HostCountriesResponse, HealthResponse, FormatMetadata
 )
-from api.serializers import serialize_engine_output
-from core.services import (
+from api.serializers import serialize_engine_output  # noqa: E402
+from core.services import (  # noqa: E402
     ParamMapperService, EnrichmentService, PlayerService,
     SerializationService
 )

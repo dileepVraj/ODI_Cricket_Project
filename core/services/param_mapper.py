@@ -80,7 +80,7 @@ class ParamMapperService:
         Enforces strict filtering based on the format manifest to prevent param leakage.
         """
         method_name = fn_def.get("engine_method", "")
-        function_key = fn_def.get("key", "")
+        fn_def.get("key", "")
         
         # 1. IDENTIFY ALLOWED KEYS FROM MANIFEST
         # The manifest is the "Filter of Truth". We only allow what the manifest declares.

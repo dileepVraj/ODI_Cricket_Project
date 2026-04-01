@@ -21,8 +21,10 @@ class PlayerStatsValidationRunner(TruthBridgeBase):
 
         for i, (player, opp, venue, years) in enumerate(scenarios, 1):
             key_parts = [f"Scenario_{i}", player]
-            if opp: key_parts.append(f"vs_{opp}")
-            if venue: key_parts.append(f"at_{venue}")
+            if opp:
+                key_parts.append(f"vs_{opp}")
+            if venue:
+                key_parts.append(f"at_{venue}")
             
             key_path = key_parts
             item_label = " > ".join(key_path)
@@ -77,7 +79,7 @@ class PlayerStatsValidationRunner(TruthBridgeBase):
                     self.compare(key_path, fingerprint, expected)
                 else:
                     # SEED MODE
-                    print(f"      🌱 New Scenario Detected. Seeding Ground Truth...")
+                    print("      🌱 New Scenario Detected. Seeding Ground Truth...")
                     self.ground_truth.setdefault(self.suite_name, {})[item_label] = fingerprint
 
             except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:

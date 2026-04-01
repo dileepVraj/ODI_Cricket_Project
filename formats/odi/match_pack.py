@@ -451,7 +451,7 @@ class MatchPackGenerator:
         # --- 4.3 Bowling Roster Analysis (FIX 4 — smart narrative) ---
         print("  ├── 4.3 Bowling Roster...")
         player_stats_data = chapter.get("player_stats", {}).get("data", {})
-        matchup_data_for_roster = chapter.get("matchups", {}).get("data", {})
+        _ = chapter.get("matchups", {}).get("data", {})
 
         chapter["bowling_roster"] = self.interpreter.analyze_bowling_roster(
             home_xi, away_xi, context.get("pitch", ""), player_stats=player_stats_data
@@ -488,8 +488,8 @@ class MatchPackGenerator:
                 parts.append(f"Both squads are similarly experienced ({h_caps} vs {a_caps} caps).")
 
         # Run-scoring depth
-        h_runs = h.get("Total Runs", 0)
-        a_runs = a.get("Total Runs", 0)
+        _ = h.get("Total Runs", 0)
+        _ = a.get("Total Runs", 0)
         h_100s = h.get("100s", 0)
         a_100s = a.get("100s", 0)
         if h_100s > 0 or a_100s > 0:
@@ -569,7 +569,7 @@ class MatchPackGenerator:
                     outs = m.get("Outs", 0)
                     avg = m.get("Avg", 0)
                     runs = m.get("Runs", 0)
-                    balls = m.get("Balls", 0)
+                    _ = m.get("Balls", 0)
                     sr = m.get("SR", 0)
 
                     # Bunny: dismissed 3+ times with avg < 20
@@ -602,13 +602,15 @@ class MatchPackGenerator:
         strugglers = []
 
         for team, players in player_stats.items():
-            if not isinstance(players, dict): continue
+            if not isinstance(players, dict):
+                continue
             for p_name, stats in players.items():
-                if not isinstance(stats, dict) or "error" in stats: continue
+                if not isinstance(stats, dict) or "error" in stats:
+                    continue
                 
                 bat = stats.get("batting", {})
                 bowl = stats.get("bowling", {})
-                role = PLAYER_ROLES.get(p_name, "All-Rounder")
+                PLAYER_ROLES.get(p_name, "All-Rounder")
 
                 # 🏏 Batting Analysis
                 bat_avg = bat.get("average", 0)
@@ -631,10 +633,14 @@ class MatchPackGenerator:
                     bowl_standouts.append(f"{p_name} ({b_econ} Econ)")
 
         parts = []
-        if bat_standouts: parts.append(f"IN-FORM BATTERS: {', '.join(bat_standouts[:3])} are in elite touch (Avg 45+).")
-        if bowl_standouts: parts.append(f"BOWLING THREATS: {', '.join(bowl_standouts[:3])} maintain elite economy rates.")
-        if venue_kings: parts.append(f"VENUE SPECIALISTS: {', '.join(venue_kings[:3])} have historically dominated these conditions.")
-        if strugglers: parts.append(f"UNDER PRESSURE: {', '.join(strugglers[:3])} are searching for form (Avg < 18).")
+        if bat_standouts:
+            parts.append(f"IN-FORM BATTERS: {', '.join(bat_standouts[:3])} are in elite touch (Avg 45+).")
+        if bowl_standouts:
+            parts.append(f"BOWLING THREATS: {', '.join(bowl_standouts[:3])} maintain elite economy rates.")
+        if venue_kings:
+            parts.append(f"VENUE SPECIALISTS: {', '.join(venue_kings[:3])} have historically dominated these conditions.")
+        if strugglers:
+            parts.append(f"UNDER PRESSURE: {', '.join(strugglers[:3])} are searching for form (Avg < 18).")
 
         return " ".join(parts) if parts else "No significant player-level trends identified."
 
@@ -645,7 +651,8 @@ class MatchPackGenerator:
         narrative_parts = []
         for team_name in [home, away]:
             team_rows = tactical_data.get(team_name, [])
-            if not team_rows: continue
+            if not team_rows:
+                continue
 
             strugglers = []
             for row in team_rows:
@@ -788,7 +795,7 @@ class MatchPackGenerator:
 
         # Baseline insight
         pp_avg = baseline.get("pp_avg_1st", 0)
-        mid_avg = baseline.get("mid_avg_1st", 0)
+        baseline.get("mid_avg_1st", 0)
         dth_avg = baseline.get("dth_avg_1st", 0)
         if pp_avg and dth_avg:
             if dth_avg > pp_avg:

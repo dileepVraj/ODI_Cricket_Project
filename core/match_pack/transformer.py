@@ -14,7 +14,7 @@ Rules:
     - NO _match_ids in output (internal diagnostic only)
 """
 import re
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
 
 # =============================================================================

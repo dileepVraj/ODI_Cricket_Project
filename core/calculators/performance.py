@@ -63,9 +63,9 @@ def calculate_team_metrics(
         bat2 = df[(df["team_bat_2"] == team_name) & valid_2nd_mask]
 
     if _COL_IS_DEFENDED in df.columns and _COL_IS_CHASED in df.columns:
-        w1 = bat1[bat1[_COL_IS_DEFENDED] == True]
-        w2 = bat2[bat2[_COL_IS_CHASED] == True]
-        l2 = bat2[bat2[_COL_IS_CHASED] == False]
+        w1 = bat1[bat1[_COL_IS_DEFENDED]]
+        w2 = bat2[bat2[_COL_IS_CHASED]]
+        l2 = bat2[~bat2[_COL_IS_CHASED]]
     else:
         w1 = bat1[bat1["winner"] == bat1["team_bat_1"]]
         w2 = bat2[bat2["winner"] == bat2["team_bat_2"]]

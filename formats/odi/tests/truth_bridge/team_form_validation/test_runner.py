@@ -51,7 +51,7 @@ class TeamFormValidationRunner(TruthBridgeBase):
                     self.compare(key_path, fingerprint, expected)
                 else:
                     # SEED MODE
-                    print(f"      🌱 New Scenario Detected. Seeding Ground Truth...")
+                    print("      🌱 New Scenario Detected. Seeding Ground Truth...")
                     self.ground_truth.setdefault(self.suite_name, {})[item_label] = fingerprint
 
             except (AttributeError, KeyError, TypeError, ValueError, RuntimeError, OSError) as e:

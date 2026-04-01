@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import pandas as pd
 from datetime import datetime
 
 # Add project root to path
@@ -126,7 +125,8 @@ class TruthBridgeRunner:
         else:
             # Both are dicts, compare metrics (exclude MATCH_IDS from visual mismatch)
             for metric, expected_val in truth_data.items():
-                if metric == "MATCH_IDS": continue
+                if metric == "MATCH_IDS":
+                    continue
                 actual_val = engine_dict.get(metric)
                 if str(actual_val) != str(expected_val):
                     mismatches.append({

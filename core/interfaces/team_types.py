@@ -4,7 +4,7 @@ Typed contracts for TeamEngine payloads and request context.
 
 from __future__ import annotations
 
-from typing import Dict, Literal, Optional, Protocol, Sequence, Tuple, TypeAlias, TypedDict, Union
+from typing import Optional, Protocol, TypeAlias, TypedDict
 
 import pandas as pd
 
@@ -206,7 +206,7 @@ class AnalyzerEngineProtocol(Protocol):
 # Remove once all import sites are migrated to the specific domain module.
 # ---------------------------------------------------------------------------
 
-from core.interfaces.venue_types import (
+from core.interfaces.venue_types import (  # noqa: E402
     TeamVenueBattingStats,
     TeamVenueChaseStats,
     TeamVenueStatsPayload,
@@ -245,7 +245,7 @@ from core.interfaces.venue_types import (
     VenueGlobalHabits,
     VenuePhasesReport,
 )
-from core.interfaces.player_types import (
+from core.interfaces.player_types import (  # noqa: E402
     TacticalRecorderPort,
     MatchupRowExtended,
     PlayerStatRow,
@@ -264,7 +264,7 @@ from core.interfaces.player_types import (
     SquadMetricsCompat,
     PlayerAnalyzerPort,
 )
-from core.interfaces.serialization_types import (
+from core.interfaces.serialization_types import (  # noqa: E402
     MatchAuditRecord,
     ReportMetricPayload,
     MatchupVisualPayload,

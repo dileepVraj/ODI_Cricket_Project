@@ -11,9 +11,6 @@ from core.interfaces.team_types import (
     PhasePayload,
     ScenarioDiff,
     ScenarioDiffRows,
-    ScenarioDiffs,
-    ScenarioRow,
-    ScenarioRows,
 )
 
 _CANONICAL_PHASE_IDS: Tuple[str, str, str] = ("pp", "mid", "dth")

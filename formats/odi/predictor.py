@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import logging
 from types import MappingProxyType
-from typing import Dict, List, Optional, Tuple, cast
+from typing import Dict, Optional, Tuple, cast
 
-import numpy as np
 import pandas as pd
 
 from core.exceptions import ConfigurationError

@@ -1,10 +1,8 @@
 import os
 import sys
-import json
-from datetime import datetime
 
 # Add project root to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))  # noqa: E402
 
 # 🚷 HEADLESS MOCK: Prevent IPython/Jupyter overhead in Truth Bridge
 import builtins
@@ -12,7 +10,7 @@ def mock_display(*args, **kwargs): pass
 builtins.display = mock_display
 builtins.HTML = lambda x: x
 
-from formats.odi.tests.truth_bridge.base_runner import TruthBridgeBase
+from formats.odi.tests.truth_bridge.base_runner import TruthBridgeBase  # noqa: E402
 
 class RecentFormTruthBridge(TruthBridgeBase):
     def __init__(self):
@@ -79,7 +77,8 @@ class RecentFormTruthBridge(TruthBridgeBase):
             # Sub-variation: Global H2H and specific Regional H2H
             # (e.g. India vs Pak in Asia is a critical check)
             check_configs = [("Global", "All")]
-            if team_a == "India" or team_a == "Pakistan": check_configs.append(("Asia", "Asia"))
+            if team_a == "India" or team_a == "Pakistan":
+                check_configs.append(("Asia", "Asia"))
 
             for label, cont_val in check_configs:
                 try:
@@ -88,7 +87,8 @@ class RecentFormTruthBridge(TruthBridgeBase):
                     
                     key = f"{scenario_key}_{label}"
                     if SEED_MODE:
-                        if "H2H_Form" not in self.ground_truth: self.ground_truth["H2H_Form"] = {}
+                        if "H2H_Form" not in self.ground_truth:
+                            self.ground_truth["H2H_Form"] = {}
                         self.ground_truth["H2H_Form"][key] = engine_h2h
                     else:
                         truth_h2h = self.ground_truth.get("H2H_Form", {}).get(key)

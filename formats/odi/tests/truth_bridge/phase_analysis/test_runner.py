@@ -1,13 +1,10 @@
 import os
 import sys
-import json
-import pandas as pd
 
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))
 
 from formats.odi.tests.truth_bridge.base_runner import TruthBridgeBase
-from config.shared.venues import VENUE_MAP
 
 class PhaseAnalysisTruthBridge(TruthBridgeBase):
     def __init__(self):
@@ -16,7 +13,8 @@ class PhaseAnalysisTruthBridge(TruthBridgeBase):
         
         flattened = {}
         def recurse_find_venues(d):
-            if not isinstance(d, dict): return
+            if not isinstance(d, dict):
+                return
             for k, v in d.items():
                 if isinstance(v, dict) and ("Baseline_Metrics" in v or "baseline" in v or "vs_India" in v):
                     flattened[k] = v
@@ -66,7 +64,8 @@ class PhaseAnalysisTruthBridge(TruthBridgeBase):
                 }
                 
                 if SEED_MODE:
-                    if venue_id not in self.ground_truth: self.ground_truth[venue_id] = {}
+                    if venue_id not in self.ground_truth:
+                        self.ground_truth[venue_id] = {}
                     self.ground_truth[venue_id]["Baseline_Metrics"] = engine_baseline
                 else:
                     truth_baseline = self.ground_truth.get(venue_id, {}).get("Baseline_Metrics")

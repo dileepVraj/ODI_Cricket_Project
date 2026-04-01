@@ -40,8 +40,10 @@ def enrich_scores():
     # Note: Merging 230k rows might take a sec but is efficient in pandas.
     
     # Drop existing if re-running
-    if 'score_inn1' in df.columns: df.drop(columns=['score_inn1'], inplace=True)
-    if 'score_inn2' in df.columns: df.drop(columns=['score_inn2'], inplace=True)
+    if 'score_inn1' in df.columns:
+        df.drop(columns=['score_inn1'], inplace=True)
+    if 'score_inn2' in df.columns:
+        df.drop(columns=['score_inn2'], inplace=True)
     
     merged_df = pd.merge(df, scores, on='match_id', how='left')
     

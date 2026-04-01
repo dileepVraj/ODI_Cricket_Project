@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Typed contracts for player and squad analysis payloads."""
+
+from __future__ import annotations
 
 from typing import Literal, Optional, Protocol, TypeAlias, TypedDict, Union
 
