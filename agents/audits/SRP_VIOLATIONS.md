@@ -111,7 +111,7 @@ transforms, HTML/emoji stripping, string parsing utilities.
 | `core/match_pack/transformers/player_transformer.py` | Player stats transforms |
 | `core/match_pack/transformers/string_utils.py` | HTML/emoji stripping, string parsing |
 
-**Status: COMPLETE** â€” TASK-172b (`COMMIT_HASH_PENDING`) replaced `transformer.py`
+**Status: COMPLETE** â€” TASK-172b (`66264c3`) replaced `transformer.py`
 with a backward-compat re-export shim and removed it from the allowlist.
 
 ---
