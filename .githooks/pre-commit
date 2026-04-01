@@ -3,7 +3,7 @@
 # Gates run in order. Any FAIL blocks the commit.
 # Dormant gates are commented out — activate when their phase ships.
 
-STAGED=$(git diff --cached --name-only)
+STAGED=$(git diff --cached --name-only | tr -d '\r')
 
 # ── SCOPE GUARD ─────────────────────────────────────────────────────────
 # Active during Codex tasks only (scope.json present). Human commits always pass.
@@ -14,7 +14,7 @@ import json
 with open('$SCOPE_FILE') as f:
     data = json.load(f)
 for p in data.get('allowed_files', []):
-    print(p)
+    print(p.strip())
 ")
     VIOLATIONS=()
     while IFS= read -r file; do
@@ -135,7 +135,7 @@ STAGED_PYTHON_BACKEND=$(echo "$STAGED" | grep -E "^(core|api|formats)/.*\.py$")
 if [ -n "$STAGED_PYTHON_BACKEND" ]; then
     if command -v semgrep >/dev/null 2>&1; then
         echo "GATE 5S — semgrep-security: TRIGGERED"
-        semgrep --config=auto --error --quiet $STAGED_PYTHON_BACKEND
+        echo "$STAGED_PYTHON_BACKEND" | xargs semgrep --config=auto --error --quiet
         if [ $? -ne 0 ]; then
             echo "GATE 5S FAILED — security violation. Commit blocked."
             exit 1
