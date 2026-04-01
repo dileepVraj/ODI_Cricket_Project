@@ -10,7 +10,7 @@ def _parse_avg_string(val: Any) -> Dict[str, int]:
     Parses engine's "230 (15)" format into {avg: 230, count: 15}.
     Also handles plain numbers like 230 or "-".
     """
-    if val is None or val == "-" or val == "" or val == 0:
+    if val is None or val == "-" or val == "":
         return {"avg": 0, "count": 0}
 
     val_str = str(val).strip()
@@ -62,21 +62,21 @@ def _strip_emojis(text: Any) -> Any:
 def _safe_int(val: Any) -> int:
     """Converts a value to int safely, returns 0 for failures."""
     if val is None or val == "-" or val == "":
-        return 0
+        return 0  # Returns 0 for missing input, conversion error, and genuine zero values.
     try:
         return int(float(val))
     except (ValueError, TypeError):
-        return 0
+        return 0  # Returns 0 for missing input, conversion error, and genuine zero values.
 
 
 def _safe_float(val: Any, decimals: int = 1) -> float:
     """Converts a value to float safely, returns 0.0 for failures."""
     if val is None or val == "-" or val == "":
-        return 0.0
+        return 0.0  # Returns 0.0 for missing input, conversion error, and genuine zero values.
     try:
         return round(float(val), decimals)
     except (ValueError, TypeError):
-        return 0.0
+        return 0.0  # Returns 0.0 for missing input, conversion error, and genuine zero values.
 
 
 def _strip_html(text: Any) -> Any:

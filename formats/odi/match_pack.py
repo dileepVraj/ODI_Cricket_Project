@@ -12,9 +12,10 @@ Rules:
     - Final JSON has NO HTML, NO emojis, NO [{Metric, Value}] flat lists
     - NO _match_ids in final output (internal diagnostic only)
 """
+import contextlib
+import io
 import json
 import os
-import io
 import sys
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional, Union
@@ -771,17 +772,12 @@ class MatchPackGenerator:
         engine methods still display normally when called from the UI buttons,
         but when called from the generator, their print output is captured and discarded.
         """
-        old_stdout = sys.stdout
-        sys.stdout = io.StringIO()
-        try:
-            result = func(*args, **kwargs)
-        except (AttributeError, KeyError, TypeError, ValueError, RuntimeError) as e:
-            sys.stdout = old_stdout
-            print(f"  ⚠️ Engine call failed: {func.__name__} — {str(e)}")
-            return None
-        finally:
-            sys.stdout = old_stdout
-        return result
+        with contextlib.redirect_stdout(io.StringIO()):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                print(f"  ⚠️ Engine call failed: {func.__name__} — {e}", file=sys.stderr)
+                return None
 
     def _build_phase_narrative(self, phase_data: Dict[str, Any], home: str, away: str) -> str:
         """Generates a narrative summary from phase analysis data."""
