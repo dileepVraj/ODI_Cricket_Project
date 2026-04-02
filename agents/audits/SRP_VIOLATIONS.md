@@ -37,7 +37,6 @@ This is the clean window for a structural refactor.
 | `core/data_access.py` | 2 | TASK-TBD | Pending |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
-| `core/services/squad_service.py` | 3 | TASK-175 | In Progress |
 | `core/calculators/team/matchup_calculator.py` | 3 | TASK-TBD | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
 | `formats/odi/manifest.py` | 4 | TASK-TBD | Pending |
@@ -213,6 +212,7 @@ TASK-174b trims interpreter and wires shim. interpreter.py removed from allowlis
 ---
 
 ### Task 4 — `core/services/squad_service.py`
+**Status:** COMPLETE — TASK-175a (`ad2265b`) created the `squad/` package; TASK-175b trims the shim and alias cleanup.
 **Lines:** 607 | **Risk:** Medium (service layer, well-bounded, but many call sites)
 
 **Responsibilities mixed:**

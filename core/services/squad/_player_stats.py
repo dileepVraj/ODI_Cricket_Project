@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Union
 import numpy as np
 import pandas as pd
 
-from core.services.squad._base import SquadService, SquadServiceBase, VALID_WICKET_TYPES
+from core.services.squad._base import SquadServiceBase, VALID_WICKET_TYPES
 
 
 class PlayerStatsBuilder(SquadServiceBase):
@@ -75,7 +75,7 @@ class PlayerStatsBuilder(SquadServiceBase):
         dismissal_mask = dismissals_series > 0
         batting_avg_series.loc[dismissal_mask] = (
             (runs_series.loc[dismissal_mask] / dismissals_series.loc[dismissal_mask])
-            .map(SquadService._round_one_decimal)
+            .map(self._round_one_decimal)
             .astype(float)
         )
 
@@ -123,7 +123,7 @@ class PlayerStatsBuilder(SquadServiceBase):
             )
             bat_join = last_window_grid.merge(bat_match, on=["player", "match_id"], how="left")
             bat_runs_text = bat_join["runs"].fillna(0).astype(int).astype(str)
-            bat_join["entry"] = np.where(
+            bat_join["entry"] = np.where(  # type: ignore[call-overload]
                 bat_join["runs"].notna(),
                 np.where(bat_join["is_out"].fillna(0).astype(int).eq(1), bat_runs_text, bat_runs_text + "*"),
                 None,
@@ -173,7 +173,7 @@ class PlayerStatsBuilder(SquadServiceBase):
             overs = legal_balls // 6
             balls = legal_balls % 6
             overs_text = np.where(balls > 0, overs.astype(str) + "." + balls.astype(str), overs.astype(str))
-            bowl_join["entry"] = np.where(
+            bowl_join["entry"] = np.where(  # type: ignore[call-overload]
                 bowl_join["legal_balls"].notna(),
                 bowl_join["wkts"].fillna(0).astype(int).astype(str)
                 + "/"
@@ -225,7 +225,7 @@ class PlayerStatsBuilder(SquadServiceBase):
             opp_out_mask = opp_outs_series > 0
             opp_avg_series.loc[opp_out_mask] = (
                 (opp_runs_series.loc[opp_out_mask] / opp_outs_series.loc[opp_out_mask])
-                .map(SquadService._round_one_decimal)
+                .map(self._round_one_decimal)
                 .astype(float)
             )
             no_opp_outs_with_runs_mask = (~opp_out_mask) & opp_runs_series.gt(0)
@@ -262,7 +262,7 @@ class PlayerStatsBuilder(SquadServiceBase):
             ven_out_mask = ven_outs_series > 0
             ven_avg_series.loc[ven_out_mask] = (
                 (ven_runs_series.fillna(0).loc[ven_out_mask] / ven_outs_series.loc[ven_out_mask])
-                .map(SquadService._round_one_decimal)
+                .map(self._round_one_decimal)
                 .astype(float)
             )
             ven_no_outs_mask = (~ven_out_mask) & ven_runs_series.notna()
@@ -327,7 +327,7 @@ class PlayerStatsBuilder(SquadServiceBase):
                     / bowl_career_group.loc[bowl_legal_mask, "legal_balls"]
                 )
                 .mul(6)
-                .map(SquadService._round_two_decimals)
+                .map(self._round_two_decimals)
                 .astype(float)
             )
             bowl_econ_series = bowl_econ_series.reindex(player_index)
@@ -369,7 +369,7 @@ class PlayerStatsBuilder(SquadServiceBase):
                     / ven_bowl_group.loc[ven_legal_mask, "legal_balls"]
                 )
                 .mul(6)
-                .map(SquadService._round_two_decimals)
+                .map(self._round_two_decimals)
                 .astype(float)
             )
             ven_econ_series = ven_econ_series.reindex(player_index)

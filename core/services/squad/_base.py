@@ -96,4 +96,3 @@ class SquadServiceBase:
         empty_df["venue_batting_activity"] = False
         return empty_df.head(500).to_dict("records")
 
-SquadService = SquadServiceBase
