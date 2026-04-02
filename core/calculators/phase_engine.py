@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import pandas as pd
 
-from core.interfaces.team_types import (
+from core.interfaces.venue_types import (
     PhasePayload,
     ScenarioDiff,
     ScenarioDiffRows,

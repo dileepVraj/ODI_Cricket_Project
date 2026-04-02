@@ -2,15 +2,8 @@ from dataclasses import asdict, is_dataclass
 import json
 import pandas as pd
 
-from core.interfaces.team_types import (
-    ComparisonReportRow,
-    DataclassProtocol,
-    EnrichablePayload,
-    MatrixReportRow,
-    PydanticProtocol,
-    SerializedEnvelope,
-    TeamFormRow,
-)
+from core.interfaces.team_types import ComparisonReportRow, MatrixReportRow, TeamFormRow
+from core.interfaces.serialization_types import DataclassProtocol, EnrichablePayload, PydanticProtocol, SerializedEnvelope
 
 
 class SerializationService:

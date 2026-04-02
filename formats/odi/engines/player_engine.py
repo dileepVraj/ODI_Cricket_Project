@@ -19,14 +19,9 @@ from core.interfaces.player_interface import (
     SquadComparisonData,
     VsBowlingStyleRow,
 )
-from core.interfaces.team_types import (
-    DataAccessPort,
-    DisplayRecord,
-    FormatRulesMap,
-    ManifestFunctionDef,
-    SquadComparisonPayload,
-    TacticalRecorderPort,
-)
+from core.interfaces.team_types import DataAccessPort
+from core.interfaces.player_types import FormatRulesMap, SquadComparisonPayload, TacticalRecorderPort
+from core.interfaces.serialization_types import DisplayRecord, ManifestFunctionDef
 
 
 _PHASE_CANONICAL: Dict[str, str] = {

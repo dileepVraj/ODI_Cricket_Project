@@ -2,7 +2,7 @@ from typing import Optional
 import pandas as pd
 from config.shared.venues import get_venue_aliases
 
-from core.interfaces.team_types import PlayerAnalyzerPort, PlayerVenueStatsFallbackPayload
+from core.interfaces.player_types import PlayerAnalyzerPort, PlayerVenueStatsFallbackPayload
 
 class PlayerService:
     """

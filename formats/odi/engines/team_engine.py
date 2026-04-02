@@ -11,7 +11,8 @@ from core.calculators.team.matchup_calculator import calculate_away_performance_
 from core.calculators.team.venue_calculator import calculate_home_fortress_payload, calculate_home_fortress_structured_payload, calculate_venue_bias_payload, calculate_venue_matchup_payload, calculate_venue_phases_payload
 from core.exceptions import ConfigurationError
 from core.interfaces.team_interface import ITeamEngine
-from core.interfaces.team_types import ComparisonReportRows, DataAccessPort, FormatConfig, HomeFortressReport, MatrixReportRows, RecorderPort, SportConstants, TacticalThresholds, TeamFormRows, TeamMatchContext, VenueBiasReport, VenueMatchupReport, VenuePhasesReport
+from core.interfaces.team_types import ComparisonReportRows, DataAccessPort, FormatConfig, MatrixReportRows, RecorderPort, SportConstants, TacticalThresholds, TeamFormRows, TeamMatchContext
+from core.interfaces.venue_types import HomeFortressReport, VenueBiasReport, VenueMatchupReport, VenuePhasesReport
 from core.services.venue_service import VenueService
 from formats.odi.config.settings import ODI_COUNTRY_PREFIX_MAP
 

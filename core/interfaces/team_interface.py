@@ -12,16 +12,8 @@ from abc import ABC, abstractmethod
 from typing import Dict, Optional, TypedDict
 import pandas as pd
 
-from core.interfaces.team_types import (
-    ComparisonReportRows,
-    MatrixReportRows,
-    RecorderPort,
-    TeamFormRows,
-    TeamMatchContext,
-    VenueBiasReport,
-    VenueMatchupReport,
-    VenuePhasesReport,
-)
+from core.interfaces.team_types import ComparisonReportRows, MatrixReportRows, RecorderPort, TeamFormRows, TeamMatchContext
+from core.interfaces.venue_types import VenueBiasReport, VenueMatchupReport, VenuePhasesReport
 
 class MatchContext(TypedDict, total=False):
     """Request-scoped context for stateless TeamEngine execution."""

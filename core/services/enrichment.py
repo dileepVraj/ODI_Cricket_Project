@@ -1,12 +1,6 @@
 from typing import List, Optional, Sequence
-from core.interfaces.team_types import (
-    EnrichablePayload,
-    AnalyzerEngineProtocol,
-    EnrichedListPayload,
-    ComparisonReportRow,
-    MatrixReportRow,
-    MatchAuditRecord
-)
+from core.interfaces.team_types import AnalyzerEngineProtocol, ComparisonReportRow, MatrixReportRow
+from core.interfaces.serialization_types import EnrichablePayload, EnrichedListPayload, MatchAuditRecord
 
 import json
 import pandas as pd

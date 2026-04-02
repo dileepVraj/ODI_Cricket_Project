@@ -6,11 +6,11 @@ from core.interfaces.team_types import (
     FormGuidePayload,
     MATRIX_ROW_HOME_TEAM_COLOR,
     MATRIX_ROW_HOME_TEAM_NAME,
-    TeamMetricsPayload,
     MatrixReportRow,
-    PlayerStatRow,
     TeamFormRow,
+    TeamMetricsPayload,
 )
+from core.interfaces.player_types import PlayerStatRow
 
 import numpy as np
 import pandas as pd

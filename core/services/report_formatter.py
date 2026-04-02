@@ -5,18 +5,9 @@ import pandas as pd
 import re
 
 from core.services.match_filter_service import MatchStatus
-from core.interfaces.team_types import (
-    DisplayRecord, 
-    MatchupVisualPayload, 
-    FormSequencePayload, 
-    FormGuidePayload
-)
-from core.interfaces.team_types import (
-    ScenarioDiff,
-    ScenarioDiffRows,
-    ScenarioRow,
-    ScenarioRows,
-)
+from core.interfaces.serialization_types import DisplayRecord, MatchupVisualPayload
+from core.interfaces.team_types import FormGuidePayload, FormSequencePayload
+from core.interfaces.venue_types import ScenarioDiff, ScenarioDiffRows, ScenarioRow, ScenarioRows
 
 
 class ReportFormatter:

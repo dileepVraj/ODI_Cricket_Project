@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from core.interfaces.team_types import FormatRulesMap
+from core.interfaces.player_types import FormatRulesMap
 
 
 VALID_WICKET_TYPES = (

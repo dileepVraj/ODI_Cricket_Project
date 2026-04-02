@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from core.interfaces.team_types import SquadBulkMetricsResult
+from core.interfaces.player_types import SquadBulkMetricsResult
 from core.services.squad._base import SquadServiceBase  # noqa: F401
 from core.services.squad._player_stats import PlayerStatsBuilder  # noqa: F401
 from core.services.squad._squad_metrics import SquadMetricsCalculator  # noqa: F401

@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 from dataclasses import dataclass, field
 import pandas as pd
-from core.interfaces.team_types import TacticalRecorderPort, DisplayRecord
+from core.interfaces.player_types import TacticalRecorderPort
+from core.interfaces.serialization_types import DisplayRecord
 
 @dataclass
 class BattingStats:

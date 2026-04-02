@@ -116,7 +116,7 @@ The allowlist ensures existing known violations are tracked, not silently ignore
 **Phase 1 — COMPLETE** — TASK-169a (`49c4243`) created domain files, TASK-169b trims
 team_types and wires re-exports. team_types.py removed from allowlist.
 
-**Phase 2 — Pending (TASK-TBD) — Migrate 16 import sites**
+**Phase 2 — COMPLETE (TASK-176a) — Migrate 16 import sites**
 
 Each of the 16 import sites currently does:
 ```python

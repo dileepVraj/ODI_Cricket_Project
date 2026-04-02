@@ -9,7 +9,8 @@ import pandas as pd
 from config.shared.team_colors import TEAM_COLORS
 from config.shared.venues import VENUE_MAP, get_country_prefixes
 from core.calculators.performance import calculate_team_metrics
-from core.interfaces.team_types import ComparisonReportRows, MatrixReportRows, TeamFormRows, VenueMatchupReport
+from core.interfaces.team_types import ComparisonReportRows, MatrixReportRows, TeamFormRows
+from core.interfaces.venue_types import VenueMatchupReport
 from core.services.match_filter_service import MatchFilterService, apply_smart_filters as apply_match_filters
 from core.services.report_builder import ReportBuilder
 from core.services.report_formatter import ReportFormatter

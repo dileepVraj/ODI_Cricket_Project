@@ -1,4 +1,4 @@
-from core.interfaces.team_types import ManifestFunctionDef, RawContextParams, MappedEngineParams
+from core.interfaces.serialization_types import ManifestFunctionDef, RawContextParams, MappedEngineParams
 
 class ParamMapperService:
     """
