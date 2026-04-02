@@ -37,7 +37,7 @@ This is the clean window for a structural refactor.
 | `core/data_access.py` | 2 | TASK-TBD | Pending |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
-| `core/services/squad_service.py` | 3 | TASK-TBD | Pending |
+| `core/services/squad_service.py` | 3 | TASK-175 | In Progress |
 | `core/calculators/team/matchup_calculator.py` | 3 | TASK-TBD | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
 | `formats/odi/manifest.py` | 4 | TASK-TBD | Pending |
@@ -52,7 +52,35 @@ This is the clean window for a structural refactor.
 Sequenced by **safest refactor first**, not blast radius. Foundation layers refactored last,
 after everything above them is stable and tested.
 
-Each task must include:
+### Three-Phase Completion Model
+
+Every refactor task has three phases. A task is not architecturally complete until all three
+are done. Phases 2+3 are often deferred until the caller is itself being restructured
+(doing them earlier would mean touching the caller twice).
+
+**Phase 1 — File decomposition (additive + trim)**
+Create domain modules, copy code verbatim, replace god file with backward-compat shim/re-exports.
+Import sites untouched. Gates pass. File removed from allowlist.
+
+**Phase 2 — Import site migration**
+Update every caller to import from the domain module directly instead of the shim.
+One-line change per site. No logic changes.
+
+**Phase 3 — Shim removal**
+Delete the shim/re-export block once all import sites are migrated.
+Circular dependencies (if any) resolved here.
+
+**Exception — Task 1 (team_types):** Type imports are stable across structural refactors
+(a type import survives when its caller file is later split). Phase 2+3 should be done as
+a standalone task before Task 5 (player_engine.py) begins — see Task 1 below.
+
+**Default rule for Tasks 2–15:** Phase 2+3 of each task is triggered by the Phase 1 of
+its primary caller file (e.g. transformer/interpreter Phase 2+3 happen during Task 9,
+squad_service Phase 2+3 happen during Task 5).
+
+---
+
+Each Phase 1 task must include:
 1. Dead code scan — identify orphaned methods/functions before splitting
 2. Import site audit — find every file importing from the target before touching it
 3. Compliance bouncer pass (GATE 6)
@@ -86,11 +114,46 @@ The allowlist ensures existing known violations are tracked, not silently ignore
 | `core/interfaces/player_types.py` | Player analysis TypedDicts |
 | `core/interfaces/serialization_types.py` | Serialization / output TypedDicts |
 
-**Note:** Re-export from `core/interfaces/__init__.py` to avoid import site churn during
-transition. Once all import sites are migrated, remove the re-exports.
-
-**Status: COMPLETE** — TASK-169a (`49c4243`) created domain files, TASK-169b trims
+**Phase 1 — COMPLETE** — TASK-169a (`49c4243`) created domain files, TASK-169b trims
 team_types and wires re-exports. team_types.py removed from allowlist.
+
+**Phase 2 — Pending (TASK-TBD) — Migrate 16 import sites**
+
+Each of the 16 import sites currently does:
+```python
+from core.interfaces.team_types import SomeType
+```
+Each must be updated to import from the domain file that owns that type:
+```python
+from core.interfaces.venue_types   import VenueData, VenuePhaseData, ...
+from core.interfaces.player_types  import PlayerFormRow, PlayerProfile, ...
+from core.interfaces.team_types    import TeamRecord, ...          # team-only types
+from core.interfaces.serialization_types import SerializedPayload, ...
+```
+Before starting: run `grep -r "from core.interfaces.team_types import" . --include="*.py"`
+to enumerate every import site and map each name to its domain file.
+
+Known import sites (verify against HEAD before task):
+`formats/odi/engines/player_engine.py`, `formats/odi/engines/team_engine.py`,
+`formats/odi/match_pack.py`, `core/services/squad_service.py`,
+`core/services/report_builder.py`, `core/services/report_formatter.py`,
+`core/calculators/team/venue_calculator.py`, `core/calculators/team/matchup_calculator.py`,
+plus ~8 additional files identified in TASK-169 import audit.
+
+**When to run:** Before Task 5 (player_engine.py Phase 1). Type imports are stable
+across structural refactors so this can be a standalone task at any point before Task 5.
+
+**Phase 3 — Pending (TASK-TBD) — Remove re-exports, resolve SN-001**
+
+Once all 16 import sites are migrated:
+1. Remove the 69-name re-export block from the bottom of `core/interfaces/team_types.py`
+2. Remove wildcard `# noqa: F403` imports from `core/interfaces/__init__.py`
+3. Verify `venue_types.py` and `player_types.py` no longer need to import from `team_types.py`
+   (if they do, move the shared type to a new `core/interfaces/shared_types.py`)
+4. Confirm SN-001 (circular import) is resolved — remove from state.json standing_notices
+
+**Phase 3 may be combined with Phase 2 into a single task** if the circular dep analysis
+is straightforward. Run in the same task only if the import graph is clean after Phase 2.
 
 ---
 
@@ -153,23 +216,21 @@ TASK-174b trims interpreter and wires shim. interpreter.py removed from allowlis
 **Lines:** 607 | **Risk:** Medium (service layer, well-bounded, but many call sites)
 
 **Responsibilities mixed:**
-- Squad data fetching
-- Player list management
-- Squad filtering by role (batters, bowlers, all-rounders)
-- Active squad determination
-- Recent squad extraction from specific matches
-- Playing XI extraction
-- Squad comparison preparation
-- Player metadata enrichment
-- Squad role classification
-- Form data assembly
+- Config/rule access helpers (`_get_tactical_threshold`, `_default_player_role`)
+- Data normalization utilities (`_normalize_players`, `_normalize_base_df`)
+- Shared rounding utilities (`_round_one_decimal`, `_round_two_decimals`)
+- Empty data scaffolding (`_empty_player_records`)
+- Squad-level metrics aggregation (`_calculate_squad_metrics`)
+- Player-level bulk stats building (`_build_bulk_player_stats`)
+- Bulk metrics entry point (`get_bulk_metrics`)
 
 **Split into:**
 | New class | Responsibility |
 |---|---|
-| `SquadFetcher` | Squad fetch, active squad determination, playing XI extraction |
-| `SquadFilter` | Role-based filtering, recent squad extraction |
-| `SquadEnricher` | Metadata enrichment, role classification, form assembly |
+| `SquadServiceBase` | Config/rule access, normalization, rounding, empty scaffolding |
+| `SquadMetricsCalculator` | Squad-level metrics aggregation |
+| `PlayerStatsBuilder` | Player-level bulk stats building |
+| `SquadService (hub)` | Composite via MRO, owns `get_bulk_metrics` |
 
 ---
 
