@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Literal, Optional, Protocol, TypeAlias, TypedDict, Union
 
-from core.interfaces.team_types import (
+from core.interfaces.shared_types import (
     ComparisonReportRow,
     ComparisonReportRows,
     DataAccessPort,

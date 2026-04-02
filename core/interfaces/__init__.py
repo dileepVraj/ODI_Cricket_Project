@@ -1,29 +1,31 @@
 # Re-export hub — all domain type modules accessible via `from core.interfaces import X`
 from core.interfaces.team_types import (  # noqa: F401
     AnalyzerEngineProtocol,
-    ComparisonReportRow,
-    ComparisonReportRows,
-    DataAccessPort,
     FormatConfig,
     FormGuidePayload,
     FormSequencePayload,
     MATRIX_ROW_HOME_TEAM_COLOR,
     MATRIX_ROW_HOME_TEAM_NAME,
-    MatrixReportRow,
     MatrixReportRows,
     PhaseRules,
     PhaseWindow,
     RecorderPort,
-    SectionHighlightFlags,
     SportConstants,
     TacticalThresholds,
     TeamBatFirstStats,
     TeamChaseStats,
     TeamEngineProtocol,
-    TeamFormRow,
     TeamFormRows,
     TeamMatchContext,
     TeamMetricsPayload,
+)
+from core.interfaces.shared_types import (  # noqa: F401
+    ComparisonReportRow,
+    ComparisonReportRows,
+    DataAccessPort,
+    MatrixReportRow,
+    SectionHighlightFlags,
+    TeamFormRow,
 )
 from core.interfaces.venue_types import (  # noqa: F401
     BatFirstGlobalHabits,

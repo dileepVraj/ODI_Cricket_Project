@@ -4,9 +4,18 @@ Typed contracts for TeamEngine payloads and request context.
 
 from __future__ import annotations
 
-from typing import Optional, Protocol, TypeAlias, TypedDict
+from typing import Protocol, TypeAlias, TypedDict
 
 import pandas as pd
+
+from core.interfaces.shared_types import (
+    ComparisonReportRow,
+    ComparisonReportRows,
+    DataAccessPort,
+    MatrixReportRow,
+    SectionHighlightFlags,
+    TeamFormRow,
+)
 
 
 class RecorderPort(Protocol):
@@ -14,12 +23,6 @@ class RecorderPort(Protocol):
 
     def record(self, message: str) -> None:
         ...
-
-
-class DataAccessPort(Protocol):
-    """Opaque DAL port placeholder for constructor compatibility."""
-
-    ...
 
 
 class PhaseWindow(TypedDict):
@@ -94,28 +97,6 @@ class TeamChaseStats(TypedDict):
     fail: str
 
 
-class SectionHighlightFlags(TypedDict, total=False):
-    has_low_sample_warnings: bool
-    has_form_guide: bool
-    has_strong_bias: bool
-    is_overall: bool
-    is_win: bool
-
-
-class ComparisonReportRow(TypedDict, total=False):
-    Metric: str
-    Value: str | int
-    row_kind: str
-    display_metric: str
-    section_label: str
-    section_tone: str
-    value_tone: str
-    is_zero_or_empty: bool
-
-
-ComparisonReportRows: TypeAlias = list[ComparisonReportRow]
-
-
 # ---------------------------------------------------------------------------
 # Form-guide contracts — MUST be defined before MatrixReportRow/TeamFormRow
 # because the functional TypedDict() syntax evaluates values eagerly.
@@ -143,50 +124,7 @@ MATRIX_ROW_HOME_TEAM_COLOR = "home_team_color"
 MATRIX_ROW_HOME_TEAM_NAME = "home_team_name"
 
 
-MatrixReportRow = TypedDict(
-    "MatrixReportRow",
-    {
-        "Opponent": str,
-        "Mat": int,
-        "Won": int,
-        "Lost": int,
-        "Tie/NR": int,
-        "Win %": str,
-        "team_color": Optional[str],
-        MATRIX_ROW_HOME_TEAM_COLOR: Optional[str],
-        MATRIX_ROW_HOME_TEAM_NAME: Optional[str],
-        "form_data": FormGuidePayload,
-        "Opp Avg (1st)": str,
-        "MATCH_IDS": str,
-        "cell_tones": dict[str, str],
-        "highlight_flags": SectionHighlightFlags,
-        "derived_badges": list[str],
-    },
-    total=False,
-)
-
-
 MatrixReportRows: TypeAlias = list[MatrixReportRow]
-
-
-TeamFormRow = TypedDict(
-    "TeamFormRow",
-    {
-        "Date": str,
-        "Opponent": str,
-        "Venue": str,
-        "Result": str,
-        "TeamScore": str,
-        "OppScore": str,
-        "RawResult": str,
-        "ResultTone": str,
-        "ResultSymbol": str,
-        "form_data": FormGuidePayload,
-        "highlight_flags": SectionHighlightFlags,
-        "derived_badges": list[str],
-    },
-    total=False,
-)
 
 
 TeamFormRows: TypeAlias = list[TeamFormRow]
@@ -201,86 +139,6 @@ class AnalyzerEngineProtocol(Protocol):
     team_engine: TeamEngineProtocol
 
 
-# ---------------------------------------------------------------------------
-# re-exports: backward compat — all 16 import sites use team_types directly.
-# Remove once all import sites are migrated to the specific domain module.
-# ---------------------------------------------------------------------------
-
-from core.interfaces.venue_types import (  # noqa: E402
-    TeamVenueBattingStats,
-    TeamVenueChaseStats,
-    TeamVenueStatsPayload,
-    VenueMatchupSummary,
-    VenueMatchupTeamPayload,
-    VenueAveragePayload,
-    VenueMatchupReport,
-    HomeFortressSummary,
-    HomeFortressTeamPayload,
-    HomeFortressReport,
-    VenuePercentBreakdown,
-    VenueBiasCI,
-    VenueScoreStats,
-    VenueScoreBand,
-    VenueScoreBanding,
-    VenueTossLossRecovery,
-    VenueScoreDistribution,
-    VenueScoreExtremes,
-    VenueBiasTrend,
-    VenueTossIntelligence,
-    VenueBiasReport,
-    PhaseSummaryCell,
-    PhasePayload,
-    InningsPhaseSummary,
-    PhaseSummaryByInnings,
-    VenuePhaseFilterCriteria,
-    TeamVenuePhaseSnapshot,
-    ScenarioRow,
-    ScenarioDiff,
-    ScenarioRows,
-    ScenarioDiffRows,
-    ScenarioDiffs,
-    BatFirstGlobalHabits,
-    ChasingGlobalHabits,
-    RunRateHabits,
-    VenueGlobalHabits,
-    VenuePhasesReport,
-)
-from core.interfaces.player_types import (  # noqa: E402
-    TacticalRecorderPort,
-    MatchupRowExtended,
-    PlayerStatRow,
-    PlayerStatsIndexed,
-    TacticalMatrixData,
-    MatchupsData,
-    SquadComparisonPayload,
-    GlobalCompareEnvelope,
-    PlayerVenueStatsFallback,
-    PlayerVenueStatsFallbackRequest,
-    PlayerVenueStatsFallbackPayload,
-    NormalizedTokenPayload,
-    PhaseRunsPayload,
-    FormatRulesMap,
-    SquadBulkMetricsResult,
-    SquadMetricsCompat,
-    PlayerAnalyzerPort,
-)
-from core.interfaces.serialization_types import (  # noqa: E402
-    MatchAuditRecord,
-    ReportMetricPayload,
-    MatchupVisualPayload,
-    MatchupBadgePayload,
-    DataclassProtocol,
-    PydanticProtocol,
-    SerializedEnvelope,
-    CellValue,
-    DisplayRecord,
-    ManifestValue,
-    ManifestFunctionDef,
-    RawContextParams,
-    MappedEngineParams,
-    EnrichablePayload,
-    EnrichedListPayload,
-)
 
 __all__ = [
     "AnalyzerEngineProtocol",
@@ -307,73 +165,5 @@ __all__ = [
     "TeamFormRows",
     "TeamMatchContext",
     "TeamMetricsPayload",
-    "BatFirstGlobalHabits",
-    "ChasingGlobalHabits",
-    "HomeFortressReport",
-    "HomeFortressSummary",
-    "HomeFortressTeamPayload",
-    "InningsPhaseSummary",
-    "PhasePayload",
-    "PhaseSummaryByInnings",
-    "PhaseSummaryCell",
-    "RunRateHabits",
-    "ScenarioDiff",
-    "ScenarioDiffRows",
-    "ScenarioDiffs",
-    "ScenarioRow",
-    "ScenarioRows",
-    "TeamVenueBattingStats",
-    "TeamVenueChaseStats",
-    "TeamVenuePhaseSnapshot",
-    "TeamVenueStatsPayload",
-    "VenueAveragePayload",
-    "VenueBiasCI",
-    "VenueBiasReport",
-    "VenueBiasTrend",
-    "VenueGlobalHabits",
-    "VenueMatchupReport",
-    "VenueMatchupSummary",
-    "VenueMatchupTeamPayload",
-    "VenuePercentBreakdown",
-    "VenuePhaseFilterCriteria",
-    "VenuePhasesReport",
-    "VenueScoreBand",
-    "VenueScoreBanding",
-    "VenueScoreDistribution",
-    "VenueScoreExtremes",
-    "VenueScoreStats",
-    "VenueTossIntelligence",
-    "VenueTossLossRecovery",
-    "FormatRulesMap",
-    "GlobalCompareEnvelope",
-    "MatchupRowExtended",
-    "MatchupsData",
-    "NormalizedTokenPayload",
-    "PhaseRunsPayload",
-    "PlayerAnalyzerPort",
-    "PlayerStatRow",
-    "PlayerStatsIndexed",
-    "PlayerVenueStatsFallback",
-    "PlayerVenueStatsFallbackPayload",
-    "PlayerVenueStatsFallbackRequest",
-    "SquadBulkMetricsResult",
-    "SquadComparisonPayload",
-    "SquadMetricsCompat",
-    "TacticalMatrixData",
-    "TacticalRecorderPort",
-    "CellValue",
-    "DataclassProtocol",
-    "DisplayRecord",
-    "EnrichablePayload",
-    "EnrichedListPayload",
-    "ManifestFunctionDef",
-    "ManifestValue",
-    "MappedEngineParams",
-    "MatchAuditRecord",
-    "MatchupBadgePayload",
-    "MatchupVisualPayload",
-    "PydanticProtocol",
-    "RawContextParams",
-    "ReportMetricPayload",
-    "SerializedEnvelope",
 ]
+

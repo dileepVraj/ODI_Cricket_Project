@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Protocol, TypeAlias, TypedDict, Union
 
-from core.interfaces.team_types import ComparisonReportRow, MatrixReportRow, TeamFormRow
+from core.interfaces.shared_types import ComparisonReportRow, MatrixReportRow, TeamFormRow
 from core.interfaces.venue_types import (
     HomeFortressReport,
     VenueBiasReport,

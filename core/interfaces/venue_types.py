@@ -6,7 +6,7 @@ from typing import Dict, Tuple, TypeAlias, TypedDict
 
 import pandas as pd
 
-from core.interfaces.team_types import ComparisonReportRows, SectionHighlightFlags
+from core.interfaces.shared_types import ComparisonReportRows, SectionHighlightFlags
 
 
 class TeamVenueBattingStats(TypedDict):

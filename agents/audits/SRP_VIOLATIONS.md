@@ -142,17 +142,15 @@ plus ~8 additional files identified in TASK-169 import audit.
 **When to run:** Before Task 5 (player_engine.py Phase 1). Type imports are stable
 across structural refactors so this can be a standalone task at any point before Task 5.
 
-**Phase 3 — Pending (TASK-TBD) — Remove re-exports, resolve SN-001**
+**Phase 3 — COMPLETE (TASK-176b) — Extract shared types, resolve SN-001**
 
-Once all 16 import sites are migrated:
-1. Remove the 69-name re-export block from the bottom of `core/interfaces/team_types.py`
-2. Remove wildcard `# noqa: F403` imports from `core/interfaces/__init__.py`
-3. Verify `venue_types.py` and `player_types.py` no longer need to import from `team_types.py`
-   (if they do, move the shared type to a new `core/interfaces/shared_types.py`)
-4. Confirm SN-001 (circular import) is resolved — remove from state.json standing_notices
+Done:
+1. `core/interfaces/shared_types.py` now owns the six shared types.
+2. `core/interfaces/team_types.py` now re-exports those six names only.
+3. `core/interfaces/venue_types.py`, `player_types.py`, and `serialization_types.py` now import from `shared_types`.
+4. SN-001 is resolved and removed from `state.json`.
 
-**Phase 3 may be combined with Phase 2 into a single task** if the circular dep analysis
-is straightforward. Run in the same task only if the import graph is clean after Phase 2.
+**Task 1 status: DONE**
 
 ---
 
@@ -509,3 +507,4 @@ table above and update its status. GATE_SRP advisory count should decrease with 
 
 *Verify line counts and method counts against current HEAD before scheduling each task.*
 *Allowlist is authoritative — do not add files to it without a matching audit entry above.*
+
