@@ -35,7 +35,6 @@ This is the clean window for a structural refactor.
 | `formats/odi/engines/player_engine.py` | 1 | TASK-TBD | Pending |
 | `core/calculators/team/venue_calculator.py` | 1 | TASK-TBD | Pending |
 | `core/data_access.py` | 2 | TASK-TBD | Pending |
-| `core/match_pack/interpreter.py` | 2 | TASK-TBD | Pending |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
 | `core/services/squad_service.py` | 3 | TASK-TBD | Pending |
@@ -144,6 +143,9 @@ with a backward-compat re-export shim and removed it from the allowlist.
 
 **Frontend wiring note:** Changes to `PlayerInterpreter` and `MatchSummaryComposer` data shapes
 will affect API response structure. Verify frontend component expectations before and after.
+
+**Status: COMPLETE** — TASK-174a (`1d63a82`) created domain files,
+TASK-174b trims interpreter and wires shim. interpreter.py removed from allowlist.
 
 ---
 
