@@ -1,4 +1,4 @@
-# SRP Violation Audit & Refactor Plan — Backend Python Files
+﻿# SRP Violation Audit & Refactor Plan â€” Backend Python Files
 **Audit date:** 2026-03-30 | **Plan updated:** 2026-03-31
 **Scope:** `core/`, `api/`, `formats/odi/`
 **Total lines scanned:** ~18,244
@@ -11,19 +11,19 @@
 SRP violations are the **diagnostic lens**, not the goal. This document is the map for a full
 backend structural refactor. Fixing the violations identified here also addresses:
 
-- **Dead code** — methods that only exist because everything is bundled together
-- **Import chain cleanup** — every file that imports from a god object breaks when it is split
-- **Type system fragmentation** — `team_types.py` has 30+ TypedDicts because the domain was never separated
-- **Test isolation** — you cannot unit-test `SchemaValidator` without a live DuckDB connection because it is fused into `DataAccess`
-- **API layer bloat** — `api/main.py` does routing + validation + context assembly + engine resolution because there was no clean place to put those things
-- **Frontend wiring clarity** — once `interpreter.py` is split, data shapes flowing to the frontend become predictable and bounded
+- **Dead code** â€” methods that only exist because everything is bundled together
+- **Import chain cleanup** â€” every file that imports from a god object breaks when it is split
+- **Type system fragmentation** â€” `team_types.py` has 30+ TypedDicts because the domain was never separated
+- **Test isolation** â€” you cannot unit-test `SchemaValidator` without a live DuckDB connection because it is fused into `DataAccess`
+- **API layer bloat** â€” `api/main.py` does routing + validation + context assembly + engine resolution because there was no clean place to put those things
+- **Frontend wiring clarity** â€” once `interpreter.py` is split, data shapes flowing to the frontend become predictable and bounded
 
 The SRP gate (`GATE_SRP`) is wired and advisory. Baseline violations = 0 as of TASK-168.
 This is the clean window for a structural refactor.
 
 ---
 
-## GATE_SRP Allowlist — Known Registered Violations
+## GATE_SRP Allowlist â€” Known Registered Violations
 
 > **These files are grandfathered.** `srp_sentinel.py` emits advisory warnings for them but does NOT
 > block. Any file **not** in this list that exceeds SRP thresholds is a **hard block**.
@@ -39,7 +39,6 @@ This is the clean window for a structural refactor.
 | `core/data_access.py` | 2 | TASK-TBD | Pending |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
-| `core/calculators/team/matchup_calculator.py` | 3 | TASK-TBD | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
 | `formats/odi/manifest.py` | 4 | TASK-TBD | Pending |
 | `core/services/report_formatter.py` | 4 | TASK-TBD | Pending |
@@ -59,38 +58,38 @@ Every refactor task has three phases. A task is not architecturally complete unt
 are done. Phases 2+3 are often deferred until the caller is itself being restructured
 (doing them earlier would mean touching the caller twice).
 
-**Phase 1 — File decomposition (additive + trim)**
+**Phase 1 â€” File decomposition (additive + trim)**
 Create domain modules, copy code verbatim, replace god file with backward-compat shim/re-exports.
 Import sites untouched. Gates pass. File removed from allowlist.
 
-**Phase 2 — Import site migration**
+**Phase 2 â€” Import site migration**
 Update every caller to import from the domain module directly instead of the shim.
 One-line change per site. No logic changes.
 
-**Phase 3 — Shim removal**
+**Phase 3 â€” Shim removal**
 Delete the shim/re-export block once all import sites are migrated.
 Circular dependencies (if any) resolved here.
 
-**Exception — Task 1 (team_types):** Type imports are stable across structural refactors
+**Exception â€” Task 1 (team_types):** Type imports are stable across structural refactors
 (a type import survives when its caller file is later split). Phase 2+3 should be done as
-a standalone task before Task 5 (player_engine.py) begins — see Task 1 below.
+a standalone task before Task 5 (player_engine.py) begins â€” see Task 1 below.
 
-**Default rule for Tasks 2–15:** Phase 2+3 of each task is triggered by the Phase 1 of
+**Default rule for Tasks 2â€“15:** Phase 2+3 of each task is triggered by the Phase 1 of
 its primary caller file (e.g. transformer/interpreter Phase 2+3 happen during Task 9,
 squad_service Phase 2+3 happen during Task 5).
 
 ---
 
 Each Phase 1 task must include:
-1. Dead code scan — identify orphaned methods/functions before splitting
-2. Import site audit — find every file importing from the target before touching it
+1. Dead code scan â€” identify orphaned methods/functions before splitting
+2. Import site audit â€” find every file importing from the target before touching it
 3. Compliance bouncer pass (GATE 6)
-4. GATE_SRP re-run — verify advisory count drops
+4. GATE_SRP re-run â€” verify advisory count drops
 5. Remove the file from the allowlist above once verified green
 
 ---
 
-### Task 0 — Gate Hardening (do first, before any refactor)
+### Task 0 â€” Gate Hardening (do first, before any refactor)
 
 **What:** Upgrade `srp_sentinel.py` to hard-block on net-new files exceeding thresholds.
 Advisory-only for files registered in the allowlist above.
@@ -102,7 +101,7 @@ The allowlist ensures existing known violations are tracked, not silently ignore
 
 ---
 
-### Task 1 — `core/interfaces/team_types.py`
+### Task 1 â€” `core/interfaces/team_types.py`
 **Lines:** 695 | **Risk:** Zero (pure type reorganization, no runtime logic)
 
 30+ TypedDicts spanning team analysis, venue, player, and serialization domains.
@@ -115,10 +114,10 @@ The allowlist ensures existing known violations are tracked, not silently ignore
 | `core/interfaces/player_types.py` | Player analysis TypedDicts |
 | `core/interfaces/serialization_types.py` | Serialization / output TypedDicts |
 
-**Phase 1 — COMPLETE** — TASK-169a (`49c4243`) created domain files, TASK-169b trims
+**Phase 1 â€” COMPLETE** â€” TASK-169a (`49c4243`) created domain files, TASK-169b trims
 team_types and wires re-exports. team_types.py removed from allowlist.
 
-**Phase 2 — COMPLETE (TASK-176a) — Migrate 16 import sites**
+**Phase 2 â€” COMPLETE (TASK-176a) â€” Migrate 16 import sites**
 
 Each of the 16 import sites currently does:
 ```python
@@ -144,7 +143,7 @@ plus ~8 additional files identified in TASK-169 import audit.
 **When to run:** Before Task 5 (player_engine.py Phase 1). Type imports are stable
 across structural refactors so this can be a standalone task at any point before Task 5.
 
-**Phase 3 — COMPLETE (TASK-176b) — Extract shared types, resolve SN-001**
+**Phase 3 â€” COMPLETE (TASK-176b) â€” Extract shared types, resolve SN-001**
 
 Done:
 1. `core/interfaces/shared_types.py` now owns the six shared types.
@@ -156,7 +155,7 @@ Done:
 
 ---
 
-### Task 2 — `core/match_pack/transformer.py`
+### Task 2 â€” `core/match_pack/transformer.py`
 **Lines:** 536 | **Risk:** Low (no external DB, pure transforms)
 
 **Responsibilities mixed:** H2H slim/full transforms, venue bias transforms, team form
@@ -172,12 +171,12 @@ transforms, HTML/emoji stripping, string parsing utilities.
 | `core/match_pack/transformers/player_transformer.py` | Player stats transforms |
 | `core/match_pack/transformers/string_utils.py` | HTML/emoji stripping, string parsing |
 
-**Status: COMPLETE** â€” TASK-172b (`66264c3`) replaced `transformer.py`
+**Status: COMPLETE** Ã¢â‚¬â€ TASK-172b (`66264c3`) replaced `transformer.py`
 with a backward-compat re-export shim and removed it from the allowlist.
 
 ---
 
-### Task 3 — `core/match_pack/interpreter.py`
+### Task 3 â€” `core/match_pack/interpreter.py`
 **Lines:** 883 | **Risk:** Low-medium (no external DB, narrative only)
 
 **Responsibilities mixed:**
@@ -206,14 +205,14 @@ with a backward-compat re-export shim and removed it from the allowlist.
 **Frontend wiring note:** Changes to `PlayerInterpreter` and `MatchSummaryComposer` data shapes
 will affect API response structure. Verify frontend component expectations before and after.
 
-**Status: COMPLETE** — TASK-174a (`1d63a82`) created domain files,
+**Status: COMPLETE** â€” TASK-174a (`1d63a82`) created domain files,
 TASK-174b trims interpreter and wires shim. interpreter.py removed from allowlist.
 
 ---
 
-### Task 4 — `core/services/squad_service.py`
-**Status:** COMPLETE — TASK-175a (`ad2265b`) created the `squad/` package; TASK-175b trims the shim and alias cleanup.
-Phase 2+3 complete — TASK-177c (<hash>). squad_service.py deleted; SquadService imported directly from core.services.squad.
+### Task 4 â€” `core/services/squad_service.py`
+**Status:** COMPLETE â€” TASK-175a (`ad2265b`) created the `squad/` package; TASK-175b trims the shim and alias cleanup.
+Phase 2+3 complete â€” TASK-177c (<hash>). squad_service.py deleted; SquadService imported directly from core.services.squad.
 **Lines:** 607 | **Risk:** Medium (service layer, well-bounded, but many call sites)
 
 **Responsibilities mixed:**
@@ -235,7 +234,7 @@ Phase 2+3 complete — TASK-177c (<hash>). squad_service.py deleted; SquadServic
 
 ---
 
-### Task 5 — `formats/odi/engines/player_engine.py`
+### Task 5 â€” `formats/odi/engines/player_engine.py`
 **Lines:** 1,612 | **Risk:** Medium-high (import audit mandatory before starting)
 
 **Responsibilities mixed:**
@@ -261,20 +260,20 @@ Phase 2+3 complete — TASK-177c (<hash>). squad_service.py deleted; SquadServic
 | `PlayerProfiler` | Profile generation, role classification, bowling style mapping |
 | `PlayerVenueAnalyzer` | Venue-specific stats, ranking lookups |
 
-**Status:** COMPLETE — Phase 1a: TASK-177a (a58c7dd) — _base, _squad, _profile, partial hub created.
-Phase 1b: TASK-177b (9a40ded) — _matchup.py created, hub MRO complete.
-Phase 2 (trim): TASK-177c (<hash>) — player_engine.py replaced with shim, split COMPLETE.
+**Status:** COMPLETE â€” Phase 1a: TASK-177a (a58c7dd) â€” _base, _squad, _profile, partial hub created.
+Phase 1b: TASK-177b (9a40ded) â€” _matchup.py created, hub MRO complete.
+Phase 2 (trim): TASK-177c (<hash>) â€” player_engine.py replaced with shim, split COMPLETE.
 
 ---
 
-### Task 6 — `core/calculators/team/venue_calculator.py`
-**Status:** COMPLETE — TASK-180b (53907da). venue_calculator.py replaced with shim. All logic lives in `core/calculators/team/venue/` package.
+### Task 6 â€” `core/calculators/team/venue_calculator.py`
+**Status:** COMPLETE â€” TASK-180b (53907da). venue_calculator.py replaced with shim. All logic lives in `core/calculators/team/venue/` package.
 
-Phase 1a (additive): TASK-180a (03e9593) — venue/ package created with _base, _fortress, _bias, _matchup, _phases, hub.
+Phase 1a (additive): TASK-180a (03e9593) â€” venue/ package created with _base, _fortress, _bias, _matchup, _phases, hub.
 
 ---
 
-### Task 7 — `core/calculators/team/matchup_calculator.py`
+### Task 7 â€” `core/calculators/team/matchup_calculator.py`
 **Lines:** 624 | **Risk:** Medium (25+ free functions, no encapsulation)
 
 **Responsibilities mixed:** Batting vs bowling matchup scoring, wicket pressure, matchup
@@ -288,14 +287,15 @@ assembly, sample filtering.
 | `MatchupRanker` | Ranking, averaging, sample filtering |
 | `MatchupMatrixBuilder` | Phase-specific analysis, matrix assembly |
 
-**Status:** Phase 1a (additive) — TASK-181a in progress
+**Status:** COMPLETE â€” TASK-181b (<commit_hash>). matchup_calculator.py replaced with shim.
+All logic lives in core.calculators.team/matchup/ package.
 
 ---
 
-### Task 8 — `core/data_access.py`
-**Lines:** 750 | **Risk:** High (foundation layer — bugs here corrupt everything above)
+### Task 8 â€” `core/data_access.py`
+**Lines:** 750 | **Risk:** High (foundation layer â€” bugs here corrupt everything above)
 
-Do this **after** Tasks 1–7 are stable. The concepts proven in those splits
+Do this **after** Tasks 1â€“7 are stable. The concepts proven in those splits
 (`SchemaValidator`, `QueryBuilder`) will have analogues here.
 
 **Responsibilities mixed:**
@@ -325,13 +325,13 @@ Do this **after** Tasks 1–7 are stable. The concepts proven in those splits
 
 ---
 
-### Task 9 — `formats/odi/match_pack.py`
+### Task 9 â€” `formats/odi/match_pack.py`
 **Lines:** 856 | **Risk:** High (entry point for every match pack generation)
 
 Refactor after all engine and service dependencies are clean.
 
 **Responsibilities mixed:**
-- Match pack orchestration (chapters 1–4 generation)
+- Match pack orchestration (chapters 1â€“4 generation)
 - Engine call coordination across 15+ different analyses
 - Data transformation (calling transformer)
 - Data interpretation (calling interpreter)
@@ -352,10 +352,10 @@ Refactor after all engine and service dependencies are clean.
 
 ---
 
-### Task 10 — `api/main.py`
+### Task 10 â€” `api/main.py`
 **Lines:** 588 | **Risk:** High (every API request passes through here)
 
-**Prerequisite:** Smoke test baseline covering at least 3–4 endpoints and verifying
+**Prerequisite:** Smoke test baseline covering at least 3â€“4 endpoints and verifying
 response shapes. Do not refactor without this baseline.
 
 **Responsibilities mixed:**
@@ -381,7 +381,7 @@ response shapes. Do not refactor without this baseline.
 
 ---
 
-### Task 11 — `formats/odi/manifest.py`
+### Task 11 â€” `formats/odi/manifest.py`
 **Lines:** 865 | **Risk:** Low (30+ function definitions, no runtime logic)
 
 All ODI function definitions in a single file. Adding one function means editing the
@@ -397,15 +397,15 @@ entire manifest. Should be split by category before new features are added.
 
 ---
 
-### Task 12 — `formats/odi/engines/team_engine.py`
+### Task 12 â€” `formats/odi/engines/team_engine.py`
 **Lines:** 463 | **Methods:** 29 | **LCOM4:** 11 | **Risk:** Medium
-**Gate score:** 5 (SRP_FLAG) — missed in original audit, caught by GATE_SRP on first run
+**Gate score:** 5 (SRP_FLAG) â€” missed in original audit, caught by GATE_SRP on first run
 
 **Responsibilities mixed:**
 - Home fortress, venue matchup, venue phases, venue bias analysis
 - Global H2H, country H2H, home dominance, away/global/continent performance
 - Team form analysis
-- Private helper factories (`_require_*`, `_resolved_*`, `_context_*` — 15+ methods)
+- Private helper factories (`_require_*`, `_resolved_*`, `_context_*` â€” 15+ methods)
 
 **Split into:**
 | New class | Responsibility |
@@ -416,11 +416,11 @@ entire manifest. Should be split by category before new features are added.
 
 ---
 
-### Task 13 — `core/services/report_builder.py`
+### Task 13 â€” `core/services/report_builder.py`
 **Lines:** 430 | **Methods:** 6 | **LCOM4:** 6 | **Risk:** Low-medium
-**Gate score:** 3 (SRP_WARNING) — missed in original audit, caught by GATE_SRP on first run
+**Gate score:** 3 (SRP_WARNING) â€” missed in original audit, caught by GATE_SRP on first run
 
-6 methods, 6 disjoint LCOM4 groups — every method operates on completely independent state.
+6 methods, 6 disjoint LCOM4 groups â€” every method operates on completely independent state.
 Report data building, form data assembly, matrix generation, player stats indexing, and team
 form record building have no shared attributes.
 
@@ -428,20 +428,20 @@ form record building have no shared attributes.
 
 ---
 
-### Task 14 — `core/services/report_formatter.py`
+### Task 14 â€” `core/services/report_formatter.py`
 **Lines:** 399 | **Risk:** Low (20+ static methods, clear seams)
 
 **Split into:** `StatusFormatter`, `ToneAssigner`, `DisplayFormatter`.
 
 ---
 
-### Task 15 — `core/utils/compliance_bouncer.py`
+### Task 15 â€” `core/utils/compliance_bouncer.py`
 **Lines:** 752 | **Risk:** Low (gate utility, lower priority)
 
 Five distinct validation tools in one module. A failure in one validation domain can
 mask failures in another.
 
-**Note:** Refactor last — this is a gate utility. Any change to it requires re-running
+**Note:** Refactor last â€” this is a gate utility. Any change to it requires re-running
 the full gate sequence to confirm nothing regressed.
 
 ---
@@ -463,7 +463,7 @@ to enumerate every import site before touching the file.
 splits (`MatchPackOrchestrator`) change internal data shapes that eventually land in API
 responses. For each of these, verify frontend component expectations before and after.
 
-### `formats/odi/manifest.py` — Multiplier Risk
+### `formats/odi/manifest.py` â€” Multiplier Risk
 Tier 4 in the original audit, but this is actually the highest future multiplier. Every
 new ODI function adds to it. Split by category (Task 11) before adding new features.
 
@@ -494,6 +494,8 @@ table above and update its status. GATE_SRP advisory count should decrease with 
 ---
 
 *Verify line counts and method counts against current HEAD before scheduling each task.*
-*Allowlist is authoritative — do not add files to it without a matching audit entry above.*
+*Allowlist is authoritative â€” do not add files to it without a matching audit entry above.*
+
+
 
 
