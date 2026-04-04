@@ -32,7 +32,10 @@ This is the clean window for a structural refactor.
 
 | File | Tier | Refactor task | Status |
 |---|---|---|---|
-| `formats/odi/engines/player_engine.py` | 1 | TASK-TBD | Pending |
+| `formats/odi/engines/player_engine.py` | 1 | TASK-177 | In Progress |
+| `formats/odi/engines/player/_base.py` | 1 | TASK-177a | In Progress |
+| `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | In Progress |
+| `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | In Progress |
 | `core/calculators/team/venue_calculator.py` | 1 | TASK-TBD | Pending |
 | `core/data_access.py` | 2 | TASK-TBD | Pending |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
@@ -257,6 +260,8 @@ TASK-174b trims interpreter and wires shim. interpreter.py removed from allowlis
 | `PlayerComparator` | Squad comparison, matchup analysis (batter vs bowler) |
 | `PlayerProfiler` | Profile generation, role classification, bowling style mapping |
 | `PlayerVenueAnalyzer` | Venue-specific stats, ranking lookups |
+
+**Status:** IN PROGRESS — Phase 1a: TASK-177a (a58c7dd) — _base, _squad, _profile, partial hub created.
 
 ---
 
