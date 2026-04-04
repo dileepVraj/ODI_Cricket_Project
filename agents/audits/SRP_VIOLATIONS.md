@@ -262,6 +262,7 @@ TASK-174b trims interpreter and wires shim. interpreter.py removed from allowlis
 | `PlayerVenueAnalyzer` | Venue-specific stats, ranking lookups |
 
 **Status:** IN PROGRESS — Phase 1a: TASK-177a (a58c7dd) — _base, _squad, _profile, partial hub created.
+**Phase 1b: TASK-177b (<commit_hash>) — _matchup.py created, hub MRO complete.**
 
 ---
 
