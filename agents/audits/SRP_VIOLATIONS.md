@@ -36,7 +36,7 @@ This is the clean window for a structural refactor.
 | `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_matchup.py` | 1 | TASK-177b | Done |
-| `core/calculators/team/venue_calculator.py` | 1 | TASK-TBD | Pending |
+| `core/calculators/team/venue_calculator.py` | 1 | TASK-180 | In Progress |
 | `core/data_access.py` | 2 | TASK-TBD | Pending |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
@@ -293,6 +293,8 @@ Phase 2 (trim): TASK-177c (<hash>) — player_engine.py replaced with shim, spli
 | `VenuePhaseAnalyzer` | Powerplay / middle / death breakdowns per venue |
 | `VenueTossAnalyzer` | Toss impact, toss-win correlation |
 | `VenueReportBuilder` | Report assembly, team color mapping |
+
+Phase 1a (additive): TASK-180a (03e9593) â€” venue/ package created with _base, _fortress, _bias, _matchup, _phases, hub.
 
 ---
 
