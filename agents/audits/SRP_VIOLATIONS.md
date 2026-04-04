@@ -36,7 +36,6 @@ This is the clean window for a structural refactor.
 | `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_matchup.py` | 1 | TASK-177b | Done |
-| `core/calculators/team/venue_calculator.py` | 1 | TASK-180 | In Progress |
 | `core/data_access.py` | 2 | TASK-TBD | Pending |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
@@ -269,32 +268,9 @@ Phase 2 (trim): TASK-177c (<hash>) — player_engine.py replaced with shim, spli
 ---
 
 ### Task 6 — `core/calculators/team/venue_calculator.py`
-**Lines:** 961 | **Risk:** Medium (42 free functions, no encapsulation — easy to parallelise tests against splits)
+**Status:** COMPLETE — TASK-180b (<commit_hash>). venue_calculator.py replaced with shim. All logic lives in `core/calculators/team/venue/` package.
 
-**Responsibilities mixed:**
-- Venue bias analysis (batting vs chasing win rates)
-- Home fortress calculations (team dominance at home)
-- Venue matchup analysis (team performance at specific ground)
-- Venue phase breakdowns (powerplay, middle, death per venue)
-- Score distribution analysis at venues
-- Toss intelligence (venue-specific toss impact)
-- Score extremes and banding calculations
-- Team performance metrics aggregation
-- Phase-based scenario comparisons
-- Report building and formatting
-- Team color mapping
-
-**Split into:**
-| New module / class | Responsibility |
-|---|---|
-| `VenueBiasCalculator` | Batting vs chasing win rates, score distributions |
-| `HomeFortressCalculator` | Team dominance at home, home win rates |
-| `VenueMatchupCalculator` | Team performance at specific ground |
-| `VenuePhaseAnalyzer` | Powerplay / middle / death breakdowns per venue |
-| `VenueTossAnalyzer` | Toss impact, toss-win correlation |
-| `VenueReportBuilder` | Report assembly, team color mapping |
-
-Phase 1a (additive): TASK-180a (03e9593) â€” venue/ package created with _base, _fortress, _bias, _matchup, _phases, hub.
+Phase 1a (additive): TASK-180a (03e9593) — venue/ package created with _base, _fortress, _bias, _matchup, _phases, hub.
 
 ---
 
@@ -517,4 +493,5 @@ table above and update its status. GATE_SRP advisory count should decrease with 
 
 *Verify line counts and method counts against current HEAD before scheduling each task.*
 *Allowlist is authoritative — do not add files to it without a matching audit entry above.*
+
 
