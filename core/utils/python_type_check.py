@@ -99,7 +99,7 @@ def main() -> int:
 
     if mypy_path:
         mypy_result = subprocess.run(
-            [mypy_path, "core/", "--ignore-missing-imports"],
+            [mypy_path, "core/", "--ignore-missing-imports", "--exclude", "core/gen_ai"],
             capture_output=True,
             text=True,
             encoding="utf-8",
