@@ -268,7 +268,7 @@ Phase 2 (trim): TASK-177c (<hash>) — player_engine.py replaced with shim, spli
 ---
 
 ### Task 6 — `core/calculators/team/venue_calculator.py`
-**Status:** COMPLETE — TASK-180b (<commit_hash>). venue_calculator.py replaced with shim. All logic lives in `core/calculators/team/venue/` package.
+**Status:** COMPLETE — TASK-180b (53907da). venue_calculator.py replaced with shim. All logic lives in `core/calculators/team/venue/` package.
 
 Phase 1a (additive): TASK-180a (03e9593) — venue/ package created with _base, _fortress, _bias, _matchup, _phases, hub.
 
@@ -287,6 +287,8 @@ assembly, sample filtering.
 | `MatchupScorer` | Batting vs bowling scoring, wicket pressure |
 | `MatchupRanker` | Ranking, averaging, sample filtering |
 | `MatchupMatrixBuilder` | Phase-specific analysis, matrix assembly |
+
+**Status:** Phase 1a (additive) — TASK-181a in progress
 
 ---
 
