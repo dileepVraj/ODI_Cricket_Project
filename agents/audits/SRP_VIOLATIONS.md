@@ -32,7 +32,6 @@ This is the clean window for a structural refactor.
 
 | File | Tier | Refactor task | Status |
 |---|---|---|---|
-| `formats/odi/engines/player_engine.py` | 1 | TASK-177 | In Progress |
 | `formats/odi/engines/player/_base.py` | 1 | TASK-177a | In Progress |
 | `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | In Progress |
 | `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | In Progress |
@@ -214,6 +213,7 @@ TASK-174b trims interpreter and wires shim. interpreter.py removed from allowlis
 
 ### Task 4 — `core/services/squad_service.py`
 **Status:** COMPLETE — TASK-175a (`ad2265b`) created the `squad/` package; TASK-175b trims the shim and alias cleanup.
+Phase 2+3 complete — TASK-177c (<hash>). squad_service.py deleted; SquadService imported directly from core.services.squad.
 **Lines:** 607 | **Risk:** Medium (service layer, well-bounded, but many call sites)
 
 **Responsibilities mixed:**
@@ -261,8 +261,9 @@ TASK-174b trims interpreter and wires shim. interpreter.py removed from allowlis
 | `PlayerProfiler` | Profile generation, role classification, bowling style mapping |
 | `PlayerVenueAnalyzer` | Venue-specific stats, ranking lookups |
 
-**Status:** IN PROGRESS — Phase 1a: TASK-177a (a58c7dd) — _base, _squad, _profile, partial hub created.
-**Phase 1b: TASK-177b (9a40ded) — _matchup.py created, hub MRO complete.**
+**Status:** COMPLETE — Phase 1a: TASK-177a (a58c7dd) — _base, _squad, _profile, partial hub created.
+Phase 1b: TASK-177b (9a40ded) — _matchup.py created, hub MRO complete.
+Phase 2 (trim): TASK-177c (<hash>) — player_engine.py replaced with shim, split COMPLETE.
 
 ---
 

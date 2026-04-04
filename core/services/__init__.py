@@ -12,7 +12,7 @@ from .match_filter_service import apply_smart_filters
 from .report_formatter import ReportFormatter
 from .venue_service import VenueService
 from .report_builder import ReportBuilder
-from .squad_service import SquadService
+from .squad import SquadService
 
 __all__ = [
     "ParamMapperService",

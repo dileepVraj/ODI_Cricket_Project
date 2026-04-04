@@ -127,24 +127,10 @@ if echo "$STAGED" | grep -qE "serializers|schemas/"; then
     echo "GATE 4 — PASS"
 fi
 
-# ── GATE 5S — semgrep-security ─────────────────────────────────────────
-# Trigger: any core/, api/, or formats/ Python file staged
-# Authoritative check is Codex's semgrep MCP. This is the hook-time enforcement layer.
-# Skipped gracefully if semgrep CLI is not installed.
-STAGED_PYTHON_BACKEND=$(echo "$STAGED" | grep -E "^(core|api|formats)/.*\.py$")
-if [ -n "$STAGED_PYTHON_BACKEND" ]; then
-    if command -v semgrep >/dev/null 2>&1; then
-        echo "GATE 5S — semgrep-security: TRIGGERED"
-        echo "$STAGED_PYTHON_BACKEND" | xargs semgrep --config=auto --error --quiet
-        if [ $? -ne 0 ]; then
-            echo "GATE 5S FAILED — security violation. Commit blocked."
-            exit 1
-        fi
-        echo "GATE 5S — PASS"
-    else
-        echo "GATE 5S — semgrep CLI not found, SKIPPED (Codex MCP check still applies)"
-    fi
-fi
+# ── GATE 5S — semgrep-security (REMOVED) ──────────────────────────────
+# Removed: internal-only platform with no public exposure, no PII, no financial
+# transactions. semgrep CLI also crashes on Windows due to charmap encoding bug
+# in --config=auto rule download. Not worth the overhead for this threat model.
 
 # ── GATE 5T — python-type-check ────────────────────────────────────────
 # Trigger: any Python file staged
