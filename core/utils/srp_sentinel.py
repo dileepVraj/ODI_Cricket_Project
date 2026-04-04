@@ -72,6 +72,24 @@ SRP_WARNING_THRESHOLD: int = 3
 SRP_FLAG_THRESHOLD: int = 5
 
 
+def _load_allowlist(root: Path) -> set[str]:
+    """Load allowlisted file paths from agents/audits/SRP_VIOLATIONS.md."""
+
+    allowlist_path = root / "agents" / "audits" / "SRP_VIOLATIONS.md"
+    if not allowlist_path.exists():
+        return set()
+
+    import re
+
+    allowlist: set[str] = set()
+    pattern = re.compile(r"\|\s*`([^`]+)`\s*\|")
+    for line in allowlist_path.read_text(encoding="utf-8").splitlines():
+        match = pattern.match(line.strip())
+        if match:
+            allowlist.add(match.group(1))
+    return allowlist
+
+
 def _compute_lcom4(class_node: ast.ClassDef) -> int:
     """
     Returns the LCOM4 score for a class.
@@ -277,18 +295,18 @@ def _scan_file(path: Path, root: Path) -> list[dict[str, object]]:
             return violations
 
         if score >= SRP_WARNING_THRESHOLD:
-            parts: list[str] = []
+            module_parts: list[str] = []
             if signal_a:
-                parts.append(f"fn_count={fn_count}(A+1)")
+                module_parts.append(f"fn_count={fn_count}(A+1)")
             if signal_b:
-                parts.append(f"lines={line_count}(B+1)")
+                module_parts.append(f"lines={line_count}(B+1)")
             if signal_d:
-                parts.append(f"verb_clusters={verb_clusters}(D+1)")
+                module_parts.append(f"verb_clusters={verb_clusters}(D+1)")
             if signal_e:
-                parts.append(f"import_domains={import_domain_count}(E+1)")
+                module_parts.append(f"import_domains={import_domain_count}(E+1)")
 
             message = (
-                f"module: score={score} [{', '.join(parts)}]. "
+                f"module: score={score} [{', '.join(module_parts)}]. "
                 "Free-function module with mixed responsibilities."
             )
             violations.append(
@@ -341,30 +359,45 @@ def main() -> int:
     for file_path in files:
         violations.extend(_scan_file(file_path, root_path))
 
+    allowlist = _load_allowlist(root_path)
+    blocking_violations = [v for v in violations if v["file"] not in allowlist]
+    advisory_violations = [v for v in violations if v["file"] in allowlist]
+    status = "FAIL" if blocking_violations else "PASS"
+
     if args.json:
         print(
             json.dumps(
                 {
                     "gate": "GATE_SRP",
                     "triggered": True,
-                    "status": "PASS",
-                    "advisory": True,
-                    "violations": violations,
-                    "violation_count": len(violations),
+                    "status": status,
+                    "blocking_violations": blocking_violations,
+                    "advisory_violations": advisory_violations,
+                    "violations": blocking_violations,
+                    "violation_count": len(blocking_violations),
                 }
             )
         )
     else:
-        print("GATE_SRP - srp-sentinel (advisory)")
+        print("GATE_SRP - srp-sentinel (two-tier)")
         print(f"  Scanned: {len(files)} files")
-        print(f"  Findings: {len(violations)}")
-        for violation in violations:
+        print(f"  Blocking findings: {len(blocking_violations)}")
+        print(f"  Advisory findings: {len(advisory_violations)}")
+        for violation in blocking_violations:
             print(
-                f"  [{violation['rule']}] {violation['file']}:{violation['line']} — "
+                f"  [BLOCKING][{violation['rule']}] {violation['file']}:{violation['line']} — "
                 f"{violation['message']}"
             )
-        print("GATE_SRP - PASS (advisory)")
-    return 0
+        for violation in advisory_violations:
+            print(
+                f"  [ADVISORY][{violation['rule']}] {violation['file']}:{violation['line']} — "
+                f"{violation['message']}"
+            )
+        print(
+            f"GATE_SRP - {status} "
+            f"({len(blocking_violations)} blocking, {len(advisory_violations)} advisory)"
+        )
+    return 1 if blocking_violations else 0
 
 
 if __name__ == "__main__":

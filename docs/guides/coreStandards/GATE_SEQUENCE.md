@@ -213,20 +213,24 @@ Trigger: always — runs after all primary gates pass.
 python core/utils/paradigm_sentinel.py --root .
 ```
 Optional JSON output: append `--json` to emit structured output.
-Pass condition: zero combined violations from GATE 1 and GATE 6.
+Pass condition: zero combined violations from GATE 1, GATE 6, and blocking GATE_SRP findings.
 Note: the hook calls `paradigm_sentinel.py`, not `run_sentinel.py`. Do not confuse with GATE 1.
 
 ---
 
-**GATE_SRP — srp-sentinel (advisory)**
+**GATE_SRP — srp-sentinel (two-tier)**
 Trigger: always — runs inside GATE5P after GATE1 and GATE6.
-Status: always PASS. Advisory only. Never blocks a commit. Always exits 0.
+Status: PASS when every violation is allowlisted. FAIL when any non-allowlisted file exceeds SRP thresholds.
 ```powershell
 python core/utils/srp_sentinel.py --root . --json
 ```
 Optional: restrict scope with `--paths core/api/formats/odi/engines/`.
-Findings appear in GATE5P JSON output under "srp_advisory" key, and as a separate
-GATE_SRP entry (status: PASS) in the task report gates array.
+JSON output keys:
+- `blocking_violations` — hard-blocking findings
+- `advisory_violations` — allowlisted findings
+- `violations` — compatibility alias for `blocking_violations`
+Findings appear in GATE5P JSON output under "srp_advisory" key, and blocking SRP
+violations are folded into GATE5P's combined violation list.
 
 Signals checked (three independent static analysis signals):
   Signal A: class method count > 20 or file function count > 20          (+1)

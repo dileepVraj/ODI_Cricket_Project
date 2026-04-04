@@ -6,6 +6,13 @@
 
 ## BOOTSTRAP — every session, in order
 
+**B0 — Read session notes**
+```bash
+cat agents/sessions/$(ls agents/sessions/ | sort | tail -1)
+```
+Read the most recent session file from agents/sessions/. Look for the "Next session"
+or "Next:" lines to understand what was planned for this session.
+
 **B1 — Read state**
 ```bash
 cat agents/workflow/state.json

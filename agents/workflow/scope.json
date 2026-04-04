@@ -1,13 +1,11 @@
 {
-  "task_id": "TASK-172a",
+  "task_id": "TASK-179",
   "allowed_files": [
-    ".githooks/pre-commit",
-    "core/match_pack/transformer.py",
-    "core/match_pack/transformers/__init__.py",
-    "core/match_pack/transformers/string_utils.py",
-    "core/match_pack/transformers/h2h_transformer.py",
-    "core/match_pack/transformers/venue_transformer.py",
-    "core/match_pack/transformers/team_transformer.py",
-    "core/match_pack/transformers/player_transformer.py"
+    "core/utils/srp_sentinel.py",
+    "core/utils/paradigm_sentinel.py",
+    "docs/guides/coreStandards/GATE_SEQUENCE.md",
+    "agents/audits/SRP_VIOLATIONS.md",
+    "CLAUDE.md",
+    "agents/workflow/assertion.py"
   ]
 }

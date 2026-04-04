@@ -32,9 +32,10 @@ This is the clean window for a structural refactor.
 
 | File | Tier | Refactor task | Status |
 |---|---|---|---|
-| `formats/odi/engines/player/_base.py` | 1 | TASK-177a | In Progress |
-| `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | In Progress |
-| `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | In Progress |
+| `formats/odi/engines/player/_base.py` | 1 | TASK-177a | Done |
+| `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | Done |
+| `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | Done |
+| `formats/odi/engines/player/_matchup.py` | 1 | TASK-177b | Done |
 | `core/calculators/team/venue_calculator.py` | 1 | TASK-TBD | Pending |
 | `core/data_access.py` | 2 | TASK-TBD | Pending |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
