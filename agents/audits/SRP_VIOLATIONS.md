@@ -40,7 +40,7 @@ This is the clean window for a structural refactor.
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
-| `formats/odi/manifest.py` | 4 | TASK-182 | Done |
+| `formats/odi/manifest.py` | 4 | TASK-182 | Partial — domain package created, activation pending TASK-185 |
 | `core/services/report_formatter.py` | 4 | TASK-TBD | Pending |
 | `formats/odi/engines/team_engine.py` | 2 | TASK-TBD | Pending |
 | `core/services/report_builder.py` | 3 | TASK-TBD | Pending |
@@ -381,19 +381,39 @@ response shapes. Do not refactor without this baseline.
 
 ---
 
-### Task 11 â€” `formats/odi/manifest.py`
-**Lines:** 865 | **Risk:** Low (30+ function definitions, no runtime logic)
+### Task 11 — `formats/odi/manifest.py`
+**Lines:** 865 → 318 (shim) | **Risk:** Low (30+ function definitions, no runtime logic)
 
 All ODI function definitions in a single file. Adding one function means editing the
 entire manifest. Should be split by category before new features are added.
 
-**Split into:**
-| New module | Domain |
-|---|---|
-| `formats/odi/manifests/h2h_manifest.py` | H2H functions |
-| `formats/odi/manifests/venue_manifest.py` | Venue functions |
-| `formats/odi/manifests/team_manifest.py` | Team functions |
-| `formats/odi/manifests/player_manifest.py` | Player functions |
+**Split completed (TASK-182a + TASK-182b) — domain package created, activation pending TASK-185:**
+| New module | Domain | Status |
+|---|---|---|
+| `formats/odi/manifests/_config.py` | Format constants + FORMAT_RULES | Created |
+| `formats/odi/manifests/_venue.py` | venue_intel category | Created |
+| `formats/odi/manifests/_rivalry.py` | rivalry category | Created |
+| `formats/odi/manifests/_team.py` | team_command category | Created |
+| `formats/odi/manifests/_player.py` | player_scout + squad_battle categories | Created |
+| `formats/odi/manifests/_operations.py` | match_pack category | Created |
+| `formats/odi/manifests/__init__.py` | Hub — assembles MANIFEST from domain files | Created |
+
+**Why this is Partial, not Done:**
+Two gates read `formats/odi/manifest.py` via static AST and cannot follow imports:
+1. `compliance_bouncer._collect_manifest_literals` walks `ast.Constant` nodes — if
+   registries are imported rather than inline, GATE6 fails with "No manifest literals discovered."
+2. `GATE3 run_verifier._load_manifest_dict` calls `ast.literal_eval` on the MANIFEST
+   assignment — cannot parse a name reference like `_PACKAGE_MANIFEST`.
+
+Until TASK-185 fixes both gates, `manifest.py` shim must keep `MANIFEST` and all three
+literal registries as physical inline data. The `manifests/` domain files are loaded at
+import time but their assembled MANIFEST is overridden by the shim's inline copy.
+
+**Activation steps in TASK-185:**
+- Update `_iter_manifest_files()` in `compliance_bouncer.py` to also scan `formats/*/manifests/`
+- Update `_load_manifest_dict()` in `run_verifier.py` to use `importlib.import_module()`
+  instead of `ast.literal_eval`
+After TASK-185: shim becomes a true ~10-line re-export, domain files become the live source.
 
 ---
 

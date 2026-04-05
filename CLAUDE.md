@@ -4,6 +4,17 @@
 
 ---
 
+## HARD RULE — COMMUNICATION STYLE (non-negotiable, every session)
+
+The human is non-technical and learning. **Always explain everything in plain, everyday language.**
+- No jargon. No technical terms unless unavoidable.
+- If a technical term must be used, explain it in one simple sentence right after.
+- Think: "explain it to a friend who has never touched a computer."
+- This applies to ALL responses — explanations, status updates, errors, everything.
+- This rule cannot be overridden by any other instruction in this file.
+
+---
+
 ## BOOTSTRAP — every session, in order
 
 **B0 — Read session notes**
@@ -12,6 +23,18 @@ cat agents/sessions/$(ls agents/sessions/ | sort | tail -1)
 ```
 Read the most recent session file from agents/sessions/. Look for the "Next session"
 or "Next:" lines to understand what was planned for this session.
+
+**B0a — Pre-read workflow files (mandatory — prevents Write tool hard-block)**
+Immediately after reading session notes, read these files every session, no exceptions:
+```
+agents/workflow/taskFile.md
+agents/workflow/state.json      ← (also read in B1, but read here too)
+```
+The Write tool hard-blocks with an error if a file has not been Read in the same session.
+`taskFile.md` is written in B5 — if it is not pre-read here, B5 will fail, trigger a
+retry loop, and consume 2× tokens. Pre-reading at bootstrap costs nothing and prevents
+this every time. This applies even if the file is empty or does not exist yet — attempt
+the read anyway (an error is acceptable; the Write tool only checks that a Read was attempted).
 
 **B1 — Read state**
 ```bash
