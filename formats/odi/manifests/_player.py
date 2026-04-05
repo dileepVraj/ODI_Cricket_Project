@@ -1,0 +1,100 @@
+PLAYER_CATEGORIES = [
+{
+            "key": "player_scout",
+            "label": "👤 Player Scout",
+            "icon": "user",
+            "group": "players",
+            "description": "Individual player deep-dive profiles",
+            "quick_links": [
+                {"label": "View H2H", "category_key": "rivalry"},
+                {"label": "Build Squad", "category_key": "squad_battle"},
+            ],
+            "functions": [
+                {
+                    "key": "player_profile",
+                    "label": "Player Profile",
+                    "icon": "id-card",
+                    "engine_class": "PlayerEngine",
+                    "engine_method": "analyze_player_profile",
+                    "required_context": [],
+                    "extra_inputs": {
+                        "player_name": {
+                            "type": "combobox",
+                            "label": "👤 Player",
+                            "required": True,
+                            "source": "players",
+                            "source_params": {"team": "All"},
+                        },
+                        "venue_id": {
+                            "type": "combobox",
+                            "label": "🏟️ Venue",
+                            "required": False,
+                            "source": "venues",
+                        },
+                        "years": {
+                            "type": "text",
+                            "label": "📅 Years",
+                            "required": False,
+                            "placeholder": "e.g. 5",
+                        },
+                    },
+                    "execute_buttons": [
+                        {"key": "profile", "label": "Profile"},
+                        {"key": "batting_intel", "label": "Batting Intel"},
+                        {"key": "bowling_intel", "label": "Bowling Intel"},
+                    ],
+                    "output_type": "profile_card",
+                },
+            ],
+        },
+
+{
+            "key": "squad_battle",
+            "label": "⚔️ Squad Battle",
+            "icon": "users",
+            "group": "players",
+            "description": "11 vs 11 squad comparison with tactical matchups",
+            "functions": [
+                {
+                    "key": "compare_squads",
+                    "label": "Squad Comparison",
+                    "icon": "columns",
+                    "engine_class": "PlayerEngine",
+                    "engine_method": "compare_squads",
+                    "required_context": ["venue", "team_a", "team_b"],
+                    "extra_inputs": {"squad_builder": True},
+                    "output_type": "squad_comparison",
+                },
+                {
+                    "key": "tactical_matrix",
+                    "label": "Tactical Matrix",
+                    "icon": "grid",
+                    "engine_class": "PlayerEngine",
+                    "engine_method": "analyze_dual_squad_matrix",
+                    "required_context": ["team_a", "team_b"],
+                    "extra_inputs": {"squad_builder": True},
+                    "output_type": "table",
+                },
+                {
+                    "key": "matchups",
+                    "label": "Player Matchups",
+                    "icon": "crosshair",
+                    "engine_class": "PlayerEngine",
+                    "engine_method": "get_matchups",
+                    "required_context": ["team_a", "team_b"],
+                    "optional_context": ["venue"],
+                    "extra_inputs": {
+                        "squad_builder": True,
+                        "player_name": {
+                            "type": "combobox",
+                            "label": "🏏 Batter",
+                            "required": False,
+                            "source": "players",
+                            "source_params": {"team": "{team}"},
+                        },
+                    },
+                    "output_type": "matchup_table",
+                },
+            ],
+        },
+]
