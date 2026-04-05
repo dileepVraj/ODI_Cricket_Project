@@ -7,9 +7,6 @@ from formats.odi.manifests._rivalry import RIVALRY_CATEGORIES
 from formats.odi.manifests._team import TEAM_CATEGORIES
 from formats.odi.manifests._player import PLAYER_CATEGORIES
 from formats.odi.manifests._operations import OPERATIONS_CATEGORIES
-from formats.odi.manifests._registries import (
-    ENGINE_LITERAL_REGISTRY, SERVICE_LITERAL_REGISTRY, CALCULATOR_LITERAL_REGISTRY,
-)
 
 MANIFEST = {
     # ── Format Identity ──────────────────────────────────────────────────
@@ -142,6 +139,5 @@ def get_manifest_stats() -> dict:
 __all__ = [
     "MANIFEST", "FORMAT_RULES", "TACTICAL_THRESHOLDS", "SPORT_CONSTANTS",
     "ENGINE_DEFAULTS", "PLAYER_RULES", "PLAYER_CONTEXT_TYPES",
-    "ENGINE_LITERAL_REGISTRY", "SERVICE_LITERAL_REGISTRY", "CALCULATOR_LITERAL_REGISTRY",
     "get_manifest_stats",
 ]

@@ -40,7 +40,7 @@ This is the clean window for a structural refactor.
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
-| `formats/odi/manifest.py` | 4 | TASK-TBD | Pending |
+| `formats/odi/manifest.py` | 4 | TASK-182 | Done |
 | `core/services/report_formatter.py` | 4 | TASK-TBD | Pending |
 | `formats/odi/engines/team_engine.py` | 2 | TASK-TBD | Pending |
 | `core/services/report_builder.py` | 3 | TASK-TBD | Pending |
