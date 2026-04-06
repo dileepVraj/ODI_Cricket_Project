@@ -179,6 +179,7 @@ Deletes assertion.py.
 
 ## HARD PROHIBITIONS
 
+- Never write non-ASCII characters in source code — docstrings, comments, string literals, or any `.py` / `.ts` / `.tsx` file. When copying text from taskFile.md (which may contain Unicode), convert before writing: em dash `—` → `--`, arrow `→` → `->`, any other non-ASCII → nearest ASCII equivalent. Garbled characters (`???`, `â€"`, replacement boxes) in committed source files are a hard fail and must be fixed before committing.
 - Never touch files outside `scope.json` `allowed_files`.
 - Never update `agents/workflow/state.json` — that belongs to the Architect.
 - Never skip gates. Never mark COMPLETE before all triggered gates PASS.
