@@ -36,7 +36,8 @@ This is the clean window for a structural refactor.
 | `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_matchup.py` | 1 | TASK-177b | Done |
-| `core/data_access.py` | 2 | TASK-TBD | Pending |
+| `core/data_access.py` | 2 | TASK-186 | Done |
+| `core/data_access/_dal.py` | 2 | TASK-186 | Done |
 | `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
 | `api/main.py` | 3 | TASK-TBD | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
