@@ -181,8 +181,9 @@ def _is_formatter_file(path: Path) -> bool:
 
 def _iter_manifest_files(root: Path) -> list[Path]:
     manifests = sorted(root.glob("formats/*/manifest.py"))
-    if manifests:
-        return manifests
+    domain_manifests = sorted(root.glob("formats/*/manifests/**/*.py"))
+    if manifests or domain_manifests:
+        return sorted({*manifests, *domain_manifests})
     return sorted(root.rglob("manifest.py"))
 
 
