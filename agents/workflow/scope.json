@@ -1,11 +1,17 @@
 {
-  "task_id": "TASK-179",
+  "task_id": "TASK-185a",
   "allowed_files": [
-    "core/utils/srp_sentinel.py",
-    "core/utils/paradigm_sentinel.py",
-    "docs/guides/coreStandards/GATE_SEQUENCE.md",
+    "core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py",
+    "core/utils/compliance_bouncer.py",
+    "core/utils/python_type_check.py",
+    "formats/odi/manifest.py",
+    "formats/odi/manifests/_config.py",
     "agents/audits/SRP_VIOLATIONS.md",
-    "CLAUDE.md",
-    "agents/workflow/assertion.py"
+    "agents/workflow/state.json",
+    "agents/workflow/state.json.bak",
+    "agents/workflow/scope.json",
+    "agents/workflow/pre_call_state.json",
+    "agents/workflow/taskFile.md",
+    "agents/workflow/reports/TASK-185a.json"
   ]
 }

@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import ast
+import importlib
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable
@@ -67,18 +69,27 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _load_manifest_dict(manifest_path: Path) -> dict:
-    text = manifest_path.read_text(encoding="utf-8", errors="replace")
-    tree = ast.parse(text, filename=str(manifest_path))
-    for node in tree.body:
-        if isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name) and target.id == "MANIFEST":
-                    return ast.literal_eval(node.value)
-        elif isinstance(node, ast.AnnAssign):
-            if isinstance(node.target, ast.Name) and node.target.id == "MANIFEST":
-                return ast.literal_eval(node.value)
-    raise ValueError("MANIFEST assignment not found in manifest file")
+def _module_name_from_path(root: Path, manifest_path: Path) -> str:
+    relative_path = manifest_path
+    try:
+        relative_path = manifest_path.relative_to(root)
+    except ValueError:
+        pass
+    if relative_path.suffix != ".py":
+        raise ValueError(f"manifest path is not a Python file: {manifest_path}")
+    return ".".join(relative_path.with_suffix("").parts)
+
+
+def _load_manifest_dict(root: Path, manifest_path: Path) -> dict:
+    module_name = _module_name_from_path(root, manifest_path)
+    root_str = str(root)
+    if root_str not in sys.path:
+        sys.path.insert(0, root_str)
+    module = importlib.import_module(module_name)
+    manifest = getattr(module, "MANIFEST", None)
+    if isinstance(manifest, dict):
+        return manifest
+    raise ValueError("MANIFEST assignment not found in manifest module")
 
 
 def _iter_engine_files(format_dir: Path) -> Iterable[Path]:
@@ -213,7 +224,7 @@ def main() -> int:
     manifest_path = (root / args.manifest).resolve() if not Path(args.manifest).is_absolute() else Path(args.manifest)
 
     try:
-        manifest = _load_manifest_dict(manifest_path)
+        manifest = _load_manifest_dict(root, manifest_path)
     except (OSError, SyntaxError, ValueError) as exc:
         if args.json:
             output = {

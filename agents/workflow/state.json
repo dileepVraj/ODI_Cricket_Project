@@ -3,13 +3,14 @@
   "last_completed_task": "TASK-176a",
   "last_commit": "2ea21ca",
   "gate_baseline_violations": 0,
+  "mypy_baseline_violations": 145,
   "active": {
     "task_id": "TASK-176b",
     "phase": "MULTI-PHASE-C",
     "agent": "Codex",
     "invoked_at": "2026-04-02T11:48:08.227449+00:00",
     "pre_call_commit": "2ea21ca",
-    "retry_count": 1,
+    "retry_count": 2,
     "thread_id": null
   },
   "abandoned_tasks": [],

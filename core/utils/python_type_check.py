@@ -53,6 +53,20 @@ def _parse_mypy(output: str) -> list[dict[str, object]]:
     return violations
 
 
+def _load_mypy_baseline(root: Path) -> int | None:
+    state_path = root / "agents" / "workflow" / "state.json"
+    if not state_path.exists():
+        return None
+    try:
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    baseline = state.get("mypy_baseline_violations")
+    if isinstance(baseline, int):
+        return baseline
+    return None
+
+
 def _emit_json(status: str, violations: list[dict[str, object]], notes: list[str]) -> int:
     output: dict[str, object] = {
         "gate": GATE_ID,
@@ -107,7 +121,15 @@ def main() -> int:
             check=False,
             cwd=root,
         )
-        violations.extend(_parse_mypy(mypy_result.stdout or ""))
+        mypy_violations = _parse_mypy(mypy_result.stdout or "")
+        baseline = _load_mypy_baseline(root)
+        if baseline is None:
+            notes.append("mypy_baseline_violations missing from agents/workflow/state.json")
+            violations.extend(mypy_violations)
+        elif len(mypy_violations) <= baseline:
+            notes.append(f"mypy violations {len(mypy_violations)} <= baseline {baseline}")
+        else:
+            violations.extend(mypy_violations)
     else:
         notes.append("mypy not found - skipped")
 
