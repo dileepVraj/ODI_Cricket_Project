@@ -1,0 +1,75 @@
+{
+  "task_id": "TASK-185a",
+  "date": "2026-04-07",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "8593dfc",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "manifest_py_line_count": 6,
+  "sn009_removed": true,
+  "task11_status": "COMPLETE",
+  "gates": [
+    {"gate_id": "GATE1", "triggered": true, "status": "PASS", "violations": []},
+    {"gate_id": "GATE-C", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE2", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE3", "triggered": true, "status": "PASS", "violations": []},
+    {"gate_id": "GATE4", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE5S", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE5T", "triggered": true, "status": "PASS", "violations": []},
+    {"gate_id": "GATEF1", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "SRP-CHECK", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATEF2", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATEF3", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE5P", "triggered": true, "status": "PASS", "violations": []},
+    {"gate_id": "GATE6", "triggered": true, "status": "PASS", "violations": []}
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {"id": "AC-1", "status": "SATISFIED", "reason": "formats/odi/manifests/__init__.py defines MANIFEST as a dict literal."},
+      {"id": "AC-2", "status": "SATISFIED", "reason": "formats/odi/manifests/_config.py defines ENGINE_LITERAL_REGISTRY, SERVICE_LITERAL_REGISTRY, and CALCULATOR_LITERAL_REGISTRY as lists."},
+      {"id": "AC-3", "status": "SATISFIED", "reason": "formats/odi/manifest.py is 6 lines long."},
+      {"id": "AC-4", "status": "SATISFIED", "reason": "formats/odi/manifest.py contains no LITERAL_REGISTRY strings."},
+      {"id": "AC-5", "status": "SATISFIED", "reason": "GATE1, GATE3, GATE5T, GATE5P, and GATE6 all passed."},
+      {"id": "AC-6", "status": "SATISFIED", "reason": "SN-009 is absent from agents/workflow/state.json standing notices."},
+      {"id": "AC-7", "status": "SATISFIED", "reason": "Task 11 is marked COMPLETE in agents/audits/SRP_VIOLATIONS.md."}
+    ],
+    "assertion": {
+      "ran": false,
+      "expected": null,
+      "actual": null,
+      "match": null,
+      "pre_impl_output": "N/A - non-calculator task",
+      "raw_output": "N/A - non-calculator task"
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {"id": "AC-1", "status": "SATISFIED", "reason": "formats/odi/manifests/__init__.py defines MANIFEST as a dict literal."},
+    {"id": "AC-2", "status": "SATISFIED", "reason": "formats/odi/manifests/_config.py defines ENGINE_LITERAL_REGISTRY, SERVICE_LITERAL_REGISTRY, and CALCULATOR_LITERAL_REGISTRY as lists."},
+    {"id": "AC-3", "status": "SATISFIED", "reason": "formats/odi/manifest.py is 6 lines long."},
+    {"id": "AC-4", "status": "SATISFIED", "reason": "formats/odi/manifest.py contains no LITERAL_REGISTRY strings."},
+    {"id": "AC-5", "status": "SATISFIED", "reason": "GATE1, GATE3, GATE5T, GATE5P, and GATE6 all passed."},
+    {"id": "AC-6", "status": "SATISFIED", "reason": "SN-009 is absent from agents/workflow/state.json standing notices."},
+    {"id": "AC-7", "status": "SATISFIED", "reason": "Task 11 is marked COMPLETE in agents/audits/SRP_VIOLATIONS.md."}
+  ],
+  "files_modified": [
+    "agents/audits/SRP_VIOLATIONS.md",
+    "agents/workflow/pre_call_state.json",
+    "agents/workflow/scope.json",
+    "agents/workflow/state.json",
+    "agents/workflow/state.json.bak",
+    "core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py",
+    "core/utils/compliance_bouncer.py",
+    "core/utils/python_type_check.py",
+    "formats/odi/manifest.py",
+    "formats/odi/manifests/_config.py"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": false
+}
