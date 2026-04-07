@@ -6,7 +6,6 @@ import pandas as pd
 from core.interfaces.serialization_types import DisplayRecord
 from core.interfaces.team_types import FormGuidePayload, FormSequencePayload
 from core.interfaces.venue_types import ScenarioDiff, ScenarioDiffRows, ScenarioRow, ScenarioRows
-from core.services.report_formatter import ReportFormatter
 
 
 class DisplayFormatter:
@@ -82,13 +81,13 @@ class DisplayFormatter:
                 "results": record.get("batting_form") or [],  # type: ignore
                 "missing_token": "DNB",
             }
-            bat_form = ReportFormatter._format_form_sequence(bat_form_payload)
+            bat_form = DisplayFormatter._format_form_sequence(bat_form_payload)
 
             bowl_form_payload: FormSequencePayload = {
                 "results": record.get("bowling_form") or [],  # type: ignore
                 "missing_token": "-",
             }
-            bowl_form = ReportFormatter._format_form_sequence(bowl_form_payload)
+            bowl_form = DisplayFormatter._format_form_sequence(bowl_form_payload)
 
             bat_avg_raw = cast(str | int | float | None, record.get("batting_average"))
             bat_avg = bat_avg_raw if innings > 0 and bat_avg_raw is not None else "-"
@@ -98,7 +97,7 @@ class DisplayFormatter:
             if venue_runs_raw is None and venue_activity:
                 venue_runs: str | int | float = "DNB"
             else:
-                venue_runs = ReportFormatter._value_or_placeholder(venue_runs_raw, "-")
+                venue_runs = DisplayFormatter._value_or_placeholder(venue_runs_raw, "-")
 
             vs_opp_average = cast(str | int | float | None, record.get("vs_opposition_average"))
             venue_innings = cast(str | int | float | None, record.get("venue_innings"))
@@ -116,16 +115,16 @@ class DisplayFormatter:
                     "Inns": innings,
                     "Bat Form": bat_form,
                     "Bat Avg": bat_avg if bat_avg is not None else "-",
-                    "vs Opp": ReportFormatter._value_or_placeholder(vs_opp_average, "-"),
-                    "Ven Inns": ReportFormatter._value_or_placeholder(venue_innings, "-"),
+                    "vs Opp": DisplayFormatter._value_or_placeholder(vs_opp_average, "-"),
+                    "Ven Inns": DisplayFormatter._value_or_placeholder(venue_innings, "-"),
                     "Ven Runs": venue_runs,
-                    "Ven Avg": ReportFormatter._value_or_placeholder(venue_average, "-"),
-                    "Ven HS": ReportFormatter._value_or_placeholder(venue_high_score, "-"),
+                    "Ven Avg": DisplayFormatter._value_or_placeholder(venue_average, "-"),
+                    "Ven HS": DisplayFormatter._value_or_placeholder(venue_high_score, "-"),
                     "Bowl Form": bowl_form,
-                    "Bowl Econ": ReportFormatter._value_or_placeholder(bowling_economy, "-"),
-                    "Ven Econ": ReportFormatter._value_or_placeholder(venue_economy, "-"),
-                    "Ven Wkts": ReportFormatter._value_or_placeholder(venue_wickets, "-"),
-                    "Ven Matches": ReportFormatter._value_or_placeholder(venue_matches, "-"),
+                    "Bowl Econ": DisplayFormatter._value_or_placeholder(bowling_economy, "-"),
+                    "Ven Econ": DisplayFormatter._value_or_placeholder(venue_economy, "-"),
+                    "Ven Wkts": DisplayFormatter._value_or_placeholder(venue_wickets, "-"),
+                    "Ven Matches": DisplayFormatter._value_or_placeholder(venue_matches, "-"),
                 }
             )
         return formatted

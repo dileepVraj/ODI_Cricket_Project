@@ -3,7 +3,6 @@ from typing import Optional
 import re
 
 from core.interfaces.serialization_types import MatchupVisualPayload
-from core.services.report_formatter import ReportFormatter
 
 
 class ToneAssigner:
@@ -124,5 +123,5 @@ class ToneAssigner:
         return {
             "highlight_flags": {"bunny_alert": bool(is_bunny)},
             "cell_tones": {"Outs": tone_token},
-            "derived_badges": ReportFormatter._badges_from_matchup_flags(bool(is_bunny)),
+            "derived_badges": ToneAssigner._badges_from_matchup_flags(bool(is_bunny)),
         }

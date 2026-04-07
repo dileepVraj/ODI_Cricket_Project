@@ -1,5 +1,4 @@
 from core.services.match_filter_service import MatchStatus
-from core.services.report_formatter import ReportFormatter
 
 
 class StatusFormatter:
@@ -38,12 +37,12 @@ class StatusFormatter:
 
     @staticmethod
     def format_match_status(status_code: int | float | str | None) -> str:
-        code = ReportFormatter.normalize_match_status_code(status_code)
-        label = ReportFormatter.MATCH_STATUS_LABELS.get(code, ReportFormatter.MATCH_STATUS_LABELS[int(MatchStatus.STATUS_OK)])
-        icon = ReportFormatter.MATCH_STATUS_ICONS.get(code, ReportFormatter.MATCH_STATUS_ICONS[int(MatchStatus.STATUS_OK)])
+        code = StatusFormatter.normalize_match_status_code(status_code)
+        label = StatusFormatter.MATCH_STATUS_LABELS.get(code, StatusFormatter.MATCH_STATUS_LABELS[int(MatchStatus.STATUS_OK)])
+        icon = StatusFormatter.MATCH_STATUS_ICONS.get(code, StatusFormatter.MATCH_STATUS_ICONS[int(MatchStatus.STATUS_OK)])
         return f"{icon} {label}"
 
     @staticmethod
     def match_status_tone(status_code: int | float | str | None) -> str:
-        code = ReportFormatter.normalize_match_status_code(status_code)
-        return ReportFormatter.MATCH_STATUS_TONES.get(code, "muted")
+        code = StatusFormatter.normalize_match_status_code(status_code)
+        return StatusFormatter.MATCH_STATUS_TONES.get(code, "muted")

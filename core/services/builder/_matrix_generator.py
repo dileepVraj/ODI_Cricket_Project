@@ -5,9 +5,10 @@ import pandas as pd
 
 from config.shared.team_colors import TEAM_COLORS
 from core.interfaces.team_types import ComparisonReportRow, MATRIX_ROW_HOME_TEAM_COLOR, MATRIX_ROW_HOME_TEAM_NAME, MatrixReportRow
+from core.services.builder._data_builder import ReportDataBuilder
+from core.services.builder._form_assembler import FormDataAssembler
 from core.services.match_filter_service import MatchFilterService
-from core.services.report_builder import ReportBuilder
-from core.services.report_formatter import ReportFormatter
+from core.services.formatter._tone_assigner import ToneAssigner
 
 
 class MatrixReportGenerator:
@@ -65,11 +66,11 @@ class MatrixReportGenerator:
                     "Tie/NR": tie_nr,
                     "Win %": f"{pct}%",
                     "team_color": TEAM_COLORS.get(opp) or TEAM_COLORS.get("Visitors", "gray"),
-                    "form_data": ReportBuilder._build_form_data_payload(full, team_name),
-                    f"{team_name} Avg (1st)": ReportBuilder._get_avg_with_count(val[val["team_bat_1"] == team_name], "score_inn1"),
-                    "Opp Avg (1st)": ReportBuilder._get_avg_with_count(val[val["team_bat_1"] != team_name], "score_inn1"),
+                    "form_data": FormDataAssembler._build_form_data_payload(full, team_name),
+                    f"{team_name} Avg (1st)": ReportDataBuilder._get_avg_with_count(val[val["team_bat_1"] == team_name], "score_inn1"),
+                    "Opp Avg (1st)": ReportDataBuilder._get_avg_with_count(val[val["team_bat_1"] != team_name], "score_inn1"),
                     "MATCH_IDS": ",".join(map(str, full["match_id"].unique().tolist())),
-                    "cell_tones": {"Win %": ReportFormatter._tone_from_win_pct(pct)},
+                    "cell_tones": {"Win %": ToneAssigner._tone_from_win_pct(pct)},
                     "highlight_flags": {"is_overall": False},
                     "derived_badges": [f"{pct}% win rate"],
                 }
@@ -110,15 +111,15 @@ class MatrixReportGenerator:
                     "team_color": None,
                     MATRIX_ROW_HOME_TEAM_COLOR: TEAM_COLORS.get(team_name) or TEAM_COLORS.get("Visitors", "gray"),
                     MATRIX_ROW_HOME_TEAM_NAME: team_name,
-                    "form_data": ReportBuilder._build_form_data_payload(overall_full, team_name),
-                    f"{team_name} Avg (1st)": ReportBuilder._get_avg_with_count(
+                    "form_data": FormDataAssembler._build_form_data_payload(overall_full, team_name),
+                    f"{team_name} Avg (1st)": ReportDataBuilder._get_avg_with_count(
                         overall_val[overall_val["team_bat_1"] == team_name], "score_inn1"
                     ),
-                    "Opp Avg (1st)": ReportBuilder._get_avg_with_count(
+                    "Opp Avg (1st)": ReportDataBuilder._get_avg_with_count(
                         overall_val[overall_val["team_bat_1"] != team_name], "score_inn1"
                     ),
                     "MATCH_IDS": ",".join(map(str, overall_full["match_id"].unique().tolist())),
-                    "cell_tones": {"Win %": ReportFormatter._tone_from_win_pct(total_pct)},
+                    "cell_tones": {"Win %": ToneAssigner._tone_from_win_pct(total_pct)},
                     "highlight_flags": {"is_overall": True},
                     "derived_badges": [f"{total_pct}% win rate", "Overall benchmark"],
                 }

@@ -41,9 +41,9 @@ This is the clean window for a structural refactor.
 | `api/main.py` | 3 | TASK-TBD | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
 | `formats/odi/manifest.py` | 4 | TASK-182 | Partial — domain package created, activation pending TASK-185 |
-| `core/services/report_formatter.py` | 4 | TASK-TBD | Pending |
-| `formats/odi/engines/team_engine.py` | 2 | TASK-TBD | Pending |
-| `core/services/report_builder.py` | 3 | TASK-TBD | Pending |
+| `core/services/report_formatter.py` | 4 | TASK-184 | Done |
+| `formats/odi/engines/team_engine.py` | 2 | TASK-183 | Done |
+| `core/services/report_builder.py` | 3 | TASK-184 | Done |
 
 ---
 
@@ -418,6 +418,9 @@ After TASK-185: shim becomes a true ~10-line re-export, domain files become the 
 ---
 
 ### Task 12 â€” `formats/odi/engines/team_engine.py`
+**Status:** COMPLETE -- TASK-183a (additive) + TASK-183b (trim). team_engine.py replaced
+with shim. Domain package at formats/odi/engines/team/.
+Phase 2+3 deferred to TASK-187 (match_pack.py split).
 **Lines:** 463 | **Methods:** 29 | **LCOM4:** 11 | **Risk:** Medium
 **Gate score:** 5 (SRP_FLAG) â€” missed in original audit, caught by GATE_SRP on first run
 
@@ -436,7 +439,8 @@ After TASK-185: shim becomes a true ~10-line re-export, domain files become the 
 
 ---
 
-### Task 13 â€” `core/services/report_builder.py`
+### Task 13 -- `core/services/report_builder.py`
+**Status:** COMPLETE
 **Lines:** 430 | **Methods:** 6 | **LCOM4:** 6 | **Risk:** Low-medium
 **Gate score:** 3 (SRP_WARNING) â€” missed in original audit, caught by GATE_SRP on first run
 
@@ -448,7 +452,8 @@ form record building have no shared attributes.
 
 ---
 
-### Task 14 â€” `core/services/report_formatter.py`
+### Task 14 -- `core/services/report_formatter.py`
+**Status:** COMPLETE
 **Lines:** 399 | **Risk:** Low (20+ static methods, clear seams)
 
 **Split into:** `StatusFormatter`, `ToneAssigner`, `DisplayFormatter`.
