@@ -6,8 +6,6 @@ These dataclasses are used as type hints and return types.
 The ITeamEngine ABC defines the minimum API any format's
 TeamEngine must implement.
 """
-from __future__ import annotations
-
 from abc import ABC, abstractmethod
 from typing import Dict, Optional, TypedDict
 import pandas as pd
@@ -105,7 +103,7 @@ class ITeamEngine(ABC):
         years_back: int = 0,
         recorder: Optional[RecorderPort] = None,
         match_context: Optional[TeamMatchContext] = None,
-    ) -> ComparisonReportRows:
+    ) -> VenueMatchupReport:
         """Analyzes team performance by host country."""
         raise NotImplementedError
 
