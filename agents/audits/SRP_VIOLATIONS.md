@@ -36,11 +36,11 @@ This is the clean window for a structural refactor.
 | `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_matchup.py` | 1 | TASK-177b | Done |
+| `formats/odi/match_pack/_legacy_impl.py` | 2 | TASK-187 | Pending |
 | `core/data_access.py` | 2 | TASK-186 | Done |
 | `core/data_access/_dal.py` | 2 | TASK-186 | Done |
-| `formats/odi/match_pack.py` | 2 | TASK-TBD | Pending |
-| `api/main.py` | 3 | TASK-TBD | Pending |
-| `core/utils/compliance_bouncer.py` | 3 | TASK-TBD | Pending |
+| `api/main.py` | 3 | TASK-188 | Pending |
+| `core/utils/compliance_bouncer.py` | 3 | TASK-185b/c | Done |
 | `formats/odi/manifest.py` | 4 | TASK-182 | Done |
 | `core/services/report_formatter.py` | 4 | TASK-184 | Done |
 | `formats/odi/engines/team_engine.py` | 2 | TASK-183 | Done |
@@ -293,11 +293,9 @@ All logic lives in core.calculators.team/matchup/ package.
 
 ---
 
-### Task 8 â€” `core/data_access.py`
-**Lines:** 750 | **Risk:** High (foundation layer â€” bugs here corrupt everything above)
-
-Do this **after** Tasks 1â€“7 are stable. The concepts proven in those splits
-(`SchemaValidator`, `QueryBuilder`) will have analogues here.
+### Task 8 — `core/data_access.py`
+**Status:** COMPLETE — TASK-186c (f7bce51). 750-line data_access.py replaced with core/data_access/ package + shim.
+**Lines:** 750 | **Risk:** High (foundation layer — bugs here corrupt everything above)
 
 **Responsibilities mixed:**
 - DuckDB connection management
@@ -461,14 +459,9 @@ form record building have no shared attributes.
 
 ---
 
-### Task 15 â€” `core/utils/compliance_bouncer.py`
+### Task 15 -- `core/utils/compliance_bouncer.py`
+**Status:** COMPLETE — TASK-185b/c (3903835). 752-line compliance_bouncer.py replaced with 25-line shim +fixed stale `_iter_manifest_files`.
 **Lines:** 752 | **Risk:** Low (gate utility, lower priority)
-
-Five distinct validation tools in one module. A failure in one validation domain can
-mask failures in another.
-
-**Note:** Refactor last â€” this is a gate utility. Any change to it requires re-running
-the full gate sequence to confirm nothing regressed.
 
 ---
 
@@ -521,7 +514,5 @@ table above and update its status. GATE_SRP advisory count should decrease with 
 
 *Verify line counts and method counts against current HEAD before scheduling each task.*
 *Allowlist is authoritative â€” do not add files to it without a matching audit entry above.*
-
-
 
 

@@ -11,7 +11,7 @@ _LEGACY_MODULE_NAME = "formats.odi._match_pack_legacy"
 
 @lru_cache(maxsize=1)
 def load_legacy_module() -> ModuleType:
-    module_path = Path(__file__).resolve().parents[1] / "match_pack.py"
+    module_path = Path(__file__).resolve().parent / "_legacy_impl.py"
     spec = util.spec_from_file_location(_LEGACY_MODULE_NAME, module_path)
     if spec is None or spec.loader is None:
         raise ImportError(f"Unable to load legacy match pack module from {module_path}")
