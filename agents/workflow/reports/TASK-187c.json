@@ -1,0 +1,157 @@
+{
+  "task_id": "TASK-187c",
+  "date": "2026-04-08",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "4c84899",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE-C",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "SRP-CHECK",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    }
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack.py is now a pure compatibility shim that re-exports MatchPackAssembler, MatchPackGenerator, MatchPackOrchestrator, and MatchPackPersister."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack/_legacy.py now resolves the relocated legacy implementation from _legacy_impl.py, preserving the package boundary without changing import sites."
+      },
+      {
+        "id": "AC-3",
+        "status": "SATISFIED",
+        "reason": "agents/audits/SRP_VIOLATIONS.md no longer grandfather-approves formats/odi/match_pack.py; the allowlist now tracks formats/odi/match_pack/_legacy_impl.py as the retained legacy SRP violation."
+      },
+      {
+        "id": "AC-4",
+        "status": "SATISFIED",
+        "reason": "The smoke test using MatchPackGenerator(..., persist=False) completed successfully and returned an in-memory dict with the expected top-level keys."
+      }
+    ],
+    "assertion": {
+      "ran": false,
+      "expected": null,
+      "actual": null,
+      "match": null,
+      "pre_impl_output": "N/A - non-calculator task",
+      "raw_output": "N/A - non-calculator task"
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "formats/odi/match_pack.py is a thin shim that re-exports the package boundary names."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "formats/odi/match_pack/_legacy.py loads _legacy_impl.py and keeps the legacy implementation available behind the package boundary."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "agents/audits/SRP_VIOLATIONS.md now tracks formats/odi/match_pack/_legacy_impl.py instead of the shim module."
+    },
+    {
+      "id": "AC-4",
+      "status": "SATISFIED",
+      "reason": "The no-op generate_pack smoke test returned a dict with the expected report keys."
+    }
+  ],
+  "files_modified": [
+    "agents/audits/SRP_VIOLATIONS.md",
+    "formats/odi/match_pack.py",
+    "formats/odi/match_pack/_legacy.py",
+    "formats/odi/match_pack/_legacy_impl.py"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}
