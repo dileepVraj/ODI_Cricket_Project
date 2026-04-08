@@ -1,0 +1,144 @@
+{
+  "task_id": "TASK-187d",
+  "date": "2026-04-08",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "0906d08",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE-C",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "SRP-CHECK",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    }
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack/__init__.py keeps the shim exports in the package boundary with MatchPackGenerator aliased to MatchPackOrchestrator."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack.py was deleted, removing the shadowing risk from the standalone module path."
+      },
+      {
+        "id": "AC-3",
+        "status": "SATISFIED",
+        "reason": "The fixed-timestamp package-vs-legacy comparison returned IDENTICAL True, showing the JSON payloads match exactly."
+      }
+    ],
+    "assertion": {
+      "ran": true,
+      "expected": true,
+      "actual": true,
+      "match": true,
+      "pre_impl_output": "N/A - non-calculator task",
+      "raw_output": "IDENTICAL True"
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "The package boundary in formats/odi/match_pack/__init__.py exports the shim names."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "The shadowing formats/odi/match_pack.py file was deleted."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "The fixed-timestamp compare printed IDENTICAL True."
+    }
+  ],
+  "files_modified": [
+    "formats/odi/match_pack.py"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}
