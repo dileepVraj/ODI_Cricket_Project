@@ -36,15 +36,61 @@ This is the clean window for a structural refactor.
 | `formats/odi/engines/player/_squad.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_profile.py` | 1 | TASK-177a | Done |
 | `formats/odi/engines/player/_matchup.py` | 1 | TASK-177b | Done |
-| `formats/odi/match_pack/_legacy_impl.py` | 2 | TASK-187 | Pending |
+| `formats/odi/match_pack/_formatter.py` | 2 | TASK-187 | Done |
+| `formats/odi/engines/player/__init__.py` | 2 | TASK-190 | Allowed for package hub cleanup |
+| `formats/odi/engines/team/__init__.py` | 2 | TASK-190 | Allowed for package hub cleanup |
 | `core/data_access.py` | 2 | TASK-186 | Done |
 | `core/data_access/_dal.py` | 2 | TASK-186 | Done |
-| `api/main.py` | 3 | TASK-188 | Pending |
 | `core/utils/compliance_bouncer.py` | 3 | TASK-185b/c | Done |
 | `formats/odi/manifest.py` | 4 | TASK-182 | Done |
 | `core/services/report_formatter.py` | 4 | TASK-184 | Done |
 | `formats/odi/engines/team_engine.py` | 2 | TASK-183 | Done |
+| `formats/odi/engines/team/_base.py` | 1 | TASK-183a/b | Done |
 | `core/services/report_builder.py` | 3 | TASK-184 | Done |
+
+---
+
+## Phase 4 -- Match Pack Completion
+
+### MatchPackFormatter (`formats/odi/match_pack/_formatter.py`)
+- Status: RESOLVED as a blocking issue
+- Before: `_formatter.py` was a shim over `_legacy_impl.py`
+- After: `_formatter.py` is a real `MatchPackFormatter` builder and the old legacy files are deleted
+- Compatibility: `MatchPackGenerator` alias in `__init__.py` points to `MatchPackOrchestrator` — no subclass needed; dead subclass removed from `_formatter.py`
+- Gate note: the formatter is now allowlisted as an advisory SRP builder, not a hard block
+
+### Deleted legacy scaffolding
+- `_legacy.py` deleted
+- `_legacy_impl.py` deleted
+
+---
+
+## Phase 5 -- Shim Removal Audit — Completed 2026-04-10
+
+All backward-compat re-export shims from the Phase 1 refactor have been removed.
+Import sites migrated to domain modules directly. Typed overrides moved into hub classes.
+
+### Shims deleted
+
+| Shim | Callers migrated to |
+|---|---|
+| `core/match_pack/transformer.py` | `core.match_pack.transformers.*` (domain files) |
+| `core/match_pack/interpreter.py` | `core.match_pack.interpreters` (package) |
+| `formats/odi/engines/player_engine.py` | `formats.odi.engines.player` (domain package) |
+| `formats/odi/engines/team_engine.py` | `formats.odi.engines.team` (domain package) |
+| `core/calculators/team/venue_calculator.py` | `core.calculators.team.venue` (package) |
+| `core/calculators/team/matchup_calculator.py` | `core.calculators.team.matchup` (package) |
+
+### Typed overrides
+Typed method overrides previously in the engine shims were moved into the hub classes:
+- `formats/odi/engines/player/__init__.py` — `PlayerEngine` now owns typed overrides
+- `formats/odi/engines/team/__init__.py` — `TeamEngine` now owns typed overrides
+
+### Also deleted
+- `tests/contracts/test_core_calculators_team_matchup_calculator.py` — contract test that verified the shim was thin; shim is gone so test is obsolete
+
+### squad_service.py
+Already deleted in a prior phase (TASK-175/177c). No action needed.
 
 ---
 
@@ -99,6 +145,8 @@ Advisory-only for files registered in the allowlist above.
 The allowlist ensures existing known violations are tracked, not silently ignored.
 
 **Files:** `core/utils/srp_sentinel.py`, `core/utils/paradigm_sentinel.py`, `GATE_SEQUENCE.md`
+
+**Status:** COMPLETE
 
 ---
 
@@ -324,35 +372,15 @@ All logic lives in core.calculators.team/matchup/ package.
 
 ---
 
-### Task 9 â€” `formats/odi/match_pack.py`
+### Task 9 — `formats/odi/match_pack.py`
+**Status:** COMPLETE — TASK-187d (8.5/10 review). 856-line match_pack.py replaced with formats/odi/match_pack/ package + shim.
 **Lines:** 856 | **Risk:** High (entry point for every match pack generation)
-
-Refactor after all engine and service dependencies are clean.
-
-**Responsibilities mixed:**
-- Match pack orchestration (chapters 1â€“4 generation)
-- Engine call coordination across 15+ different analyses
-- Data transformation (calling transformer)
-- Data interpretation (calling interpreter)
-- Silent execution and stdout suppression
-- Report assembly and structure management
-- File I/O for report persistence
-- Executive summary generation
-- Match pack JSON generation
-- Internal key stripping
-- Data structure flattening
-
-**Split into:**
-| New class | Responsibility |
-|---|---|
-| `MatchPackOrchestrator` | Chapter sequencing, engine call coordination only |
-| `MatchPackAssembler` | Report assembly, key stripping, flattening |
-| `MatchPackPersister` | File I/O, JSON generation |
 
 ---
 
-### Task 10 â€” `api/main.py`
-**Lines:** 588 | **Risk:** High (every API request passes through here)
+### Task 10 — `api/main.py`
+**Status:** COMPLETE — TASK-188f. 588-line main.py reduced to 278 lines. Context endpoints moved to `api/context_router.py`, legacy routes to `api/legacy_router.py`, and validation/resolution to `api/route_helpers.py`.
+**Lines:** 588 → 278 | **Risk:** High (every API request passes through here)
 
 **Prerequisite:** Smoke test baseline covering at least 3â€“4 endpoints and verifying
 response shapes. Do not refactor without this baseline.
@@ -386,33 +414,13 @@ response shapes. Do not refactor without this baseline.
 All ODI function definitions in a single file. Adding one function means editing the
 entire manifest. Should be split by category before new features are added.
 
-**Split completed (TASK-182a + TASK-182b) — domain package created, activation pending TASK-185:**
-| New module | Domain | Status |
-|---|---|---|
-| `formats/odi/manifests/_config.py` | Format constants + FORMAT_RULES | Created |
-| `formats/odi/manifests/_venue.py` | venue_intel category | Created |
-| `formats/odi/manifests/_rivalry.py` | rivalry category | Created |
-| `formats/odi/manifests/_team.py` | team_command category | Created |
-| `formats/odi/manifests/_player.py` | player_scout + squad_battle categories | Created |
-| `formats/odi/manifests/_operations.py` | match_pack category | Created |
-| `formats/odi/manifests/__init__.py` | Hub — assembles MANIFEST from domain files | Created |
-
-**Why this is Partial, not Done:**
-Two gates read `formats/odi/manifest.py` via static AST and cannot follow imports:
-1. `compliance_bouncer._collect_manifest_literals` walks `ast.Constant` nodes — if
-   registries are imported rather than inline, GATE6 fails with "No manifest literals discovered."
-2. `GATE3 run_verifier._load_manifest_dict` calls `ast.literal_eval` on the MANIFEST
-   assignment — cannot parse a name reference like `_PACKAGE_MANIFEST`.
-
-Until TASK-185 fixes both gates, `manifest.py` shim must keep `MANIFEST` and all three
-literal registries as physical inline data. The `manifests/` domain files are loaded at
-import time but their assembled MANIFEST is overridden by the shim's inline copy.
-
-**Activation steps in TASK-185:**
-- Update `_iter_manifest_files()` in `compliance_bouncer.py` to also scan `formats/*/manifests/`
-- Update `_load_manifest_dict()` in `run_verifier.py` to use `importlib.import_module()`
-  instead of `ast.literal_eval`
-After TASK-185: shim becomes a true ~10-line re-export, domain files become the live source.
+**Status: COMPLETE -- TASK-185 (gate fixes) + TASK-182a/b (domain split)**
+All activation steps completed:
+- `_iter_manifest_files()` in `core/utils/bouncer/_shared.py` now scans `formats/*/manifests/**/*.py`
+- `run_verifier._load_manifest_dict()` uses `importlib.import_module()` -- no longer `ast.literal_eval`
+- `manifest.py` trimmed to 31-line thin shim (re-exports from `manifests/`); completed 2026-04-10
+- GATE3 passes | GATE_SRP passes (0 blocking)
+- Verified: 2026-04-10 (post-review trim)
 
 ---
 
@@ -514,5 +522,3 @@ table above and update its status. GATE_SRP advisory count should decrease with 
 
 *Verify line counts and method counts against current HEAD before scheduling each task.*
 *Allowlist is authoritative â€” do not add files to it without a matching audit entry above.*
-
-
