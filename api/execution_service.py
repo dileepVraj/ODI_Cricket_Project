@@ -2,19 +2,46 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any, cast
 
-from api.context_builder import AnalyzerProtocol, _engine_default_int
+from api.context_builder import AnalyzerProtocol, EngineCallParams, _engine_default_int
+from api.serializers import serialize_engine_output
 from core.interfaces.player_types import PlayerAnalyzerPort
+from core.interfaces.serialization_types import ManifestFunctionDef
 from core.interfaces.team_types import AnalyzerEngineProtocol
-from core.services import EnrichmentService, PlayerService
+from core.services import EnrichmentService, ParamMapperService, PlayerService, SerializationService
 
 
 class ExecutionService:
     """Applies domain-specific post-processing after an engine method call."""
 
-    @staticmethod
+    def __init__(self) -> None:
+        self._log = logging.getLogger(__name__)
+
+    def map_call_params(
+        self,
+        fn_def: dict,
+        raw_params: dict,
+    ) -> EngineCallParams:
+        """Map raw request params to engine call params via ParamMapperService."""
+        self._log.debug("Mapping params for function: %s", fn_def.get("key"))
+        return cast(
+            EngineCallParams,
+            ParamMapperService.map_params(
+                cast(ManifestFunctionDef, fn_def),
+                raw_params,
+            ),
+        )
+
+    def serialize(self, result: Any) -> Any:
+        """Wrap engine result in schema and serialize for API response."""
+        self._log.debug("Serializing result of type: %s", type(result).__name__)
+        schematized = SerializationService.wrap_as_schema(result)
+        return serialize_engine_output(schematized)
+
     def post_process(
+        self,
         engine_method_name: str,
         serialized: Any,
         call_params: dict[str, Any],
@@ -26,6 +53,7 @@ class ExecutionService:
         Called once per request, after the engine result has been serialized.
         Returns the (possibly modified) serialized result.
         """
+        self._log.debug("Post-processing output of: %s", engine_method_name)
         # Case 1 -- analyze_player_profile: add venue stats if missing
         if (
             engine_method_name == "analyze_player_profile"
