@@ -24,6 +24,7 @@ VENUE_CATEGORIES = [
                             "venue_id", "matches", "total_matches", "bat1_win_pct", "chase_win_pct",
                             "bias_verdict", "sample_reliability", "confidence_interval",
                             "score_distribution", "score_extremes", "bias_trend", "toss_intelligence",
+                            "toss_loss_recovery", "score_banding",
                         ],
                     },
                     "discover_bullets": [

@@ -8,6 +8,7 @@ from fastapi import HTTPException
 
 from api.context_builder import AnalyzerProtocol
 from api.engine_pool import get_active_formats, get_analyzer, is_format_loaded
+from api.schemas import ManifestResponse
 from config.format_registry import get_format_engines, get_format_manifest
 
 
@@ -28,6 +29,18 @@ class RequestValidator:
             raise HTTPException(
                 status_code=404,
                 detail=f"Format '{format_key}' not available. Loaded: {list(active.keys())}",
+            )
+
+    @staticmethod
+    def get_manifest_or_404(format_type: str) -> ManifestResponse:
+        """Validate format and return its manifest, or raise 404."""
+        RequestValidator.validate_format(format_type)
+        try:
+            return cast(ManifestResponse, get_format_manifest(format_type))
+        except (ValueError, ImportError) as exc:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No manifest for format '{format_type}': {exc}",
             )
 
     @staticmethod
