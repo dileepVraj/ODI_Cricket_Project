@@ -21,7 +21,6 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 from api.context_builder import (  # noqa: E402
-    EngineCallParams,
     _inject_player_engine_context,
     _inject_team_engine_context,
 )
@@ -39,8 +38,6 @@ from api.schemas import (  # noqa: E402
     HealthResponse,
     ManifestResponse,
 )
-from api.serializers import serialize_engine_output  # noqa: E402
-from config.format_registry import get_format_manifest  # noqa: E402
 from config.settings import (  # noqa: E402
     API_DOCS_URL,
     API_HOST,
@@ -49,11 +46,6 @@ from config.settings import (  # noqa: E402
     API_V1_PREFIX,
     CORS_ORIGINS,
 )
-from core.services import (  # noqa: E402
-    ParamMapperService,
-    SerializationService,
-)
-from core.interfaces.serialization_types import ManifestFunctionDef  # noqa: E402
 
 
 logging.basicConfig(
@@ -141,14 +133,7 @@ def get_manifest(
     format_type: str = Path(..., description="Format key (e.g., 'odi')"),
 ) -> ManifestResponse:
     """Returns the format's complete manifest."""
-    RequestValidator.validate_format(format_type)
-    try:
-        return cast(ManifestResponse, get_format_manifest(format_type))
-    except (ValueError, ImportError) as exc:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No manifest for format '{format_type}': {exc}",
-        )
+    return RequestValidator.get_manifest_or_404(format_type)
 
 
 @v1_router.post("/{format_type}/execute/{function_key}", response_model=ExecuteResponse, tags=["Execute"])
@@ -191,12 +176,10 @@ def execute_function(
         )
     method = getattr(engine_instance, engine_method_name)
 
-    call_params = cast(
-        EngineCallParams,
-        ParamMapperService.map_params(
-            cast(ManifestFunctionDef, fn_def),
-            request.params.model_dump(exclude_none=True),
-        ),
+    _svc = ExecutionService()
+    call_params = _svc.map_call_params(
+        fn_def,
+        request.params.model_dump(exclude_none=True),
     )
     call_params = _inject_team_engine_context(
         analyzer=analyzer,
@@ -228,10 +211,9 @@ def execute_function(
             detail=f"Engine error in {engine_class_name}.{engine_method_name}: {exc}",
         )
 
-    schematized = SerializationService.wrap_as_schema(result)
-    serialized = serialize_engine_output(schematized)
+    serialized = _svc.serialize(result)
 
-    serialized = ExecutionService.post_process(
+    serialized = _svc.post_process(
         engine_method_name=engine_method_name,
         serialized=serialized,
         call_params=dict(call_params),
