@@ -261,6 +261,8 @@ export interface VenueBiasTrend {
 export interface VenueTossIntelligence {
   chose_bat_win_pct: number | null;
   chose_bowl_win_pct: number | null;
+  chose_bat_count: number;
+  chose_bowl_count: number;
   toss_match_count: number;
   data_available: boolean;
 }
@@ -285,4 +287,14 @@ export interface VenueBiasData {
   score_extremes: VenueScoreExtremes;
   bias_trend: VenueBiasTrend;
   toss_intelligence: VenueTossIntelligence;
+  toss_loss_recovery?: {
+    data_available: boolean;
+    forced_bat_count: number;
+    forced_bowl_count: number;
+    forced_bat_win_pct: number | null;
+    forced_bowl_win_pct: number | null;
+  };
+  score_banding?: {
+    inn1_bands: Array<{ label: string; pct: number }>;
+  };
 }

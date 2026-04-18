@@ -56,7 +56,7 @@ export interface QuickLink {
  * @schema-exempt frontend-only — frontend form field config, nested sub-shape of Manifest
  */
 export interface ContextField {
-    type: "combobox" | "dropdown" | "slider" | "text" | "textarea";
+    type: "combobox" | "dropdown" | "slider" | "text" | "textarea" | "number";
     label: string;
     required: boolean;
     source?: string;
@@ -83,6 +83,7 @@ export interface ManifestFunction {
     output_schema?: Record<string, unknown>;
     extra_inputs?: Record<string, unknown>;
     execute_buttons?: Array<{ key: string; label: string }>;
+    discover_bullets?: string[];
 }
 
 /**
@@ -94,6 +95,7 @@ export interface ManifestCategory {
     icon: string;
     group: string;
     description: string;
+    module_type?: string;
     functions: ManifestFunction[];
     quick_links?: QuickLink[];
 }
@@ -215,7 +217,7 @@ async function parseErrorPayload(res: Response): Promise<unknown> {
     }
 }
 
-async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+export async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
     let res: Response;
     try {
         res = await fetch(`${API_BASE}${path}`, init);
