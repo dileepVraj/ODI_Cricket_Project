@@ -7,6 +7,7 @@ import "./styles/cards.css";
 import "./styles/inputs.css";
 import "./styles/data.css";
 import "./styles/landing.css";
+import "./styles/live-trade-cockpit.css";
 
 const inter = Inter({
   subsets: ["latin"],
