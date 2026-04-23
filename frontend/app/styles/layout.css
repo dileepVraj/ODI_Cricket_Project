@@ -276,6 +276,13 @@
   display: grid;
   gap: var(--space-6);
   align-items: start;
+  min-width: 0;
+}
+
+.cockpit-trade-layout-shell {
+  position: relative;
+  width: 100%;
+  min-width: 0;
 }
 
 .cockpit-trade-layout--single {
@@ -294,6 +301,7 @@
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
+  min-width: 0;
 }
 
 .cockpit-match-setup-header {
@@ -356,15 +364,51 @@
   font-size: var(--text-sm);
 }
 
+#cockpit-venue {
+  width: min(100%, 360px);
+}
+
 .cockpit-odds-selector {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.65fr) minmax(0, 0.65fr);
-  gap: var(--space-2);
+  display: flex;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: flex-start;
+  align-self: flex-start;
+  flex-wrap: nowrap;
 }
 
 .cockpit-odds-selector-control {
   min-width: 0;
+  flex: 0 0 auto;
+}
+
+.cockpit-odds-selector-control--team {
+  width: 8ch;
+  min-width: 8ch;
+  max-width: 8ch;
+}
+
+.cockpit-odds-selector-control--odds {
+  width: 6ch;
+  min-width: 6ch;
+  max-width: 6ch;
+  padding: 4px 8px;
+  text-align: center;
+  background: var(--bg-base);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.cockpit-odds-selector-control--odds::placeholder {
+  color: var(--text-muted);
+}
+
+.cockpit-odds-selector-control--odds:focus {
+  border-color: var(--accent-ui);
+  box-shadow: var(--shadow-glow);
 }
 
 .cockpit-match-setup-input[type="date"]::-webkit-calendar-picker-indicator {
@@ -389,6 +433,151 @@
   font-size: var(--text-sm);
   color: var(--tier-danger);
   margin-right: auto;
+}
+
+.cockpit-match-setup-message {
+  color: var(--tier-elite);
+  margin-right: auto;
+}
+
+.cockpit-pending-trades {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+  transition: opacity var(--transition-normal), width var(--transition-normal), max-width var(--transition-normal), padding var(--transition-normal), margin var(--transition-normal);
+}
+
+.cockpit-pending-trade-error {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-danger);
+  border-radius: var(--radius-sm);
+  background: var(--bg-danger);
+  color: var(--tier-danger);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.cockpit-pending-trade-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.cockpit-pending-trade-card:hover {
+  border-color: var(--border-default);
+}
+
+.cockpit-pending-trade-card:focus-within {
+  border-color: var(--border-accent);
+}
+
+.cockpit-pending-trade-card-body {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  padding-right: calc(var(--space-3) + 34px);
+  background: transparent;
+  border: 0;
+  border-radius: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.cockpit-pending-trade-card-body:hover {
+  background: var(--bg-hover);
+}
+
+.cockpit-pending-trade-card-body:focus-visible {
+  outline: 2px solid var(--border-accent);
+  outline-offset: -2px;
+}
+
+.cockpit-pending-trade-card-body:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+.cockpit-pending-trade-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.cockpit-pending-trade-delete:hover:not(:disabled) {
+  background: var(--bg-danger);
+  border-color: var(--border-danger);
+  color: var(--tier-danger);
+  transform: translateY(-1px);
+}
+
+.cockpit-pending-trade-delete:focus-visible {
+  outline: 2px solid var(--tier-danger);
+  outline-offset: 1px;
+}
+
+.cockpit-pending-trade-delete:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.cockpit-pending-trades-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.cockpit-pending-trades-toggle:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+.cockpit-pending-trades-toggle--dock {
+  position: absolute;
+  top: var(--space-6);
+  right: 0;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: var(--radius-md);
+  z-index: 3;
+}
+
+.cockpit-pending-trades-toggle--dock:hover {
+  transform: translateX(-1px);
 }
 
 .cockpit-trade-panel {
@@ -527,6 +716,15 @@
   font-family: var(--font-ui);
   font-size: var(--text-sm);
   color: var(--text-secondary);
+}
+
+.cockpit-pending-trade-secondary {
+  color: color-mix(in srgb, var(--text-primary) 84%, var(--bg-base));
+  line-height: 1.45;
+}
+
+.cockpit-pending-trade-chip {
+  color: color-mix(in srgb, var(--text-primary) 84%, var(--bg-base));
 }
 
 .cockpit-trade-chip--muted {
