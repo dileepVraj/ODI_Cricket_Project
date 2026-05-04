@@ -1,7 +1,7 @@
 "use client";
 
 import EmptyState from "@/components/common/EmptyState";
-import { thClass, tdClass, fmtNum } from "@/components/phase-analysis/PhaseTableStyles";
+import { thClass, tdClass, fmtNum } from "./PhaseTableStyles";
 
 interface BatFirstHabits {
     home_team_pp_runs?: number;

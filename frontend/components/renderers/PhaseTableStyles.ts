@@ -11,9 +11,9 @@ export const tdClass = (align: "left" | "right") =>
     `${baseTdClass} ${align === "left" ? "[text-align:left]" : "[text-align:right]"}`;
 
 export function accentBarClass(accentColor: string): string {
-    if (accentColor === "var(--accent-primary)") return "[background:var(--accent-primary)]";
-    if (accentColor === "var(--accent-secondary)") return "[background:var(--accent-secondary)]";
-    if (accentColor === "var(--accent-tertiary)") return "[background:var(--accent-tertiary)]";
+    if (accentColor === "var(--accent-ui)") return "[background:var(--accent-ui)]";
+    if (accentColor === "var(--tier-strong)") return "[background:var(--tier-strong)]";
+    if (accentColor === "var(--accent-data)") return "[background:var(--accent-data)]";
     return "[background:var(--tier-strong)]";
 }
 

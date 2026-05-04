@@ -3,10 +3,10 @@
 import { Activity } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
 import MatchAuditSection from "./MatchAuditSection";
-import StatPill from "@/components/phase-analysis/StatPill";
-import FilterCriteriaNotice from "@/components/phase-analysis/FilterCriteriaNotice";
-import PhaseTable from "@/components/phase-analysis/PhaseTable";
-import GlobalHabitsCard from "@/components/phase-analysis/GlobalHabitsCard";
+import { StatPill } from "@/components/common/StatPill";
+import FilterCriteriaNotice from "@/components/common/FilterCriteriaNotice";
+import PhaseTable from "./PhaseTable";
+import GlobalHabitsCard from "./GlobalHabitsCard";
 
 interface PhaseData {
     avg: number;
@@ -67,9 +67,9 @@ export default function PhaseAnalysisCard({ data }: PhaseAnalysisCardProps) {
 
     return (
         <div className="[display:flex] [flex-direction:column] [gap:20px]">
-            <div className="glass-card [padding:18px_22px] [display:flex] [align-items:center] [gap:16px] [flex-wrap:wrap] [border-left:4px_solid_var(--accent-primary)]">
-                <div className="[width:40px] [height:40px] [border-radius:var(--radius-md)] [background:var(--accent-glow)] [display:flex] [align-items:center] [justify-content:center]">
-                    <Activity size={20} className="[color:var(--accent-primary)]" />
+            <div className="glass-card [padding:18px_22px] [display:flex] [align-items:center] [gap:16px] [flex-wrap:wrap] [border-left:4px_solid_var(--accent-ui)]">
+                <div className="[width:40px] [height:40px] [border-radius:var(--radius-md)] [background:var(--bg-info)] [display:flex] [align-items:center] [justify-content:center]">
+                    <Activity size={20} className="[color:var(--accent-ui)]" />
                 </div>
 
                 <div className="[flex:1]">
@@ -91,7 +91,7 @@ export default function PhaseAnalysisCard({ data }: PhaseAnalysisCardProps) {
                 <PhaseTable
                     title="Venue Baseline (All Teams)"
                     stats={data.baseline}
-                    accentColor="var(--accent-tertiary)"
+                    accentColor="var(--accent-data)"
                 />
             )}
 
@@ -99,7 +99,7 @@ export default function PhaseAnalysisCard({ data }: PhaseAnalysisCardProps) {
                 <PhaseTable
                     title={`${data.home_at_venue.team} at this Venue`}
                     stats={data.home_at_venue.stats}
-                    accentColor="var(--accent-primary)"
+                    accentColor="var(--accent-ui)"
                 />
             )}
 
@@ -107,7 +107,7 @@ export default function PhaseAnalysisCard({ data }: PhaseAnalysisCardProps) {
                 <PhaseTable
                     title={`${data.away_at_venue.team} at this Venue`}
                     stats={data.away_at_venue.stats}
-                    accentColor="var(--accent-secondary)"
+                    accentColor="var(--tier-strong)"
                 />
             )}
 

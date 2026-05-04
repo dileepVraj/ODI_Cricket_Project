@@ -1,5 +1,9 @@
 const API_BASE = "";  // Empty = same origin (proxied by Next.js rewrites)
 
+// Known format keys -- single source of truth for frontend code
+export const FMT_ODI = "odi" as const;
+export const FMT_IPL = "ipl" as const;
+
 type ApiErrorCode = "validation" | "server" | "http" | "network";
 
 export class ApiClientError extends Error {
@@ -220,7 +224,10 @@ async function parseErrorPayload(res: Response): Promise<unknown> {
 export async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
     let res: Response;
     try {
-        res = await fetch(`${API_BASE}${path}`, init);
+        res = await fetch(`${API_BASE}${path}`, {
+            ...init,
+            cache: "no-store",
+        });
     } catch {
         throw new ApiClientError(
             "Network Error: Could not reach the backend service.",

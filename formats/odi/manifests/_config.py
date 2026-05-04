@@ -369,4 +369,31 @@ CALCULATOR_LITERAL_REGISTRY = [
     "visitor",
     "venue_avg",
     "home_win_pct",
+    # venue bias calculator (_bias.py) — key names used in output dicts
+    "median", "std",
+    "lowest_defended", "highest_chased",
+    "direction", "recent_pct", "historical_pct",
+    "chose_bat_win_pct", "chose_bowl_win_pct",
+    "toss_match_count", "data_available",
+    "forced_bat_win_pct", "forced_bowl_win_pct",
+    "forced_bat_count", "forced_bowl_count",
+    "pct", "inn1_bands",
+    "bat1_wins", "chase_wins",
+]
+
+SERVICE_LITERAL_REGISTRY += [
+    # enrichment.py — format rules key passed through service layer
+    "format_rules",
+    # serialization_service.py — JsonValue type name used as string literal
+    "JsonValue",
+]
+
+SERVICE_LITERAL_REGISTRY += [
+    # BOUNCER-FIX: Internal dict keys from core/services/builder/
+    # _data_builder.py -- keys from _calculate_win_stats accessed by _build_report_data
+    "home_stats", "visitor_stats", "valid_1st", "valid_2nd",
+    "win_rate", "home_wins", "home_win_bat1", "home_win_bat2",
+    "visitor_wins", "visitor_win_bat1", "visitor_win_bat2",
+    # _matrix_generator.py -- keys from _compute_overall_stats accessed by _assemble_overall_row
+    "total_wins", "total_losses", "total_tie_nr", "total_pct",
 ]

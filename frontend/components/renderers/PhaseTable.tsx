@@ -1,7 +1,7 @@
 "use client";
 
 import { Zap, Clock, Target, BarChart3 } from "lucide-react";
-import { thClass, tdClass, accentBarClass, fmtNum } from "@/components/phase-analysis/PhaseTableStyles";
+import { thClass, tdClass, accentBarClass, fmtNum } from "./PhaseTableStyles";
 
 interface PhaseData {
     avg: number;
@@ -64,7 +64,7 @@ export default function PhaseTable({
                             return (
                                 <tr
                                     key={phase.key}
-                                    className={`[transition:background-color_0.2s] ${i < phases.length - 1 ? "[border-bottom:1px_solid_var(--border-subtle)]" : ""} ${isTotal ? "[font-weight:700] [background:var(--bg-active)]" : "[font-weight:500] hover:[background:var(--bg-hover)]"}`}
+                                    className={`[transition:background-color_0.2s] ${i < phases.length - 1 ? "[border-bottom:1px_solid_var(--border-subtle)]" : ""} ${isTotal ? "[font-weight:700] [background:var(--bg-hover)]" : "[font-weight:500] hover:[background:var(--bg-hover)]"}`}
                                 >
                                     <td className={`${tdClass("left")} [font-weight:600]`}>
                                         <span className="[display:inline-flex] [align-items:center] [gap:6px]">
