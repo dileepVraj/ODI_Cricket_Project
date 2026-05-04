@@ -12,9 +12,9 @@ commit exists in git history and all applicable gates passed.
 
 | ST | File(s) targeted | Type | Status |
 |---|---|---|---|
-| ST-1 | `formats/odi/engines/team/_venue.py` | 2-line relocation | IN PROGRESS |
-| ST-2 | `formats/odi/match_pack/_chapter1.py` | Method decomposition | NOT STARTED |
-| ST-3 | `core/match_pack/interpreters/summary_composer.py` | 3-way file split | NOT STARTED |
+| ST-1 | `formats/odi/engines/team/_venue.py` | 2-line relocation | DONE (score 4->3, file remains at advisory -- accepted) |
+| ST-2 | `formats/odi/match_pack/_chapter1.py` | Method decomposition | DONE (score 3->0, removed from advisory) |
+| ST-3 | `core/match_pack/interpreters/summary_composer.py` | 3-way file split | DONE (score 3->0, removed from advisory) |
 | ST-4 | `formats/odi/match_pack/_formatter.py` | 3-way file split | NOT STARTED |
 | ST-5 | `formats/odi/engines/player/_matchup.py` | 3-way file split | NOT STARTED |
 | ST-6 | `formats/odi/engines/player/_profile.py` | 2-way file split | NOT STARTED |
@@ -774,3 +774,176 @@ The full plan is complete when:
 3. `paradigm_sentinel.py` returns PASS
 4. All tests pass
 5. All 8 commits exist in git history on main
+
+---
+
+## PRE-EXISTING TEST FAILURES -- FIX AFTER ST-8
+
+These 4 failure groups were discovered during the ST-4 baseline check (2026-05-04).
+They existed before ST-4 began and are unrelated to the SRP refactor. Fix them in a
+dedicated session immediately after all 8 SRP sub-tasks are committed.
+
+Run before starting that session to confirm the failures are still present:
+```bash
+python -m pytest tests/test_cockpit_api.py tests/test_venue_bias_enrichment.py tests/test_continent_performance_regression.py tests/verify_headless_player.py -q --tb=short
+```
+Expected: 8 failures. If fewer, some were fixed as a side-effect of SRP work.
+
+---
+
+### FAILURE GROUP 1 -- Cockpit settlement: total_volume_wagered wrong
+
+**Test:** `tests/test_cockpit_api.py::test_cockpit_trade_settlement_records_metrics_and_locks_trade`
+**Assertion:** `assert settled_trade["total_volume_wagered"] == 60.0`
+**Actual:** `64.0`
+
+**What the test does:**
+- Creates a trade, places two bets:
+  - Bet 1: BACK, stake=40, odds_paise=90
+  - Bet 2: LAY, stake=20, odds_paise=120
+- Settles the trade and checks `total_volume_wagered`
+- Expected: 40 + 20 = 60 (sum of raw stakes)
+- Actual: 64 -- which is 40 + 24
+
+**Root cause hypothesis:**
+The LAY bet stake of 20 at odds_paise=120 (1.2 decimal) has a liability of
+`20 * (1.2 - 1.0) = 4`. The actual result of 64 = 40 + 20 + 4, which means the
+code is now calculating `total_volume_wagered` as stake + liability for LAY bets
+instead of just stake. Either the formula changed, or the field being summed
+changed from `stake` to something like `exposure` or `total_exposure`.
+
+**Investigation steps:**
+1. Read `cockpit/calculator.py` -- search for `total_volume_wagered`. Find where
+   it is computed and what fields it sums.
+2. Read `cockpit/models.py` -- check the `Bet` model. Confirm whether it has a
+   `liability`, `exposure`, or `total_exposure` field that was recently added.
+3. Check git log for `cockpit/calculator.py` and `cockpit/models.py`:
+   `git log --oneline -10 -- cockpit/calculator.py cockpit/models.py`
+   The formula changed at some point -- identify the commit.
+4. Decision: either the formula is wrong (revert to stake-only) or the test
+   expectation is wrong (update to 64.0 to reflect the new liability-inclusive
+   formula). The correct answer depends on what `total_volume_wagered` is
+   supposed to mean for the operator. Ask the human before changing either.
+
+---
+
+### FAILURE GROUP 2 -- Continent mask: _build_continent_mask deleted
+
+**Test:** `tests/test_continent_performance_regression.py::test_continent_mask_uses_venue_fallback_when_venue_id_missing`
+**Assertion:** `AttributeError: 'TeamEngine' object has no attribute '_build_continent_mask'`
+
+**What the test does:**
+Directly calls `engine._build_continent_mask(...)` on a `TeamEngine` instance to
+verify it falls back to venue-based country lookup when `venue_id` is missing.
+
+**Root cause:**
+`_build_continent_mask` was a private method on `TeamEngine` (or one of its parent
+analyzer classes). It no longer exists -- it was either renamed, moved to a helper
+function, or deleted during an earlier refactor session.
+
+**Investigation steps:**
+1. Search the codebase for `_build_continent_mask`:
+   `grep -r "_build_continent_mask" .`
+   If found: the method was moved -- update the test to call it on the correct object.
+   If not found: the method was deleted or renamed.
+2. If deleted/renamed, check git log:
+   `git log --oneline --all -S "_build_continent_mask"`
+   Find the commit that removed it and see what replaced it.
+3. Read the test in full (`tests/test_continent_performance_regression.py`) to
+   understand exactly what behavior it is asserting -- the venue fallback logic
+   probably still exists somewhere, just under a different name or in a different class.
+4. Fix options (choose one):
+   - If the logic moved to a module-level function, update the test to call that
+     function directly.
+   - If the method was inlined into a larger method, extract it back out as a
+     private helper so the test can target it.
+   - If the behavior is now tested indirectly through a public method, rewrite
+     the test to go through that public method with a fixture that exercises the
+     fallback path.
+
+---
+
+### FAILURE GROUP 3 -- Venue bias enrichment: trend and toss intelligence broken
+
+**Tests (5 failures):**
+- `test_venue_bias_enrichment.py::test_bias_trend_strengthening`
+- `test_venue_bias_enrichment.py::test_bias_trend_weakening`
+- `test_venue_bias_enrichment.py::test_bias_trend_stable`
+- `test_venue_bias_enrichment.py::test_toss_intelligence_chose_bat_wins`
+- `test_venue_bias_enrichment.py::test_toss_intelligence_mixed_decisions`
+
+**Assertions:**
+- `assert result["direction"] == "STABLE"` -- actual: `"INSUFFICIENT_DATA"`
+  (same for STRENGTHENING and WEAKENING)
+- `assert result["chose_bat_win_pct"] == 80` -- actual: `None`
+- `assert result["chose_bat_win_pct"] == 100` -- actual: `None`
+
+**Root cause hypotheses (two separate issues):**
+
+*Issue A -- Bias trend direction always returns INSUFFICIENT_DATA:*
+The enrichment service that calculates `direction` (STABLE / STRENGTHENING /
+WEAKENING) has a minimum-data guard that is now stricter than the test fixtures
+provide. Either the threshold constant increased, or the input data shape expected
+by the function changed (e.g., it now requires a different DataFrame column that
+the test fixtures do not supply).
+
+*Issue B -- Toss intelligence chose_bat_win_pct is always None:*
+The field that drives `chose_bat_win_pct` is not being populated from the test
+fixture data. The key being read from the fixture may have been renamed, or the
+calculation path that sets this field was moved and is not being reached.
+
+**Investigation steps:**
+1. Read `tests/test_venue_bias_enrichment.py` in full. Identify the fixture data
+   being passed in for the trend and toss intelligence tests.
+2. Read `core/services/enrichment.py` (or wherever `calculate_bias_trend` and
+   `toss_intelligence` live). Trace the exact code path from input fixture to
+   the `direction` and `chose_bat_win_pct` output keys.
+3. For Issue A: find the minimum-data threshold constant. Compare against the
+   number of rows in the test fixture. If the fixture has fewer rows than the
+   threshold, either lower the threshold or add more rows to the fixture.
+4. For Issue B: find where `chose_bat_win_pct` is set. Trace back to what input
+   key feeds it. Compare the input key name against what the test fixture provides.
+   A rename somewhere in the pipeline is the most likely cause.
+5. Fix: update the enrichment function or the test fixture so they agree on data
+   shape and field names. Do not change both simultaneously -- fix one side and
+   confirm the test passes before touching the other.
+
+---
+
+### FAILURE GROUP 4 -- Headless player API: tactical_thresholds missing from rules
+
+**Test:** `tests/verify_headless_player.py::test_headless_api`
+**Error:**
+```
+ConfigurationError: Missing required format rule 'tactical_thresholds'.
+Define it in manifest FORMAT_RULES and pass it into PlayerEngine.
+```
+**Stack:** `PlayerEngine.__init__` -> `_require_tactical_thresholds()` ->
+`_require_nonempty_dict_rule("tactical_thresholds")` -> raises.
+
+**What the test does:**
+Constructs a `PlayerEngine` directly (headless -- no API layer) by passing
+`player_df`, `meta_df`, and `dal`. The engine then tries to read
+`tactical_thresholds` from its injected `rules` dict and fails because the
+test is not supplying that key.
+
+**Root cause:**
+`tactical_thresholds` was added as a required key in `FORMAT_RULES` (in the ODI
+manifest) at some point after this test was written. The test's fixture or setup
+never added it because it did not exist at the time. The `PlayerEngine` constructor
+now hard-requires it, so any test that builds `PlayerEngine` without it will crash.
+
+**Investigation steps:**
+1. Read `tests/verify_headless_player.py` in full. Find how the test constructs
+   the `PlayerEngine` -- specifically, what `rules` dict (if any) it passes in.
+2. Read `formats/odi/manifest.py`. Find `FORMAT_RULES` and locate the
+   `tactical_thresholds` entry. Copy its exact structure (keys and default values).
+3. Read `formats/odi/engines/player/_base.py` lines 40-70. Confirm exactly what
+   `_require_tactical_thresholds()` checks for -- the minimum keys the dict must
+   contain.
+4. Fix: update the test fixture to include a valid `tactical_thresholds` dict that
+   satisfies the validator. Use the same structure as in `FORMAT_RULES` in the
+   manifest. The test should not need to change its assertions -- only its setup.
+5. After fixing, run the full headless test to confirm it reaches its actual
+   assertions (the engine constructing successfully is step one; the engine
+   returning correct results is step two).
