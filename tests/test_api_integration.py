@@ -1,3 +1,5 @@
+from collections.abc import Generator
+from pathlib import Path
 from typing import Dict, Optional
 
 import pytest
@@ -6,11 +8,25 @@ from fastapi.testclient import TestClient
 from api.main import app
 
 
+COCKPIT_TEST_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+COCKPIT_INTEGRATION_FINANCES_DB_PATH = COCKPIT_TEST_DATA_DIR / "api-integration-finances.sqlite"
+
+
 @pytest.fixture(scope="module")
-def client() -> TestClient:
+def client() -> Generator[TestClient, None, None]:
     # Context manager triggers startup/shutdown so the engine pool is initialized.
-    with TestClient(app) as test_client:
-        yield test_client
+    if COCKPIT_INTEGRATION_FINANCES_DB_PATH.exists():
+        COCKPIT_INTEGRATION_FINANCES_DB_PATH.unlink()
+
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setenv("FINANCES_DB_PATH", str(COCKPIT_INTEGRATION_FINANCES_DB_PATH))
+    try:
+        with TestClient(app) as test_client:
+            yield test_client
+    finally:
+        monkeypatch.undo()
+        if COCKPIT_INTEGRATION_FINANCES_DB_PATH.exists():
+            COCKPIT_INTEGRATION_FINANCES_DB_PATH.unlink()
 
 
 def _get_active_format_key(client: TestClient) -> str:

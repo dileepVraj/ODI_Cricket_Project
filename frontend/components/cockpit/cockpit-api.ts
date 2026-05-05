@@ -7,6 +7,7 @@
  */
 
 import { requestJson } from "@/lib/api";
+import type { BetResponse } from "@/lib/cockpit/live-trade-bets-api";
 import type { HomeGround } from "./cockpit-types";
 
 const COCKPIT_BASE = "/api/cockpit";
@@ -138,6 +139,12 @@ export interface SettleTradeRequest {
     trade_mistakes: TradeMistakes | null;
 }
 
+/** @schema TradeRestoreRequest in cockpit/schemas.py */
+export interface RestoreTradeSnapshotRequest {
+    trade: TradeResponse;
+    bets: BetResponse[];
+}
+
 /** @schema TradeStateResponse in cockpit/schemas.py */
 export interface TradeStateResponse extends TradeResponse {
     net_pnl_team_1: number;
@@ -215,6 +222,17 @@ export async function resettleTrade(
 ): Promise<TradeResponse> {
     return cockpitFetch<TradeResponse>(`/trades/${tradeId}/settlement?format=${encodeURIComponent(format)}`, {
         method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+    });
+}
+
+export async function restoreTradeSnapshot(
+    body: RestoreTradeSnapshotRequest,
+    format = "ipl"
+): Promise<TradeResponse> {
+    return cockpitFetch<TradeResponse>(`/trades/restore?format=${encodeURIComponent(format)}`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
     });

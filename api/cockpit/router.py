@@ -30,6 +30,7 @@ from cockpit.schemas import (
     HistorySummaryResponse,
     HistoryTradeResponse,
     SettleTradeRequest,
+    TradeRestoreRequest,
     TradeResponse,
     TradeStateResponse,
     VenuesResponse,
@@ -286,6 +287,66 @@ def _trade_total_volume_wagered(trade_id: int, db: CockpitStore) -> float:
     return round(sum(float(bet["liability"]) for bet in bets), 2)
 
 
+def _apply_settlement_to_trade(trade: Trade, body: SettleTradeRequest, db: CockpitStore) -> None:
+    if trade.id is None:
+        raise HTTPException(status_code=500, detail="Trade id missing from database row")
+
+    state = _trade_book_state(trade, db)
+    realized_pnl = 0.0
+    if body.winner == "team_1":
+        realized_pnl = state["net_pnl_team_1"]
+    elif body.winner == "team_2":
+        realized_pnl = state["net_pnl_team_2"]
+
+    trade.winner = body.winner
+    trade.actual_profit = round(realized_pnl, 2)
+    trade.trade_sentiment = body.sentiment
+    trade.fav_sub_30_loss = body.fav_sub_30_loss
+    trade.lowest_fav_odds_paise = body.lowest_fav_odds_paise
+    trade.post_low_bet_number = body.post_low_bet_number
+    trade.post_low_bet_stake = (
+        round(body.post_low_bet_stake, 2)
+        if body.post_low_bet_stake is not None
+        else None
+    )
+    trade.targeted_pnl = round(body.targeted_pnl, 2)
+    trade.achieved_yield_percentage = round(body.achieved_yield, 2)
+    trade.trade_mistakes = (
+        body.trade_mistakes.model_dump_json()
+        if body.trade_mistakes is not None
+        else None
+    )
+    trade.total_volume_wagered = _trade_total_volume_wagered(trade.id, db)
+    trade.total_stake = trade.total_volume_wagered
+    trade.status = "SETTLED"
+    trade.updated_at = _datetime.now(timezone.utc)
+
+
+def _trade_from_restore_request(body: TradeRestoreRequest) -> Trade:
+    trade = Trade(**body.trade.model_dump(exclude={"id"}))
+    if trade.status == "SETTLED":
+        missing_fields = [
+            field_name
+            for field_name, value in (
+                ("winner", trade.winner),
+                ("actual_profit", trade.actual_profit),
+                ("trade_sentiment", trade.trade_sentiment),
+                ("targeted_pnl", trade.targeted_pnl),
+                ("achieved_yield_percentage", trade.achieved_yield_percentage),
+            )
+            if value is None
+        ]
+        if missing_fields:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "Restored settled trade is missing settlement fields: "
+                    + ", ".join(missing_fields)
+                ),
+            )
+    return trade
+
+
 @cockpit_router.get("/teams")
 def list_teams(
     season: int = Query(default=2025),
@@ -446,38 +507,7 @@ def settle_trade(
     """Lock a live trade after the result is known and store journaling metrics."""
     trade = _get_trade_or_404(trade_id, db)
     _ensure_trade_is_active(trade)
-    if trade.id is None:
-        raise HTTPException(status_code=500, detail="Trade id missing from database row")
-
-    state = _trade_book_state(trade, db)
-    realized_pnl = 0.0
-    if body.winner == "team_1":
-        realized_pnl = state["net_pnl_team_1"]
-    elif body.winner == "team_2":
-        realized_pnl = state["net_pnl_team_2"]
-
-    trade.winner = body.winner
-    trade.actual_profit = round(realized_pnl, 2)
-    trade.trade_sentiment = body.sentiment
-    trade.fav_sub_30_loss = body.fav_sub_30_loss
-    trade.lowest_fav_odds_paise = body.lowest_fav_odds_paise
-    trade.post_low_bet_number = body.post_low_bet_number
-    trade.post_low_bet_stake = (
-        round(body.post_low_bet_stake, 2)
-        if body.post_low_bet_stake is not None
-        else None
-    )
-    trade.targeted_pnl = round(body.targeted_pnl, 2)
-    trade.achieved_yield_percentage = round(body.achieved_yield, 2)
-    trade.trade_mistakes = (
-        body.trade_mistakes.model_dump_json()
-        if body.trade_mistakes is not None
-        else None
-    )
-    trade.total_volume_wagered = _trade_total_volume_wagered(trade.id, db)
-    trade.total_stake = trade.total_volume_wagered
-    trade.status = "SETTLED"
-    trade.updated_at = _datetime.now(timezone.utc)
+    _apply_settlement_to_trade(trade, body, db)
 
     trade = db.update_trade(trade)
     finances = getattr(request.app.state, "finances", None)
@@ -496,38 +526,46 @@ def re_settle_trade(
     trade = _get_trade_or_404(trade_id, db)
     if trade.status != "SETTLED":
         raise HTTPException(status_code=400, detail="Trade must be SETTLED to edit settlement")
-    if trade.id is None:
-        raise HTTPException(status_code=500, detail="Trade id missing from database row")
-
-    state = _trade_book_state(trade, db)
-    realized_pnl = 0.0
-    if body.winner == "team_1":
-        realized_pnl = state["net_pnl_team_1"]
-    elif body.winner == "team_2":
-        realized_pnl = state["net_pnl_team_2"]
-
-    trade.winner = body.winner
-    trade.actual_profit = round(realized_pnl, 2)
-    trade.trade_sentiment = body.sentiment
-    trade.fav_sub_30_loss = body.fav_sub_30_loss
-    trade.lowest_fav_odds_paise = body.lowest_fav_odds_paise
-    trade.post_low_bet_number = body.post_low_bet_number
-    trade.post_low_bet_stake = (
-        round(body.post_low_bet_stake, 2)
-        if body.post_low_bet_stake is not None
-        else None
-    )
-    trade.targeted_pnl = round(body.targeted_pnl, 2)
-    trade.achieved_yield_percentage = round(body.achieved_yield, 2)
-    trade.trade_mistakes = (
-        body.trade_mistakes.model_dump_json()
-        if body.trade_mistakes is not None
-        else None
-    )
+    _apply_settlement_to_trade(trade, body, db)
     trade.updated_at = _datetime.now(timezone.utc)
 
     trade = db.update_trade(trade)
     return _trade_to_response(trade)
+
+
+@cockpit_router.post("/trades/restore", response_model=TradeResponse)
+def restore_trade(
+    body: TradeRestoreRequest,
+    db: CockpitStore = Depends(_get_write_db),
+) -> TradeResponse:
+    """Restore a deleted trade snapshot without replaying wallet credits."""
+    trade = _trade_from_restore_request(body)
+    restored_trade = db.insert_trade(trade)
+    if restored_trade.id is None:
+        raise HTTPException(status_code=500, detail="Trade id missing from database row")
+
+    try:
+        for bet in body.bets:
+            db.insert_bet(
+                trade_id=restored_trade.id,
+                team=bet.team,
+                bet_type=bet.bet_type,
+                odds_paise=bet.odds_paise,
+                odds_decimal=bet.odds_decimal,
+                stake=bet.stake,
+                liability=bet.liability,
+                is_open=bet.is_open,
+                created_at=bet.created_at,
+            )
+    except Exception:
+        try:
+            db.delete_trade(restored_trade.id)
+        except Exception:
+            pass
+        raise
+
+    restored_trade = db.get_trade(restored_trade.id) or restored_trade
+    return _trade_to_response(restored_trade)
 
 
 @cockpit_router.post("/trades/{trade_id}/void", response_model=TradeResponse)

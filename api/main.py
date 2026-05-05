@@ -2,50 +2,57 @@
 
 from __future__ import annotations
 
-import io
 import logging
 import os
 import sys
-from contextlib import redirect_stdout
-from typing import List, cast
+from collections.abc import Callable
 
-from fastapi import FastAPI, HTTPException, Path, Request
+from fastapi import APIRouter, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.routing import APIRouter
-from pydantic import JsonValue
 
 # Add project root to path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from api.context_builder import (  # noqa: E402
-    _inject_player_engine_context,
-    _inject_team_engine_context,
-)
 from api.context_router import router as context_router  # noqa: E402
-from api.engine_pool import get_active_formats  # noqa: E402
-from api.execution_service import ExecutionService  # noqa: E402
+from api.discovery_router import router as discovery_router  # noqa: E402
+from api.execute_router import router as execute_router  # noqa: E402
 from api.legacy_router import router as legacy_router  # noqa: E402
 from api.lifespan import run_startup_initialization  # noqa: E402
-from api.route_helpers import EngineResolver, RequestValidator  # noqa: E402
-from api.schemas import (  # noqa: E402
-    ErrorResponse,
-    ExecuteRequest,
-    ExecuteResponse,
-    FormatMetadata,
-    HealthResponse,
-    ManifestResponse,
-)
+from api.schemas import ErrorResponse  # noqa: E402
+from api.system_router import router as system_router  # noqa: E402
 from config.settings import (  # noqa: E402
     API_DOCS_URL,
     API_HOST,
     API_PORT,
     API_REDOC_URL,
-    API_V1_PREFIX,
     CORS_ORIGINS,
+    FINANCES_DB_PATH,
 )
+
+init_db: Callable[[str], None] | None = None
+cockpit_router: APIRouter | None = None
+cockpit_import_error: ImportError | None = None
+
+try:
+    from cockpit.database import init_db as cockpit_init_db  # noqa: E402
+    from api.cockpit.router import cockpit_router as cockpit_router_impl  # noqa: E402
+except ImportError as exc:  # pragma: no cover - environment dependent
+    cockpit_import_error = exc
+else:
+    init_db = cockpit_init_db
+    cockpit_router = cockpit_router_impl
+
+finances_router_impl: APIRouter | None = None
+finances_import_error: ImportError | None = None
+
+try:
+    from api.finances_router import finances_router as _finances_router_impl  # noqa: E402
+    finances_router_impl = _finances_router_impl
+except ImportError as exc:  # pragma: no cover - environment dependent
+    finances_import_error = exc
 
 
 logging.basicConfig(
@@ -77,10 +84,52 @@ app.add_middleware(
 
 app.include_router(context_router)
 app.include_router(legacy_router)
+app.include_router(system_router)
+app.include_router(discovery_router)
+app.include_router(execute_router)
+if cockpit_router is not None:
+    app.include_router(cockpit_router, prefix="/api/cockpit", tags=["Cockpit"])
+if finances_router_impl is not None:
+    app.include_router(finances_router_impl, prefix="/api/finances", tags=["Finances"])
+
+
 @app.on_event("startup")
-def startup_event() -> None:
+async def startup_event() -> None:
     """Initialize engine pool at API startup."""
     run_startup_initialization(logger)
+    if init_db is None:
+        if cockpit_import_error is not None:
+            logger.warning("Cockpit module disabled: %s", cockpit_import_error)
+        return
+    init_db("ipl")
+    init_db("odi")
+    if finances_router_impl is not None:
+        try:
+            from cockpit.finances import FinancesStore  # noqa: E402
+            finances_db_path = os.path.abspath(
+                os.path.join(
+                    PROJECT_ROOT,
+                    os.getenv("FINANCES_DB_PATH", FINANCES_DB_PATH),
+                )
+            )
+            app.state.finances = FinancesStore(finances_db_path)
+            logger.info("FinancesStore initialized at %s", finances_db_path)
+        except Exception as exc:  # pragma: no cover
+            logger.warning("FinancesStore failed to initialize: %s", exc)
+
+
+@app.on_event("shutdown")
+async def shutdown_event() -> None:
+    """Close long-lived app resources before the process exits."""
+    finances = getattr(app.state, "finances", None)
+    if finances is None:
+        return
+    try:
+        finances.close()
+    except Exception as exc:  # pragma: no cover
+        logger.warning("FinancesStore failed to close: %s", exc)
+    finally:
+        app.state.finances = None
 
 
 @app.exception_handler(HTTPException)
@@ -106,133 +155,6 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
             status_code=500,
         ).model_dump(),
     )
-v1_router = APIRouter(prefix=API_V1_PREFIX)
-
-
-@app.get("/health", response_model=HealthResponse, tags=["System"])
-def health_check() -> HealthResponse:
-    """API health check - returns loaded formats and match counts."""
-    active = get_active_formats()
-    return HealthResponse(
-        status="active" if active else "no_formats_loaded",
-        formats_loaded=list(active.keys()),
-        total_matches={k: v["matches"] for k, v in active.items()},
-    )
-
-
-@v1_router.get("/formats", response_model=List[FormatMetadata], tags=["Formats"])
-def list_formats() -> List[FormatMetadata]:
-    """Returns metadata about all available formats for the Format Selector."""
-    from config.format_registry import get_format_metadata
-
-    return get_format_metadata()
-
-
-@v1_router.get("/{format_type}/manifest", response_model=ManifestResponse, tags=["Manifest"])
-def get_manifest(
-    format_type: str = Path(..., description="Format key (e.g., 'odi')"),
-) -> ManifestResponse:
-    """Returns the format's complete manifest."""
-    return RequestValidator.get_manifest_or_404(format_type)
-
-
-@v1_router.post("/{format_type}/execute/{function_key}", response_model=ExecuteResponse, tags=["Execute"])
-def execute_function(
-    request: ExecuteRequest,
-    format_type: str = Path(..., description="Format key (e.g., 'odi')"),
-    function_key: str = Path(..., description="Function key from manifest (e.g., 'venue_bias')"),
-) -> ExecuteResponse:
-    """Execute any engine function declared in the format's manifest."""
-    analyzer = RequestValidator.get_analyzer_or_404(format_type)
-    fn_def = RequestValidator.find_function_in_manifest(analyzer, function_key)
-
-    required_fields = fn_def.get("required_context", [])
-    provided_params = request.params.model_dump(exclude_none=True)
-
-    missing = []
-    for field in required_fields:
-        val = provided_params.get(field)
-        if val is None or val == "" or (field == "venue" and val == "needed"):
-            missing.append(field)
-
-    if missing:
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                "Required selection missing: Please provide "
-                f"{', '.join(missing)} before executing this analysis."
-            ),
-        )
-
-    engine_class_name = fn_def["engine_class"]
-    engine_method_name = fn_def["engine_method"]
-
-    engine_instance = EngineResolver.resolve(engine_class_name, analyzer)
-
-    if not hasattr(engine_instance, engine_method_name):
-        raise HTTPException(
-            status_code=500,
-            detail=f"Method '{engine_method_name}' not found on {engine_class_name}",
-        )
-    method = getattr(engine_instance, engine_method_name)
-
-    _svc = ExecutionService()
-    call_params = _svc.map_call_params(
-        fn_def,
-        request.params.model_dump(exclude_none=True),
-    )
-    call_params = _inject_team_engine_context(
-        analyzer=analyzer,
-        engine_class_name=engine_class_name,
-        engine_method_name=engine_method_name,
-        call_params=call_params,
-    )
-    call_params = _inject_player_engine_context(
-        analyzer=analyzer,
-        engine_class_name=engine_class_name,
-        engine_method_name=engine_method_name,
-        call_params=call_params,
-    )
-
-    try:
-        captured_output = io.StringIO()
-        with redirect_stdout(captured_output):
-            result = method(**call_params)
-    except TypeError as exc:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Parameter error calling {engine_class_name}.{engine_method_name}: {exc}",
-        )
-    except HTTPException:
-        raise
-    except (AttributeError, KeyError, ValueError, RuntimeError) as exc:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Engine error in {engine_class_name}.{engine_method_name}: {exc}",
-        )
-
-    serialized = _svc.serialize(result)
-
-    serialized = _svc.post_process(
-        engine_method_name=engine_method_name,
-        serialized=serialized,
-        call_params=dict(call_params),
-        analyzer=analyzer,
-    )
-
-    return ExecuteResponse(
-        function_key=function_key,
-        output_type=fn_def.get("output_type", "unknown"),
-        data=cast(JsonValue, serialized),
-        metadata={
-            "engine_class": engine_class_name,
-            "engine_method": engine_method_name,
-            "format": format_type,
-        },
-    )
-
-
-app.include_router(v1_router)
 
 
 if __name__ == "__main__":
