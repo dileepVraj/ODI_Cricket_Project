@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    lockDistDir: false,
+    workerThreads: true,
+  },
+
+  turbopack: {
+    root: process.cwd(),
+  },
+
   // Move Next.js dev indicator away from the left sidebar area.
   devIndicators: {
     position: "bottom-right",

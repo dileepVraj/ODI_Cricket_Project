@@ -615,31 +615,72 @@ def _sqlite_trade_table_needs_rebuild(con: sqlite3.Connection) -> bool:
     return not _TRADE_REQUIRED_COLUMNS.issubset(trades_columns)
 
 
+def _sqlite_table_row_count(con: sqlite3.Connection, table_name: str) -> int:
+    if table_name not in _table_names_sqlite(con):
+        return 0
+    row = con.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()
+    return int(row[0]) if row and row[0] is not None else 0
+
+
+def _sqlite_pick_trade_source_table(con: sqlite3.Connection) -> str | None:
+    candidate_tables = [
+        table_name
+        for table_name in ("trades", "trades_legacy")
+        if table_name in _table_names_sqlite(con)
+    ]
+    if not candidate_tables:
+        return None
+
+    source_table = candidate_tables[0]
+    source_count = _sqlite_table_row_count(con, source_table)
+    for table_name in candidate_tables[1:]:
+        row_count = _sqlite_table_row_count(con, table_name)
+        if row_count > source_count or (row_count == source_count and table_name == "trades_legacy"):
+            source_table = table_name
+            source_count = row_count
+    return source_table
+
+
 def _sqlite_rebuild_trades_table(path: str) -> None:
     con = sqlite3.connect(path, check_same_thread=False)
     try:
         if "trades" not in _table_names_sqlite(con):
             return
         if not _sqlite_trade_table_needs_rebuild(con):
+            if "trades_legacy" in _table_names_sqlite(con):
+                con.execute("DROP TABLE trades_legacy")
+                con.commit()
             return
 
         con.execute("PRAGMA foreign_keys = OFF")
         con.execute("BEGIN")
         try:
-            con.execute("ALTER TABLE trades RENAME TO trades_legacy")
-            con.execute(_ddl_trades_sqlite())
+            temp_table = "trades_rebuild_tmp"
+            if temp_table in _table_names_sqlite(con):
+                con.execute(f"DROP TABLE {temp_table}")
 
-            new_columns = _sqlite_table_columns(con, "trades")
-            legacy_columns = _sqlite_table_columns(con, "trades_legacy")
-            insert_columns = [column for column in new_columns if column in legacy_columns]
+            source_table = _sqlite_pick_trade_source_table(con)
+            con.execute(_ddl_trades_sqlite(temp_table))
+
+            new_columns = _sqlite_table_columns(con, temp_table)
+            source_columns = (
+                _sqlite_table_columns(con, source_table)
+                if source_table is not None
+                else []
+            )
+            insert_columns = [column for column in new_columns if column in source_columns]
             if not insert_columns:
                 raise RuntimeError("Could not determine trade columns for migration")
 
             column_sql = ", ".join(insert_columns)
             con.execute(
-                f"INSERT INTO trades ({column_sql}) SELECT {column_sql} FROM trades_legacy"
+                f"INSERT INTO {temp_table} ({column_sql}) SELECT {column_sql} FROM {source_table}"
             )
-            con.execute("DROP TABLE trades_legacy")
+
+            con.execute("DROP TABLE trades")
+            if "trades_legacy" in _table_names_sqlite(con):
+                con.execute("DROP TABLE trades_legacy")
+            con.execute(f"ALTER TABLE {temp_table} RENAME TO trades")
 
             max_id_row = con.execute("SELECT MAX(id) FROM trades").fetchone()
             max_id = int(max_id_row[0]) if max_id_row and max_id_row[0] is not None else None

@@ -197,12 +197,13 @@ def test_cockpit_migrate_trades_db_rebuilds_stale_relational_schema(
             CREATE TABLE matches (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 season INTEGER NOT NULL,
-                match_date TEXT,
+                match_date TEXT NOT NULL DEFAULT '',
                 team_1 TEXT NOT NULL,
                 team_2 TEXT NOT NULL,
                 stadium TEXT NOT NULL,
                 toss_winner TEXT,
-                toss_decision TEXT
+                toss_decision TEXT,
+                UNIQUE (season, match_date, team_1, team_2)
             )
             """
         )
@@ -296,51 +297,151 @@ def test_cockpit_migrate_trades_db_rebuilds_stale_relational_schema(
         }
         assert {"matches", "trades", "bets"}.issubset(tables)
 
-        match_rows = verify_con.execute("PRAGMA table_info(matches)").fetchall()
-        trade_rows = verify_con.execute("PRAGMA table_info(trades)").fetchall()
-        bet_rows = verify_con.execute("PRAGMA table_info(bets)").fetchall()
-        match_columns = {str(row[1]): row for row in match_rows}
-        trade_columns = {str(row[1]): row for row in trade_rows}
-        bet_columns = {str(row[1]): row for row in bet_rows}
+        match_columns = {
+            str(row[1]): row
+            for row in verify_con.execute("PRAGMA table_info(matches)").fetchall()
+        }
+        trade_columns = {
+            str(row[1]): row
+            for row in verify_con.execute("PRAGMA table_info(trades)").fetchall()
+        }
+        bet_columns = {
+            str(row[1]): row
+            for row in verify_con.execute("PRAGMA table_info(bets)").fetchall()
+        }
 
         assert int(match_columns["match_date"][3]) == 1
         assert int(trade_columns["match_id"][3]) == 1
         assert int(bet_columns["trade_id"][3]) == 1
 
-        match_has_unique_key = False
-        for index_row in verify_con.execute("PRAGMA index_list(matches)").fetchall():
-            if int(index_row[2]) != 1:
-                continue
-            index_name = str(index_row[1])
-            index_columns = [
-                str(column_row[2])
-                for column_row in verify_con.execute(f"PRAGMA index_info({index_name})").fetchall()
-            ]
-            if index_columns == ["season", "match_date", "team_1", "team_2"]:
-                match_has_unique_key = True
-                break
-        assert match_has_unique_key is True
+        assert "missed_swing_team" in trade_columns
+        assert "lowest_fav_odds_paise" not in trade_columns
 
-        trade_fk_rows = verify_con.execute("PRAGMA foreign_key_list(trades)").fetchall()
-        assert any(
-            str(row[2]) == "matches"
-            and str(row[3]) == "match_id"
-            and str(row[4]) == "id"
-            for row in trade_fk_rows
+        assert verify_con.execute("SELECT COUNT(*) FROM matches").fetchone()[0] == 1
+        assert verify_con.execute("SELECT COUNT(*) FROM trades").fetchone()[0] == 1
+        assert verify_con.execute("SELECT COUNT(*) FROM bets").fetchone()[0] == 1
+    finally:
+        verify_con.close()
+        if trades_db_path.exists():
+            trades_db_path.unlink()
+
+
+def test_cockpit_migrate_trades_db_recovers_from_stale_trades_legacy_table(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    workspace_tmp = Path.cwd() / "temp_pytest"
+    workspace_tmp.mkdir(exist_ok=True)
+
+    trades_db_path = workspace_tmp / "cockpit-stale-legacy.sqlite"
+    if trades_db_path.exists():
+        trades_db_path.unlink()
+    monkeypatch.setenv("ODI_COCKPIT_DB_PATH", str(trades_db_path))
+
+    stale_con = sqlite3.connect(trades_db_path)
+    try:
+        stale_con.execute(
+            """
+            CREATE TABLE matches (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                season INTEGER NOT NULL,
+                match_date TEXT NOT NULL DEFAULT '',
+                team_1 TEXT NOT NULL,
+                team_2 TEXT NOT NULL,
+                stadium TEXT NOT NULL,
+                toss_winner TEXT,
+                toss_decision TEXT,
+                UNIQUE (season, match_date, team_1, team_2)
+            )
+            """
         )
-
-        bet_fk_rows = verify_con.execute("PRAGMA foreign_key_list(bets)").fetchall()
-        assert any(
-            str(row[2]) == "trades"
-            and str(row[3]) == "trade_id"
-            and str(row[4]) == "id"
-            and str(row[6]).upper() == "CASCADE"
-            for row in bet_fk_rows
+        stale_con.execute(
+            """
+            CREATE TABLE trades (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                match_id INTEGER NOT NULL,
+                favourite_team TEXT NOT NULL,
+                home_ground TEXT NOT NULL,
+                bankroll REAL NOT NULL DEFAULT 100.0,
+                status TEXT NOT NULL DEFAULT 'DRAFT',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                FOREIGN KEY (match_id) REFERENCES matches(id)
+            )
+            """
         )
+        stale_con.execute(
+            """
+            CREATE TABLE trades_legacy (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                match_id INTEGER NOT NULL,
+                favourite_team TEXT NOT NULL,
+                home_ground TEXT NOT NULL,
+                bankroll REAL NOT NULL DEFAULT 100.0,
+                status TEXT NOT NULL DEFAULT 'DRAFT',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                FOREIGN KEY (match_id) REFERENCES matches(id)
+            )
+            """
+        )
+        stale_con.execute(
+            """
+            INSERT INTO matches (
+                season,
+                match_date,
+                team_1,
+                team_2,
+                stadium
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            (2025, "2025-05-01T00:00:00", "PBKS", "RCB", "M. Chinnaswamy Stadium"),
+        )
+        stale_con.execute(
+            """
+            INSERT INTO trades_legacy (
+                match_id,
+                favourite_team,
+                home_ground,
+                bankroll,
+                status,
+                created_at,
+                updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (1, "RCB", "NEU", 100.0, "ACTIVE", "2025-05-01T00:00:00Z", "2025-05-01T00:00:00Z"),
+        )
+        stale_con.commit()
+    finally:
+        stale_con.close()
 
-        assert verify_con.execute("SELECT COUNT(*) FROM matches").fetchone()[0] == 0
-        assert verify_con.execute("SELECT COUNT(*) FROM trades").fetchone()[0] == 0
-        assert verify_con.execute("SELECT COUNT(*) FROM bets").fetchone()[0] == 0
+    migrate_trades_db("odi")
+
+    verify_con = sqlite3.connect(trades_db_path)
+    try:
+        tables = {
+            row[0]
+            for row in verify_con.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table'"
+            ).fetchall()
+        }
+        assert "trades_legacy" not in tables
+        assert {"matches", "trades", "bets"}.issubset(tables)
+
+        trade_rows = verify_con.execute("PRAGMA table_info(trades)").fetchall()
+        trade_columns = {str(row[1]): row for row in trade_rows}
+        assert "lowest_fav_odds_paise" not in trade_columns
+        assert "missed_swing_team" in trade_columns
+
+        trade_count = verify_con.execute("SELECT COUNT(*) FROM trades").fetchone()[0]
+        assert trade_count == 1
+
+        trade_row = verify_con.execute(
+            """
+            SELECT favourite_team, home_ground, status, missed_swing_team
+            FROM trades
+            """
+        ).fetchone()
+        assert trade_row == ("RCB", "NEU", "ACTIVE", None)
     finally:
         verify_con.close()
         if trades_db_path.exists():
