@@ -116,26 +116,47 @@ export function calculateMissedOpportunityResult(
     }
 
     const betWindow = bets.slice(0, upperBound + 1);
-    const cumulativeStake = betWindow.reduce((total, bet) => total + bet.stake, 0);
-    const potentialPayout = betWindow.reduce((total, bet) => {
-        if (bet.team !== trimmedTeam || bet.bet_type !== "BACK") {
-            return total;
+    let pnlTargetTeam = 0;
+    let pnlOpposingTeam = 0;
+
+    for (const bet of betWindow) {
+        const isTargetTeam = bet.team === trimmedTeam;
+        const isBackBet = bet.bet_type === "BACK";
+
+        if (isTargetTeam) {
+            if (isBackBet) {
+                pnlTargetTeam += bet.stake * (bet.odds_decimal - 1);
+                pnlOpposingTeam -= bet.stake;
+            } else {
+                pnlTargetTeam -= bet.stake * (bet.odds_decimal - 1);
+                pnlOpposingTeam += bet.stake;
+            }
+            continue;
         }
-        return total + (bet.stake * bet.odds_decimal);
-    }, 0);
+
+        if (isBackBet) {
+            pnlTargetTeam -= bet.stake;
+            pnlOpposingTeam += bet.stake * (bet.odds_decimal - 1);
+        } else {
+            pnlTargetTeam += bet.stake;
+            pnlOpposingTeam -= bet.stake * (bet.odds_decimal - 1);
+        }
+    }
+
+    const cumulativeRisk = Math.abs(Math.min(pnlTargetTeam, pnlOpposingTeam, 0));
     const layOddsDecimal = oddsDecimalFromPaise(layOddsPaise);
     if (layOddsDecimal <= 0) {
         return null;
     }
 
-    const idealLayStake = potentialPayout / layOddsDecimal;
-    const netPnl = idealLayStake - cumulativeStake;
+    const idealLayStake = (pnlTargetTeam - pnlOpposingTeam) / layOddsDecimal;
+    const simulatedNetPnl = pnlOpposingTeam + idealLayStake;
 
     return {
-        cumulativeStake,
-        potentialPayout,
+        cumulativeStake: cumulativeRisk,
+        potentialPayout: pnlTargetTeam,
         idealLayStake,
-        netPnl,
+        netPnl: simulatedNetPnl,
         layOddsDecimal,
     };
 }
