@@ -112,9 +112,12 @@ class TradeResponse(BaseModel):
     actual_profit: Optional[float] = None
     trade_sentiment: Optional[TradeSentiment] = None
     fav_sub_30_loss: bool = False
-    lowest_fav_odds_paise: Optional[int] = None
-    post_low_bet_number: Optional[int] = None
-    post_low_bet_stake: Optional[float] = None
+    missed_swing_team: Optional[str] = None
+    missed_swing_back_odds: Optional[int] = None
+    missed_swing_lay_odds: Optional[int] = None
+    missed_swing_bet_index: Optional[int] = None
+    missed_swing_cumulative_stake: Optional[float] = None
+    missed_swing_net_pnl: Optional[float] = None
     trade_mistakes: Optional[str] = None
     targeted_pnl: Optional[float] = None
     achieved_yield_percentage: Optional[float] = None
@@ -146,6 +149,13 @@ class HistorySummaryResponse(BaseModel):
     total_volume_wagered: float
     positive_trades: int
     negative_trades: int
+    gross_profit: float
+    gross_loss: float
+    profit_factor: Optional[float] = None
+    profit_factor_tier: Literal["elite", "caution", "danger"]
+    hit_rate: Optional[float] = None
+    avg_win: Optional[float] = None
+    avg_loss: Optional[float] = None
     earliest_match_date: Optional[datetime] = None
     latest_match_date: Optional[datetime] = None
 
@@ -158,9 +168,12 @@ class SettleTradeRequest(BaseModel):
     winner: Literal["team_1", "team_2", "tie"]
     sentiment: TradeSentiment
     fav_sub_30_loss: bool = False
-    lowest_fav_odds_paise: Optional[int] = None
-    post_low_bet_number: Optional[int] = None
-    post_low_bet_stake: Optional[float] = None
+    missed_swing_team: Optional[str] = None
+    missed_swing_back_odds: Optional[int] = None
+    missed_swing_lay_odds: Optional[int] = None
+    missed_swing_bet_index: Optional[int] = None
+    missed_swing_cumulative_stake: Optional[float] = None
+    missed_swing_net_pnl: Optional[float] = None
     targeted_pnl: float = Field(..., ge=0)
     achieved_yield: float
     trade_mistakes: Optional[TradeMistakes] = None

@@ -1,23 +1,16 @@
 "use client";
 
-import { Suspense, useRef, useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { useCockpitTradeDraft } from "@/lib/cockpit/CockpitTradeDraftContext";
-import { calculateStrategyTargetPnl } from "@/lib/cockpit/live-trade-strategy";
 import { useLiveTradeBets } from "@/lib/cockpit/useLiveTradeBets";
 import { useLiveTradeState } from "@/lib/cockpit/useLiveTradeState";
 import CockpitTeamText from "@/components/cockpit/CockpitTeamText";
 import LiveTradeSettlementPreview from "@/components/cockpit/LiveTradeSettlementPreview";
 import SettlementResultSelector from "@/components/cockpit/SettlementResultSelector";
 import SettlementTradeNotes from "@/components/cockpit/SettlementTradeNotes";
-import { parseIntegerOdds } from "@/components/cockpit/cockpit-form-helpers";
-import {
-    resettleTrade,
-    settleTrade,
-    voidTrade,
-    type SettleTradeRequest,
-} from "@/components/cockpit/cockpit-api";
+import { type SettleTradeRequest } from "@/components/cockpit/cockpit-api";
 
 import {
     ERROR_GRID_STYLE,
@@ -27,13 +20,13 @@ import {
     SettlePageSkeleton,
     useSettleEditPrePopulate,
 } from "./SettlePageParts";
+import { useSettlePageActions } from "./useSettlePageActions";
 
 /* -- main inner component --------------------------------------------------- */
 
 function SettlePageInner() {
     const params = useParams<{ tradeId?: string | string[] }>();
     const searchParams = useSearchParams();
-    const router = useRouter();
     const format = searchParams.get("format") ?? "ipl";
     const { resetDraftState } = useCockpitTradeDraft();
 
@@ -54,134 +47,64 @@ function SettlePageInner() {
     const [winner, setWinner] = useState<SettleTradeRequest["winner"] | null>(null);
     const [sentiment, setSentiment] = useState<SettleTradeRequest["sentiment"]>("saved");
     const [favSub30Loss, setFavSub30Loss] = useState(false);
-    const [lowestFavOddsPaise, setLowestFavOddsPaise] = useState("");
-    const [postLowBetNumber, setPostLowBetNumber] = useState<number | null>(null);
-    const [postLowBetStake, setPostLowBetStake] = useState<number | null>(null);
+    const [hasMissedSwing, setHasMissedSwing] = useState(false);
+    const [missedSwingTeam, setMissedSwingTeam] = useState("");
+    const [missedSwingBackOddsPaise, setMissedSwingBackOddsPaise] = useState("");
+    const [missedSwingLayOddsPaise, setMissedSwingLayOddsPaise] = useState("");
+    const [missedSwingBetIndex, setMissedSwingBetIndex] = useState<number | null>(null);
     const [mistakeTags, setMistakeTags] = useState<string[]>([]);
     const [mistakeNote, setMistakeNote] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isVoiding, setIsVoiding] = useState(false);
-    const [voidConfirmPending, setVoidConfirmPending] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
-    const isSubmittingRef = useRef(false);
-    const isVoidingRef = useRef(false);
+    const {
+        targetedPnl,
+        settledPnl,
+        achievedYield,
+        missedOpportunityResult,
+        isBusy,
+        canSubmit,
+        isSubmitting,
+        isVoiding,
+        voidConfirmPending,
+        error,
+        clearVoidConfirmPending,
+        handleBack,
+        handleConfirm,
+        handleVoidMatch,
+    } = useSettlePageActions({
+        format,
+        tradeId,
+        isEditMode,
+        tradeState: tradeState ?? null,
+        bets,
+        winner,
+        sentiment,
+        favSub30Loss,
+        hasMissedSwing,
+        missedSwingTeam,
+        missedSwingBackOddsPaise,
+        missedSwingLayOddsPaise,
+        missedSwingBetIndex,
+        mistakeTags,
+        mistakeNote,
+        resetDraftState,
+    });
 
     useSettleEditPrePopulate(isEditMode, tradeState ?? null, {
-        setWinner, setSentiment, setFavSub30Loss,
-        setLowestFavOddsPaise, setMistakeTags, setMistakeNote,
+        setWinner,
+        setSentiment,
+        setFavSub30Loss,
+        setHasMissedSwing,
+        setMissedSwingTeam,
+        setMissedSwingBackOddsPaise,
+        setMissedSwingLayOddsPaise,
+        setMissedSwingBetIndex,
+        setMistakeTags,
+        setMistakeNote,
     });
 
     if (isLoading) return <SettlePageSkeleton />;
     if (loadError || !tradeState) {
         return <SettlePageError message={loadError ?? "Trade not found."} />;
-    }
-
-    const dashboardPath = `/trading-dashboard?format=${encodeURIComponent(format)}&action=new`;
-    const tradePath = `/trading-dashboard/${tradeId}?format=${encodeURIComponent(format)}`;
-    const historyPath = `/history?format=${encodeURIComponent(format)}`;
-
-    const targetProjection = calculateStrategyTargetPnl(
-        tradeState.bankroll,
-        tradeState.back_odds_after_toss,
-    );
-    const targetedPnl = isEditMode && tradeState.targeted_pnl !== null && tradeState.targeted_pnl !== undefined
-        ? tradeState.targeted_pnl
-        : (targetProjection?.targetPnl ?? 0);
-    const settledPnl = winner === "team_1"
-        ? tradeState.net_pnl_team_1
-        : winner === "team_2"
-            ? tradeState.net_pnl_team_2
-            : 0;
-    const achievedYield = targetedPnl > 0
-        ? Math.round((settledPnl / targetedPnl) * 10000) / 100
-        : 0;
-    const isBusy = isSubmitting || isVoiding;
-    const canSubmit = winner !== null && !isBusy;
-
-    function handleBack(): void {
-        if (isEditMode) {
-            router.push(historyPath);
-        } else {
-            router.push(tradePath);
-        }
-    }
-
-    async function handleConfirm(): Promise<void> {
-        if (isSubmittingRef.current || isVoidingRef.current || winner === null) return;
-
-        isSubmittingRef.current = true;
-        setIsSubmitting(true);
-        setError(null);
-
-        const payload: SettleTradeRequest = {
-            winner,
-            sentiment,
-            fav_sub_30_loss: favSub30Loss,
-            lowest_fav_odds_paise: parseIntegerOdds(lowestFavOddsPaise),
-            post_low_bet_number: postLowBetNumber,
-            post_low_bet_stake: postLowBetStake,
-            targeted_pnl: targetedPnl,
-            achieved_yield: achievedYield,
-            trade_mistakes: mistakeTags.length > 0 || mistakeNote.trim() !== ""
-                ? { tags: mistakeTags, note: mistakeNote.trim() || null }
-                : null,
-        };
-
-        try {
-            if (isEditMode) {
-                await resettleTrade(tradeId, payload, format);
-            } else {
-                await settleTrade(tradeId, payload, format);
-            }
-        } catch (err: unknown) {
-            const msg = err instanceof Error && err.message.trim() !== ""
-                ? err.message
-                : isEditMode ? "Could not save the changes." : "Could not settle the trade.";
-            setError(msg);
-            isSubmittingRef.current = false;
-            setIsSubmitting(false);
-            return;
-        }
-
-        isSubmittingRef.current = false;
-        setIsSubmitting(false);
-        if (isEditMode) {
-            router.replace(historyPath);
-        } else {
-            resetDraftState();
-            router.replace(dashboardPath);
-        }
-    }
-
-    async function handleVoidMatch(): Promise<void> {
-        if (!voidConfirmPending) {
-            setVoidConfirmPending(true);
-            return;
-        }
-
-        if (isSubmittingRef.current || isVoidingRef.current) return;
-
-        isVoidingRef.current = true;
-        setIsVoiding(true);
-        setError(null);
-
-        try {
-            await voidTrade(tradeId, format);
-        } catch (err: unknown) {
-            const msg = err instanceof Error && err.message.trim() !== ""
-                ? err.message
-                : "Could not void the trade.";
-            setError(msg);
-            isVoidingRef.current = false;
-            setIsVoiding(false);
-            return;
-        }
-
-        isVoidingRef.current = false;
-        setIsVoiding(false);
-        resetDraftState();
-        router.replace(dashboardPath);
     }
 
     /* -- render ------------------------------------------------------------- */
@@ -225,7 +148,7 @@ function SettlePageInner() {
                     winner={winner}
                     onWinnerChange={(w) => {
                         setWinner(w);
-                        setVoidConfirmPending(false);
+                        clearVoidConfirmPending();
                     }}
                 />
 
@@ -244,22 +167,33 @@ function SettlePageInner() {
             {/* -- Right Column ------------------------------------------------ */}
             <div className="settle-page__right">
                 <div className="settle-page__right-card">
-                    <h2 className="settle-page__card-title">Match Journal</h2>
+                    <h2 className="settle-page__card-title">Missed Opportunity / Cashout Simulator</h2>
                     <SettlementTradeNotes
                         sentiment={sentiment}
                         favSub30Loss={favSub30Loss}
-                        lowestFavOddsPaise={lowestFavOddsPaise}
-                        selectedBetNumber={postLowBetNumber}
+                        hasMissedSwing={hasMissedSwing}
+                        missedSwingTeam={missedSwingTeam}
+                        missedSwingBackOddsPaise={missedSwingBackOddsPaise}
+                        missedSwingLayOddsPaise={missedSwingLayOddsPaise}
+                        missedSwingBetIndex={missedSwingBetIndex}
+                        team1={tradeState.team_1}
+                        team2={tradeState.team_2}
                         bets={bets}
+                        missedOpportunityResult={missedOpportunityResult}
                         mistakeTags={mistakeTags}
                         mistakeNote={mistakeNote}
                         onSentimentChange={setSentiment}
                         onFavSub30LossChange={setFavSub30Loss}
-                        onLowestFavOddsPaiseChange={setLowestFavOddsPaise}
-                        onBetNumberChange={(num, stake) => {
-                            setPostLowBetNumber(num);
-                            setPostLowBetStake(stake);
+                        onHasMissedSwingChange={(value) => {
+                            setHasMissedSwing(value);
+                            if (value && missedSwingTeam === "") {
+                                setMissedSwingTeam(tradeState.team_1);
+                            }
                         }}
+                        onMissedSwingTeamChange={setMissedSwingTeam}
+                        onMissedSwingBackOddsPaiseChange={setMissedSwingBackOddsPaise}
+                        onMissedSwingLayOddsPaiseChange={setMissedSwingLayOddsPaise}
+                        onMissedSwingBetIndexChange={setMissedSwingBetIndex}
                         onMistakeTagsChange={setMistakeTags}
                         onMistakeNoteChange={setMistakeNote}
                     />

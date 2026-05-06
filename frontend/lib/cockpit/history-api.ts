@@ -48,8 +48,15 @@ export interface HistoryTradeResponse {
     actual_profit: number | null;
     trade_sentiment: "saved" | "satisfied" | "lost" | "achieved" | null;
     fav_sub_30_loss: boolean;
+    missed_swing_team: string | null;
+    missed_swing_back_odds: number | null;
+    missed_swing_lay_odds: number | null;
+    missed_swing_bet_index: number | null;
+    missed_swing_cumulative_stake: number | null;
+    missed_swing_net_pnl: number | null;
     targeted_pnl: number | null;
     achieved_yield_percentage: number | null;
+    trade_mistakes: string | null;
     total_volume_wagered: number;
     created_at: string;
     updated_at: string;
@@ -68,6 +75,13 @@ export interface HistorySummaryResponse {
     total_volume_wagered: number;
     positive_trades: number;
     negative_trades: number;
+    gross_profit: number;
+    gross_loss: number;
+    profit_factor: number | null;
+    profit_factor_tier: "elite" | "caution" | "danger";
+    hit_rate: number | null;
+    avg_win: number | null;
+    avg_loss: number | null;
     earliest_match_date: string | null;
     latest_match_date: string | null;
 }

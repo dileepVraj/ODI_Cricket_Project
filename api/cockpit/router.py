@@ -302,11 +302,18 @@ def _apply_settlement_to_trade(trade: Trade, body: SettleTradeRequest, db: Cockp
     trade.actual_profit = round(realized_pnl, 2)
     trade.trade_sentiment = body.sentiment
     trade.fav_sub_30_loss = body.fav_sub_30_loss
-    trade.lowest_fav_odds_paise = body.lowest_fav_odds_paise
-    trade.post_low_bet_number = body.post_low_bet_number
-    trade.post_low_bet_stake = (
-        round(body.post_low_bet_stake, 2)
-        if body.post_low_bet_stake is not None
+    trade.missed_swing_team = _normalize_optional_text(body.missed_swing_team)
+    trade.missed_swing_back_odds = body.missed_swing_back_odds
+    trade.missed_swing_lay_odds = body.missed_swing_lay_odds
+    trade.missed_swing_bet_index = body.missed_swing_bet_index
+    trade.missed_swing_cumulative_stake = (
+        round(body.missed_swing_cumulative_stake, 2)
+        if body.missed_swing_cumulative_stake is not None
+        else None
+    )
+    trade.missed_swing_net_pnl = (
+        round(body.missed_swing_net_pnl, 2)
+        if body.missed_swing_net_pnl is not None
         else None
     )
     trade.targeted_pnl = round(body.targeted_pnl, 2)

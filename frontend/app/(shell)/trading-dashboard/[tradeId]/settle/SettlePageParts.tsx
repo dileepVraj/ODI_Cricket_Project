@@ -26,6 +26,7 @@ export function SettlePageSkeleton() {
                     <div className="skeleton h-24 w-full rounded-lg" />
                     <div className="skeleton h-10 w-full rounded-lg" />
                     <div className="skeleton h-10 w-full rounded-lg" />
+                    <div className="skeleton h-10 w-full rounded-lg" />
                     <div className="skeleton h-16 w-full rounded-lg" />
                 </div>
             </div>
@@ -37,7 +38,11 @@ interface EditPrePopulateDispatchers {
     setWinner: Dispatch<SetStateAction<SettleTradeRequest["winner"] | null>>;
     setSentiment: Dispatch<SetStateAction<SettleTradeRequest["sentiment"]>>;
     setFavSub30Loss: Dispatch<SetStateAction<boolean>>;
-    setLowestFavOddsPaise: Dispatch<SetStateAction<string>>;
+    setHasMissedSwing: Dispatch<SetStateAction<boolean>>;
+    setMissedSwingTeam: Dispatch<SetStateAction<string>>;
+    setMissedSwingBackOddsPaise: Dispatch<SetStateAction<string>>;
+    setMissedSwingLayOddsPaise: Dispatch<SetStateAction<string>>;
+    setMissedSwingBetIndex: Dispatch<SetStateAction<number | null>>;
     setMistakeTags: Dispatch<SetStateAction<string[]>>;
     setMistakeNote: Dispatch<SetStateAction<string>>;
 }
@@ -51,12 +56,44 @@ export function useSettleEditPrePopulate(
     useEffect(() => {
         if (!isEditMode || !tradeState || initializedRef.current) return;
         initializedRef.current = true;
-        const { setWinner, setSentiment, setFavSub30Loss, setLowestFavOddsPaise, setMistakeTags, setMistakeNote } = dispatchers;
+        const {
+            setWinner,
+            setSentiment,
+            setFavSub30Loss,
+            setHasMissedSwing,
+            setMissedSwingTeam,
+            setMissedSwingBackOddsPaise,
+            setMissedSwingLayOddsPaise,
+            setMissedSwingBetIndex,
+            setMistakeTags,
+            setMistakeNote,
+        } = dispatchers;
         if (tradeState.winner) setWinner(tradeState.winner);
         if (tradeState.trade_sentiment) setSentiment(tradeState.trade_sentiment);
         setFavSub30Loss(tradeState.fav_sub_30_loss);
-        if (tradeState.lowest_fav_odds_paise != null) {
-            setLowestFavOddsPaise(String(tradeState.lowest_fav_odds_paise));
+        const hasMissedSwing = (
+            tradeState.missed_swing_team != null
+            || tradeState.missed_swing_back_odds != null
+            || tradeState.missed_swing_lay_odds != null
+            || tradeState.missed_swing_bet_index != null
+            || tradeState.missed_swing_cumulative_stake != null
+            || tradeState.missed_swing_net_pnl != null
+        );
+        setHasMissedSwing(hasMissedSwing);
+        if (hasMissedSwing && tradeState.missed_swing_team == null) {
+            setMissedSwingTeam(tradeState.team_1);
+        }
+        if (tradeState.missed_swing_team != null) {
+            setMissedSwingTeam(tradeState.missed_swing_team);
+        }
+        if (tradeState.missed_swing_back_odds != null) {
+            setMissedSwingBackOddsPaise(String(tradeState.missed_swing_back_odds));
+        }
+        if (tradeState.missed_swing_lay_odds != null) {
+            setMissedSwingLayOddsPaise(String(tradeState.missed_swing_lay_odds));
+        }
+        if (tradeState.missed_swing_bet_index != null) {
+            setMissedSwingBetIndex(tradeState.missed_swing_bet_index);
         }
         if (tradeState.trade_mistakes) {
             try {

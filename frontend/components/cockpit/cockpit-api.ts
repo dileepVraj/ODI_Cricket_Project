@@ -100,9 +100,12 @@ export interface TradeResponse {
     actual_profit: number | null;
     trade_sentiment: TradeSentiment | null;
     fav_sub_30_loss: boolean;
-    lowest_fav_odds_paise?: number | null;
-    post_low_bet_number?: number | null;
-    post_low_bet_stake?: number | null;
+    missed_swing_team?: string | null;
+    missed_swing_back_odds?: number | null;
+    missed_swing_lay_odds?: number | null;
+    missed_swing_bet_index?: number | null;
+    missed_swing_cumulative_stake?: number | null;
+    missed_swing_net_pnl?: number | null;
     trade_mistakes?: string | null;
     targeted_pnl: number | null;
     achieved_yield_percentage: number | null;
@@ -131,9 +134,12 @@ export interface SettleTradeRequest {
     winner: "team_1" | "team_2" | "tie";
     sentiment: TradeSentiment;
     fav_sub_30_loss: boolean;
-    lowest_fav_odds_paise: number | null;
-    post_low_bet_number: number | null;
-    post_low_bet_stake: number | null;
+    missed_swing_team: string | null;
+    missed_swing_back_odds: number | null;
+    missed_swing_lay_odds: number | null;
+    missed_swing_bet_index: number | null;
+    missed_swing_cumulative_stake: number | null;
+    missed_swing_net_pnl: number | null;
     targeted_pnl: number;
     achieved_yield: number;
     trade_mistakes: TradeMistakes | null;
@@ -158,7 +164,6 @@ export interface CockpitTeamsResponse {
     season: number;
     teams: string[];
 }
-
 async function cockpitFetch<T>(
     path: string,
     init?: RequestInit
