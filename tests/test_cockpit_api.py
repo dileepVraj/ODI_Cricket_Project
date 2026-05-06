@@ -326,6 +326,156 @@ def test_cockpit_migrate_trades_db_rebuilds_stale_relational_schema(
             trades_db_path.unlink()
 
 
+def test_cockpit_migrate_trades_db_rebuilds_stale_bets_foreign_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    workspace_tmp = Path.cwd() / "temp_pytest"
+    workspace_tmp.mkdir(exist_ok=True)
+
+    trades_db_path = workspace_tmp / "cockpit-stale-bets-foreign-key.sqlite"
+    if trades_db_path.exists():
+        trades_db_path.unlink()
+    monkeypatch.setenv("IPL_COCKPIT_TRADES_DB_PATH", str(trades_db_path))
+
+    stale_con = sqlite3.connect(trades_db_path)
+    try:
+        stale_con.execute(
+            """
+            CREATE TABLE matches (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                season INTEGER NOT NULL,
+                match_date TEXT NOT NULL DEFAULT '',
+                team_1 TEXT NOT NULL,
+                team_2 TEXT NOT NULL,
+                stadium TEXT NOT NULL,
+                toss_winner TEXT,
+                toss_decision TEXT,
+                UNIQUE (season, match_date, team_1, team_2)
+            )
+            """
+        )
+        stale_con.execute(
+            """
+            CREATE TABLE trades (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                match_id INTEGER NOT NULL,
+                favourite_team TEXT NOT NULL,
+                home_ground TEXT NOT NULL,
+                bankroll REAL NOT NULL DEFAULT 100.0,
+                status TEXT NOT NULL DEFAULT 'DRAFT',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                FOREIGN KEY (match_id) REFERENCES matches(id)
+            )
+            """
+        )
+        stale_con.execute(
+            """
+            CREATE TABLE bets (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                trade_id INTEGER NOT NULL,
+                team TEXT NOT NULL,
+                bet_type TEXT NOT NULL CHECK (bet_type IN ('BACK', 'LAY')),
+                odds_paise INTEGER NOT NULL,
+                odds_decimal REAL NOT NULL,
+                stake REAL NOT NULL,
+                liability REAL NOT NULL,
+                is_open INTEGER NOT NULL DEFAULT 1,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (trade_id) REFERENCES trades_legacy(id) ON DELETE CASCADE
+            )
+            """
+        )
+        stale_con.execute("PRAGMA foreign_keys = OFF")
+        stale_con.execute(
+            """
+            INSERT INTO matches (
+                season,
+                match_date,
+                team_1,
+                team_2,
+                stadium
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            (2025, "2025-05-01T00:00:00", "PBKS", "RCB", "M. Chinnaswamy Stadium"),
+        )
+        stale_con.execute(
+            """
+            INSERT INTO trades (
+                match_id,
+                favourite_team,
+                home_ground,
+                bankroll,
+                status,
+                created_at,
+                updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (1, "RCB", "NEU", 100.0, "ACTIVE", "2025-05-01T00:00:00Z", "2025-05-01T00:00:00Z"),
+        )
+        stale_con.execute(
+            """
+            INSERT INTO bets (
+                trade_id,
+                team,
+                bet_type,
+                odds_paise,
+                odds_decimal,
+                stake,
+                liability,
+                is_open,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (1, "PBKS", "BACK", 90, 1.9, 100.0, 90.0, 1, "2025-05-01T00:00:00Z"),
+        )
+        stale_con.commit()
+    finally:
+        stale_con.close()
+
+    migrate_trades_db("ipl")
+
+    verify_con = sqlite3.connect(trades_db_path)
+    try:
+        verify_con.execute("PRAGMA foreign_keys = ON")
+        tables = {
+            row[0]
+            for row in verify_con.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table'"
+            ).fetchall()
+        }
+        assert {"matches", "trades", "bets"}.issubset(tables)
+
+        fk_rows = verify_con.execute("PRAGMA foreign_key_list(bets)").fetchall()
+        assert {str(row[2]) for row in fk_rows} == {"trades"}
+
+        assert verify_con.execute("SELECT COUNT(*) FROM bets").fetchone()[0] == 1
+
+        verify_con.execute(
+            """
+            INSERT INTO bets (
+                trade_id,
+                team,
+                bet_type,
+                odds_paise,
+                odds_decimal,
+                stake,
+                liability,
+                is_open,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (1, "RCB", "LAY", 95, 1.95, 25.0, 23.75, 1, "2025-05-01T00:10:00Z"),
+        )
+        verify_con.commit()
+
+        assert verify_con.execute("SELECT COUNT(*) FROM bets").fetchone()[0] == 2
+    finally:
+        verify_con.close()
+        if trades_db_path.exists():
+            trades_db_path.unlink()
+
+
 def test_cockpit_migrate_trades_db_recovers_from_stale_trades_legacy_table(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

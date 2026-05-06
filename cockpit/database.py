@@ -408,6 +408,7 @@ CREATE TABLE IF NOT EXISTS {table_name} (
     missed_swing_bet_index    INTEGER,
     missed_swing_cumulative_stake REAL,
     missed_swing_net_pnl      REAL,
+    missed_swing_type         TEXT,
     trade_mistakes            TEXT,
     targeted_pnl              REAL,
     achieved_yield_percentage REAL,
@@ -420,8 +421,9 @@ CREATE TABLE IF NOT EXISTS {table_name} (
 )
 """
 
-_DDL_BETS_SQLITE = """
-CREATE TABLE IF NOT EXISTS bets (
+def _ddl_bets_sqlite(table_name: str = "bets") -> str:
+    return f"""
+CREATE TABLE IF NOT EXISTS {table_name} (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     trade_id     INTEGER NOT NULL,
     team         TEXT NOT NULL,
@@ -448,13 +450,13 @@ _DDL_SQLITE_TABLES = (
     _DDL_VENUES,
     _DDL_MATCHES_SQLITE,
     _ddl_trades_sqlite(),
-    _DDL_BETS_SQLITE,
+    _ddl_bets_sqlite(),
 )
 
 _DDL_TRADE_SQLITE_TABLES = (
     _DDL_MATCHES_SQLITE,
     _ddl_trades_sqlite(),
-    _DDL_BETS_SQLITE,
+    _ddl_bets_sqlite(),
 )
 
 _TRADE_REQUIRED_COLUMNS = {
@@ -470,7 +472,20 @@ _TRADE_REQUIRED_COLUMNS = {
     "missed_swing_bet_index",
     "missed_swing_cumulative_stake",
     "missed_swing_net_pnl",
+    "missed_swing_type",
     "trade_mistakes",
+}
+
+_BET_REQUIRED_COLUMNS = {
+    "trade_id",
+    "team",
+    "bet_type",
+    "odds_paise",
+    "odds_decimal",
+    "stake",
+    "liability",
+    "is_open",
+    "created_at",
 }
 
 _TRADE_LEGACY_COLUMNS = {
@@ -703,6 +718,79 @@ def _sqlite_rebuild_trades_table(path: str) -> None:
         con.close()
 
 
+def _sqlite_bets_table_needs_rebuild(con: sqlite3.Connection) -> bool:
+    bets_columns = set(_sqlite_table_columns(con, "bets"))
+    if not bets_columns:
+        return False
+    if not _BET_REQUIRED_COLUMNS.issubset(bets_columns):
+        return True
+
+    bets_info = {str(row[1]): row for row in _sqlite_table_info(con, "bets")}
+    if "trade_id" not in bets_info or cast(int, bets_info["trade_id"][3]) != 1:
+        return True
+
+    return not _sqlite_foreign_key_has_rule(
+        con,
+        "bets",
+        from_column="trade_id",
+        ref_table="trades",
+        ref_column="id",
+        on_delete="CASCADE",
+    )
+
+
+def _sqlite_rebuild_bets_table(path: str) -> None:
+    con = sqlite3.connect(path, check_same_thread=False)
+    try:
+        if "bets" not in _table_names_sqlite(con):
+            return
+        if not _sqlite_bets_table_needs_rebuild(con):
+            return
+
+        con.execute("PRAGMA foreign_keys = OFF")
+        con.execute("BEGIN")
+        try:
+            temp_table = "bets_rebuild_tmp"
+            if temp_table in _table_names_sqlite(con):
+                con.execute(f"DROP TABLE {temp_table}")
+
+            con.execute(_ddl_bets_sqlite(temp_table))
+
+            new_columns = _sqlite_table_columns(con, temp_table)
+            source_columns = _sqlite_table_columns(con, "bets")
+            insert_columns = [column for column in new_columns if column in source_columns]
+            if not insert_columns:
+                raise RuntimeError("Could not determine bet columns for migration")
+
+            column_sql = ", ".join(insert_columns)
+            con.execute(
+                f"INSERT INTO {temp_table} ({column_sql}) SELECT {column_sql} FROM bets"
+            )
+
+            con.execute("DROP TABLE bets")
+            con.execute(f"ALTER TABLE {temp_table} RENAME TO bets")
+
+            max_id_row = con.execute("SELECT MAX(id) FROM bets").fetchone()
+            max_id = int(max_id_row[0]) if max_id_row and max_id_row[0] is not None else None
+            if max_id is not None:
+                try:
+                    con.execute(
+                        "INSERT OR REPLACE INTO sqlite_sequence (name, seq) VALUES (?, ?)",
+                        ["bets", max_id],
+                    )
+                except sqlite3.OperationalError:
+                    pass
+
+            con.commit()
+        except Exception:
+            con.rollback()
+            raise
+        finally:
+            con.execute("PRAGMA foreign_keys = ON")
+    finally:
+        con.close()
+
+
 def migrate_trades_db(format_key: str) -> None:
     """Ensure SQLite trade tables exist and legacy columns are removed."""
     fmt = format_key.strip().lower()
@@ -714,6 +802,7 @@ def migrate_trades_db(format_key: str) -> None:
             table_names=("bets", "trades", "matches", "teams", "venues"),
         )
         _sqlite_rebuild_trades_table(path)
+        _sqlite_rebuild_bets_table(path)
         return
 
     trades_path = get_trades_db_path(fmt)
@@ -723,6 +812,7 @@ def migrate_trades_db(format_key: str) -> None:
         table_names=("bets", "trades", "matches"),
     )
     _sqlite_rebuild_trades_table(trades_path)
+    _sqlite_rebuild_bets_table(trades_path)
 
 
 def _seed_ipl_trade_history_if_needed(format_key: str) -> None:
@@ -855,6 +945,33 @@ def _seed_ipl_trade_history_if_needed(format_key: str) -> None:
                     _coerce_optional_text(record.get("trade_sentiment")),
                 ),
                 fav_sub_30_loss=bool(record.get("fav_sub_30_loss", 0)),
+                missed_swing_team=_coerce_optional_text(record.get("missed_swing_team")),
+                missed_swing_back_odds=(
+                    int(record["missed_swing_back_odds"])
+                    if record.get("missed_swing_back_odds") is not None
+                    else None
+                ),
+                missed_swing_lay_odds=(
+                    int(record["missed_swing_lay_odds"])
+                    if record.get("missed_swing_lay_odds") is not None
+                    else None
+                ),
+                missed_swing_bet_index=(
+                    int(record["missed_swing_bet_index"])
+                    if record.get("missed_swing_bet_index") is not None
+                    else None
+                ),
+                missed_swing_cumulative_stake=(
+                    float(record["missed_swing_cumulative_stake"])
+                    if record.get("missed_swing_cumulative_stake") is not None
+                    else None
+                ),
+                missed_swing_net_pnl=(
+                    float(record["missed_swing_net_pnl"])
+                    if record.get("missed_swing_net_pnl") is not None
+                    else None
+                ),
+                missed_swing_type=_coerce_optional_text(record.get("missed_swing_type")),
                 targeted_pnl=(
                     float(record["targeted_pnl"])
                     if record.get("targeted_pnl") is not None
