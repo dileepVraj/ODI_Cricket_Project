@@ -97,8 +97,8 @@ def diff_snapshots(
     if modified:
         print(f"\nMODIFIED ({len(modified)}):")
         for f in modified:
-            old_size = old[f]["size_bytes"]
-            new_size = new[f]["size_bytes"]
+            old_size = int(old[f]["size_bytes"])
+            new_size = int(new[f]["size_bytes"])
             delta = new_size - old_size
             sign = "+" if delta >= 0 else ""
             print(f"  ~ {f}")

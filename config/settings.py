@@ -8,12 +8,21 @@ This module centralizes:
 from __future__ import annotations
 
 import os
+from os import PathLike
 from pathlib import Path
+from typing import IO
 
 try:
     from dotenv import load_dotenv
 except ImportError:
-    def load_dotenv(dotenv_path: Path | str | None = None, override: bool = False) -> bool:
+    def load_dotenv(
+        dotenv_path: str | PathLike[str] | None = None,
+        stream: IO[str] | None = None,
+        verbose: bool = False,
+        override: bool = False,
+        interpolate: bool = True,
+        encoding: str | None = None,
+    ) -> bool:
         return False
 
 
@@ -73,6 +82,13 @@ CORS_ORIGINS: list[str] = _get_csv_list(
     "http://localhost:3000,http://127.0.0.1:3000",
 )
 ODI_DB_PATH: str = _get_str("ODI_DB_PATH", "formats/odi/data/odi.duckdb")
+IPL_COCKPIT_DB_PATH: str = _get_str("IPL_COCKPIT_DB_PATH", "data/ipl.duckdb")
+IPL_COCKPIT_TRADES_DB_PATH: str = _get_str(
+    "IPL_COCKPIT_TRADES_DB_PATH",
+    "data/ipl_master.sqlite",
+)
+ODI_COCKPIT_DB_PATH: str = _get_str("ODI_COCKPIT_DB_PATH", "data/odi_cockpit.sqlite")
+FINANCES_DB_PATH: str = _get_str("FINANCES_DB_PATH", "data/finances.sqlite")
 
 
 # =====================================================================

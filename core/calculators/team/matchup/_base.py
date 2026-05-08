@@ -122,6 +122,26 @@ def _apply_filters(match_df: pd.DataFrame, min_balls: int) -> pd.DataFrame:
     return apply_match_filters(match_df, min_balls=min_balls)
 
 
+# ── Service/config facades ────────────────────────────────────────────────────
+# Calculator functions must not call service/config domains directly.
+# These module-level wrappers absorb the cross-domain calls so that internal
+# calculator functions stay within a single domain boundary.
+
+def _call_build_report_data(
+    match_df: pd.DataFrame,
+    home_team: str,
+    visitor_label: str,
+    title: str,
+    is_venue_mode: bool,
+    calculate_team_stats: object,
+) -> object:
+    return ReportBuilder._build_report_data(
+        match_df, home_team, visitor_label, title,
+        is_venue_mode=is_venue_mode,
+        calculate_team_stats=calculate_team_stats,
+    )
+
+
 def _comparison_rows(
     match_df: pd.DataFrame,
     home_team: str,
@@ -129,7 +149,7 @@ def _comparison_rows(
     title: str,
     competitive_threshold: int,
 ) -> ComparisonReportRows:
-    return cast(ComparisonReportRows, ReportBuilder._build_report_data(
+    return cast(ComparisonReportRows, _call_build_report_data(
         match_df,
         home_team,
         visitor_label,

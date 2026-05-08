@@ -25,6 +25,23 @@ COCKPIT_TEST_FINANCES_DB_PATH = COCKPIT_TEST_DATA_DIR / "cockpit-finances-test.s
 COCKPIT_TEST_INITIAL_BANK_BALANCE = 70560.67
 COCKPIT_TEST_INITIAL_WALLET_BALANCE = 29980.76
 COCKPIT_TEST_INITIAL_BANK_DEPOSIT = 100541.43
+REMOVED_TRADE_FIELDS = (
+    "bullet_05_odds",
+    "bullet_05_stake",
+    "bullet_1_odds",
+    "bullet_1_stake",
+    "bullet_2_odds",
+    "bullet_2_stake",
+    "bullet_3_odds",
+    "bullet_3_stake",
+    "fav_reached_130",
+    "is_fake_favourite",
+)
+
+
+def assert_trimmed_trade_payload(payload: dict[str, object]) -> None:
+    for field_name in REMOVED_TRADE_FIELDS:
+        assert field_name not in payload
 
 
 @pytest.fixture()
@@ -314,6 +331,16 @@ def test_cockpit_migrate_trades_db_rebuilds_stale_relational_schema(
         assert int(trade_columns["match_id"][3]) == 1
         assert int(bet_columns["trade_id"][3]) == 1
 
+        assert "bullet_05_odds" not in trade_columns
+        assert "bullet_05_stake" not in trade_columns
+        assert "bullet_1_odds" not in trade_columns
+        assert "bullet_1_stake" not in trade_columns
+        assert "bullet_2_odds" not in trade_columns
+        assert "bullet_2_stake" not in trade_columns
+        assert "bullet_3_odds" not in trade_columns
+        assert "bullet_3_stake" not in trade_columns
+        assert "fav_reached_130" not in trade_columns
+        assert "is_fake_favourite" not in trade_columns
         assert "missed_swing_team" in trade_columns
         assert "lowest_fav_odds_paise" not in trade_columns
 
@@ -579,6 +606,16 @@ def test_cockpit_migrate_trades_db_recovers_from_stale_trades_legacy_table(
 
         trade_rows = verify_con.execute("PRAGMA table_info(trades)").fetchall()
         trade_columns = {str(row[1]): row for row in trade_rows}
+        assert "bullet_05_odds" not in trade_columns
+        assert "bullet_05_stake" not in trade_columns
+        assert "bullet_1_odds" not in trade_columns
+        assert "bullet_1_stake" not in trade_columns
+        assert "bullet_2_odds" not in trade_columns
+        assert "bullet_2_stake" not in trade_columns
+        assert "bullet_3_odds" not in trade_columns
+        assert "bullet_3_stake" not in trade_columns
+        assert "fav_reached_130" not in trade_columns
+        assert "is_fake_favourite" not in trade_columns
         assert "lowest_fav_odds_paise" not in trade_columns
         assert "missed_swing_team" in trade_columns
 
@@ -668,6 +705,7 @@ def _create_active_trade(client: TestClient, season: int = 2026) -> int:
     assert draft_trade["selected_team_before_toss"] == "MI"
     assert draft_trade["back_odds_before_toss"] == 57
     assert draft_trade["lay_odds_before_toss"] == 58
+    assert_trimmed_trade_payload(draft_trade)
 
     update_response = client.patch(
         f"/api/cockpit/trades/{trade_id}",
@@ -698,6 +736,7 @@ def _create_active_trade(client: TestClient, season: int = 2026) -> int:
     assert active_trade["selected_team_after_toss"] == "CSK"
     assert active_trade["back_odds_after_toss"] == 64
     assert active_trade["lay_odds_after_toss"] == 66
+    assert_trimmed_trade_payload(active_trade)
 
     return trade_id
 
@@ -719,6 +758,85 @@ def test_cockpit_trade_creation_reuses_the_same_match_row(client: TestClient) ->
     assert trades_count == 2
 
 
+def test_cockpit_trade_requests_reject_removed_fields(client: TestClient) -> None:
+    create_response = client.post(
+        "/api/cockpit/trades",
+        json={
+            "season": 2025,
+            "match_date": "2025-04-18T00:00:00",
+            "team_1": "MI",
+            "team_2": "CSK",
+            "favourite_team": "MI",
+            "home_ground": "FAV",
+            "stadium": "WANKHEDE",
+            "bankroll": 100,
+            "selected_team_before_toss": "MI",
+            "back_odds_before_toss": 57,
+            "lay_odds_before_toss": 58,
+            "fav_reached_130": True,
+        },
+    )
+    assert create_response.status_code == 422
+
+    restore_response = client.post(
+        "/api/cockpit/trades/restore",
+        json={
+            "trade": {
+                "id": 1,
+                "season": 2025,
+                "match_date": "2025-04-18T00:00:00",
+                "team_1": "MI",
+                "team_2": "CSK",
+                "favourite_team": "MI",
+                "home_ground": "FAV",
+                "stadium": "WANKHEDE",
+                "status": "SETTLED",
+                "toss_winner": "MI",
+                "toss_decision": "bat",
+                "bankroll": 100,
+                "opening_odds": 1.57,
+                "total_stake": 64.0,
+                "target_profit": 26.15,
+                "profit_80pct": 0.0,
+                "exit_target_odds": 0.0,
+                "breakeven_odds": 0.0,
+                "pct_of_target": 0.0,
+                "pct_return_on_stake": 0.0,
+                "exit_odds": 0.0,
+                "fav_reached_130": True,
+                "notes": None,
+                "crex_url": None,
+                "selected_team_before_toss": "MI",
+                "back_odds_before_toss": 57,
+                "lay_odds_before_toss": 58,
+                "selected_team_after_toss": "CSK",
+                "back_odds_after_toss": 64,
+                "lay_odds_after_toss": 66,
+                "result": None,
+                "winner": "team_1",
+                "actual_profit": 56.0,
+                "trade_sentiment": "achieved",
+                "fav_sub_30_loss": True,
+                "missed_swing_team": None,
+                "missed_swing_back_odds": None,
+                "missed_swing_lay_odds": None,
+                "missed_swing_bet_index": None,
+                "missed_swing_cumulative_stake": None,
+                "missed_swing_net_pnl": None,
+                "missed_swing_type": None,
+                "trade_mistakes": None,
+                "targeted_pnl": 26.15,
+                "achieved_yield_percentage": 214.0,
+                "total_volume_wagered": 64.0,
+                "created_at": "2025-04-18T00:00:00Z",
+                "updated_at": "2025-04-18T00:00:00Z",
+            },
+            "bets": [],
+        },
+    )
+    assert restore_response.status_code == 422
+
+
 def test_cockpit_routes_support_crud(client: TestClient) -> None:
     empty_trades = client.get("/api/cockpit/trades")
     assert empty_trades.status_code == 200
@@ -734,15 +852,18 @@ def test_cockpit_routes_support_crud(client: TestClient) -> None:
     assert list_response.status_code == 200
     assert len(list_response.json()) == 1
     assert list_response.json()[0]["status"] == "ACTIVE"
+    assert_trimmed_trade_payload(list_response.json()[0])
 
     active_response = client.get("/api/cockpit/trades?status=ACTIVE")
     assert active_response.status_code == 200
     assert len(active_response.json()) == 1
     assert active_response.json()[0]["id"] == trade_id
+    assert_trimmed_trade_payload(active_response.json()[0])
 
     get_response = client.get(f"/api/cockpit/trades/{trade_id}")
     assert get_response.status_code == 200
     assert get_response.json()["id"] == trade_id
+    assert_trimmed_trade_payload(get_response.json())
 
     bet_response = client.post(
         f"/api/cockpit/trades/{trade_id}/bets",
@@ -789,12 +910,14 @@ def test_cockpit_trade_list_filters_by_match_season(client: TestClient) -> None:
     season_2025_trades = season_2025_response.json()
     assert [trade["id"] for trade in season_2025_trades] == [trade_2025]
     assert season_2025_trades[0]["season"] == 2025
+    assert_trimmed_trade_payload(season_2025_trades[0])
 
     season_2026_response = client.get("/api/cockpit/trades?season=2026")
     assert season_2026_response.status_code == 200
     season_2026_trades = season_2026_response.json()
     assert [trade["id"] for trade in season_2026_trades] == [trade_2026]
     assert season_2026_trades[0]["season"] == 2026
+    assert_trimmed_trade_payload(season_2026_trades[0])
 
 
 def test_cockpit_store_delete_trade_removes_bets(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1198,6 +1321,7 @@ def test_cockpit_trade_settlement_records_metrics_and_locks_trade(client: TestCl
     assert settled_trade["targeted_pnl"] == 26.15
     assert settled_trade["achieved_yield_percentage"] == 214.0
     assert settled_trade["total_volume_wagered"] == 64.0
+    assert_trimmed_trade_payload(settled_trade)
 
     get_response = client.get(f"/api/cockpit/trades/{trade_id}")
     assert get_response.status_code == 200
@@ -1205,6 +1329,7 @@ def test_cockpit_trade_settlement_records_metrics_and_locks_trade(client: TestCl
     assert stored_trade["status"] == "SETTLED"
     assert stored_trade["winner"] == "team_1"
     assert stored_trade["actual_profit"] == 56.0
+    assert_trimmed_trade_payload(stored_trade)
 
     locked_add_response = client.post(
         f"/api/cockpit/trades/{trade_id}/bets",
@@ -1305,6 +1430,7 @@ def test_cockpit_trade_restore_recreates_a_settled_trade_without_recrediting_wal
     assert restored_trade["status"] == "SETTLED"
     assert restored_trade["winner"] == "team_1"
     assert restored_trade["actual_profit"] == 56.0
+    assert_trimmed_trade_payload(restored_trade)
 
     assert finances.get_balances()["wallet"] == pytest.approx(wallet_after_settle)
 

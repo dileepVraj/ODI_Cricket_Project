@@ -24,7 +24,7 @@ def get_team_engine(format_key: str) -> Type[ITeamEngine]:
             f"Unknown format_key '{normalized_key}'. Available: {list(FORMATS.keys())}"
         )
 
-    module_path = f"{entry['module']}.engines.team_engine"
+    module_path = f"{entry['module']}.engines.team"
     try:
         module = importlib.import_module(module_path)
     except ImportError as exc:

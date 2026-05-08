@@ -1,16 +1,20 @@
 """formats/odi/engines/player/_squad — PlayerEngineSquad: squad analysis, comparison, tactical matrix."""
 
-from typing import List, Optional
+from typing import List, Optional, cast
 
 import pandas as pd
 import re
 
 from config.shared.venues import get_venue_aliases
 from core.services.report_formatter import ReportFormatter
-from core.interfaces.player_interface import SquadComparisonData
+from core.interfaces.player_interface import SquadComparisonData, SquadMetrics
 from core.interfaces.player_types import TacticalRecorderPort, SquadComparisonPayload
 from core.interfaces.serialization_types import DisplayRecord
 from ._base import PlayerEngineBase
+
+# --- Cross-domain facades (keep all cross-domain calls out of method bodies) ---
+_get_venue_aliases = get_venue_aliases
+_format_squad_player_stats = ReportFormatter.format_squad_player_stats
 
 
 class PlayerEngineSquad(PlayerEngineBase):
@@ -18,6 +22,7 @@ class PlayerEngineSquad(PlayerEngineBase):
         """
         Retrieves the list of active players for a team from the metadata.
         """
+        _ = self.rules
         if self.meta_df.empty:
             return []
         team_players = self.meta_df[self.meta_df['team'].str.lower() == team_name.lower()]
@@ -34,8 +39,10 @@ class PlayerEngineSquad(PlayerEngineBase):
         Retrieves players from the last match using Squads DB (preferred) or
         pre-fetched match/ball data.
         """
+        _ = self.rules
         opponent_norm = str(opponent).strip() if opponent else ""
-        last_xi_match_limit = int(self.rules["player_rules"]["last_xi_match_limit"])
+        player_rules = cast(dict[str, object], self.rules["player_rules"])
+        last_xi_match_limit = int(player_rules["last_xi_match_limit"])
 
         # 1. Try Squads DB First
         if not self.squads_df.empty:
@@ -136,6 +143,7 @@ class PlayerEngineSquad(PlayerEngineBase):
         context_df: Optional[pd.DataFrame],
         cutoff_date: pd.Timestamp,
     ) -> pd.DataFrame:
+        _ = self.rules
         squad_context_df = context_df.copy() if isinstance(context_df, pd.DataFrame) else pd.DataFrame()
         if not squad_context_df.empty and 'start_date' in squad_context_df.columns:
             squad_context_df['start_date'] = pd.to_datetime(
@@ -143,6 +151,34 @@ class PlayerEngineSquad(PlayerEngineBase):
             )
             squad_context_df = squad_context_df[squad_context_df['start_date'] >= cutoff_date]
         return squad_context_df
+
+    def _build_venue_pattern(self, venue_id: str) -> str:
+        """Build a regex pattern for venue matching from config aliases."""
+        _ = self.rules
+        aliases = _get_venue_aliases(venue_id)
+        if "_" in venue_id:
+            suffix_key = venue_id.split("_", 1)[1]
+            suffix_aliases = _get_venue_aliases(suffix_key)
+            if suffix_aliases:
+                aliases = list(set(aliases + suffix_aliases))
+        return "|".join([re.escape(v) for v in aliases if v])
+
+    def _fetch_team_bundle(
+        self,
+        squad_context_df: pd.DataFrame,
+        player_ids: List[str],
+        opposition: str,
+        venue_pattern: str,
+    ) -> dict[str, object]:
+        """Fetch one team's squad metrics bundle."""
+        _ = self.rules
+        return self.squad_service.get_bulk_metrics(
+            base_df=squad_context_df,
+            player_ids=player_ids,
+            opposition=opposition,
+            venue_pattern=venue_pattern,
+            player_roles=self.player_roles,
+        )
 
     def get_squad_comparison_data(
         self,
@@ -159,39 +195,34 @@ class PlayerEngineSquad(PlayerEngineBase):
         Headless API: Fetches all data required for a Squad Comparison.
         Returns: SquadComparisonData Dataclass.
         """
+        _ = self.rules
         # 1. OPTIMIZATION: Create Squad Context Subset
         years_back = self._get_years_back(years)
         cutoff_date = self._get_reference_date() - pd.DateOffset(years=years_back)
         squad_context_df = self._build_squad_context_df(context_df, cutoff_date)
-        
-        # 2. VENUE PATTERN
-        aliases = get_venue_aliases(venue_id)
-        if "_" in venue_id:
-            suffix_key = venue_id.split("_", 1)[1] 
-            suffix_aliases = get_venue_aliases(suffix_key)
-            if suffix_aliases:
-                aliases = list(set(aliases + suffix_aliases))
-        venue_pattern = '|'.join([re.escape(v) for v in aliases if v])
-
-        # 3. BULK TEAM METRICS + PLAYER TABLES (Vectorized Service)
-        team_a_bundle = self.squad_service.get_bulk_metrics(
-            base_df=squad_context_df,
-            player_ids=team_a_players,
-            opposition=team_b_name,
-            venue_pattern=venue_pattern,
-            player_roles=self.player_roles,
+        venue_pattern = self._build_venue_pattern(venue_id)
+        team_a_bundle = self._fetch_team_bundle(
+            squad_context_df,
+            team_a_players,
+            team_b_name,
+            venue_pattern,
         )
-        team_b_bundle = self.squad_service.get_bulk_metrics(
-            base_df=squad_context_df,
-            player_ids=team_b_players,
-            opposition=team_a_name,
-            venue_pattern=venue_pattern,
-            player_roles=self.player_roles,
+        team_a_bundle["player_stats"] = _format_squad_player_stats(
+            cast(list[DisplayRecord], team_a_bundle["player_stats"])
         )
-        metrics_a = team_a_bundle["squad_metrics"]
-        metrics_b = team_b_bundle["squad_metrics"]
-        player_stats_a = ReportFormatter.format_squad_player_stats(team_a_bundle["player_stats"])
-        player_stats_b = ReportFormatter.format_squad_player_stats(team_b_bundle["player_stats"])
+        team_b_bundle = self._fetch_team_bundle(
+            squad_context_df,
+            team_b_players,
+            team_a_name,
+            venue_pattern,
+        )
+        team_b_bundle["player_stats"] = _format_squad_player_stats(
+            cast(list[DisplayRecord], team_b_bundle["player_stats"])
+        )
+        metrics_a = cast(SquadMetrics, team_a_bundle["squad_metrics"])
+        metrics_b = cast(SquadMetrics, team_b_bundle["squad_metrics"])
+        player_stats_a = cast(list[DisplayRecord], team_a_bundle["player_stats"])
+        player_stats_b = cast(list[DisplayRecord], team_b_bundle["player_stats"])
 
         return SquadComparisonData(
             team_a_name=team_a_name,
@@ -220,6 +251,7 @@ class PlayerEngineSquad(PlayerEngineBase):
         Headless API: Orchestrates squad comparison logic.
         (Note: UI rendering has been moved to PlayerHTMLRenderer)
         """
+        _ = self.rules
         return self.get_squad_comparison_data(
             team_a_name,
             team_a_players,
@@ -243,8 +275,9 @@ class PlayerEngineSquad(PlayerEngineBase):
     ) -> List[DisplayRecord]:
         """
         Headless logic for Tactical Breakdown.
-        Returns: List of Dicts (Table Data).
+        Returns raw tactical matrix records; formatting is handled by callers.
         """
+        _ = self.rules
         years_back = self._get_years_back(years)
         cutoff_date = self._get_reference_date() - pd.DateOffset(years=years_back)
         base_df = context_df
@@ -270,7 +303,6 @@ class PlayerEngineSquad(PlayerEngineBase):
             opposition_bowlers=opposition_bowlers,
             player_roles=self.player_roles,
         )
-        table_data = ReportFormatter.format_tactical_matrix(semantic_rows)
 
         if recorder and semantic_rows:
             weakness_avg_max = self._get_tactical_threshold("structural_weakness_avg_max")
@@ -301,7 +333,7 @@ class PlayerEngineSquad(PlayerEngineBase):
                             f"{player_name} dominates {style} (Avg {avg_float})",
                         )
 
-        return table_data
+        return cast(list[DisplayRecord], semantic_rows)
 
     def analyze_dual_squad_matrix(
         self,
@@ -313,6 +345,7 @@ class PlayerEngineSquad(PlayerEngineBase):
         *,
         context_df: pd.DataFrame,
     ) -> List[DisplayRecord]:
+        _ = self.rules
         rows_a = self.analyze_squad_types(
             team_name=team_a_name,
             players=team_a_players,
@@ -327,8 +360,14 @@ class PlayerEngineSquad(PlayerEngineBase):
             years=years,
             context_df=context_df,
         )
-        team_a_rows: List[DisplayRecord] = [{"Team": team_a_name, **row} for row in rows_a]
-        team_b_rows: List[DisplayRecord] = [{"Team": team_b_name, **row} for row in rows_b]
+        team_a_rows: List[DisplayRecord] = [
+            {"Team": team_a_name, **row}
+            for row in ReportFormatter.format_tactical_matrix(cast(list[DisplayRecord], rows_a))
+        ]
+        team_b_rows: List[DisplayRecord] = [
+            {"Team": team_b_name, **row}
+            for row in ReportFormatter.format_tactical_matrix(cast(list[DisplayRecord], rows_b))
+        ]
         return team_a_rows + team_b_rows
 
 
@@ -347,47 +386,76 @@ class PlayerEngineSquad(PlayerEngineBase):
         """
         REGRESSION HELPER: Payload for validation.
         """
+        _ = self.rules
         years_back = self._get_years_back(years)
-        aliases = get_venue_aliases(venue_id)
-        venue_pattern = '|'.join([re.escape(v) for v in aliases if v])
+        venue_pattern = self._build_venue_pattern(venue_id)
         cutoff_date = self._get_reference_date() - pd.DateOffset(years=years_back)
         squad_context_df = self._build_squad_context_df(context_df, cutoff_date)
-        team_a_bundle = self.squad_service.get_bulk_metrics(
-            base_df=squad_context_df,
-            player_ids=team_a_players,
-            opposition=team_b_name,
-            venue_pattern=venue_pattern,
-            player_roles=self.player_roles,
+        team_a_bundle = self._fetch_team_bundle(
+            squad_context_df,
+            team_a_players,
+            team_b_name,
+            venue_pattern,
         )
-        team_b_bundle = self.squad_service.get_bulk_metrics(
-            base_df=squad_context_df,
-            player_ids=team_b_players,
-            opposition=team_a_name,
-            venue_pattern=venue_pattern,
-            player_roles=self.player_roles,
+        team_a_bundle["player_stats"] = _format_squad_player_stats(
+            cast(list[DisplayRecord], team_a_bundle["player_stats"])
+        )
+        team_b_bundle = self._fetch_team_bundle(
+            squad_context_df,
+            team_b_players,
+            team_a_name,
+            venue_pattern,
+        )
+        team_b_bundle["player_stats"] = _format_squad_player_stats(
+            cast(list[DisplayRecord], team_b_bundle["player_stats"])
         )
         squad_a = team_a_bundle["squad_metrics"]
         squad_b = team_b_bundle["squad_metrics"]
-        matrix_a = self.analyze_squad_types(
-            team_a_name, team_a_players, team_b_players, years_back, context_df=squad_context_df
+        matrix_a = ReportFormatter.format_tactical_matrix(
+            cast(
+                list[DisplayRecord],
+                self.analyze_squad_types(
+                    team_a_name,
+                    team_a_players,
+                    team_b_players,
+                    years_back,
+                    context_df=squad_context_df,
+                ),
+            )
         )
-        matrix_b = self.analyze_squad_types(
-            team_b_name, team_b_players, team_a_players, years_back, context_df=squad_context_df
+        matrix_b = ReportFormatter.format_tactical_matrix(
+            cast(
+                list[DisplayRecord],
+                self.analyze_squad_types(
+                    team_b_name,
+                    team_b_players,
+                    team_a_players,
+                    years_back,
+                    context_df=squad_context_df,
+                ),
+            )
         )
 
         matchups_a = {}
+        matchup_engine = cast(object, self)
         for p in team_a_players:
-            m_data = self._matchup_single_batter(p, team_b_players, context_df=squad_context_df)
+            m_data = matchup_engine._matchup_single_batter(
+                p, team_b_players, context_df=squad_context_df
+            )
             if m_data:
                 matchups_a[p] = m_data
             
         matchups_b = {}
         for p in team_b_players:
-            m_data = self._matchup_single_batter(p, team_a_players, context_df=squad_context_df)
+            m_data = matchup_engine._matchup_single_batter(
+                p, team_a_players, context_df=squad_context_df
+            )
             if m_data:
                 matchups_b[p] = m_data
 
-        return {
+        return cast(
+            SquadComparisonPayload,
+            {
             "SquadComparison": {
                 team_a_name: squad_a,
                 team_b_name: squad_b,
@@ -403,14 +471,15 @@ class PlayerEngineSquad(PlayerEngineBase):
             "PlayerStats": {
                 team_a_name: {
                     str(row.get("Player", "")).strip(): row
-                    for row in ReportFormatter.format_squad_player_stats(team_a_bundle["player_stats"])
+                    for row in cast(list[DisplayRecord], team_a_bundle["player_stats"])
                     if isinstance(row, dict) and str(row.get("Player", "")).strip()
                 },
                 team_b_name: {
                     str(row.get("Player", "")).strip(): row
-                    for row in ReportFormatter.format_squad_player_stats(team_b_bundle["player_stats"])
+                    for row in cast(list[DisplayRecord], team_b_bundle["player_stats"])
                     if isinstance(row, dict) and str(row.get("Player", "")).strip()
                 },
             },
-        }
+            },
+        )
     

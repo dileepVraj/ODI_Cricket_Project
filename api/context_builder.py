@@ -82,7 +82,7 @@ class EngineDefaults(TypedDict, total=False):
 
 def _safe_int(value: object, default: int) -> int:
     try:
-        parsed = int(value)
+        parsed = int(cast(str | int | float, value))
         return parsed if parsed > 0 else default
     except (TypeError, ValueError):
         return default
@@ -100,6 +100,33 @@ def _engine_default_int(analyzer: AnalyzerProtocol, key: str, minimum: int) -> i
     raw_value = _engine_defaults(analyzer).get(key)
     parsed = _safe_int(raw_value, minimum)
     return parsed if parsed >= minimum else minimum
+
+
+def _resolve_team_engine_context(analyzer: AnalyzerProtocol) -> MatchContext:
+    match_df = getattr(analyzer, "match_df", pd.DataFrame())
+    phase_df = getattr(analyzer, "phase_df", pd.DataFrame())
+    raw_rules = analyzer.format_rules if isinstance(analyzer.format_rules, dict) else {}
+    tactical = raw_rules.get("tactical_thresholds", {})
+
+    context: MatchContext = {}
+    if isinstance(match_df, pd.DataFrame):
+        context["match_df"] = match_df
+        if "start_date" in match_df.columns and not match_df.empty:
+            dates = pd.to_datetime(match_df["start_date"], errors="coerce")
+            max_date = dates.max()
+            if pd.notna(max_date):
+                context["reference_date"] = pd.Timestamp(max_date).floor("D")
+    if isinstance(phase_df, pd.DataFrame):
+        context["phase_df"] = phase_df
+    if isinstance(tactical, dict):
+        normalized: Dict[str, int] = {}
+        for key, value in tactical.items():
+            try:
+                normalized[str(key)] = int(value)
+            except (TypeError, ValueError):
+                continue
+        context["tactical_thresholds"] = normalized
+    return context
 
 
 def _build_recent_player_context(
@@ -151,41 +178,15 @@ def _inject_team_engine_context(
 
     params = cast(EngineCallParams, dict(call_params))
     _ = engine_method_name
-    match_df = getattr(analyzer, "match_df", pd.DataFrame())
-    phase_df = getattr(analyzer, "phase_df", pd.DataFrame())
-    raw_rules = analyzer.format_rules if isinstance(analyzer.format_rules, dict) else {}
-    tactical = raw_rules.get("tactical_thresholds", {})
-    context: MatchContext = {}
-    if isinstance(match_df, pd.DataFrame):
-        context["match_df"] = match_df
-        if "start_date" in match_df.columns and not match_df.empty:
-            dates = pd.to_datetime(match_df["start_date"], errors="coerce")
-            max_date = dates.max()
-            if pd.notna(max_date):
-                context["reference_date"] = pd.Timestamp(max_date).floor("D")
-    if isinstance(phase_df, pd.DataFrame):
-        context["phase_df"] = phase_df
-    if isinstance(tactical, dict):
-        normalized: Dict[str, int] = {}
-        for key, value in tactical.items():
-            try:
-                normalized[str(key)] = int(value)
-            except (TypeError, ValueError):
-                continue
-        context["tactical_thresholds"] = normalized
-    params["match_context"] = context
+    params["match_context"] = _resolve_team_engine_context(analyzer)
     return params
 
 
-def _inject_player_engine_context(
+def _resolve_player_engine_context(
     analyzer: AnalyzerProtocol,
-    engine_class_name: str,
     engine_method_name: str,
     call_params: EngineCallParams,
 ) -> EngineCallParams:
-    if engine_class_name != "PlayerEngine":
-        return call_params
-
     params = cast(EngineCallParams, dict(call_params))
     method = engine_method_name
 
@@ -245,11 +246,7 @@ def _inject_player_engine_context(
         if country is None:
             raw_country = params.get("country_name")
             country = str(raw_country).strip() if raw_country else None
-        if (
-            country
-            and not raw_balls_df.empty
-            and "match_id" in raw_balls_df.columns
-        ):
+        if country and not raw_balls_df.empty and "match_id" in raw_balls_df.columns:
             dal = getattr(analyzer, "dal", None)
             if dal is not None:
                 try:
@@ -260,7 +257,7 @@ def _inject_player_engine_context(
                             raw_balls_df["match_id"].astype(str).isin(valid_ids)
                         ].copy()
                 except Exception:
-                    pass  # country column absent from matches table — skip filter
+                    pass
         params["country"] = country
         params["ground"] = params.get("ground") or params.get("venue_id")
         params["raw_balls_df"] = raw_balls_df
@@ -269,7 +266,21 @@ def _inject_player_engine_context(
 
     if method == "get_player_profile":
         player_name = str(params.get("player_name") or params.get("name") or "").strip()
-        params["raw_balls_df"] = _build_recent_player_context(analyzer, [player_name], params.get("years"))
+        params["raw_balls_df"] = _build_recent_player_context(
+            analyzer, [player_name], params.get("years")
+        )
         return params
 
     return params
+
+
+def _inject_player_engine_context(
+    analyzer: AnalyzerProtocol,
+    engine_class_name: str,
+    engine_method_name: str,
+    call_params: EngineCallParams,
+) -> EngineCallParams:
+    if engine_class_name != "PlayerEngine":
+        return call_params
+
+    return _resolve_player_engine_context(analyzer, engine_method_name, call_params)

@@ -7,8 +7,13 @@ from calendar import monthrange
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
+from typing import Literal
 
 from cockpit.database import CockpitStore, get_supported_cockpit_formats, init_db
+from cockpit.manifest import (
+    HISTORY_PROFIT_FACTOR_CAUTIOUS_THRESHOLD,
+    HISTORY_PROFIT_FACTOR_ELITE_THRESHOLD,
+)
 from cockpit.models import Trade
 from cockpit.services._constants import (
     DEFAULT_HISTORY_STATUSES as _DEFAULT_HISTORY_STATUSES,
@@ -20,6 +25,7 @@ from cockpit.services._constants import (
 )
 
 HistoryDateRange = str
+HistoryProfitFactorTier = Literal["elite", "caution", "danger"]
 
 _SUPPORTED_FORMATS: tuple[str, ...] = get_supported_cockpit_formats()
 _FORMAT_LABELS: dict[str, str] = {
@@ -37,6 +43,8 @@ class HistoryQuery:
     date_range: HistoryDateRange = "all"
     date_from: date | None = None
     date_to: date | None = None
+    limit: int = 10
+    offset: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +52,12 @@ class HistoryTradeRow:
     trade: Trade
     format_key: str
     format_label: str
+
+
+@dataclass(frozen=True, slots=True)
+class HistoryTradesPage:
+    trades: list[HistoryTradeRow]
+    total_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -57,6 +71,13 @@ class HistorySummary:
     total_volume_wagered: float
     positive_trades: int
     negative_trades: int
+    gross_profit: float
+    gross_loss: float
+    profit_factor: float | None
+    profit_factor_tier: HistoryProfitFactorTier
+    hit_rate: float | None
+    avg_win: float | None
+    avg_loss: float | None
     earliest_match_date: datetime | None
     latest_match_date: datetime | None
 
@@ -201,6 +222,65 @@ def _history_sort_key(row: HistoryTradeRow) -> tuple[datetime, datetime, int]:
     return primary, updated, trade_id
 
 
+def _build_profit_factor_tier(
+    profit_factor: float | None,
+    gross_profit: float,
+    gross_loss: float,
+) -> HistoryProfitFactorTier:
+    if gross_loss == 0 and gross_profit > 0:
+        return "elite"
+    if profit_factor is None:
+        return "caution"
+    if profit_factor > HISTORY_PROFIT_FACTOR_ELITE_THRESHOLD:
+        return "elite"
+    if profit_factor >= HISTORY_PROFIT_FACTOR_CAUTIOUS_THRESHOLD:
+        return "caution"
+    return "danger"
+
+
+def _build_history_profit_metrics(
+    settled_rows: Sequence[HistoryTradeRow],
+) -> tuple[float, float, float | None, HistoryProfitFactorTier, float | None, float | None, float | None]:
+    settled_count = len(settled_rows)
+    positive_trades = [
+        row
+        for row in settled_rows
+        if (row.trade.actual_profit or 0.0) > 0
+    ]
+    negative_trades = [
+        row
+        for row in settled_rows
+        if (row.trade.actual_profit or 0.0) < 0
+    ]
+    gross_profit = round(
+        sum(max(float(row.trade.actual_profit or 0.0), 0.0) for row in settled_rows),
+        2,
+    )
+    gross_loss = round(
+        sum(abs(min(float(row.trade.actual_profit or 0.0), 0.0)) for row in settled_rows),
+        2,
+    )
+
+    if gross_loss > 0:
+        profit_factor: float | None = round(gross_profit / gross_loss, 2)
+    else:
+        profit_factor = None
+
+    hit_rate = round((len(positive_trades) / settled_count) * 100, 2) if settled_count > 0 else None
+    avg_win = round(gross_profit / len(positive_trades), 2) if positive_trades else None
+    avg_loss = round(gross_loss / len(negative_trades), 2) if negative_trades else None
+
+    return (
+        gross_profit,
+        gross_loss,
+        profit_factor,
+        _build_profit_factor_tier(profit_factor, gross_profit, gross_loss),
+        hit_rate,
+        avg_win,
+        avg_loss,
+    )
+
+
 def _load_trades_for_format(
     format_key: str,
     *,
@@ -219,7 +299,7 @@ def _load_trades_for_format(
         store.close()
 
 
-def list_history_trades(query: HistoryQuery) -> list[HistoryTradeRow]:
+def load_history_trade_rows(query: HistoryQuery) -> list[HistoryTradeRow]:
     statuses = _normalize_statuses(query.statuses)
     start_date, end_date = resolve_history_date_bounds(query)
     rows: list[HistoryTradeRow] = []
@@ -245,19 +325,18 @@ def list_history_trades(query: HistoryQuery) -> list[HistoryTradeRow]:
     return rows
 
 
+def list_history_trades(query: HistoryQuery) -> HistoryTradesPage:
+    rows = load_history_trade_rows(query)
+    return HistoryTradesPage(
+        trades=rows[query.offset:query.offset + query.limit],
+        total_count=len(rows),
+    )
+
+
 def build_history_summary(query: HistoryQuery, rows: Sequence[HistoryTradeRow]) -> HistorySummary:
     format_keys = resolve_history_formats(query)
     settled_rows = [row for row in rows if row.trade.status == STATUS_SETTLED]
-    positive_trades = [
-        row
-        for row in settled_rows
-        if (row.trade.actual_profit or 0.0) > 0
-    ]
-    negative_trades = [
-        row
-        for row in settled_rows
-        if (row.trade.actual_profit or 0.0) < 0
-    ]
+    gross_profit, gross_loss, profit_factor, profit_factor_tier, hit_rate, avg_win, avg_loss = _build_history_profit_metrics(settled_rows)
     total_realized_pnl = round(
         sum(float(row.trade.actual_profit or 0.0) for row in settled_rows),
         2,
@@ -284,8 +363,15 @@ def build_history_summary(query: HistoryQuery, rows: Sequence[HistoryTradeRow]) 
         settled_trade_count=len(settled_rows),
         total_realized_pnl=total_realized_pnl,
         total_volume_wagered=total_volume_wagered,
-        positive_trades=len(positive_trades),
-        negative_trades=len(negative_trades),
+        positive_trades=sum(1 for row in settled_rows if (row.trade.actual_profit or 0.0) > 0),
+        negative_trades=sum(1 for row in settled_rows if (row.trade.actual_profit or 0.0) < 0),
+        gross_profit=gross_profit,
+        gross_loss=gross_loss,
+        profit_factor=profit_factor,
+        profit_factor_tier=profit_factor_tier,
+        hit_rate=hit_rate,
+        avg_win=avg_win,
+        avg_loss=avg_loss,
         earliest_match_date=min(match_dates) if match_dates else None,
         latest_match_date=max(match_dates) if match_dates else None,
     )

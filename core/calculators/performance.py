@@ -9,6 +9,7 @@ import pandas as pd
 
 from core.interfaces.team_types import TeamMetricsPayload
 from core.services.match_filter_service import MatchFilterService
+from core.utils.display_math import avg_with_count
 
 _COL_IS_DEFENDED: str = (
     "is_legal_ball".split("_", 1)[0]
@@ -20,19 +21,6 @@ _COL_IS_CHASED: str = (
     + "_"
     + "high_chased".split("_", 1)[1]
 )
-
-
-def _get_avg_with_count(df: pd.DataFrame, col: str) -> str:
-    """Return match-level average as `Avg [Count]`."""
-    if df.empty or col not in df.columns:
-        return "-"
-
-    match_scores = df.groupby("match_id")[col].first()
-    val = match_scores.mean()
-    if pd.isna(val) or val == 0:
-        return "-"
-
-    return f"{int(val)} [{len(match_scores)}]"
 
 
 def _safe_series_extreme(
@@ -77,13 +65,13 @@ def calculate_team_metrics(
     smart_bat2 = bat2[mask_competitive]
 
     return {
-        "avg_1st": _get_avg_with_count(bat1, "score_inn1"),
+        "avg_1st": avg_with_count(bat1, "score_inn1"),
         "high_1st": _safe_series_extreme(bat1["score_inn1"], np.max),
         "low_1st": _safe_series_extreme(bat1["score_inn1"], np.min),
-        "avg_1st_win": _get_avg_with_count(w1, "score_inn1"),
+        "avg_1st_win": avg_with_count(w1, "score_inn1"),
         "low_defended": _safe_series_extreme(w1["score_inn1"], np.min),
-        "avg_2nd": _get_avg_with_count(smart_bat2, "score_inn2"),
+        "avg_2nd": avg_with_count(smart_bat2, "score_inn2"),
         "high_chased": _safe_series_extreme(w2["score_inn2"], np.max),
-        "avg_succ": _get_avg_with_count(w2, "score_inn2"),
-        "avg_fail": _get_avg_with_count(l2, "score_inn2"),
+        "avg_succ": avg_with_count(w2, "score_inn2"),
+        "avg_fail": avg_with_count(l2, "score_inn2"),
     }

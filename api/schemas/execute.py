@@ -34,7 +34,21 @@ class ExecuteRequest(BaseModel):
     """Generic request to execute any manifest-declared function."""
     model_config = ConfigDict(extra="forbid")
     params: EngineParams = Field(
-        default_factory=EngineParams,
+        default_factory=lambda: EngineParams(
+            venue=None,
+            team_a=None,
+            team_b=None,
+            country_name=None,
+            years=5,
+            region="All",
+            home_xi=None,
+            away_xi=None,
+            player_name=None,
+            match_limit=None,
+            match_time=None,
+            toss_result=None,
+            pitch_report=None,
+        ),
         description="Parameters to pass to the engine method. Keys match the manifest context fields.",
     )
 

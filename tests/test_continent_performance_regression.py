@@ -1,6 +1,6 @@
 import pandas as pd
 
-from formats.odi.engines.team_engine import TeamEngine
+from formats.odi.engines.team import TeamEngine
 
 
 def _make_engine_with_df(df: pd.DataFrame) -> TeamEngine:

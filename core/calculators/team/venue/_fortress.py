@@ -20,6 +20,13 @@ from core.calculators.team.venue._base import (
     _venue_window,
 )
 from core.services.match_filter_service import MatchFilterService
+# Layer purity confirmed: no service-layer imports are required here.
+
+
+# ── Service/config facades ────────────────────────────────────────────────────
+
+def _no_result_mask(df: pd.DataFrame) -> pd.Series:
+    return MatchFilterService.get_excluded_no_result_mask(df)
 
 
 def calculate_home_fortress_payload(match_df: pd.DataFrame, context: HomeFortressContext) -> ComparisonRowsPayload:
@@ -98,9 +105,7 @@ def calculate_home_fortress_structured_payload(
     clean_df = _apply_filters(rivalry_df, context["min_balls_for_completed_innings"])
     if clean_df.empty:
         return cast(HomeFortressStructuredPayload, {"payload": {}})
-    summary_df = clean_df[
-        ~MatchFilterService.get_excluded_no_result_mask(clean_df)
-    ].copy()
+    summary_df = clean_df[~_no_result_mask(clean_df)].copy()
     if summary_df.empty:
         return cast(HomeFortressStructuredPayload, {"payload": {}})
     low_sample_min_matches = cast(int, context.get("low_sample_min_matches", 0))

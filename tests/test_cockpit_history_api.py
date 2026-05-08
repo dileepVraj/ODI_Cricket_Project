@@ -70,6 +70,7 @@ def _create_active_trade(
     favourite_team: str,
     home_ground: str,
     stadium: str,
+    is_win: bool = True,
 ) -> int:
     payload = {
         "season": season,
@@ -106,10 +107,14 @@ def _create_active_trade(
     )
     assert bet_response.status_code == 201
 
+    winning_team = team_1 if favourite_team == team_1 else team_2
+    losing_team = team_2 if favourite_team == team_1 else team_1
+    winner = winning_team if is_win else losing_team
+
     settle_response = client.post(
         f"/api/cockpit/trades/{trade['id']}/settle?format={format_key}",
         json={
-            "winner": "team_1" if favourite_team == team_1 else "team_2",
+            "winner": "team_1" if winner == team_1 else "team_2",
             "sentiment": "achieved",
             "fav_sub_30_loss": False,
             "targeted_pnl": 10.0,
@@ -202,6 +207,40 @@ def test_history_all_formats_merges_rows_and_keeps_format_metadata(
     assert {row["format_label"] for row in rows} == {"IPL", "ODI"}
 
 
+def test_history_pagination_returns_total_count_and_page_slice(
+    history_client: TestClient,
+) -> None:
+    today = datetime.now(timezone.utc).date()
+    created_trade_ids: list[int] = []
+
+    for index in range(12):
+        match_date = datetime.combine(today - timedelta(days=index), datetime.min.time(), tzinfo=timezone.utc)
+        created_trade_ids.append(
+            _create_active_trade(
+                history_client,
+                format_key="ipl",
+                season=2026,
+                match_date=match_date,
+                team_1=f"MI{index}",
+                team_2=f"CSK{index}",
+                favourite_team=f"MI{index}",
+                home_ground="FAV",
+                stadium="WANKHEDE",
+            )
+        )
+
+    response = history_client.get(
+        "/api/cockpit/history/trades?format_scope=single&format=ipl&date_range=15d&page=2&page_size=10"
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["total_count"] == 12
+    assert payload["page"] == 2
+    assert payload["page_size"] == 10
+    assert [row["id"] for row in payload["trades"]] == created_trade_ids[10:12]
+    assert len(payload["trades"]) == 2
+
+
 def test_history_supports_arbitrary_day_windows(history_client: TestClient) -> None:
     today = datetime.now(timezone.utc).date()
     in_range_match_date = datetime.combine(today - timedelta(days=2), datetime.min.time(), tzinfo=timezone.utc)
@@ -275,7 +314,7 @@ def test_history_summary_uses_the_same_filters(history_client: TestClient) -> No
     first_match_date = datetime.combine(today - timedelta(days=3), datetime.min.time(), tzinfo=timezone.utc)
     second_match_date = datetime.combine(today - timedelta(days=1), datetime.min.time(), tzinfo=timezone.utc)
 
-    _create_active_trade(
+    _winning_trade_id = _create_active_trade(
         history_client,
         format_key="ipl",
         season=2026,
@@ -286,7 +325,7 @@ def test_history_summary_uses_the_same_filters(history_client: TestClient) -> No
         home_ground="FAV",
         stadium="WANKHEDE",
     )
-    _create_active_trade(
+    _losing_trade_id = _create_active_trade(
         history_client,
         format_key="odi",
         season=2026,
@@ -296,6 +335,7 @@ def test_history_summary_uses_the_same_filters(history_client: TestClient) -> No
         favourite_team="IND",
         home_ground="FAV",
         stadium="WANKHEDE",
+        is_win=False,
     )
 
     response = history_client.get("/api/cockpit/history/summary?format_scope=all&date_range=7d")
@@ -306,10 +346,22 @@ def test_history_summary_uses_the_same_filters(history_client: TestClient) -> No
     assert payload["format_keys"] == ["ipl", "odi"]
     assert payload["trade_count"] == 2
     assert payload["settled_trade_count"] == 2
-    assert payload["positive_trades"] == 2
-    assert payload["negative_trades"] == 0
-    assert payload["total_realized_pnl"] > 0
+    assert payload["positive_trades"] == 1
+    assert payload["negative_trades"] == 1
     assert payload["total_volume_wagered"] > 0
+    assert payload["gross_profit"] > 0
+    assert payload["gross_loss"] > 0
+    assert payload["profit_factor"] == round(payload["gross_profit"] / payload["gross_loss"], 2)
+    assert payload["profit_factor_tier"] in {"elite", "caution", "danger"}
+    if payload["profit_factor"] > 1.5:
+        assert payload["profit_factor_tier"] == "elite"
+    elif payload["profit_factor"] >= 1.0:
+        assert payload["profit_factor_tier"] == "caution"
+    else:
+        assert payload["profit_factor_tier"] == "danger"
+    assert payload["hit_rate"] == 50.0
+    assert payload["avg_win"] == payload["gross_profit"]
+    assert payload["avg_loss"] == payload["gross_loss"]
 
 
 def test_history_custom_date_range_rejects_missing_bounds(history_client: TestClient) -> None:

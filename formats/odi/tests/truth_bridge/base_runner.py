@@ -27,7 +27,7 @@ class TruthBridgeBase:
 
         # Load Ground Truth
         if not os.path.exists(self.truth_file):
-            self.ground_truth = {self.suite_name: {"Details": {}, "Stats": {}}}
+            self.ground_truth: Dict[str, Any] = {self.suite_name: {"Details": {}, "Stats": {}}}
         else:
             with open(self.truth_file, "r", encoding="utf-8") as f:
                 self.ground_truth = json.load(f)

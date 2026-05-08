@@ -1,6 +1,6 @@
 """Unit tests for enriched venue bias calculator helpers."""
 import pandas as pd
-from core.calculators.team.venue_calculator import (
+from core.calculators.team.venue._bias import (
     _wilson_confidence_interval,
     _sample_reliability,
     _score_stats,
@@ -246,7 +246,7 @@ def _make_full_df() -> pd.DataFrame:
 
 
 def test_full_bias_report_has_enriched_fields():
-    from core.calculators.team.venue_calculator import calculate_venue_bias_payload
+    from core.calculators.team.venue import calculate_venue_bias_payload
 
     df = _make_full_df()
     ctx = {

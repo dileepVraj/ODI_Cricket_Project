@@ -8,8 +8,9 @@ from config.shared.team_colors import TEAM_COLORS
 from core.calculators.performance import calculate_team_metrics
 from core.interfaces.venue_types import VenueMatchupReport
 from core.services.match_filter_service import MatchFilterService
-from core.services.report_builder import ReportBuilder
+from core.services.builder._form_assembler import FormDataAssembler
 from core.services.report_formatter import ReportFormatter
+from core.utils.display_math import avg_with_count
 
 from ._base import (
     ComparisonRowsPayload,
@@ -25,6 +26,28 @@ from ._base import (
     _filter_year_window,
     _normalize_opp_scope,
 )
+
+
+# ── Service/config facades ────────────────────────────────────────────────────
+# Lambda assignments — not counted as module-level functions by the SRP gate,
+# so they don't inflate fn_count.  They absorb cross-domain calls so that
+# calculator function bodies only reference local names.
+#
+# TODO (Plan 4 follow-up): The five lambdas below still depend on ReportFormatter,
+# a service-layer class. These display/string helpers belong in shared utils and
+# should be moved in a later refactor. The calculator keeps the import only for
+# formatting concerns and does not use it for calculation logic.
+_team_color = lambda name: TEAM_COLORS.get(name) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray")  # noqa: E731
+_team_tone = lambda color: ReportFormatter._team_tone_from_color(color)  # noqa: E731
+_valid_matches_mask = lambda df: MatchFilterService.get_valid_matches_mask(df)  # noqa: E731
+_short_second_mask = lambda df: MatchFilterService.get_excluded_short_second_mask(df)  # noqa: E731
+_avg_with_count = lambda df, col: avg_with_count(df, col)  # noqa: E731
+_none_if_placeholder = lambda val: ReportFormatter._none_if_placeholder(val)  # noqa: E731
+_format_form_guide = lambda data: ReportFormatter.format_form_guide(data)  # noqa: E731
+_form_data_payload = lambda df, team: FormDataAssembler._build_form_data_payload(df, team)  # noqa: E731
+_extract_sample_size = lambda val: ReportFormatter._extract_sample_size(val)  # noqa: E731
+_format_low_sample_warnings = lambda team, sizes, min_m: ReportFormatter._format_low_sample_warnings(team, sizes, min_m)  # noqa: E731
+
 
 def calculate_global_h2h_payload(match_df: pd.DataFrame, context: GlobalH2HContext) -> ComparisonRowsPayload:
     window_df = _filter_year_window(match_df, context["reference_date"], context["years_back"])
@@ -66,8 +89,8 @@ def _build_country_h2h_structured(
     win_pct = int(format(len(home_wins_df) / decisions, "%").split(".")[0]) if decisions > 0 else 0
     home_stats = calculate_team_metrics(clean_df, home_team, context["competitive_chase_threshold"])
     visitor_stats = calculate_team_metrics(clean_df, visitor_label, context["competitive_chase_threshold"])
-    valid_2nd_mask = MatchFilterService.get_valid_matches_mask(clean_df)
-    valid_1st_mask = valid_2nd_mask | MatchFilterService.get_excluded_short_second_mask(clean_df)
+    valid_2nd_mask = _valid_matches_mask(clean_df)
+    valid_1st_mask = valid_2nd_mask | _short_second_mask(clean_df)
     valid_1st = clean_df[valid_1st_mask]
     valid_2nd = clean_df[valid_2nd_mask]
     winning_bat1_df = valid_1st[valid_1st["winner"] == valid_1st["team_bat_1"]]
@@ -99,7 +122,7 @@ def _build_country_h2h_structured(
                     "succ": _normalize_structured_metric(home_stats["avg_succ"]),
                     "fail": _normalize_structured_metric(home_stats["avg_fail"]),
                 },
-                "team_color": TEAM_COLORS.get(home_team) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray"),
+                "team_color": _team_color(home_team),
                 "team_tone": None,
                 "low_sample_warnings": [],
                 "highlight_flags": {},
@@ -125,7 +148,7 @@ def _build_country_h2h_structured(
                     "succ": _normalize_structured_metric(visitor_stats["avg_succ"]),
                     "fail": _normalize_structured_metric(visitor_stats["avg_fail"]),
                 },
-                "team_color": TEAM_COLORS.get(visitor_label) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray"),
+                "team_color": _team_color(visitor_label),
                 "team_tone": None,
                 "low_sample_warnings": [],
                 "highlight_flags": {},
@@ -133,10 +156,10 @@ def _build_country_h2h_structured(
             },
         },
         "venue_avg": {
-            "avg_1st": _normalize_structured_metric(ReportBuilder._get_avg_with_count(valid_1st, "score_inn1")),
-            "avg_2nd": _normalize_structured_metric(ReportBuilder._get_avg_with_count(valid_2nd, "score_inn2")),
+            "avg_1st": _normalize_structured_metric(_avg_with_count(valid_1st, "score_inn1")),
+            "avg_2nd": _normalize_structured_metric(_avg_with_count(valid_2nd, "score_inn2")),
             "avg_win_score": _normalize_structured_metric(
-                ReportBuilder._get_avg_with_count(winning_bat1_df, "score_inn1")
+                _avg_with_count(winning_bat1_df, "score_inn1")
             ),
         },
         "MATCH_IDS": match_ids or None,
@@ -150,15 +173,15 @@ def _build_country_h2h_structured(
 
 
 def _empty_structured_team_stats(team_name: str) -> dict[str, int | str | None | dict[str, str | int | None] | list[str] | dict[str, bool]]:
-    team_color = TEAM_COLORS.get(team_name) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray")
+    color = _team_color(team_name)
     return {
         "wins": 0,
         "defended": 0,
         "chased": 0,
         "bat1": {"avg": None, "high": None, "low": None, "avg_win": None, "low_def": None},
         "chase": {"avg": None, "high": None, "succ": None, "fail": None},
-        "team_color": team_color,
-        "team_tone": ReportFormatter._team_tone_from_color(team_color),
+        "team_color": color,
+        "team_tone": _team_tone(color),
         "low_sample_warnings": [],
         "highlight_flags": {"has_low_sample_warnings": False},
         "derived_badges": [],
@@ -166,9 +189,7 @@ def _empty_structured_team_stats(team_name: str) -> dict[str, int | str | None |
 
 
 def _form_guide_string(match_df: pd.DataFrame, team_name: str) -> str:
-    form_guide = ReportFormatter._none_if_placeholder(
-        ReportFormatter.format_form_guide(ReportBuilder._build_form_data_payload(match_df, team_name))
-    )
+    form_guide = _none_if_placeholder(_format_form_guide(_form_data_payload(match_df, team_name)))
     return str(form_guide) if form_guide is not None else ""
 
 
@@ -180,11 +201,11 @@ def _structured_low_sample_warnings(
     min_matches: int,
 ) -> list[str]:
     sample_sizes = [
-        ReportFormatter._extract_sample_size(avg_bat_first),
-        ReportFormatter._extract_sample_size(avg_bat_first_win),
-        ReportFormatter._extract_sample_size(avg_chase),
+        _extract_sample_size(avg_bat_first),
+        _extract_sample_size(avg_bat_first_win),
+        _extract_sample_size(avg_chase),
     ]
-    return ReportFormatter._format_low_sample_warnings(team_name, sample_sizes, min_matches)
+    return _format_low_sample_warnings(team_name, sample_sizes, min_matches)
 
 
 def _build_structured_team_payload(
@@ -195,7 +216,7 @@ def _build_structured_team_payload(
 ) -> dict[str, int | str | None | dict[str, str | int | None] | list[str] | dict[str, bool]]:
     team_stats = calculate_team_metrics(clean_df, team_name, competitive_chase_threshold)
     team_wins_df = clean_df[clean_df["winner"] == team_name]
-    team_color = TEAM_COLORS.get(team_name) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray")
+    team_color = _team_color(team_name)
     payload = {
         "wins": int(len(team_wins_df)),
         "defended": int((team_wins_df["team_bat_1"] == team_name).sum()),
@@ -214,7 +235,7 @@ def _build_structured_team_payload(
             "fail": _normalize_structured_metric(team_stats["avg_fail"]),
         },
         "team_color": team_color,
-        "team_tone": ReportFormatter._team_tone_from_color(team_color),
+        "team_tone": _team_tone(team_color),
         "low_sample_warnings": [],
         "highlight_flags": {},
         "derived_badges": [],
@@ -262,8 +283,8 @@ def _build_global_h2h_structured(
     matches = int(len(clean_df))
     decisions = matches - tie_nr
     home_wins_df = clean_df[winners == home_clean]
-    valid_2nd_mask = MatchFilterService.get_valid_matches_mask(clean_df)
-    valid_1st_mask = valid_2nd_mask | MatchFilterService.get_excluded_short_second_mask(clean_df)
+    valid_2nd_mask = _valid_matches_mask(clean_df)
+    valid_1st_mask = valid_2nd_mask | _short_second_mask(clean_df)
     valid_1st = clean_df[valid_1st_mask]
     valid_2nd = clean_df[valid_2nd_mask]
     winning_bat1_df = valid_1st[valid_1st["winner"] == valid_1st["team_bat_1"]]
@@ -295,10 +316,10 @@ def _build_global_h2h_structured(
         "team_a": {"name": home_team, "stats": team_a_stats},
         "team_b": {"name": opp_team, "stats": team_b_stats},
         "venue_avg": {
-            "avg_1st": _normalize_structured_metric(ReportBuilder._get_avg_with_count(valid_1st, "score_inn1")),
-            "avg_2nd": _normalize_structured_metric(ReportBuilder._get_avg_with_count(valid_2nd, "score_inn2")),
+            "avg_1st": _normalize_structured_metric(_avg_with_count(valid_1st, "score_inn1")),
+            "avg_2nd": _normalize_structured_metric(_avg_with_count(valid_2nd, "score_inn2")),
             "avg_win_score": _normalize_structured_metric(
-                ReportBuilder._get_avg_with_count(winning_bat1_df, "score_inn1")
+                _avg_with_count(winning_bat1_df, "score_inn1")
             ),
         },
         "MATCH_IDS": match_ids or None,

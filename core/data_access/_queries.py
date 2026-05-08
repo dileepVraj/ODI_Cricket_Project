@@ -67,8 +67,8 @@ class DataAccess(DALConnection):
         match_ids: Optional[List[Any]] = None,
         limit: Optional[int] = None,
     ) -> pd.DataFrame:
-        conditions = []
-        params = []
+        conditions: list[str] = []
+        params: list[Any] = []
 
         if team_a:
             append_matches_team_filter(conditions, params, team_a)
@@ -116,8 +116,8 @@ class DataAccess(DALConnection):
         years_back: Optional[int] = None,
         limit: Optional[int] = None,
     ) -> pd.DataFrame:
-        conditions = []
-        params = []
+        conditions: list[str] = []
+        params: list[Any] = []
 
         if match_ids:
             placeholders = ",".join(["?"] * len(match_ids))
@@ -168,8 +168,8 @@ class DataAccess(DALConnection):
         return self.con.execute(query, params).df()
 
     def get_venue_summary(self, venue_id: str, years_back: Optional[int] = None) -> pd.DataFrame:
-        conditions = []
-        params = []
+        conditions: list[str] = []
+        params: list[Any] = []
 
         append_matches_venue_filter(conditions, params, venue_id, self.match_cols)
 
@@ -199,8 +199,8 @@ class DataAccess(DALConnection):
         venue_id: Optional[str] = None,
         years_back: Optional[int] = None,
     ) -> pd.DataFrame:
-        conditions = []
-        params = []
+        conditions: list[str] = []
+        params: list[Any] = []
         append_matches_team_filter(conditions, params, team_a)
         append_matches_team_filter(conditions, params, team_b)
 
@@ -260,8 +260,8 @@ class DataAccess(DALConnection):
         return pd.concat([batting, bowling], ignore_index=True)
 
     def get_venue_phase_stats(self, venue: str, innings: Optional[int] = None) -> pd.DataFrame:
-        conditions = []
-        params = []
+        conditions: list[str] = []
+        params: list[Any] = []
         append_balls_venue_filter(conditions, params, venue, self.ball_cols)
         if innings:
             conditions.append("innings = ?")
@@ -313,8 +313,8 @@ class DataAccess(DALConnection):
         return pd.concat(results, ignore_index=True) if results else pd.DataFrame()
 
     def get_team_form(self, team_name: str, limit: int = 10, opponent: Optional[str] = None) -> pd.DataFrame:
-        conditions = []
-        params = []
+        conditions: list[str] = []
+        params: list[Any] = []
         append_matches_team_filter(conditions, params, team_name)
 
         if opponent:
@@ -405,8 +405,14 @@ class DataAccess(DALConnection):
         ).df()
 
     def get_db_stats(self) -> Dict[str, int]:
-        balls = self.con.execute("SELECT COUNT(*) FROM balls").fetchone()[0]
-        matches = self.con.execute("SELECT COUNT(*) FROM matches").fetchone()[0]
+        balls_row = self.con.execute("SELECT COUNT(*) FROM balls").fetchone()
+        matches_row = self.con.execute("SELECT COUNT(*) FROM matches").fetchone()
+
+        assert balls_row is not None
+        assert matches_row is not None
+
+        balls = int(balls_row[0])
+        matches = int(matches_row[0])
         return {"balls": balls, "matches": matches}
 
     def get_latest_match_date(self) -> Optional[pd.Timestamp]:
@@ -419,7 +425,10 @@ class DataAccess(DALConnection):
             """
         ).fetchone()
 
-        if not row or row[0] is None:
+        if row is None:
+            return None
+
+        if row[0] is None:
             return None
 
         try:

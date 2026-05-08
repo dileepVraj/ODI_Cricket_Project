@@ -11,7 +11,7 @@ import os
 import sys
 import logging
 import importlib
-from typing import Dict
+from typing import Any, Dict, Optional
 
 # Add project root to path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,7 +35,7 @@ class FormatAnalyzer:
     Format-aware analyzer facade that satisfies AnalyzerProtocol.
     Wires together individual strategy engines with pre-loaded data.
     """
-    def __init__(self, format_type: str, format_rules: dict):
+    def __init__(self, format_type: str, format_rules: dict[str, Any]):
         self.format_type = format_type
         self.format_rules = format_rules
         
@@ -146,7 +146,7 @@ _engine_pool: Dict[str, object] = {}
 _active_formats: Dict[str, dict] = {}
 
 
-def initialize_pool(formats: list = None):
+def initialize_pool(formats: Optional[list[str]] = None):
     """
     Initialize CricketAnalyzer instances for the specified formats.
     Only formats WITH a valid manifest are loaded.
@@ -173,14 +173,23 @@ def initialize_pool(formats: list = None):
     for fmt_key in formats:
         try:
             logger.info(f"   Loading {fmt_key.upper()}...")
-            format_rules = {}
+            try:
+                get_format_config(fmt_key)
+            except (AttributeError, ImportError):
+                logger.info(f"   Skipping '{fmt_key}' - no format config found")
+                continue
+
+            format_rules: dict[str, Any] = {}
             try:
                 manifest_module = importlib.import_module(f"{FORMATS[fmt_key]['module']}.manifest")
                 format_rules = getattr(manifest_module, "FORMAT_RULES", {}) or {}
             except (ImportError, KeyError, AttributeError):
                 format_rules = {}
 
-            analyzer = FormatAnalyzer(format_type=fmt_key, format_rules=format_rules)
+            analyzer = FormatAnalyzer(
+                format_type=fmt_key,
+                format_rules=format_rules,
+            )
 
             _engine_pool[fmt_key] = analyzer
             _active_formats[fmt_key] = {

@@ -1,4 +1,4 @@
-from typing import Dict, List, Mapping, Optional, Sequence, Union
+from typing import Dict, List, Mapping, Optional, Sequence, Union, cast
 
 import numpy as np
 import pandas as pd
@@ -31,7 +31,7 @@ class MatchupEngine:
     ) -> int:
         raw_value = (thresholds or {}).get(key, default)
         try:
-            return int(raw_value)
+            return int(cast(str | int | float, raw_value))
         except (TypeError, ValueError):
             return default
 
@@ -89,7 +89,7 @@ class MatchupEngine:
             return []
 
         role_map = player_roles if isinstance(player_roles, dict) else {}
-        default_role = self._default_player_role(self.rules.get("default_player_role"))
+        default_role = self._default_player_role(cast(str | None, self.rules.get("default_player_role")))
         players_df = pd.DataFrame({"player_name": players.astype(str)}).drop_duplicates()
         players_df["player_role"] = players_df["player_name"].map(role_map).fillna(default_role)
         styles_df = pd.DataFrame({"style_key": styles.astype(str)})
@@ -243,7 +243,7 @@ class MatchupEngine:
         grouped["sr"] = np.trunc(grouped["sr"]).astype(int)
 
         role_map = player_roles if isinstance(player_roles, dict) else {}
-        default_role = self._default_player_role(self.rules.get("default_player_role"))
+        default_role = self._default_player_role(cast(str | None, self.rules.get("default_player_role")))
         players_df = pd.DataFrame({"player_name": players_series.astype(str)}).drop_duplicates()
         players_df["player_role"] = players_df["player_name"].map(role_map).fillna(default_role)
         styles_df = pd.DataFrame({"style_key": style_order.astype(str)})

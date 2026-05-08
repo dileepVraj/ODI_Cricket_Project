@@ -27,15 +27,12 @@ class VenueService:
 
         aliases = get_venue_aliases(venue_identifier)
 
-        def _norm_token(value: str) -> str:
-            return "".join(ch for ch in str(value).lower() if ch.isalnum())
-
         search_terms = {
             str(x).lower().strip()
             for x in (aliases + [venue_identifier])
             if x is not None and str(x).strip()
         }
-        search_norm = {_norm_token(x) for x in search_terms if x}
+        search_norm = {"".join(ch for ch in x if ch.isalnum()) for x in search_terms if x}
 
         mask = pd.Series(False, index=df.index)
         if "venue" in df.columns:

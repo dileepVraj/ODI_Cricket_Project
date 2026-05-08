@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple, cast
 
 import pandas as pd
 
@@ -21,18 +21,25 @@ def _safe_remove(path: str) -> None:
         os.remove(path)
 
 
+def _fetchone_count(con: duckdb.DuckDBPyConnection, query: str) -> int:
+    row = con.execute(query).fetchone()
+    assert row is not None
+    return int(row[0])
+
+
 def _backfill_match_venue_ids(con: duckdb.DuckDBPyConnection) -> Tuple[int, int]:
     """
     Backfill missing matches.venue_id values using deterministic venue resolver.
     Returns (fixed_rows, remaining_null_rows).
     """
-    before_null = con.execute(
+    before_null = _fetchone_count(
+        con,
         """
         SELECT COUNT(*)
         FROM matches
         WHERE venue_id IS NULL OR TRIM(CAST(venue_id AS VARCHAR)) = ''
-        """
-    ).fetchone()[0]
+        """,
+    )
 
     if before_null == 0:
         print("   Venue ID Backfill: already complete (0 NULL rows).")
@@ -66,13 +73,14 @@ def _backfill_match_venue_ids(con: duckdb.DuckDBPyConnection) -> Tuple[int, int]
         )
         con.unregister("resolved_venue_map")
 
-    after_null = con.execute(
+    after_null = _fetchone_count(
+        con,
         """
         SELECT COUNT(*)
         FROM matches
         WHERE venue_id IS NULL OR TRIM(CAST(venue_id AS VARCHAR)) = ''
-        """
-    ).fetchone()[0]
+        """,
+    )
 
     fixed = int(before_null - after_null)
     print(f"   Venue ID Backfill: fixed {fixed} rows, remaining NULL rows: {after_null}")
@@ -151,16 +159,16 @@ def _validate_integrity(
     *,
     max_unresolved_venue_ratio: float,
 ) -> Dict[str, Any]:
-    balls_count = int(con.execute("SELECT COUNT(*) FROM balls").fetchone()[0])
-    matches_count = int(con.execute("SELECT COUNT(*) FROM matches").fetchone()[0])
+    balls_count = _fetchone_count(con, "SELECT COUNT(*) FROM balls")
+    matches_count = _fetchone_count(con, "SELECT COUNT(*) FROM matches")
 
     if balls_count == 0:
         raise DataIntegrityError("balls table is empty after ingestion.")
     if matches_count == 0:
         raise DataIntegrityError("matches table is empty after ingestion.")
 
-    distinct_matches_balls = int(con.execute("SELECT COUNT(DISTINCT match_id) FROM balls").fetchone()[0])
-    distinct_matches_matches = int(con.execute("SELECT COUNT(DISTINCT match_id) FROM matches").fetchone()[0])
+    distinct_matches_balls = _fetchone_count(con, "SELECT COUNT(DISTINCT match_id) FROM balls")
+    distinct_matches_matches = _fetchone_count(con, "SELECT COUNT(DISTINCT match_id) FROM matches")
 
     if distinct_matches_balls != distinct_matches_matches:
         raise DataIntegrityError(
@@ -168,43 +176,40 @@ def _validate_integrity(
             f"balls={distinct_matches_balls}, matches={distinct_matches_matches}"
         )
 
-    orphan_in_matches = int(
-        con.execute(
-            """
-            SELECT COUNT(*)
-            FROM matches m
-            LEFT JOIN balls b ON b.match_id = m.match_id
-            WHERE b.match_id IS NULL
-            """
-        ).fetchone()[0]
+    orphan_in_matches = _fetchone_count(
+        con,
+        """
+        SELECT COUNT(*)
+        FROM matches m
+        LEFT JOIN balls b ON b.match_id = m.match_id
+        WHERE b.match_id IS NULL
+        """,
     )
     if orphan_in_matches > 0:
         raise DataIntegrityError(f"Found {orphan_in_matches} match rows without any deliveries in balls.")
 
-    orphan_in_balls = int(
-        con.execute(
-            """
-            SELECT COUNT(*)
-            FROM (
-                SELECT DISTINCT b.match_id
-                FROM balls b
-                LEFT JOIN matches m ON m.match_id = b.match_id
-                WHERE m.match_id IS NULL
-            ) q
-            """
-        ).fetchone()[0]
+    orphan_in_balls = _fetchone_count(
+        con,
+        """
+        SELECT COUNT(*)
+        FROM (
+            SELECT DISTINCT b.match_id
+            FROM balls b
+            LEFT JOIN matches m ON m.match_id = b.match_id
+            WHERE m.match_id IS NULL
+        ) q
+        """,
     )
     if orphan_in_balls > 0:
         raise DataIntegrityError(f"Found {orphan_in_balls} ball match_ids missing from matches.")
 
-    null_delivery_keys = int(
-        con.execute(
-            """
-            SELECT COUNT(*)
-            FROM balls
-            WHERE over_num IS NULL OR ball_rank IS NULL
-            """
-        ).fetchone()[0]
+    null_delivery_keys = _fetchone_count(
+        con,
+        """
+        SELECT COUNT(*)
+        FROM balls
+        WHERE over_num IS NULL OR ball_rank IS NULL
+        """,
     )
     if null_delivery_keys > 0:
         raise DataIntegrityError(
@@ -212,18 +217,17 @@ def _validate_integrity(
             f"{null_delivery_keys}"
         )
 
-    duplicate_delivery_keys = int(
-        con.execute(
-            """
-            SELECT COUNT(*)
-            FROM (
-                SELECT match_id, innings, over_num, ball_rank, COUNT(*) AS c
-                FROM balls
-                GROUP BY match_id, innings, over_num, ball_rank
-                HAVING COUNT(*) > 1
-            ) d
-            """
-        ).fetchone()[0]
+    duplicate_delivery_keys = _fetchone_count(
+        con,
+        """
+        SELECT COUNT(*)
+        FROM (
+            SELECT match_id, innings, over_num, ball_rank, COUNT(*) AS c
+            FROM balls
+            GROUP BY match_id, innings, over_num, ball_rank
+            HAVING COUNT(*) > 1
+        ) d
+        """,
     )
     if duplicate_delivery_keys > 0:
         raise DataIntegrityError(
@@ -232,14 +236,13 @@ def _validate_integrity(
             f"{duplicate_delivery_keys}"
         )
 
-    unresolved_venue_rows = int(
-        con.execute(
-            """
-            SELECT COUNT(*)
-            FROM matches
-            WHERE venue_id IS NULL OR TRIM(CAST(venue_id AS VARCHAR)) = ''
-            """
-        ).fetchone()[0]
+    unresolved_venue_rows = _fetchone_count(
+        con,
+        """
+        SELECT COUNT(*)
+        FROM matches
+        WHERE venue_id IS NULL OR TRIM(CAST(venue_id AS VARCHAR)) = ''
+        """,
     )
     unresolved_ratio = (float(unresolved_venue_rows) / float(matches_count)) if matches_count else 1.0
     if unresolved_ratio > max_unresolved_venue_ratio:
@@ -248,15 +251,14 @@ def _validate_integrity(
             f"ratio={unresolved_ratio:.4f}, threshold={max_unresolved_venue_ratio:.4f}"
         )
 
-    suspicious_missing_inn2 = int(
-        con.execute(
-            """
-            SELECT COUNT(*)
-            FROM matches
-            WHERE (balls_inn2 IS NULL OR wickets_inn2 IS NULL)
-              AND lower(trim(coalesce(winner, ''))) NOT IN ('', 'none', 'nan', 'no result', 'abandoned')
-            """
-        ).fetchone()[0]
+    suspicious_missing_inn2 = _fetchone_count(
+        con,
+        """
+        SELECT COUNT(*)
+        FROM matches
+        WHERE (balls_inn2 IS NULL OR wickets_inn2 IS NULL)
+          AND lower(trim(coalesce(winner, ''))) NOT IN ('', 'none', 'nan', 'no result', 'abandoned')
+        """,
     )
     if suspicious_missing_inn2 > 0:
         raise DataIntegrityError(
@@ -430,7 +432,7 @@ def _atomic_swap(db_path: str, tmp_db_path: str, backup_db_path: str) -> None:
 
 
 def run_db_ingestion(
-    config: Dict[str, Any] = None,
+    config: Optional[Dict[str, Any]] = None,
     *,
     atomic_swap: bool = True,
 ) -> Dict[str, Any]:
@@ -443,7 +445,7 @@ def run_db_ingestion(
 
         config = ODI_FORMAT_CONFIG
 
-    cfg = config
+    cfg = cast(Dict[str, Any], config)
     db_path = cfg["db_file"]
     tmp_db_path = f"{db_path}.tmp"
     backup_db_path = f"{db_path}.prev"

@@ -5,10 +5,10 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)  # noqa: E402
 
-from core.match_pack.transformer import (  # noqa: E402
-    transform_h2h_report, transform_h2h_slim, transform_team_form, transform_dominance_matrix, transform_player_stats,
-)
-from core.match_pack.interpreter import MatchInterpreter  # noqa: E402
+from core.match_pack.transformers.h2h_transformer import transform_h2h_report, transform_h2h_slim  # noqa: E402
+from core.match_pack.transformers.team_transformer import transform_team_form, transform_dominance_matrix  # noqa: E402
+from core.match_pack.transformers.player_transformer import transform_player_stats  # noqa: E402
+from core.match_pack.interpreters import MatchInterpreter  # noqa: E402
 
 passed = 0
 failed = 0

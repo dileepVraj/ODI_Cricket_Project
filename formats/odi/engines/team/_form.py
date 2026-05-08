@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, cast
 
-from core.calculators.team.matchup_calculator import calculate_team_form_payload
+from core.calculators.team.matchup import calculate_team_form_payload
 from core.interfaces.team_types import RecorderPort, TeamFormRows, TeamMatchContext
 
 from ._base import TeamEngineBase

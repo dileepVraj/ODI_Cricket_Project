@@ -64,11 +64,12 @@ class PredictorEngine(IPredictorEngine):
 
     def _config_float(self, key: str) -> float:
         config = self._require_format_config()
-        if key not in config:
+        config_map = cast(dict[str, object], config)
+        if key not in config_map:
             raise ConfigurationError(
                 f"Missing predictor config '{key}' in format_config."
             )
-        return self._require_positive_number(config[key], key)
+        return self._require_positive_number(config_map[key], key)
 
     def calculate_smart_projection(
         self,

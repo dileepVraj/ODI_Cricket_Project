@@ -18,10 +18,11 @@ from api.schemas import (
     VenuesResponse,
 )
 from config.format_registry import get_format_manifest
+from config.settings import API_V1_PREFIX
 from config.shared.venues import VENUE_MAP, list_host_countries_from_venue_ids
 
 
-router = APIRouter()
+router = APIRouter(prefix=API_V1_PREFIX)
 
 
 @router.get("/{format_type}/context/teams", response_model=TeamsResponse, tags=["Context"])

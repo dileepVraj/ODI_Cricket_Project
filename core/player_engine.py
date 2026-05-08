@@ -24,7 +24,7 @@ def get_player_engine(format_key: str) -> Type[IPlayerEngine]:
             f"Unknown format_key '{normalized_key}'. Available: {list(FORMATS.keys())}"
         )
 
-    module_path = f"{entry['module']}.engines.player_engine"
+    module_path = f"{entry['module']}.engines.player"
     try:
         module = importlib.import_module(module_path)
     except ImportError as exc:

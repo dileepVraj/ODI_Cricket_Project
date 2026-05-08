@@ -45,6 +45,11 @@ def get_format_metadata() -> list:
         try:
             mod = importlib.import_module(f"{entry['module']}.manifest")
             has_manifest = hasattr(mod, "MANIFEST")
+            if has_manifest:
+                try:
+                    get_format_config(key)
+                except (AttributeError, ImportError):
+                    has_manifest = False
         except ImportError:
             pass
 
@@ -95,14 +100,14 @@ def get_format_engines(format_type: str) -> dict:
 
     # TeamEngine
     try:
-        mod = importlib.import_module(f"{base}.engines.team_engine")
+        mod = importlib.import_module(f"{base}.engines.team")
         engines["TeamEngine"] = mod.TeamEngine
     except (ImportError, AttributeError) as e:
         logger.debug(f"TeamEngine not found for {format_type}: {e}")
 
     # PlayerEngine
     try:
-        mod = importlib.import_module(f"{base}.engines.player_engine")
+        mod = importlib.import_module(f"{base}.engines.player")
         engines["PlayerEngine"] = mod.PlayerEngine
     except (ImportError, AttributeError) as e:
         logger.debug(f"PlayerEngine not found for {format_type}: {e}")
@@ -122,4 +127,3 @@ def get_format_engines(format_type: str) -> dict:
         logger.debug(f"MatchPackGenerator not found for {format_type}: {e}")
 
     return engines
-

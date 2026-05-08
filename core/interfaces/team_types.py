@@ -122,6 +122,7 @@ class FormSequencePayload(TypedDict):
 
 MATRIX_ROW_HOME_TEAM_COLOR = "home_team_color"
 MATRIX_ROW_HOME_TEAM_NAME = "home_team_name"
+MATRIX_ROW_OVERALL_LABEL = "\U0001f539 OVERALL"
 
 
 MatrixReportRows: TypeAlias = list[MatrixReportRow]
@@ -150,6 +151,7 @@ __all__ = [
     "FormSequencePayload",
     "MATRIX_ROW_HOME_TEAM_COLOR",
     "MATRIX_ROW_HOME_TEAM_NAME",
+    "MATRIX_ROW_OVERALL_LABEL",
     "MatrixReportRow",
     "MatrixReportRows",
     "PhaseRules",

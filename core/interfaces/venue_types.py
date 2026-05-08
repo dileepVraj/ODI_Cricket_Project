@@ -168,6 +168,8 @@ class VenueBiasReport(TypedDict):
     score_extremes: VenueScoreExtremes
     bias_trend: VenueBiasTrend
     toss_intelligence: VenueTossIntelligence
+    toss_loss_recovery: VenueTossLossRecovery
+    score_banding: VenueScoreBanding | None
     MATCH_IDS: str | None
     raw_matches: str
 

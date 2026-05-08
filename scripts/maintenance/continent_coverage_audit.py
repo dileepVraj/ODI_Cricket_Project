@@ -21,7 +21,7 @@ if ROOT not in sys.path:
 
 from core.data_access import DataAccess  # noqa: E402
 from config.settings import ODI_DB_PATH  # noqa: E402
-from formats.odi.engines.team_engine import TeamEngine  # noqa: E402
+from formats.odi.engines.team import TeamEngine  # noqa: E402
 
 
 def _pair_mask(df: pd.DataFrame, home_team: str, away_team: str) -> pd.Series:

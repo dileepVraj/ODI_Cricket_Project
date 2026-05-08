@@ -34,9 +34,10 @@ class RequestValidator:
     @staticmethod
     def get_manifest_or_404(format_type: str) -> ManifestResponse:
         """Validate format and return its manifest, or raise 404."""
-        RequestValidator.validate_format(format_type)
         try:
             return cast(ManifestResponse, get_format_manifest(format_type))
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail=str(exc))
         except (ValueError, ImportError) as exc:
             raise HTTPException(
                 status_code=404,

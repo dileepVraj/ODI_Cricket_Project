@@ -1,4 +1,4 @@
-"""Match pack persistence helpers."""
+"""Match pack persistence — saves the assembled pack to disk as JSON."""
 from __future__ import annotations
 
 import json
@@ -11,7 +11,11 @@ JsonObject: TypeAlias = dict[str, JsonValue]
 
 
 class MatchPackPersister:
-    """Owns report file creation and JSON serialization."""
+    """Owns report file creation and JSON serialisation.
+
+    Single responsibility: given a match-pack dict, write it to disk and
+    return the file path.  No knowledge of how the pack was built.
+    """
 
     def __init__(self, reports_dir: Path | str | None = None) -> None:
         if reports_dir is None:
@@ -19,7 +23,8 @@ class MatchPackPersister:
         else:
             self.reports_dir = Path(reports_dir)
 
-    def _save_report(self, match_pack: JsonObject, home: str, away: str) -> str:
+    def save_report(self, match_pack: JsonObject, home: str, away: str) -> str:
+        """Write match_pack to a timestamped JSON file and return the file path."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"MatchPack_{home}_vs_{away}_{timestamp}.json"
         self.reports_dir.mkdir(parents=True, exist_ok=True)

@@ -11,6 +11,7 @@ from core.calculators.performance import calculate_team_metrics
 from core.interfaces.team_types import ComparisonReportRows
 from core.interfaces.venue_types import (
     HomeFortressReport,
+    VenueAveragePayload,
     TeamVenueStatsPayload,
     VenueBiasReport,
     VenueMatchupReport,
@@ -21,6 +22,7 @@ from core.services.match_filter_service import MatchFilterService, apply_smart_f
 from core.services.report_builder import ReportBuilder
 from core.services.report_formatter import ReportFormatter
 from core.services.venue_service import VenueService
+from core.utils.display_math import avg_with_count
 
 
 class HomeFortressContext(TypedDict):
@@ -126,7 +128,7 @@ def _venue_window(
 
 
 def _normalize_none_marker(value: str | int | None) -> str | int | None:
-    return ReportFormatter._none_if_placeholder(value)
+    return cast(str | int | None, ReportFormatter._none_if_placeholder(value))
 
 
 def _normalize_text_metric(value: str | int | None) -> str | None:
@@ -134,6 +136,34 @@ def _normalize_text_metric(value: str | int | None) -> str | None:
     if normalized is None:
         return None
     return str(normalized)
+
+
+# ── Service/config facades ────────────────────────────────────────────────────
+# Calculator functions must not call service/config domains directly.
+# These module-level wrappers absorb the cross-domain calls so that internal
+# calculator functions stay within a single domain boundary.
+
+def _call_build_report_data(
+    match_df: pd.DataFrame,
+    home_team: str,
+    visitor_label: str,
+    title: str,
+    is_venue_mode: bool,
+    calculate_team_stats: object,
+) -> object:
+    return ReportBuilder._build_report_data(
+        match_df, home_team, visitor_label, title,
+        is_venue_mode=is_venue_mode,
+        calculate_team_stats=calculate_team_stats,
+    )
+
+
+def _resolve_team_color(team_name: str) -> str:
+    return (
+        TEAM_COLORS.get(team_name)
+        or TEAM_COLORS.get("VISITOR_TEAM")
+        or TEAM_COLORS.get("Visitors", "gray")
+    )
 
 
 def _comparison_rows(
@@ -144,7 +174,7 @@ def _comparison_rows(
     competitive_threshold: int,
     is_venue_mode: bool,
 ) -> ComparisonReportRows:
-    return cast(ComparisonReportRows, ReportBuilder._build_report_data(
+    return cast(ComparisonReportRows, _call_build_report_data(
         match_df,
         home_team,
         visitor_label,
@@ -207,7 +237,7 @@ def _team_intel(
             "succ": stats["avg_succ"],
             "fail": stats["avg_fail"],
         },
-        "team_color": TEAM_COLORS.get(team_name) or TEAM_COLORS.get("VISITOR_TEAM") or TEAM_COLORS.get("Visitors", "gray"),
+        "team_color": _resolve_team_color(team_name),
         "team_tone": None,
         "low_sample_warnings": [],
         "highlight_flags": {},
@@ -218,7 +248,7 @@ def _team_intel(
     return payload
 
 
-def _venue_avg_payload(summary_df: pd.DataFrame, competitive_threshold: int) -> dict[str, str | int | None]:
+def _venue_avg_payload(summary_df: pd.DataFrame, competitive_threshold: int) -> VenueAveragePayload:
     included_mask = MatchFilterService.get_valid_matches_mask(summary_df)
     short_second_mask = MatchFilterService.get_excluded_short_second_mask(summary_df)
     valid_1st = summary_df[included_mask | short_second_mask]
@@ -227,7 +257,7 @@ def _venue_avg_payload(summary_df: pd.DataFrame, competitive_threshold: int) -> 
     comp_mask = (~is_chase_win) | (valid_2nd["score_inn2"] >= competitive_threshold)
     comp_2nd = valid_2nd[comp_mask]
     return {
-        "avg_1st": _normalize_none_marker(ReportBuilder._get_avg_with_count(valid_1st, "score_inn1")),
-        "avg_2nd": _normalize_none_marker(ReportBuilder._get_avg_with_count(comp_2nd, "score_inn2")),
-        "avg_win_score": _normalize_none_marker(ReportBuilder._get_avg_with_count(valid_1st[valid_1st["winner"] == valid_1st["team_bat_1"]], "score_inn1")),
+        "avg_1st": _normalize_none_marker(avg_with_count(valid_1st, "score_inn1")),
+        "avg_2nd": _normalize_none_marker(avg_with_count(comp_2nd, "score_inn2")),
+        "avg_win_score": _normalize_none_marker(avg_with_count(valid_1st[valid_1st["winner"] == valid_1st["team_bat_1"]], "score_inn1")),
     }

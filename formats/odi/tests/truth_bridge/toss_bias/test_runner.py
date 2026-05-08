@@ -7,8 +7,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.
 # 🚷 HEADLESS MOCK: Prevent IPython/Jupyter overhead in Truth Bridge
 import builtins  # noqa: E402
 def mock_display(*args, **kwargs): pass
-builtins.display = mock_display
-builtins.HTML = lambda x: x
+builtins.display = mock_display  # type: ignore[attr-defined]
+builtins.HTML = lambda x: x  # type: ignore[attr-defined]
 
 from formats.odi.tests.truth_bridge.base_runner import TruthBridgeBase  # noqa: E402
 from config.shared.venues import VENUE_MAP  # noqa: E402

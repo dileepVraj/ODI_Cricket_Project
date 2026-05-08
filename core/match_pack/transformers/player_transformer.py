@@ -25,7 +25,7 @@ def transform_squad_comparison(comparison_payload: Dict[str, Any]) -> Dict[str, 
     if not comparison_payload or not isinstance(comparison_payload, dict):
         return {"error": "No data returned from engine"}
 
-    result = {
+    result: dict[str, Any] = {
         "squad_comparison": {},
         "tactical_matrix": {},
         "matchups": {},

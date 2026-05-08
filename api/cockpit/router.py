@@ -29,6 +29,7 @@ from cockpit.schemas import (
     CreateTradeRequest,
     HistorySummaryResponse,
     HistoryTradeResponse,
+    HistoryTradesPageResponse,
     SettleTradeRequest,
     TradeRestoreRequest,
     TradeResponse,
@@ -40,7 +41,8 @@ from cockpit.services.history_service import (
     HistoryQuery,
     HistoryTradeRow,
     build_history_summary,
-    list_history_trades as load_history_trades,
+    load_history_trade_rows,
+    list_history_trades as load_history_trades_page,
 )
 from cockpit.services import teams_service, venues_service
 
@@ -316,6 +318,7 @@ def _apply_settlement_to_trade(trade: Trade, body: SettleTradeRequest, db: Cockp
         if body.missed_swing_net_pnl is not None
         else None
     )
+    trade.missed_swing_type = _normalize_optional_text(body.missed_swing_type)
     trade.targeted_pnl = round(body.targeted_pnl, 2)
     trade.achieved_yield_percentage = round(body.achieved_yield, 2)
     trade.trade_mistakes = (
@@ -427,7 +430,10 @@ def list_trades(
     return [_trade_to_response(trade) for trade in trades]
 
 
-@cockpit_router.get("/history/trades", response_model=List[HistoryTradeResponse])
+@cockpit_router.get(
+    "/history/trades",
+    response_model=List[HistoryTradeResponse] | HistoryTradesPageResponse,
+)
 def list_history_trades(
     response: Response,
     format_scope: Literal["single", "all"] = Query(default="single"),
@@ -437,7 +443,9 @@ def list_history_trades(
     date_range: HistoryDateRange = Query(default="all"),
     date_from: _date | None = Query(default=None),
     date_to: _date | None = Query(default=None),
-) -> List[HistoryTradeResponse]:
+    page: int | None = Query(default=None, ge=1),
+    page_size: int | None = Query(default=None, ge=1),
+) -> List[HistoryTradeResponse] | HistoryTradesPageResponse:
     """Return history trades filtered by format scope, season, and match date."""
     _set_no_cache_headers(response)
     query = _build_history_query(
@@ -450,10 +458,35 @@ def list_history_trades(
         date_to=date_to,
     )
     try:
-        rows = load_history_trades(query)
+        rows = load_history_trade_rows(query)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    return [_history_trade_to_response(row) for row in rows]
+
+    if page is None and page_size is None:
+        return [_history_trade_to_response(row) for row in rows]
+
+    if page is None or page_size is None:
+        raise HTTPException(status_code=400, detail="page and page_size must be provided together")
+
+    offset = (page - 1) * page_size
+    page_query = HistoryQuery(
+        format_scope=query.format_scope,
+        format_key=query.format_key,
+        season=query.season,
+        statuses=query.statuses,
+        date_range=query.date_range,
+        date_from=query.date_from,
+        date_to=query.date_to,
+        limit=page_size,
+        offset=offset,
+    )
+    page_data = load_history_trades_page(page_query)
+    return HistoryTradesPageResponse(
+        trades=[_history_trade_to_response(row) for row in page_data.trades],
+        total_count=page_data.total_count,
+        page=page,
+        page_size=page_size,
+    )
 
 
 @cockpit_router.get("/history/summary", response_model=HistorySummaryResponse)
@@ -479,7 +512,7 @@ def get_history_summary(
         date_to=date_to,
     )
     try:
-        rows = load_history_trades(query)
+        rows = load_history_trade_rows(query)
         summary = build_history_summary(query, rows)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

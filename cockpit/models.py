@@ -35,14 +35,6 @@ TRADE_WRITE_COLUMNS = (
     "home_ground",
     "bankroll",
     "opening_odds",
-    "bullet_05_odds",
-    "bullet_05_stake",
-    "bullet_1_odds",
-    "bullet_1_stake",
-    "bullet_2_odds",
-    "bullet_2_stake",
-    "bullet_3_odds",
-    "bullet_3_stake",
     "total_stake",
     "target_profit",
     "profit_80pct",
@@ -51,8 +43,6 @@ TRADE_WRITE_COLUMNS = (
     "pct_of_target",
     "pct_return_on_stake",
     "exit_odds",
-    "fav_reached_130",
-    "is_fake_favourite",
     "notes",
     "crex_url",
     "selected_team_before_toss",
@@ -72,6 +62,7 @@ TRADE_WRITE_COLUMNS = (
     "missed_swing_bet_index",
     "missed_swing_cumulative_stake",
     "missed_swing_net_pnl",
+    "missed_swing_type",
     "trade_mistakes",
     "targeted_pnl",
     "achieved_yield_percentage",
@@ -178,14 +169,6 @@ class Trade:
     toss_decision: str | None = None
     bankroll: float = 100.0
     opening_odds: float | None = None
-    bullet_05_odds: float | None = None
-    bullet_05_stake: float | None = None
-    bullet_1_odds: float | None = None
-    bullet_1_stake: float | None = None
-    bullet_2_odds: float | None = None
-    bullet_2_stake: float | None = None
-    bullet_3_odds: float | None = None
-    bullet_3_stake: float | None = None
     total_stake: float | None = None
     target_profit: float | None = None
     profit_80pct: float | None = None
@@ -194,8 +177,6 @@ class Trade:
     pct_of_target: float | None = None
     pct_return_on_stake: float | None = None
     exit_odds: float | None = None
-    fav_reached_130: bool = False
-    is_fake_favourite: bool = False
     notes: str | None = None
     crex_url: str | None = None
     selected_team_before_toss: str | None = None
@@ -215,6 +196,7 @@ class Trade:
     missed_swing_bet_index: int | None = None
     missed_swing_cumulative_stake: float | None = None
     missed_swing_net_pnl: float | None = None
+    missed_swing_type: str | None = None
     trade_mistakes: str | None = None
     targeted_pnl: float | None = None
     achieved_yield_percentage: float | None = None
@@ -241,30 +223,6 @@ class Trade:
             bankroll=_as_float(row.get("bankroll", 100.0)),
             opening_odds=(
                 _as_float(row["opening_odds"]) if row.get("opening_odds") is not None else None
-            ),
-            bullet_05_odds=(
-                _as_float(row["bullet_05_odds"]) if row.get("bullet_05_odds") is not None else None
-            ),
-            bullet_05_stake=(
-                _as_float(row["bullet_05_stake"]) if row.get("bullet_05_stake") is not None else None
-            ),
-            bullet_1_odds=(
-                _as_float(row["bullet_1_odds"]) if row.get("bullet_1_odds") is not None else None
-            ),
-            bullet_1_stake=(
-                _as_float(row["bullet_1_stake"]) if row.get("bullet_1_stake") is not None else None
-            ),
-            bullet_2_odds=(
-                _as_float(row["bullet_2_odds"]) if row.get("bullet_2_odds") is not None else None
-            ),
-            bullet_2_stake=(
-                _as_float(row["bullet_2_stake"]) if row.get("bullet_2_stake") is not None else None
-            ),
-            bullet_3_odds=(
-                _as_float(row["bullet_3_odds"]) if row.get("bullet_3_odds") is not None else None
-            ),
-            bullet_3_stake=(
-                _as_float(row["bullet_3_stake"]) if row.get("bullet_3_stake") is not None else None
             ),
             total_stake=(
                 _as_float(row["total_stake"]) if row.get("total_stake") is not None else None
@@ -296,8 +254,6 @@ class Trade:
             exit_odds=(
                 _as_float(row["exit_odds"]) if row.get("exit_odds") is not None else None
             ),
-            fav_reached_130=_as_bool(row.get("fav_reached_130"), default=False),
-            is_fake_favourite=_as_bool(row.get("is_fake_favourite"), default=False),
             notes=_as_optional_text(row.get("notes")),
             crex_url=_as_optional_text(row.get("crex_url")),
             selected_team_before_toss=_as_optional_text(row.get("selected_team_before_toss")),
@@ -358,6 +314,7 @@ class Trade:
                 if row.get("missed_swing_net_pnl") is not None
                 else None
             ),
+            missed_swing_type=_as_optional_text(row.get("missed_swing_type")),
             trade_mistakes=(
                 str(row["trade_mistakes"])
                 if row.get("trade_mistakes") is not None
@@ -400,14 +357,6 @@ class Trade:
             "home_ground": self.home_ground,
             "bankroll": self.bankroll,
             "opening_odds": self.opening_odds,
-            "bullet_05_odds": self.bullet_05_odds,
-            "bullet_05_stake": self.bullet_05_stake,
-            "bullet_1_odds": self.bullet_1_odds,
-            "bullet_1_stake": self.bullet_1_stake,
-            "bullet_2_odds": self.bullet_2_odds,
-            "bullet_2_stake": self.bullet_2_stake,
-            "bullet_3_odds": self.bullet_3_odds,
-            "bullet_3_stake": self.bullet_3_stake,
             "total_stake": self.total_stake,
             "target_profit": self.target_profit,
             "profit_80pct": self.profit_80pct,
@@ -416,8 +365,6 @@ class Trade:
             "pct_of_target": self.pct_of_target,
             "pct_return_on_stake": self.pct_return_on_stake,
             "exit_odds": self.exit_odds,
-            "fav_reached_130": self.fav_reached_130,
-            "is_fake_favourite": self.is_fake_favourite,
             "notes": self.notes,
             "crex_url": self.crex_url,
             "selected_team_before_toss": self.selected_team_before_toss,
@@ -437,6 +384,7 @@ class Trade:
             "missed_swing_bet_index": self.missed_swing_bet_index,
             "missed_swing_cumulative_stake": self.missed_swing_cumulative_stake,
             "missed_swing_net_pnl": self.missed_swing_net_pnl,
+            "missed_swing_type": self.missed_swing_type,
             "trade_mistakes": self.trade_mistakes,
             "targeted_pnl": self.targeted_pnl,
             "achieved_yield_percentage": self.achieved_yield_percentage,

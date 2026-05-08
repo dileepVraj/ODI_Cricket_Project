@@ -1,3 +1,5 @@
+from typing import Any, cast
+
 from formats.odi.manifests._config import (
     FORMAT_RULES, TACTICAL_THRESHOLDS, SPORT_CONSTANTS,
     ENGINE_DEFAULTS, PLAYER_RULES, PLAYER_CONTEXT_TYPES,
@@ -117,22 +119,23 @@ MANIFEST = {
     ],
 }
 
-def get_manifest_stats() -> dict:
+def get_manifest_stats() -> dict[str, Any]:
     """Returns summary statistics about this manifest."""
-    total_funcs = sum(len(cat["functions"]) for cat in MANIFEST["categories"])
+    categories = cast(list[dict[str, Any]], MANIFEST["categories"])
+    total_funcs = sum(len(cast(list[dict[str, Any]], cat["functions"])) for cat in categories)
     return {
         "format": MANIFEST["format_key"],
-        "categories": len(MANIFEST["categories"]),
+        "categories": len(categories),
         "functions": total_funcs,
         "output_types_used": sorted(set(
-            fn["output_type"]
-            for cat in MANIFEST["categories"]
-            for fn in cat["functions"]
+            cast(dict[str, Any], fn)["output_type"]
+            for cat in categories
+            for fn in cast(list[dict[str, Any]], cat["functions"])
         )),
         "engine_classes_used": sorted(set(
-            fn["engine_class"]
-            for cat in MANIFEST["categories"]
-            for fn in cat["functions"]
+            cast(dict[str, Any], fn)["engine_class"]
+            for cat in categories
+            for fn in cast(list[dict[str, Any]], cat["functions"])
         )),
     }
 

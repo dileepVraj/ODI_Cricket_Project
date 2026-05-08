@@ -81,14 +81,6 @@ class TradeResponse(BaseModel):
     toss_decision: Optional[Literal["bat", "field"]]
     bankroll: float
     opening_odds: Optional[float]
-    bullet_05_odds: Optional[float] = None
-    bullet_05_stake: Optional[float] = None
-    bullet_1_odds: Optional[float] = None
-    bullet_1_stake: Optional[float] = None
-    bullet_2_odds: Optional[float] = None
-    bullet_2_stake: Optional[float] = None
-    bullet_3_odds: Optional[float] = None
-    bullet_3_stake: Optional[float] = None
     total_stake: Optional[float] = None
     target_profit: Optional[float] = None
     profit_80pct: Optional[float] = None
@@ -97,8 +89,6 @@ class TradeResponse(BaseModel):
     pct_of_target: Optional[float] = None
     pct_return_on_stake: Optional[float] = None
     exit_odds: Optional[float] = None
-    fav_reached_130: bool = False
-    is_fake_favourite: bool = False
     notes: Optional[str] = None
     crex_url: Optional[str] = None
     selected_team_before_toss: Optional[str] = None
@@ -118,6 +108,7 @@ class TradeResponse(BaseModel):
     missed_swing_bet_index: Optional[int] = None
     missed_swing_cumulative_stake: Optional[float] = None
     missed_swing_net_pnl: Optional[float] = None
+    missed_swing_type: Optional[str] = None
     trade_mistakes: Optional[str] = None
     targeted_pnl: Optional[float] = None
     achieved_yield_percentage: Optional[float] = None
@@ -135,6 +126,17 @@ class HistoryTradeResponse(TradeResponse):
     format_label: str
 
     model_config = ConfigDict(from_attributes=True, extra="forbid")
+
+
+class HistoryTradesPageResponse(BaseModel):
+    """Returned by GET /api/cockpit/history/trades when pagination is requested."""
+
+    trades: List[HistoryTradeResponse]
+    total_count: int
+    page: int
+    page_size: int
+
+    model_config = ConfigDict(extra="forbid")
 
 
 class HistorySummaryResponse(BaseModel):
@@ -174,6 +176,7 @@ class SettleTradeRequest(BaseModel):
     missed_swing_bet_index: Optional[int] = None
     missed_swing_cumulative_stake: Optional[float] = None
     missed_swing_net_pnl: Optional[float] = None
+    missed_swing_type: Optional[str] = None
     targeted_pnl: float = Field(..., ge=0)
     achieved_yield: float
     trade_mistakes: Optional[TradeMistakes] = None

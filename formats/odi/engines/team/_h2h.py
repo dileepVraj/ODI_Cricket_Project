@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, cast
 
-from core.calculators.team.matchup_calculator import (
+from core.calculators.team.matchup import (
     calculate_away_performance_payload,
     calculate_continent_performance_payload,
     calculate_country_h2h_payload,
@@ -37,6 +37,8 @@ class TeamH2HAnalyzer(TeamEngineBase):
                 "reference_date": self._context_reference_date(ctx),
                 "min_balls_for_completed_innings": self._min_balls_for_completed_innings(),
                 "competitive_chase_threshold": self._threshold(ctx, "competitive_chase_threshold"),
+                "low_sample_min_matches": self._threshold(ctx, "low_sample_min_matches"),
+                "percent_scale": self._sport_constant("percent_scale"),
             },
         )
         return cast(ComparisonReportRows, payload.get("rows", []))
@@ -68,7 +70,7 @@ class TeamH2HAnalyzer(TeamEngineBase):
     def analyze_country_h2h(
         self,
         home_team: str,
-        opp_team: str,
+        opp_team: str = "All",
         country_name: Optional[str] = None,
         years_back: int = 0,
         recorder: Optional[RecorderPort] = None,

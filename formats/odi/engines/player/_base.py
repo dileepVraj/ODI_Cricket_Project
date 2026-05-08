@@ -1,6 +1,6 @@
 """formats/odi/engines/player/_base — PlayerEngineBase: config loading and runtime accessors."""
 
-from typing import Dict, Optional
+from typing import Dict, Optional, cast
 
 import logging
 
@@ -30,39 +30,10 @@ _PURE_BOWLER_ROLE: str = "Bowler"
 _logger = logging.getLogger(__name__)
 
 
-class PlayerEngineBase(IPlayerEngine):
-    def __init__(
-        self,
-        player_df: pd.DataFrame,
-        meta_df: pd.DataFrame,
-        squads_df: Optional[pd.DataFrame] = None,
-        dal: Optional[DataAccessPort] = None,
-        format_rules: Optional[FormatRulesMap] = None,
-    ) -> None:
-        _ = dal  # Backward-compatible parameter; DAL access is forbidden in PlayerEngine.
-        self.rules = format_rules or {}
-        self.tactical_thresholds = self._require_tactical_thresholds()
-        self.style_map = self._require_style_map()
-        self.player_roles = self._require_player_roles()
-        self.default_player_role = self._require_default_player_role()
-        self.default_years_window = self._require_default_years_window()
-        self.engine_defaults = self._require_engine_defaults()
-        self.squad_service = SquadService(format_rules=self.rules)
-        self.matchup_engine = MatchupEngine(format_rules=self.rules)
-        self.raw_df = None  # Deprecated in v5.0
-        
-        self.player_df = player_df
-        self.meta_df = meta_df
-        self.squads_df = self._normalise_squads_df(squads_df)
+class _PlayerConfigMixin:
+    """Config loading and validation helpers used by PlayerEngineBase."""
 
-    def _normalise_squads_df(self, squads_df: Optional[pd.DataFrame]) -> pd.DataFrame:
-        """Normalise squads_df: apply default columns and coerce match_id dtype."""
-        df = squads_df if squads_df is not None else pd.DataFrame(
-            columns=['match_id', 'player', 'date', 'team']
-        )
-        if not df.empty:
-            df['match_id'] = df['match_id'].astype(str)
-        return df
+    rules: dict[str, object]
 
     def _require_nonempty_dict_rule(self, key: str) -> ManifestFunctionDef:
         raw_value = self.rules.get(key)
@@ -71,7 +42,7 @@ class PlayerEngineBase(IPlayerEngine):
                 f"Missing required format rule '{key}'. "
                 "Define it in manifest FORMAT_RULES and pass it into PlayerEngine."
             )
-        return raw_value
+        return cast(ManifestFunctionDef, raw_value)
 
     def _coerce_dict_values_to_int(
         self,
@@ -91,7 +62,10 @@ class PlayerEngineBase(IPlayerEngine):
         return normalized
 
     def _require_tactical_thresholds(self) -> Dict[str, int | float]:
-        thresholds = self._require_nonempty_dict_rule("tactical_thresholds")
+        thresholds = cast(
+            Dict[str, int | float | str],
+            self._require_nonempty_dict_rule("tactical_thresholds"),
+        )
         return self._coerce_dict_values_to_int(thresholds, "tactical threshold")
 
     def _require_style_map(self) -> Dict[str, str]:
@@ -130,11 +104,61 @@ class PlayerEngineBase(IPlayerEngine):
                 "Missing required format rule 'default_years_window'. "
                 "Define it in manifest FORMAT_RULES and pass it into PlayerEngine."
             )
-        return self._coerce_positive_int_rule(raw_value, "default_years_window")
+        return self._coerce_positive_int_rule(
+            cast(int | str, raw_value),
+            "default_years_window",
+        )
 
-    def _require_engine_defaults(self) -> Dict[str, int]:
-        defaults = self._require_nonempty_dict_rule("engine_defaults")
+    def _require_engine_defaults(self) -> Dict[str, int | float]:
+        defaults = cast(
+            Dict[str, int | float | str],
+            self._require_nonempty_dict_rule("engine_defaults"),
+        )
         return self._coerce_dict_values_to_int(defaults, "engine default")
+
+
+class PlayerEngineBase(_PlayerConfigMixin, IPlayerEngine):
+    def __init__(
+        self,
+        player_df: pd.DataFrame,
+        meta_df: pd.DataFrame,
+        squads_df: Optional[pd.DataFrame] = None,
+        dal: Optional[DataAccessPort] = None,
+        format_rules: Optional[FormatRulesMap] = None,
+    ) -> None:
+        _ = dal  # Backward-compatible parameter; DAL access is forbidden in PlayerEngine.
+        self.rules = format_rules or {}
+        self.tactical_thresholds = self._require_tactical_thresholds()
+        self.style_map = self._require_style_map()
+        self.player_roles = self._require_player_roles()
+        self.default_player_role = self._require_default_player_role()
+        self.default_years_window = self._require_default_years_window()
+        self.engine_defaults = self._require_engine_defaults()
+        self.squad_service = self._create_squad_service()
+        self.matchup_engine = self._create_matchup_engine()
+        self.raw_df = None  # Deprecated in v5.0
+        self._reference_date = None
+        
+        self.player_df = player_df
+        self.meta_df = meta_df
+        self.squads_df = self._normalise_squads_df(squads_df)
+
+    def _create_squad_service(self) -> SquadService:
+        """Factory: create the SquadService for this engine instance."""
+        return SquadService(format_rules=self.rules)
+
+    def _create_matchup_engine(self) -> MatchupEngine:
+        """Factory: create the MatchupEngine for this engine instance."""
+        return MatchupEngine(format_rules=self.rules)
+
+    def _normalise_squads_df(self, squads_df: Optional[pd.DataFrame]) -> pd.DataFrame:
+        """Normalise squads_df: apply default columns and coerce match_id dtype."""
+        df = squads_df if squads_df is not None else pd.DataFrame(
+            columns=['match_id', 'player', 'date', 'team']
+        )
+        if not df.empty:
+            df['match_id'] = df['match_id'].astype(str)
+        return df
 
     def _get_player_role(self, player_name: str) -> str:
         """Returns the role of a player from config or default."""

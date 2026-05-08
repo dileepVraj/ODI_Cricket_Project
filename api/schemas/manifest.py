@@ -43,6 +43,12 @@ class QuickLinkDesc(BaseModel):
     category_key: str
 
 
+class ExecuteButtonDesc(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    key: str
+    label: str
+
+
 # ── Existing models (extended where noted) ──────────────────────────────
 
 
@@ -69,6 +75,8 @@ class FunctionDesc(BaseModel):
     required_context: List[str]
     optional_context: Optional[List[str]] = None
     extra_inputs: Optional[JsonObject] = None
+    execute_buttons: Optional[List[ExecuteButtonDesc]] = None
+    discover_bullets: Optional[List[str]] = None
     output_type: str
     output_schema: Optional[JsonObject] = None
 
@@ -79,6 +87,7 @@ class CategoryDesc(BaseModel):
     icon: str
     group: Optional[str] = None
     description: Optional[str] = None
+    module_type: Optional[str] = None
     functions: List[FunctionDesc]
     quick_links: Optional[List[QuickLinkDesc]] = None  # TASK-046
 

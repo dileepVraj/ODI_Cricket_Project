@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, cast
 
 import numpy as np
 import pandas as pd
@@ -219,12 +219,12 @@ def _build_phase_stats(df: pd.DataFrame, cfg: Dict[str, Any]) -> None:
     pivot.columns = new_cols
     pivot.rename(columns={"batting_team": "team"}, inplace=True)
 
-    phase_stats_file = cfg.get("phase_stats_file", "processed_phase_stats.csv")
+    phase_stats_file = cast(str, cfg.get("phase_stats_file", "processed_phase_stats.csv"))
     pivot.to_csv(phase_stats_file, index=False)
     print(f"   Saved: {phase_stats_file}")
 
 
-def rebuild_intelligence_layer(config: Dict[str, Any] = None) -> None:
+def rebuild_intelligence_layer(config: Optional[Dict[str, Any]] = None) -> None:
     """
     Refines raw ball-by-ball data into player stats and phase stats.
     """
@@ -232,14 +232,14 @@ def rebuild_intelligence_layer(config: Dict[str, Any] = None) -> None:
         try:
             from formats.odi.config.settings import ODI_FORMAT_CONFIG
 
-            config = ODI_FORMAT_CONFIG
+            config = cast(Dict[str, Any], ODI_FORMAT_CONFIG)
         except ImportError:
             return
 
-    cfg = config
+    cfg: Dict[str, Any] = cast(Dict[str, Any], config)
     print(f"\nSTARTING INTELLIGENCE REFINERY [{cfg['label']}]...")
 
-    master_file = cfg["data_file"]
+    master_file = cast(str, cfg["data_file"])
     if not os.path.exists(master_file):
         print(f"CRITICAL ERROR: '{master_file}' not found.")
         return

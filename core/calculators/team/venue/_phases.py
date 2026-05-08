@@ -18,7 +18,7 @@ from core.calculators.team.venue._base import (
     VenuePhasesReport,
     _empty_like,
 )
-from core.interfaces.venue_types import TeamVenuePhaseSnapshot, VenueGlobalHabits
+from core.interfaces.venue_types import PhaseSummaryByInnings, TeamVenuePhaseSnapshot, VenueGlobalHabits
 from core.services.report_formatter import ReportFormatter
 from core.services.venue_service import VenueService
 
@@ -89,7 +89,7 @@ def _phase_report_base(
             "min_first_innings_balls": min_balls, "min_first_innings_overs": round(min_balls / balls_per_over, 1),
             "keep_all_outs": True, "keep_successful_chases": True, "drop_short_no_result_only": True,
         },
-        "baseline": summarize_phase_by_innings(venue_stats), "home_at_venue": None, "away_at_venue": None, "global_habits": None,
+        "baseline": cast(PhaseSummaryByInnings, summarize_phase_by_innings(venue_stats)), "home_at_venue": None, "away_at_venue": None, "global_habits": None,
         "MATCH_IDS": ",".join(venue_stats["match_id"].astype(str).unique().tolist()) if "match_id" in venue_stats.columns else None,
     }
 

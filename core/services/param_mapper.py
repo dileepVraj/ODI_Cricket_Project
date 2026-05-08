@@ -1,3 +1,5 @@
+from typing import cast
+
 from core.interfaces.serialization_types import ManifestFunctionDef, RawContextParams, MappedEngineParams
 
 class ParamMapperService:
@@ -79,19 +81,21 @@ class ParamMapperService:
         Maps frontend context to engine arguments.
         Enforces strict filtering based on the format manifest to prevent param leakage.
         """
-        method_name = fn_def.get("engine_method", "")
-        fn_def.get("key", "")
+        method_name = str(fn_def.get("engine_method", ""))
+        _ = fn_def.get("key", "")
         
         # 1. IDENTIFY ALLOWED KEYS FROM MANIFEST
         # The manifest is the "Filter of Truth". We only allow what the manifest declares.
-        required = set(fn_def.get("required_context", []))
-        optional = set(fn_def.get("optional_context", []))
+        required_raw = fn_def.get("required_context", [])
+        optional_raw = fn_def.get("optional_context", [])
+        required = set(required_raw if isinstance(required_raw, list) else [])
+        optional = set(optional_raw if isinstance(optional_raw, list) else [])
         extra_input_defs = fn_def.get("extra_inputs", {})
         
         # extra_inputs can be a dict of field defs or a bool (like squad_builder: True)
         extra = set()
         if isinstance(extra_input_defs, dict):
-            extra = set(extra_input_defs.keys())
+            extra = set(cast(dict[str, object], extra_input_defs).keys())
         
         # Universal technical/system keys that handle cross-cutting concerns (e.g., squads)
         system_keys = {"home_xi", "away_xi", "context", "player_name", "batter", "bowlers"}
@@ -99,16 +103,16 @@ class ParamMapperService:
         allowed_keys = required | optional | extra | system_keys
         
         # 2. FILTER & INITIALIZE
-        input_params = {k: v for k, v in raw_params.items() if k in allowed_keys}
-        mapped_params = {}
+        input_params: RawContextParams = {k: v for k, v in raw_params.items() if k in allowed_keys}
+        mapped_params: MappedEngineParams = {}
 
         # 3. APPLY MAPPING REGISTRY
         # Method mappings inherit global defaults, then override as needed.
         # This prevents missing-key regressions (e.g., team_a leaking through
         # as an unexpected kwarg when a method-specific mapping omits it).
-        mapping = {
-            **cls.MAPPING_REGISTRY.get("*", {}),
-            **cls.MAPPING_REGISTRY.get(method_name, {}),
+        mapping: dict[str, str | None] = {
+            **cast(dict[str, str | None], cls.MAPPING_REGISTRY.get("*", {})),
+            **cast(dict[str, str | None], cls.MAPPING_REGISTRY.get(method_name, {})),
         }
         
         for key, val in input_params.items():
@@ -143,18 +147,21 @@ class ParamMapperService:
         if method_name == "analyze_team_form" and "match_limit" in input_params:
             raw_limit = input_params["match_limit"]
             try:
-                mapped_params["limit"] = int(raw_limit) if raw_limit not in (None, "", "All") else 10
+                mapped_params["limit"] = int(cast(str | int | float, raw_limit)) if raw_limit not in (None, "", "All") else 10
             except (TypeError, ValueError):
                 mapped_params["limit"] = 10
 
         # D. Match Pack Context Bundle
         if method_name == "generate_pack":
-            context = {
-                "time": input_params.get("match_time"),
-                "toss": input_params.get("toss_result"),
-                "pitch": input_params.get("pitch_report"),
+            context: dict[str, str | None] = {
+                "time": cast(str | None, input_params.get("match_time")),
+                "toss": cast(str | None, input_params.get("toss_result")),
+                "pitch": cast(str | None, input_params.get("pitch_report")),
             }
-            mapped_params["context"] = {k: v for k, v in context.items() if v is not None}
+            mapped_params["context"] = cast(
+                dict[str, str],
+                {k: cast(str, v) for k, v in context.items() if v is not None},
+            )
             # Keep API execute path CPU-bound by preventing report file writes.
             mapped_params["persist"] = False
 

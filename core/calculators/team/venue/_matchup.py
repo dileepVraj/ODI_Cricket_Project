@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import cast
+
 import pandas as pd
 
 from config.shared.team_colors import TEAM_COLORS
@@ -19,6 +21,24 @@ from core.calculators.team.venue._base import (
 from core.services.match_filter_service import MatchFilterService
 from core.services.report_builder import ReportBuilder
 from core.services.report_formatter import ReportFormatter
+
+
+# ── Service/config facades ────────────────────────────────────────────────────
+
+def _no_result_mask(df: pd.DataFrame) -> pd.Series:
+    return MatchFilterService.get_excluded_no_result_mask(df)
+
+
+def _form_data_payload(df: pd.DataFrame, team: str) -> object:
+    return ReportBuilder._build_form_data_payload(df, team)
+
+
+def _format_form_guide(data: object) -> object:
+    return ReportFormatter.format_form_guide(data)
+
+
+def _none_if_placeholder(val: object) -> object:
+    return ReportFormatter._none_if_placeholder(val)
 
 
 def _empty_team_stats(team_name: str) -> TeamVenueStatsPayload:
@@ -57,7 +77,7 @@ def calculate_venue_matchup_payload(match_df: pd.DataFrame, context: VenueMatchu
     clean_df = _apply_filters(venue_df, context["min_balls_for_completed_innings"])
     matchup_mask = ((clean_df["team_bat_1"] == context["home_team"]) & (clean_df["team_bat_2"] == context["opp_team"])) | ((clean_df["team_bat_1"] == context["opp_team"]) & (clean_df["team_bat_2"] == context["home_team"]))
     matchup_df = clean_df[matchup_mask].copy()
-    summary_df = matchup_df[~MatchFilterService.get_excluded_no_result_mask(matchup_df)].copy()
+    summary_df = matchup_df[~_no_result_mask(matchup_df)].copy()
     if summary_df.empty:
         return {"payload": _empty_match_intel(context["home_team"], context["opp_team"])}
     return {"payload": _build_match_intel(summary_df, context)}
@@ -67,8 +87,8 @@ def _build_match_intel(summary_df: pd.DataFrame, context: VenueMatchupContext) -
     summary = _summary_payload(summary_df, context["home_team"], context["percent_scale"])
     team_a_stats = _team_intel(summary_df, context["home_team"], context["competitive_chase_threshold"], context["low_sample_min_matches"])
     team_b_stats = _team_intel(summary_df, context["opp_team"], context["competitive_chase_threshold"], context["low_sample_min_matches"])
-    last_5_home = ReportFormatter._none_if_placeholder(ReportFormatter.format_form_guide(ReportBuilder._build_form_data_payload(summary_df, context["home_team"])))
-    last_5_away = ReportFormatter._none_if_placeholder(ReportFormatter.format_form_guide(ReportBuilder._build_form_data_payload(summary_df, context["opp_team"])))
+    last_5_home = cast(str | None, _none_if_placeholder(_format_form_guide(_form_data_payload(summary_df, context["home_team"]))))
+    last_5_away = cast(str | None, _none_if_placeholder(_format_form_guide(_form_data_payload(summary_df, context["opp_team"]))))
     low_sample_warnings = [*team_a_stats["low_sample_warnings"], *team_b_stats["low_sample_warnings"]]
     summary["last_5_home"] = last_5_home
     summary["last_5_away"] = last_5_away

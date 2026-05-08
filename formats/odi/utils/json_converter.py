@@ -3,7 +3,7 @@ import glob
 import json
 import os
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple, cast
 
 import pandas as pd
 
@@ -230,11 +230,11 @@ def _write_conversion_audit(audit_path: str, audit: Dict[str, Any]) -> None:
 
 
 def run_json_conversion(
-    config: Dict[str, Any] = None,
+    config: Optional[Dict[str, Any]] = None,
     *,
     strict: bool = True,
     allow_partial: bool = False,
-    audit_path: str = None,
+    audit_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Parses Cricsheet JSON files into standardized CSVs.
@@ -246,16 +246,16 @@ def run_json_conversion(
     if config is None:
         from formats.odi.config.settings import ODI_FORMAT_CONFIG
 
-        config = ODI_FORMAT_CONFIG
+        config = cast(Dict[str, Any], ODI_FORMAT_CONFIG)
 
-    cfg = config
-    source_dir = cfg["json_source_dir"]
-    output_bbb = cfg["data_file"]
-    output_squads = cfg["squads_file"]
-    output_info = cfg["info_file"]
+    cfg: Dict[str, Any] = cast(Dict[str, Any], config)
+    source_dir = cast(str, cfg["json_source_dir"])
+    output_bbb = cast(str, cfg["data_file"])
+    output_squads = cast(str, cfg["squads_file"])
+    output_info = cast(str, cfg["info_file"])
 
     effective_strict = strict and not allow_partial
-    audit_file = audit_path or cfg.get("conversion_audit_file") or _default_audit_path(output_bbb)
+    audit_file = cast(str, audit_path or cfg.get("conversion_audit_file") or _default_audit_path(output_bbb))
 
     started_at = _to_utc_iso_now()
     print(f"\nSTARTING JSON CONVERSION [{cfg['label']}]...")

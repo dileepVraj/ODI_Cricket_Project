@@ -370,14 +370,6 @@ CREATE TABLE IF NOT EXISTS {table_name} (
                                   CHECK (home_ground IN ('FAV', 'UG', 'NEU')),
     bankroll                  REAL      NOT NULL DEFAULT 100.0,
     opening_odds              REAL,
-    bullet_05_odds            REAL,
-    bullet_05_stake           REAL,
-    bullet_1_odds             REAL,
-    bullet_1_stake            REAL,
-    bullet_2_odds             REAL,
-    bullet_2_stake            REAL,
-    bullet_3_odds             REAL,
-    bullet_3_stake            REAL,
     total_stake               REAL,
     target_profit             REAL,
     profit_80pct              REAL,
@@ -386,8 +378,6 @@ CREATE TABLE IF NOT EXISTS {table_name} (
     pct_of_target             REAL,
     pct_return_on_stake       REAL,
     exit_odds                 REAL,
-    fav_reached_130           INTEGER   NOT NULL DEFAULT 0,
-    is_fake_favourite         INTEGER   NOT NULL DEFAULT 0,
     notes                     TEXT,
     crex_url                  TEXT,
     selected_team_before_toss TEXT,
@@ -460,11 +450,32 @@ _DDL_TRADE_SQLITE_TABLES = (
 )
 
 _TRADE_REQUIRED_COLUMNS = {
+    "id",
+    "match_id",
     "favourite_team",
     "home_ground",
-    "status",
-    "created_at",
-    "updated_at",
+    "bankroll",
+    "opening_odds",
+    "total_stake",
+    "target_profit",
+    "profit_80pct",
+    "exit_target_odds",
+    "breakeven_odds",
+    "pct_of_target",
+    "pct_return_on_stake",
+    "exit_odds",
+    "notes",
+    "crex_url",
+    "selected_team_before_toss",
+    "back_odds_before_toss",
+    "lay_odds_before_toss",
+    "selected_team_after_toss",
+    "back_odds_after_toss",
+    "lay_odds_after_toss",
+    "result",
+    "winner",
+    "actual_profit",
+    "trade_sentiment",
     "fav_sub_30_loss",
     "missed_swing_team",
     "missed_swing_back_odds",
@@ -474,6 +485,12 @@ _TRADE_REQUIRED_COLUMNS = {
     "missed_swing_net_pnl",
     "missed_swing_type",
     "trade_mistakes",
+    "targeted_pnl",
+    "achieved_yield_percentage",
+    "total_volume_wagered",
+    "status",
+    "created_at",
+    "updated_at",
 }
 
 _BET_REQUIRED_COLUMNS = {
@@ -489,6 +506,16 @@ _BET_REQUIRED_COLUMNS = {
 }
 
 _TRADE_LEGACY_COLUMNS = {
+    "bullet_05_odds",
+    "bullet_05_stake",
+    "bullet_1_odds",
+    "bullet_1_stake",
+    "bullet_2_odds",
+    "bullet_2_stake",
+    "bullet_3_odds",
+    "bullet_3_stake",
+    "fav_reached_130",
+    "is_fake_favourite",
     "lowest_fav_odds_paise",
     "post_low_bet_number",
     "post_low_bet_stake",
@@ -684,13 +711,11 @@ def _sqlite_rebuild_trades_table(path: str) -> None:
                 else []
             )
             insert_columns = [column for column in new_columns if column in source_columns]
-            if not insert_columns:
-                raise RuntimeError("Could not determine trade columns for migration")
-
-            column_sql = ", ".join(insert_columns)
-            con.execute(
-                f"INSERT INTO {temp_table} ({column_sql}) SELECT {column_sql} FROM {source_table}"
-            )
+            if source_table is not None and "match_id" in source_columns and insert_columns:
+                column_sql = ", ".join(insert_columns)
+                con.execute(
+                    f"INSERT INTO {temp_table} ({column_sql}) SELECT {column_sql} FROM {source_table}"
+                )
 
             con.execute("DROP TABLE trades")
             if "trades_legacy" in _table_names_sqlite(con):
@@ -903,8 +928,6 @@ def _seed_ipl_trade_history_if_needed(format_key: str) -> None:
                     if record.get("opening_odds") is not None
                     else None
                 ),
-                fav_reached_130=bool(record.get("fav_reached_130", 0)),
-                is_fake_favourite=bool(record.get("is_fake_favourite", 0)),
                 notes=_coerce_optional_text(record.get("notes")),
                 crex_url=_coerce_optional_text(record.get("crex_url")),
                 selected_team_before_toss=_coerce_optional_text(
