@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-185c",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Should I keep the task-file-specified exact shim, or may I change core/utils/compliance_bouncer.py to filter the compliance scan so python core/utils/compliance_bouncer.py --root . returns PASS, because the current package implementation reports 3764 violations across 54 files outside the allowed scope?",
+  "blocker_context": "I wrote the exact shim content in core/utils/compliance_bouncer.py and verified the import path. The script check then failed with 'FAIL: 3764 violation(s) across 54 file(s).' from the re-exported bouncer, with violations reported in untouched files such as core/calculators/matchup_engine.py and formats/odi/engines/team/_venue.py. The task scope only allows modifying core/utils/compliance_bouncer.py, so I cannot repair those violations in scope.",
+  "files_modified_so_far": ["core/utils/compliance_bouncer.py", "agents/workflow/scope.json", "agents/workflow/pre_call_state.json", "agents/workflow/reports/TASK-185c-blocked.json"],
+  "taskfile_cleared": false
+}

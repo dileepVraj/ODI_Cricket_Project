@@ -1,0 +1,17 @@
+{
+  "task_id": "TASK-172a",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Can Claude fix or re-authorize the scope-guard pre-commit hook? It falsely rejects staged transformer files that are already listed in agents/workflow/scope.json.",
+  "blocker_context": "Bootstrap, standards load, baseline bouncer, and baseline paradigm sentinel all passed. Implemented the additive split under core/match_pack/transformers/, all 6 smoke imports passed, boundary_sentinel passed, semgrep passed after forcing PYTHONUTF8=1, python_type_check passed, paradigm_sentinel passed, compliance_bouncer passed, and a fresh codex-reviewer subagent returned PASS. Final commit attempt with `$env:PYTHONUTF8='1'; git commit -m \"[TASK-172a]: create transformers/ package — additive phase of transformer split\"` was rejected by SCOPE GUARD, which reported these staged files as out of scope despite their presence in agents/workflow/scope.json: core/match_pack/transformers/__init__.py, core/match_pack/transformers/h2h_transformer.py, core/match_pack/transformers/string_utils.py, core/match_pack/transformers/team_transformer.py, core/match_pack/transformers/venue_transformer.py. The guard did not flag core/match_pack/transformers/player_transformer.py, which suggests a hook line-ending/parsing defect rather than a task implementation issue.",
+  "files_modified_so_far": [
+    "core/match_pack/transformers/__init__.py",
+    "core/match_pack/transformers/string_utils.py",
+    "core/match_pack/transformers/h2h_transformer.py",
+    "core/match_pack/transformers/venue_transformer.py",
+    "core/match_pack/transformers/team_transformer.py",
+    "core/match_pack/transformers/player_transformer.py"
+  ],
+  "taskfile_cleared": false
+}

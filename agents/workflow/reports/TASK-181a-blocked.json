@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-181a",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Where is agents/workflow/assertion.py for TASK-181a?",
+  "blocker_context": "Pre-task bootstrap required running python agents/workflow/assertion.py before implementation, but the file is missing from agents/workflow and the command failed with [Errno 2] No such file or directory.",
+  "files_modified_so_far": [],
+  "taskfile_cleared": false
+}

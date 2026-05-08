@@ -1,0 +1,147 @@
+{
+  "task_id": "TASK-182b",
+  "date": "2026-04-05",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "fc73ada",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE-C",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE3",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5S",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "SRP-CHECK",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    }
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "`formats/odi/manifest.py` is a shim with imports from `formats.odi.manifests` and inline literal registry blocks."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "`formats/odi/manifests/_registries.py` is deleted and `formats/odi/manifests/__init__.py` no longer imports or exports it."
+      },
+      {
+        "id": "AC-3",
+        "status": "SATISFIED",
+        "reason": "`agents/audits/SRP_VIOLATIONS.md` marks `formats/odi/manifest.py` as `Done` for `TASK-182`."
+      }
+    ],
+    "assertion": {
+      "ran": false,
+      "expected": null,
+      "actual": null,
+      "match": null,
+      "pre_impl_output": "N/A - non-calculator task",
+      "raw_output": "N/A - non-calculator task"
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "`formats/odi/manifest.py` contains the shim plus inline literal registries."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "`formats/odi/manifests/__init__.py` no longer imports `_registries`, and `_registries.py` was deleted."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "`agents/audits/SRP_VIOLATIONS.md` now lists the manifest row as `TASK-182` and `Done`."
+    }
+  ],
+  "files_modified": [
+    "agents/audits/SRP_VIOLATIONS.md",
+    "formats/odi/manifest.py",
+    "formats/odi/manifests/__init__.py",
+    "formats/odi/manifests/_registries.py"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}

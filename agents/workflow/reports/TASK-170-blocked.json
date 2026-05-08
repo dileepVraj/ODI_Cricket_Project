@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-170",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "agents/workflow/assertion.py is missing for a task that touches core/calculators/ and core/services/; should this task be reissued with the required assertion file?",
+  "blocker_context": "Read AGENTS.md, taskFile.md, executor soul, and pre-task skill. Ran the required pre-task sequence: compliance_bouncer passed, standards files loaded, and then checked for agents/workflow/assertion.py before implementation. The file does not exist, so pre-task.md requires an immediate stop with a BLOCKED report.",
+  "files_modified_so_far": [],
+  "taskfile_cleared": false
+}

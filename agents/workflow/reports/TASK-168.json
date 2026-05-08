@@ -1,0 +1,295 @@
+{
+  "task_id": "TASK-168",
+  "date": "2026-03-31",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "d49985184eb48a18ced6a1c249c104696eb9735c",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5S",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE_SRP",
+      "triggered": true,
+      "status": "PASS",
+      "violations": [
+        {
+          "file": "core/calculators/team/matchup_calculator.py",
+          "line": 1,
+          "rule": "SRP_WARNING",
+          "message": "module: score=3 [fn_count=26(A+1), lines=624(B+1), import_domains=3(E+1)]. Free-function module with mixed responsibilities."
+        },
+        {
+          "file": "core/calculators/team/venue_calculator.py",
+          "line": 1,
+          "rule": "SRP_WARNING",
+          "message": "module: score=3 [fn_count=42(A+1), lines=961(B+1), import_domains=3(E+1)]. Free-function module with mixed responsibilities."
+        },
+        {
+          "file": "core/data_access.py",
+          "line": 20,
+          "rule": "SRP_WARNING",
+          "message": "DataAccess: score=4 [method_count=33(A+1), lines=750(B+1), lcom4=8(C+2)]. 8 disjoint method groups."
+        },
+        {
+          "file": "core/match_pack/interpreter.py",
+          "line": 19,
+          "rule": "SRP_WARNING",
+          "message": "MatchInterpreter: score=3 [lines=883(B+1), lcom4=12(C+2)]. 12 disjoint method groups."
+        },
+        {
+          "file": "core/services/report_builder.py",
+          "line": 22,
+          "rule": "SRP_WARNING",
+          "message": "ReportBuilder: score=3 [lines=430(B+1), lcom4=6(C+2)]. 6 disjoint method groups."
+        },
+        {
+          "file": "core/services/squad_service.py",
+          "line": 21,
+          "rule": "SRP_WARNING",
+          "message": "SquadService: score=3 [lines=607(B+1), lcom4=7(C+2)]. 7 disjoint method groups."
+        },
+        {
+          "file": "api/main.py",
+          "line": 1,
+          "rule": "SRP_WARNING",
+          "message": "module: score=3 [fn_count=24(A+1), lines=588(B+1), import_domains=3(E+1)]. Free-function module with mixed responsibilities."
+        },
+        {
+          "file": "formats/odi/engines/player_engine.py",
+          "line": 47,
+          "rule": "SRP_FLAG",
+          "message": "PlayerEngine: score=5 [method_count=39(A+1), lines=1612(B+1), lcom4=13(C+2), import_domains=3(E+1)]. 13 disjoint method groups."
+        },
+        {
+          "file": "formats/odi/engines/team_engine.py",
+          "line": 18,
+          "rule": "SRP_FLAG",
+          "message": "TeamEngine: score=5 [method_count=29(A+1), lines=463(B+1), lcom4=11(C+2), import_domains=3(E+1)]. 11 disjoint method groups."
+        },
+        {
+          "file": "formats/odi/match_pack.py",
+          "line": 37,
+          "rule": "SRP_WARNING",
+          "message": "MatchPackGenerator: score=3 [lines=856(B+1), lcom4=10(C+2)]. 10 disjoint method groups."
+        }
+      ]
+    }
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "`core/utils/srp_sentinel.py` exists; `main()` prints JSON via `json.dumps(...)` when `--json` is set, and the provided GATE_SRP runtime output is valid JSON."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "In `core/utils/srp_sentinel.py:main()`, the JSON object contains exactly `gate`, `triggered`, `status`, `advisory`, `violations`, and `violation_count`, with no additional top-level keys."
+      },
+      {
+        "id": "AC-3",
+        "status": "SATISFIED",
+        "reason": "In `core/utils/srp_sentinel.py:main()`, `status` is emitted as the literal `\"PASS\"` and the function unconditionally `return`s `0`; the script exits through `raise SystemExit(main())`."
+      },
+      {
+        "id": "AC-4",
+        "status": "SATISFIED",
+        "reason": "Both violation construction sites in `core/utils/srp_sentinel.py:_scan_file()` create objects with exactly `file`, `line`, `rule`, and `message` keys."
+      },
+      {
+        "id": "AC-5",
+        "status": "SATISFIED",
+        "reason": "`core/utils/srp_sentinel.py:_compute_lcom4()` parses class methods from AST, collects `self.X` accesses from `ast.Attribute` where `node.value` is `ast.Name(id='self')`, unions methods sharing attributes, returns connected-component count, and returns `1` early when method count is `<= 1`."
+      },
+      {
+        "id": "AC-6",
+        "status": "SATISFIED",
+        "reason": "`core/utils/srp_sentinel.py:VERB_GROUPS` defines verb-prefix groups, `_count_verb_clusters()` marks a group active when a method name `startswith()` one of its prefixes, and `_scan_file()` fires Signal D with `signal_d = 1` when `verb_clusters >= VERB_CLUSTER_THRESHOLD` (`3`)."
+      },
+      {
+        "id": "AC-7",
+        "status": "SATISFIED",
+        "reason": "`core/utils/srp_sentinel.py:_count_import_domains()` inspects module-level `ast.Import` and `ast.ImportFrom` nodes from `tree.body`, skips `EXCLUDED_MODULE_PREFIXES`, maps modules through `PROJECT_DOMAIN_MAP` using `startswith()`, counts distinct domains, and `_scan_file()` applies `signal_e` once per file to every scored class."
+      },
+      {
+        "id": "AC-8",
+        "status": "SATISFIED",
+        "reason": "`core/utils/srp_sentinel.py:_scan_file()` computes Signal A (`method_count` or `fn_count` > 20), Signal B (`line_count` > 400), Signal C (`lcom4 > 1` => `+2`), Signal D (`verb_clusters >= 3`), and Signal E (`import_domain_count >= 3`); it emits `SRP_WARNING` for scores `3-4`, `SRP_FLAG` for scores `>= 5`, and emits nothing for lower scores."
+      },
+      {
+        "id": "AC-9",
+        "status": "SATISFIED",
+        "reason": "The `message` built in `core/utils/srp_sentinel.py:_scan_file()` includes the class/module name, total `score`, and fired signal/value fragments such as `method_count=...`, `lines=...`, `lcom4=...`, `verb_clusters=...`, and `import_domains=...`; it also appends disjoint-group detail when `lcom4 > 1`."
+      },
+      {
+        "id": "AC-10",
+        "status": "SATISFIED",
+        "reason": "`core/utils/srp_sentinel.py:main()` accepts `--root`, `--paths`, and `--json`; without `--json` it prints a human-readable summary and still returns `0`."
+      },
+      {
+        "id": "AC-11",
+        "status": "SATISFIED",
+        "reason": "`core/utils/srp_sentinel.py:DEFAULT_SCAN_PATHS` is `['core/', 'api/', 'formats/']`; `main()` resolves them relative to `--root`; `_collect_py_files()` silently skips missing paths, scans only `*.py`, and excludes paths containing `__pycache__`."
+      },
+      {
+        "id": "AC-12",
+        "status": "SATISFIED",
+        "reason": "`core/utils/paradigm_sentinel.py` adds `GATE_SRP_SCRIPT`, runs `gate_srp = run_gate(...)` after `gate6`, collects `srp_findings = list(gate_srp.get('violations', []))`, keeps `all_violations` limited to GATE1 + GATE6, includes `srp_advisory` in JSON output, and prints `GATE_SRP (advisory): {N} finding(s)` in human-readable mode."
+      },
+      {
+        "id": "AC-13",
+        "status": "SATISFIED",
+        "reason": "In `core/utils/paradigm_sentinel.py:main()`, the JSON payload includes `srp_advisory`, and `status` is derived only from `all_violations` built from GATE1 + GATE6, so advisory-only SRP findings do not change GATE5P PASS/FAIL behavior."
+      },
+      {
+        "id": "AC-14",
+        "status": "SATISFIED",
+        "reason": "`docs/guides/coreStandards/GATE_SEQUENCE.md` contains a new `GATE_SRP — srp-sentinel (advisory)` section documenting trigger condition, standalone command, always-PASS advisory status, signals checked, scoring thresholds, and appearance under GATE5P `srp_advisory` output."
+      },
+      {
+        "id": "AC-15",
+        "status": "SATISFIED",
+        "reason": "The provided GATE_SRP runtime output includes all five required files: `formats/odi/engines/player_engine.py`, `core/calculators/team/venue_calculator.py`, `core/data_access.py`, `core/match_pack/interpreter.py`, and `formats/odi/match_pack.py`, each with `SRP_WARNING` or `SRP_FLAG`."
+      },
+      {
+        "id": "AC-16",
+        "status": "SATISFIED",
+        "reason": "The provided global GATE6 runtime output is `{\"gate\": \"GATE6\", \"triggered\": true, \"status\": \"PASS\", \"violations\": [], \"violation_count\": 0}`, satisfying the required post-change global compliance pass."
+      }
+    ],
+    "assertion": {
+      "ran": false,
+      "expected": null,
+      "actual": null,
+      "match": null,
+      "pre_impl_output": "",
+      "raw_output": ""
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py` exists and `main()` emits valid JSON for `--json`."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:main()` emits exactly `gate`, `triggered`, `status`, `advisory`, `violations`, and `violation_count`."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:main()` hardcodes `status` to `PASS` and returns `0`."
+    },
+    {
+      "id": "AC-4",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:_scan_file()` emits only `file`, `line`, `rule`, and `message` in each violation."
+    },
+    {
+      "id": "AC-5",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:_compute_lcom4()` implements AST-based union-find cohesion scoring with `self.X` attribute access collection."
+    },
+    {
+      "id": "AC-6",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:VERB_GROUPS` and `_count_verb_clusters()` implement the verb clustering signal."
+    },
+    {
+      "id": "AC-7",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:_count_import_domains()` implements module-level import domain counting with exclusions and longest-prefix matching."
+    },
+    {
+      "id": "AC-8",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:_scan_file()` applies the five-signal scoring model and maps `3-4` to `SRP_WARNING` and `>=5` to `SRP_FLAG` for both classes and free-function modules."
+    },
+    {
+      "id": "AC-9",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:_scan_file()` message strings encode score and fired signal values, including disjoint-group detail."
+    },
+    {
+      "id": "AC-10",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:main()` supports `--root`, `--paths`, and `--json`, and prints a human-readable summary without `--json`."
+    },
+    {
+      "id": "AC-11",
+      "status": "SATISFIED",
+      "reason": "`core/utils/srp_sentinel.py:DEFAULT_SCAN_PATHS` and `_collect_py_files()` scan `core/`, `api/`, and `formats/`, skip missing paths, scan only `.py`, and exclude `__pycache__`."
+    },
+    {
+      "id": "AC-12",
+      "status": "SATISFIED",
+      "reason": "`core/utils/paradigm_sentinel.py` wires `GATE_SRP` into `GATE5P` as advisory-only and emits `srp_advisory`."
+    },
+    {
+      "id": "AC-13",
+      "status": "SATISFIED",
+      "reason": "`python core/utils/paradigm_sentinel.py --root . --json` returned `PASS` with an `srp_advisory` key while `violations` remained empty."
+    },
+    {
+      "id": "AC-14",
+      "status": "SATISFIED",
+      "reason": "`docs/guides/coreStandards/GATE_SEQUENCE.md` documents the advisory `GATE_SRP` trigger, command, signals, scoring, and reporting path."
+    },
+    {
+      "id": "AC-15",
+      "status": "SATISFIED",
+      "reason": "`python core/utils/srp_sentinel.py --root . --json` emitted findings for `formats/odi/engines/player_engine.py`, `core/calculators/team/venue_calculator.py`, `core/data_access.py`, `core/match_pack/interpreter.py`, and `formats/odi/match_pack.py`."
+    },
+    {
+      "id": "AC-16",
+      "status": "SATISFIED",
+      "reason": "`python core/utils/compliance_bouncer.py --root .` returned `PASS: 100% compliance across 22 file(s).`"
+    }
+  ],
+  "files_modified": [
+    "core/utils/srp_sentinel.py",
+    "core/utils/paradigm_sentinel.py",
+    "docs/guides/coreStandards/GATE_SEQUENCE.md"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}

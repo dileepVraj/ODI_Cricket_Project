@@ -1,0 +1,10 @@
+﻿{
+  "task_id": "TASK-182c",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Should formats/odi/manifest.py prioritize the task's alias-assignment requirement, or the current GATE3 manifest verifier requirement that MANIFEST be a parseable inline dict?",
+  "blocker_context": "I verified both branches of the implementation. A package-alias MANIFEST satisfies the task text and AC1/AC2, but GATE3 fails because run_verifier.py uses ast.literal_eval on MANIFEST and cannot parse a Name reference. An inline-dict MANIFEST makes GATE3 and compliance_bouncer pass, but fails the reviewer/task ACs that require alias delegation. The two requirements are mutually exclusive without changing the verifier or the task spec.",
+  "files_modified_so_far": ["formats/odi/manifest.py"],
+  "taskfile_cleared": false
+}

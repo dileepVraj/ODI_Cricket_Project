@@ -1,0 +1,13 @@
+{
+  "task_id": "TASK-174b",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Should the Task 3 status line in agents/audits/SRP_VIOLATIONS.md omit the TASK-174b commit hash until after the required pre-commit reviewer pass, or should the reviewer/commit ordering for this task be overridden?",
+  "blocker_context": "Bootstrap, pre-task setup, standards load, hub import verification, shim replacement, shim runtime import check, and all required gates passed (GATE1, GATE5S, GATE5T, GATE5P, GATE6, GATE_SRP) with violations_delta = 0. Two fresh codex-reviewer rounds were run. The second reviewer failure was solely that AC-3 requires the TASK-174b commit hash to appear in agents/audits/SRP_VIOLATIONS.md before commit, while the workflow requires reviewer PASS before any commit. Because the final commit hash does not exist until after commit, the task is self-contradictory as written.",
+  "files_modified_so_far": [
+    "core/match_pack/interpreter.py",
+    "agents/audits/SRP_VIOLATIONS.md"
+  ],
+  "taskfile_cleared": false
+}

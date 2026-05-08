@@ -15,7 +15,7 @@ commit exists in git history and all applicable gates passed.
 | ST-1 | `formats/odi/engines/team/_venue.py` | 2-line relocation | DONE (score 4->3, file remains at advisory -- accepted) |
 | ST-2 | `formats/odi/match_pack/_chapter1.py` | Method decomposition | DONE (score 3->0, removed from advisory) |
 | ST-3 | `core/match_pack/interpreters/summary_composer.py` | 3-way file split | DONE (score 3->0, removed from advisory) |
-| ST-4 | `formats/odi/match_pack/_formatter.py` | 3-way file split | NOT STARTED |
+| ST-4 | `formats/odi/match_pack/_formatter.py` | 3-way file split | DONE (score removed from advisory, 3 new builders created) |
 | ST-5 | `formats/odi/engines/player/_matchup.py` | 3-way file split | NOT STARTED |
 | ST-6 | `formats/odi/engines/player/_profile.py` | 2-way file split | NOT STARTED |
 | ST-7 | `core/services/serialization_service.py` | Sub-package extraction | NOT STARTED |

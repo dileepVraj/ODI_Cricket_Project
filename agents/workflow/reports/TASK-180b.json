@@ -1,0 +1,140 @@
+{
+  "task_id": "TASK-180b",
+  "date": "2026-04-04",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "53907da422f4440809579e1a6e1b7fc34ea06f5b",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE-C",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE2",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "FAIL",
+      "violations": [
+        {
+          "file": "core/utils/data_snapshot.py",
+          "line": 102,
+          "rule": "MYPY_ERROR",
+          "message": "Pre-existing advisory mypy baseline violation; 142 total violations reported."
+        }
+      ]
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE_SRP",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    }
+  ],
+  "reviewer": {
+    "verdict": "FAIL",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "core/calculators/team/venue_calculator.py re-exports the 11 required public and private names from core.calculators.team.venue._bias, core.calculators.team.venue._fortress, core.calculators.team.venue._matchup, and core.calculators.team.venue._phases."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "inspect.getsource(core.calculators.team.venue_calculator) is 30 lines, which is under the required 40-line shim threshold."
+      },
+      {
+        "id": "AC-3",
+        "status": "SATISFIED",
+        "reason": "core/calculators/team/venue/__init__.py still exports calculate_venue_bias_payload from the venue package, so TASK-180a remains intact."
+      },
+      {
+        "id": "AC-4",
+        "status": "SATISFIED",
+        "reason": "agents/workflow/assertion.py prints the expected PASS message after the shim replacement."
+      },
+      {
+        "id": "AC-5",
+        "status": "FAILED",
+        "reason": "GATE5T remains advisory but reports 142 pre-existing mypy violations; the reviewer did not treat that as a blocking implementation issue, but the workflow's all-gates requirement was not met literally."
+      }
+    ],
+    "assertion": {
+      "ran": true,
+      "expected": "ASSERTION PASSED: venue_calculator.py is a 30-line shim — all original import paths resolve",
+      "actual": "ASSERTION PASSED: venue_calculator.py is a 30-line shim — all original import paths resolve",
+      "match": true,
+      "pre_impl_output": "Traceback (most recent call last):\r\n  File \"C:\\Cricket_Project_Stable\\agents\\workflow\\assertion.py\", line 34, in <module>\r\n    assert line_count < 40, f\"ASSERTION FAILED: venue_calculator.py has {line_count} lines — expected shim (< 40 lines). Original not yet replaced.\"\r\n           ^^^^^^^^^^^^^^^\r\nAssertionError: ASSERTION FAILED: venue_calculator.py has 961 lines — expected shim (< 40 lines). Original not yet replaced.\r\n",
+      "raw_output": "ASSERTION PASSED: venue_calculator.py is a 30-line shim — all original import paths resolve\r\n",
+      "match": true
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": [
+      "GATE5T reports 142 pre-existing mypy violations and is advisory-only in this workflow.",
+      "The final reviewer did not return PASS because the workflow requires literal all-gates success."
+    ]
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "core/calculators/team/venue_calculator.py re-exports the 11 required names from the venue package."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "The shim source is 30 lines, below the 40-line threshold."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "core.calculators.team.venue still imports calculate_venue_bias_payload cleanly."
+    },
+    {
+      "id": "AC-4",
+      "status": "SATISFIED",
+      "reason": "The assertion script prints the expected PASS output."
+    },
+    {
+      "id": "AC-5",
+      "status": "FAILED",
+      "reason": "GATE5T remains advisory and reports pre-existing mypy violations."
+    }
+  ],
+  "files_modified": [
+    "agents/audits/SRP_VIOLATIONS.md",
+    "core/calculators/team/venue_calculator.py"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}

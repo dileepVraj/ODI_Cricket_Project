@@ -55,6 +55,12 @@ git commit -m "[TASK-XXX]: <one line description>"
 Capture commit hash. If commit fails (hook rejection) → fix the hook violation, retry once.
 Contract files are always permitted by the scope-guard (tests/contracts/* exemption).
 
+**IMPLEMENTATION IS NOW FROZEN.**
+After the commit hash is captured, do NOT modify any code file for any reason.
+No re-reading of gate output. No "one more fix." No further interpretation of standards.
+The implementation phase is closed. The only permitted actions from this point are:
+Step 6 (write report), Step 7 (clear workflow files), Step 8 (print summary).
+
 ### Step 6 — Write JSON report
 Write to `agents/workflow/reports/TASK-XXX.json` (NOT report.md — JSON only):
 ```json
@@ -73,7 +79,6 @@ Write to `agents/workflow/reports/TASK-XXX.json` (NOT report.md — JSON only):
     {"gate_id": "GATE2",     "triggered": true,  "status": "PASS",     "violations": []},
     {"gate_id": "GATE3",     "triggered": true,  "status": "PASS",     "violations": []},
     {"gate_id": "GATE4",     "triggered": false, "status": "SKIPPED",  "violations": []},
-    {"gate_id": "GATE5S",    "triggered": true,  "status": "PASS",     "violations": []},
     {"gate_id": "GATE5T",    "triggered": true,  "status": "PASS",     "violations": []},
     {"gate_id": "GATEF1",    "triggered": false, "status": "SKIPPED",  "violations": []},
     {"gate_id": "SRP-CHECK", "triggered": false, "status": "SKIPPED",  "violations": []},

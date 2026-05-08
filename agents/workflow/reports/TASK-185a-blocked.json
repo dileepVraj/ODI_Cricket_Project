@@ -1,0 +1,18 @@
+{
+  "task_id": "TASK-185a",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Should GATE5S be treated as a required gate for TASK-185a, or is the task judged only by the gates listed in the acceptance criteria?",
+  "blocker_context": "The requested manifest split, verifier update, compliance bouncer update, state cleanup, and SRP audit update were implemented and verified with passing GATE1, GATE3, GATE5T, GATE5P, and GATE6 outputs plus a clean Semgrep scan, but reviewer feedback still rejected the bundle on gate-artifact completeness and the review budget was exhausted.",
+  "files_modified_so_far": [
+    "agents/audits/SRP_VIOLATIONS.md",
+    "agents/workflow/state.json",
+    "agents/workflow/state.json.bak",
+    "core/gen_ai/skills/validators/backend/manifest-contract-verifier/scripts/run_verifier.py",
+    "core/utils/compliance_bouncer.py",
+    "formats/odi/manifest.py",
+    "formats/odi/manifests/_config.py"
+  ],
+  "taskfile_cleared": false
+}

@@ -1,0 +1,223 @@
+{
+  "task_id": "TASK-182a",
+  "date": "2026-04-05",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "3e59e31",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE-C",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5S",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE_SRP",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    }
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "`formats/odi/manifests/__init__.py` defines top-level `MANIFEST` and imports its pieces from `_config`, `_venue`, `_rivalry`, `_team`, `_player`, `_operations`, and `_registries`."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "`MANIFEST['categories']` is assembled from `*VENUE_CATEGORIES`, `*RIVALRY_CATEGORIES`, `*TEAM_CATEGORIES`, `*PLAYER_CATEGORIES`, and `*OPERATIONS_CATEGORIES`, totaling 6 categories."
+      },
+      {
+        "id": "AC-3",
+        "status": "SATISFIED",
+        "reason": "The split category files define 16 functions total: venue 4, rivalry 3, team 4, player 4, and operations 1."
+      },
+      {
+        "id": "AC-4",
+        "status": "SATISFIED",
+        "reason": "The category keys appear in the required order: `venue_intel`, `rivalry`, `team_command`, `player_scout`, `squad_battle`, `match_pack`."
+      },
+      {
+        "id": "AC-5",
+        "status": "SATISFIED",
+        "reason": "`formats/odi/manifests/_config.py` defines `FORMAT_RULES` and includes `tactical_thresholds`."
+      },
+      {
+        "id": "AC-6",
+        "status": "SATISFIED",
+        "reason": "`formats/odi/manifests/_registries.py` defines `ENGINE_LITERAL_REGISTRY`, `SERVICE_LITERAL_REGISTRY`, and `CALCULATOR_LITERAL_REGISTRY`, and the engine registry is non-empty."
+      },
+      {
+        "id": "AC-7",
+        "status": "SATISFIED",
+        "reason": "The provided `git diff HEAD -- formats/odi/manifest.py` output is empty."
+      },
+      {
+        "id": "AC-8",
+        "status": "SATISFIED",
+        "reason": "GATE1 output was empty with exit 0 after compiling the new manifest package files."
+      },
+      {
+        "id": "AC-9",
+        "status": "SATISFIED",
+        "reason": "GATE5T passed with `delta=0` against the 122 baseline."
+      },
+      {
+        "id": "AC-10",
+        "status": "SATISFIED",
+        "reason": "GATE5P passed with `GATE1 (boundary): PASS`, `GATE6 (bouncer): PASS`, and `GATE_SRP: PASS`."
+      },
+      {
+        "id": "AC-11",
+        "status": "SATISFIED",
+        "reason": "GATE6 reported `PASS: 100% compliance across 41 file(s).`"
+      },
+      {
+        "id": "AC-12",
+        "status": "SATISFIED",
+        "reason": "GATE_SRP reported `PASS (0 blocking, 8 advisory)`."
+      }
+    ],
+    "assertion": {
+      "ran": false,
+      "expected": null,
+      "actual": null,
+      "match": null,
+      "pre_impl_output": "",
+      "raw_output": ""
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "`formats/odi/manifests/__init__.py` defines top-level `MANIFEST` and imports its pieces from `_config`, `_venue`, `_rivalry`, `_team`, `_player`, `_operations`, and `_registries`."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "`MANIFEST['categories']` is assembled from `*VENUE_CATEGORIES`, `*RIVALRY_CATEGORIES`, `*TEAM_CATEGORIES`, `*PLAYER_CATEGORIES`, and `*OPERATIONS_CATEGORIES`, totaling 6 categories."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "The split category files define 16 functions total: venue 4, rivalry 3, team 4, player 4, and operations 1."
+    },
+    {
+      "id": "AC-4",
+      "status": "SATISFIED",
+      "reason": "The category keys appear in the required order: `venue_intel`, `rivalry`, `team_command`, `player_scout`, `squad_battle`, `match_pack`."
+    },
+    {
+      "id": "AC-5",
+      "status": "SATISFIED",
+      "reason": "`formats/odi/manifests/_config.py` defines `FORMAT_RULES` and includes `tactical_thresholds`."
+    },
+    {
+      "id": "AC-6",
+      "status": "SATISFIED",
+      "reason": "`formats/odi/manifests/_registries.py` defines `ENGINE_LITERAL_REGISTRY`, `SERVICE_LITERAL_REGISTRY`, and `CALCULATOR_LITERAL_REGISTRY`, and the engine registry is non-empty."
+    },
+    {
+      "id": "AC-7",
+      "status": "SATISFIED",
+      "reason": "The provided `git diff HEAD -- formats/odi/manifest.py` output is empty."
+    },
+    {
+      "id": "AC-8",
+      "status": "SATISFIED",
+      "reason": "GATE1 output was empty with exit 0 after compiling the new manifest package files."
+    },
+    {
+      "id": "AC-9",
+      "status": "SATISFIED",
+      "reason": "GATE5T passed with `delta=0` against the 122 baseline."
+    },
+    {
+      "id": "AC-10",
+      "status": "SATISFIED",
+      "reason": "GATE5P passed with `GATE1 (boundary): PASS`, `GATE6 (bouncer): PASS`, and `GATE_SRP: PASS`."
+    },
+    {
+      "id": "AC-11",
+      "status": "SATISFIED",
+      "reason": "GATE6 reported `PASS: 100% compliance across 41 file(s).`"
+    },
+    {
+      "id": "AC-12",
+      "status": "SATISFIED",
+      "reason": "GATE_SRP reported `PASS (0 blocking, 8 advisory)`."
+    }
+  ],
+  "files_modified": [
+    "formats/odi/manifests/__init__.py",
+    "formats/odi/manifests/_config.py",
+    "formats/odi/manifests/_venue.py",
+    "formats/odi/manifests/_rivalry.py",
+    "formats/odi/manifests/_team.py",
+    "formats/odi/manifests/_player.py",
+    "formats/odi/manifests/_operations.py",
+    "formats/odi/manifests/_registries.py"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}

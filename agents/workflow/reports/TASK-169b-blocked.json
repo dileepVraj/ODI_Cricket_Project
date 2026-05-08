@@ -1,0 +1,14 @@
+{
+  "task_id": "TASK-169b",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Can you provide a clean working tree and a passing baseline for GATE5T, or explicitly direct how the task should proceed despite the existing out-of-scope diffs and repo-wide type-check failures?",
+  "blocker_context": "Implemented the scoped refactor and verified all 5 smoke imports passed. boundary_sentinel passed, paradigm_sentinel passed, srp_sentinel passed with team_types.py removed from advisory output, and compliance_bouncer passed. The task still cannot complete because python core/utils/python_type_check.py --root . fails with 271 existing repo-wide violations, including wildcard-import lint hits required by AC4, and git diff --name-only HEAD currently lists many out-of-scope files outside core/interfaces/, so AC10 cannot be satisfied from the present repository state.",
+  "files_modified_so_far": [
+    "core/interfaces/team_types.py",
+    "core/interfaces/__init__.py",
+    "agents/audits/SRP_VIOLATIONS.md"
+  ],
+  "taskfile_cleared": false
+}

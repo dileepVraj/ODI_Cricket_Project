@@ -22,10 +22,16 @@ Gather the following before spawning. Everything must be passed explicitly —
 the subagent has no shared memory with you and no independent filesystem access.
 
 1. Full contents of `agents/workflow/taskFile.md`
-2. Full contents of every file listed under FILES IN SCOPE in the taskFile
+2. Implementation files to pass — depends on task type:
+   - **New logic task (new-feature, modification, bug-fix):** full contents of every
+     file listed under FILES IN SCOPE.
+   - **Refactor / verbatim-split task:** full contents of the new file(s) written this
+     task + only the relevant source lines from the origin file (use the LINE REFERENCE
+     TABLE in taskFile to extract just the lines being split — do NOT pass the entire
+     source file). The reviewer only needs to diff the new file against its source section.
 3. Raw terminal output from the last assertion run (after implementation)
    - Calculator/engine/service task: required — capture verbatim
-   - Frontend/infra task: pass `N/A - non-calculator task`
+   - Frontend/infra/refactor task: pass `N/A - non-calculator task`
 4. The expected assertion value from the Verification Matrix (or `null`)
 5. List of files actually modified: `git diff --cached --name-only`
 

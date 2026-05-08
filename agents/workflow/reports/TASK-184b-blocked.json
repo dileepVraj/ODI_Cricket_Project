@@ -1,0 +1,22 @@
+{
+  "task_id": "TASK-184b",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Why does the reviewer still mark agents/audits/SRP_VIOLATIONS.md as out of scope even though the taskFile lists it in FILES IN SCOPE?",
+  "blocker_context": "All gates passed, the commit 8e50ff3 was created, and the third reviewer round failed only because scope_clean was false with agents/audits/SRP_VIOLATIONS.md reported as out_of_scope_files.",
+  "files_modified_so_far": [
+    "agents/audits/SRP_VIOLATIONS.md",
+    "agents/workflow/pre_call_state.json",
+    "agents/workflow/scope.json",
+    "core/services/builder/_data_builder.py",
+    "core/services/builder/_form_assembler.py",
+    "core/services/builder/_matrix_generator.py",
+    "core/services/formatter/_display_formatter.py",
+    "core/services/formatter/_status_formatter.py",
+    "core/services/formatter/_tone_assigner.py",
+    "core/services/report_builder.py",
+    "core/services/report_formatter.py"
+  ],
+  "taskfile_cleared": false
+}

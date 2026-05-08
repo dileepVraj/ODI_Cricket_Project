@@ -1,0 +1,14 @@
+{
+  "task_id": "TASK-190",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "May I modify the package import chain outside the task scope so `from formats.odi.match_pack._assembler import MatchPackAssembler` can import without failing in `formats/odi/__init__.py`?",
+  "blocker_context": "The required acceptance import command fails before it reaches the new match-pack modules because `formats/odi/__init__.py` eagerly imports `formats.odi.engines.player`, which imports `core.calculators.team.matchup_calculator`; that module is missing in the current workspace and is outside the allowed task scope. The match-pack files themselves compile, but the package-level import path is blocked by this pre-existing dependency error.",
+  "files_modified_so_far": [
+    "formats/odi/match_pack/_assembler.py",
+    "formats/odi/match_pack/_formatter.py",
+    "formats/odi/match_pack/_orchestrator.py"
+  ],
+  "taskfile_cleared": false
+}

@@ -1,0 +1,14 @@
+{
+  "task_id": "TASK-188a",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "How should I satisfy the missing 'tactical_thresholds' format rule so the API can start and the TASK-188a baseline endpoints can be recorded?",
+  "blocker_context": "I wrote the TASK-188a workflow file, scope.json, and pre_call_state.json, then started the API with 'python -m uvicorn api.main:app --host 127.0.0.1 --port 8000'. Startup failed in api/lifespan.py -> initialize_pool() because formats/odi/engines/player/_base.py raised ConfigurationError: Missing required format rule 'tactical_thresholds'. The server never became reachable on 127.0.0.1:8000, so the required /health, /api/formats, /odi/context/teams, and /odi/execute/team_form baseline calls could not be completed.",
+  "files_modified_so_far": [
+    "agents/workflow/taskFile.md",
+    "agents/workflow/scope.json",
+    "agents/workflow/pre_call_state.json"
+  ],
+  "taskfile_cleared": false
+}

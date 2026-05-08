@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-176a",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Where is agents/workflow/assertion.py for TASK-176a, since the pre-task contract requires it before implementation?",
+  "blocker_context": "Pre-task step 5 requires running agents/workflow/assertion.py before any implementation. Test-Path returned false and Get-Content confirmed the file is missing.",
+  "files_modified_so_far": [],
+  "taskfile_cleared": false
+}

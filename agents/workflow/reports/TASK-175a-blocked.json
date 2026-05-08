@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-175a",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Can you restore or provide agents/workflow/assertion.py for TASK-175a so I can run the required pre-implementation assertion?",
+  "blocker_context": "I completed the required baseline and scope setup, loaded the task file and standards, and attempted to run python agents/workflow/assertion.py. The file is missing at agents/workflow/assertion.py, so the mandated red-state assertion cannot be captured.",
+  "files_modified_so_far": [],
+  "taskfile_cleared": false
+}

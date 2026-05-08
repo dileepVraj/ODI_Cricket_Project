@@ -1,0 +1,22 @@
+{
+  "task_id": "TASK-USER-TRADING-DASHBOARD",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Should I expand the task scope to include the pre-existing frontend/components/cockpit/CloseTradeView.tsx and frontend/components/cockpit/HistoryView.tsx SRP violations plus the unrelated Python lint debt that the required gates are failing on outside the requested cockpit files?",
+  "blocker_context": "The requested cockpit form split is implemented and the cockpit files pass local eslint and TypeScript checks, but the mandatory validation gates fail on unrelated repository debt: python core/utils/python_type_check.py --root . reports 41 pre-existing violations in other files, and python core/utils/frontend_paradigm_sentinel.py --root . reports component files over 300 lines in frontend/components/cockpit/CloseTradeView.tsx and frontend/components/cockpit/HistoryView.tsx, which are outside the requested scope.",
+  "files_modified_so_far": [
+    "api/cockpit/router.py",
+    "api/cockpit/schemas.py",
+    "agents/workflow/pre_call_state.json",
+    "agents/workflow/scope.json",
+    "frontend/app/styles/layout.css",
+    "frontend/components/cockpit/ActiveTradeView.tsx",
+    "frontend/components/cockpit/CockpitMatchSetup.tsx",
+    "frontend/components/cockpit/CockpitTradeDetails.tsx",
+    "frontend/components/cockpit/CockpitTradePanel.tsx",
+    "frontend/components/cockpit/cockpit-api.ts",
+    "frontend/components/cockpit/cockpit-types.ts"
+  ],
+  "taskfile_cleared": false
+}

@@ -1,0 +1,130 @@
+{
+  "task_id": "TASK-180a",
+  "date": "2026-04-04",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "11a4fd6",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE-C",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE2",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5S",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "SRP-CHECK",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    }
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "`core/calculators/team/venue/__init__.py` re-exports the five requested public functions and the assertion confirms they import from the hub successfully."
+      }
+    ],
+    "assertion": {
+      "ran": true,
+      "expected": "ASSERTION PASSED: venue package imports cleanly — all 5 public functions accessible from hub",
+      "actual": "ASSERTION PASSED: venue package imports cleanly — all 5 public functions accessible from hub",
+      "match": true,
+      "pre_impl_output": "Traceback (most recent call last):\r\n  File \"C:\\Cricket_Project_Stable\\agents\\workflow\\assertion.py\", line 9, in <module>\r\n    from core.calculators.team.venue import (\r\nModuleNotFoundError: No module named 'core.calculators.team.venue'",
+      "raw_output": "ASSERTION PASSED: venue package imports cleanly — all 5 public functions accessible from hub"
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "`core/calculators/team/venue/__init__.py` re-exports the five requested public functions and the assertion confirms they import from the hub successfully."
+    }
+  ],
+  "files_modified": [
+    "core/calculators/team/venue/__init__.py",
+    "core/calculators/team/venue/_base.py",
+    "core/calculators/team/venue/_bias.py",
+    "core/calculators/team/venue/_fortress.py",
+    "core/calculators/team/venue/_matchup.py",
+    "core/calculators/team/venue/_phases.py",
+    "agents/audits/SRP_VIOLATIONS.md"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}

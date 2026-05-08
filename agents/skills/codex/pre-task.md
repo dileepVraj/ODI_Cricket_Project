@@ -46,9 +46,25 @@ Write `agents/workflow/scope.json`:
 This file is read by the scope-guard pre-commit hook.
 Do not proceed if taskFile.md is empty or missing FILES IN SCOPE.
 
-### Step 3 — Load standards
-Read every file listed under READ FIRST in the TASK PROMPT section of taskFile.md.
-Do not skip any listed file. A missing standards file is not a blocker — note it and proceed.
+### Step 3 — Load standards (automatic — no READ FIRST or taskFile required)
+Based on what the task asks you to touch, load these standards now:
+
+Always — every task:
+- `docs/guides/coreStandards/MANDATES_1_TO_4.md`
+- `docs/guides/coreStandards/SYSTEM_TOPOLOGY.md`
+- `docs/guides/coreStandards/HIGH_IMPACT_REGISTRY.md`
+- `docs/guides/coreStandards/GATE_SEQUENCE.md`
+
+Backend task — any `core/` `formats/` `api/` `scripts/` file touched:
+- `docs/guides/backendStandards/PYTHON_STANDARDS.md`
+- `docs/guides/backendStandards/MEMORY_AND_THREADING.md`
+
+Frontend task — any `frontend/` file touched:
+- `docs/guides/frontendStandards/TACTICAL_EXECUTION.md`
+- `docs/guides/frontendStandards/UI_IMPLEMENTATION.md`
+- `docs/guides/frontendStandards/PERF_RESILIENCE_A11Y_TESTING.md`
+
+Do not rely on READ FIRST from any taskFile. Load based on what you will touch, not what someone else listed.
 
 ### Step 4 — Classify task
 Using the layer role table in MANDATES_1_TO_4.md, classify every file the task will touch.
@@ -59,12 +75,17 @@ This determines which gates trigger. Write classification to the pre_call_state.
   "last_commit": "<hash>",
   "timestamp": "<ISO>",
   "layers_touched": ["calculator", "frontend", "manifest"],
-  "gates_triggered": ["GATE1", "GATE-C", "GATE2", "GATE3", "GATE4", "GATE5S", "GATE5T", "GATEF1", "SRP-CHECK", "GATEF2", "GATEF3", "GATE5P", "GATE6"]
+  "gates_triggered": ["GATE1", "GATE-C", "GATE2", "GATE3", "GATE4", "GATE5T", "GATEF1", "SRP-CHECK", "GATEF2", "GATEF3", "GATE5P", "GATE6"]
 }
 ```
 
 ### Step 5 — Run pre-written assertion to capture red state (calculator/engine/service tasks only)
-If the task touches `core/calculators/`, `core/services/`, or `formats/*/engines/`:
+SKIP this step entirely if EITHER of the following is true:
+- Task Type in taskFile.md is "refactor" (file restructure with no new logic)
+- taskFile.md explicitly states "No assertion.py for this task"
+In both cases: set `assertion.pre_impl_output` to "N/A - non-calculator task" in the report.
+
+Otherwise, if the task touches `core/calculators/`, `core/services/`, or `formats/*/engines/`:
 `agents/workflow/assertion.py` was written by Claude before this task was assigned.
 Do NOT rewrite or modify it. It encodes the Verification Matrix — not your implementation plan.
 

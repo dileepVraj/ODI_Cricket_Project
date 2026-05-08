@@ -1,0 +1,102 @@
+{
+  "task_id": "TASK-173b",
+  "date": "2026-04-01",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "d5db806be616e5c86edc987efd0a2c03b9370e4b",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {"gate_id": "GATE1", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE-C", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE2", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE3", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE4", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE5S", "triggered": true, "status": "PASS", "violations": []},
+    {"gate_id": "GATE5T", "triggered": true, "status": "PASS", "violations": []},
+    {"gate_id": "GATEF1", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "SRP-CHECK", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATEF2", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATEF3", "triggered": false, "status": "SKIPPED", "violations": []},
+    {"gate_id": "GATE5P", "triggered": true, "status": "PASS", "violations": []},
+    {"gate_id": "GATE6", "triggered": true, "status": "PASS", "violations": []}
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "In MatchPackGenerator._build_chapter_1 in formats/odi/match_pack.py, the country H2H call derives host_country from resolve_venue_id(venue) and get_country_from_venue_id(...) before calling self.bot.analyze_country_h2h(home, away, host_country, 8), so home is no longer misused as country_name."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "The country H2H block no longer passes the nested VenueMatchupReport into transform_h2h_slim. It now reads summary, team_a.stats, and team_b.stats from raw_country and builds the flat data dict consumed by interpret_h2h, avoiding the old list-guard failure path."
+      }
+    ],
+    "assertion": {
+      "ran": false,
+      "expected": null,
+      "actual": null,
+      "match": null,
+      "pre_impl_output": "",
+      "raw_output": "N/A - non-calculator task"
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "The 1.3 Country H2H block now derives host_country from venue via resolve_venue_id(...) and get_country_from_venue_id(...), then passes that geographic identifier into analyze_country_h2h instead of passing home."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "The 1.3 Country H2H block no longer uses transform_h2h_slim on a VenueMatchupReport. It extracts wins, tie count, win percentage, defended wins, and chase wins directly from the structured payload and passes a compatible dict into interpret_h2h."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "The timeline label was updated from the generic In-Country, 8Y to the venue-derived f\"In {host_country}, 8Y\", so the rendered label matches the actual host-country filter used for the query."
+    },
+    {
+      "id": "AC-4",
+      "status": "SATISFIED",
+      "reason": "The staged diff only touched the import block and the country H2H block around lines 203-216. The global H2H calls at lines 160 and 166 remain raw_h2h_4y = self._silent_call(self.bot.analyze_global_h2h, home, away, 4) and raw_h2h_8y = self._silent_call(self.bot.analyze_global_h2h, home, away, 8)."
+    },
+    {
+      "id": "AC-5",
+      "status": "SATISFIED",
+      "reason": "semgrep --config auto formats/odi/match_pack.py --json completed with exit code 0 and results: []."
+    },
+    {
+      "id": "AC-6",
+      "status": "SATISFIED",
+      "reason": "ruff check formats/odi/match_pack.py returned exit code 0 with raw output: All checks passed!"
+    },
+    {
+      "id": "AC-7",
+      "status": "SATISFIED",
+      "reason": "python core/utils/paradigm_sentinel.py --root . returned exit code 0 and reported GATE5P - PASS."
+    },
+    {
+      "id": "AC-8",
+      "status": "SATISFIED",
+      "reason": "python core/utils/compliance_bouncer.py --root . returned exit code 0 and reported PASS: 100% compliance across 22 file(s)."
+    },
+    {
+      "id": "AC-9",
+      "status": "SATISFIED",
+      "reason": "baseline_violations was 0 in pre_call_state.json and final compliance_bouncer count remained 0, so violations_delta = 0."
+    }
+  ],
+  "files_modified": ["formats/odi/match_pack.py"],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}

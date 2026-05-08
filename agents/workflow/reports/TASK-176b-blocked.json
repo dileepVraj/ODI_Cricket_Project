@@ -1,0 +1,21 @@
+{
+  "task_id": "TASK-176b",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Can you confirm the runtime import-check stdout and explicit violations_delta needed to satisfy AC8 and AC9?",
+  "blocker_context": "Three reviewer rounds were completed. The code and gates passed locally, but the reviewer could not verify AC8/AC9 because the supplied review artifacts did not include the `python -c \"from core.interfaces import team_types, venue_types, player_types, serialization_types\"` stdout or an explicit `violations_delta` value.",
+  "files_modified_so_far": [
+    "core/interfaces/shared_types.py",
+    "core/interfaces/team_types.py",
+    "core/interfaces/venue_types.py",
+    "core/interfaces/player_types.py",
+    "core/interfaces/serialization_types.py",
+    "core/interfaces/__init__.py",
+    "agents/audits/SRP_VIOLATIONS.md",
+    "agents/workflow/state.json",
+    "agents/workflow/scope.json",
+    "agents/workflow/pre_call_state.json"
+  ],
+  "taskfile_cleared": false
+}

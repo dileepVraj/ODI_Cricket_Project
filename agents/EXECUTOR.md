@@ -1,17 +1,14 @@
-# EXECUTOR.md — Codex Full Operational Reference
+# EXECUTOR.md — Universal Executor Reference
 **Version:** 4.0 | **Updated:** 2026-03-26
-**Read by:** Codex (Executor) during task execution. Governs all backend and frontend tasks.
+**Read by:** Any executor agent (Claude, Codex, or Gemini). Governs all backend, frontend, and design tasks.
 
 ---
 
 ## BOOTSTRAP SEQUENCE
 
-**E0 — Check taskFile**
-```bash
-cat agents/workflow/taskFile.md
-```
-Non-empty → stop all other steps. Execute the task. Do not proceed to E1.
-Empty or missing → continue with E1.
+**E0 — Wait for human direction**
+Do not read or act on `agents/workflow/taskFile.md` unless the human explicitly points to it and asks you to work on it.
+Wait for the human to tell you what to work on.
 
 **E1 — Soul**
 Read `agents/souls/executor.md`. Ground every decision before touching code.
@@ -203,18 +200,33 @@ Status: [COMPLETE / BLOCKED — reason]
 | `jcodemunch` | Code exploration and symbol search across the codebase |
 | `duckdb` | Query `formats/odi/data/odi.duckdb` directly |
 | `cricket` | Live cricket domain context during implementation |
-| `stitch` | **Claude-native only** — not available to Codex. Stitch HTML is embedded in `taskFile.md` by the Architect as your visual reference. |
+| `stitch` | Create and iterate on designs. Available to all executors. Use when the task includes design work or when you need to reference a design for implementation. |
 
 ---
 
-## HARD PROHIBITIONS
+## CONTINUATION PROTOCOL
+
+If you are picking up work left blocked by a previous executor:
+
+1. Read `agents/workflow/taskFile.md` in full (the original task spec -- not cleared when blocked)
+2. Read `agents/workflow/reports/TASK-XXX-blocked.json` (what was tried + the exact blocker)
+3. Run `git diff HEAD` to see any uncommitted changes the previous agent made
+4. Run `git log --oneline -5` to see any commits already made by the previous agent
+5. Resolve the blocker, complete the remaining implementation, run all triggered gates, commit, and write a COMPLETE report
+
+Do not restart the task from scratch unless the previous agent's changes must be reverted.
+
+---
+
+## HARD PROHIBITIONS -- EXECUTION
+
+These are workflow and process rules. All coding rules (typing, vectorization, CSS tokens, ASCII,
+dependency management, domain logic separation, etc.) live exclusively in the standards files
+auto-loaded in Phase 1. Do not look here for coding rules.
 
 - Never touch files outside task scope.
-- Never update `agents/workflow/handoff.md` — that belongs to the Architect.
+- Never update `agents/workflow/handoff.md` -- that belongs to Claude (Architect role).
+- Update `agents/workflow/state.json` only through the Architect role after task verification. Do not update it during task execution.
 - Never skip gates. Never mark COMPLETE before all triggered gates PASS.
 - Never proceed when blocked. Write the BLOCKED report with your exact question.
-- Never introduce new npm packages or Python dependencies without explicit instruction.
-- Never write domain logic (cricket arithmetic) in React components.
-- Never use raw hex/rgba values — CSS variables only.
-- Never use `any` in TypeScript.
-- Never commit `agents/workflow/taskFile.md` — it is in .gitignore.
+- Never commit `agents/workflow/taskFile.md` -- it is in .gitignore.

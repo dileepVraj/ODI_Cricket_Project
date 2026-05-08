@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-183b",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Should I recreate agents/workflow/assertion.py, or is there another location for the pre-task assertion script?",
+  "blocker_context": "Ran the required pre-task checks. Baseline compliance_bouncer reported 1 existing violation in formats/odi/engines/team_engine.py, and Test-Path agents/workflow/assertion.py returned false, so the required pre-written assertion script is missing.",
+  "files_modified_so_far": [],
+  "taskfile_cleared": false
+}

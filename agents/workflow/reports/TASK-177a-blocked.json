@@ -1,0 +1,10 @@
+{
+  "task_id": "TASK-177a",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Should AC-5 be interpreted as forbidding only the deprecated import path core.services.squad_service rather than the required self.squad_service attribute name, and should the report-only task ignore the repository-wide mypy failures from python -m mypy formats/odi/engines/player/ --ignore-missing-imports --no-error-summary?",
+  "blocker_context": "Reviewer verdict was FAIL. AC-5 failed because the player package still contains self.squad_service attribute uses in formats/odi/engines/player/_base.py and formats/odi/engines/player/_squad.py. Additional evidence gathered later showed the package tree contains exactly __init__.py, _base.py, _squad.py, and _profile.py (plus __pycache__), player_engine.py is unchanged in the commit diff, semgrep passes when run directly, and the requested mypy command reports many pre-existing errors outside the touched files.",
+  "files_modified_so_far": [],
+  "taskfile_cleared": false
+}

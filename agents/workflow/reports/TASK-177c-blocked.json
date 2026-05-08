@@ -1,0 +1,18 @@
+{
+  "task_id": "TASK-177c",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Where is agents/workflow/assertion.py? The task requires running it before implementation, but the file is absent.",
+  "blocker_context": "I checked the worktree and agents/workflow/assertion.py does not exist; a recursive search for assertion.py under the repo also returned no matches. Pre-task Step 5 cannot run until the file is restored.",
+  "files_modified_so_far": [
+    "agents/audits/SRP_VIOLATIONS.md",
+    "agents/workflow/scope.json",
+    "agents/workflow/state.json",
+    "agents/workflow/state.json.bak",
+    "core/services/__init__.py",
+    "core/services/squad_service.py",
+    "formats/odi/engines/player_engine.py"
+  ],
+  "taskfile_cleared": false
+}

@@ -1,4 +1,13 @@
-# DESIGNER.md — Gemini Full Operational Reference
+# DESIGNER.md -- RETIRED (v4.0 -> v5.0)
+
+> This file is retired as of 2026-04-19. Gemini is no longer limited to design and guide tasks.
+> All executors (Claude, Codex, Gemini) follow the same standard: `AGENTS.md`.
+> Design is now a task type embedded in the taskFile, not a separate phase with a separate agent.
+> See `agents/PIPELINE.md` for the new design workflow.
+
+---
+
+# DESIGNER.md — Gemini Full Operational Reference (ARCHIVED)
 **Version:** 4.0 | **Updated:** 2026-03-26
 **Read by:** Gemini (Designer) during design and guide implementation tasks.
 

@@ -1,0 +1,34 @@
+{
+  "task": "TASK-188a",
+  "status": "PASS",
+  "baseline": {
+    "health": {
+      "keys_present": [
+        "status",
+        "formats_loaded",
+        "total_matches"
+      ]
+    },
+    "formats": {
+      "format_names": [
+        "odi",
+        "t20i",
+        "wodi",
+        "wt20i",
+        "ipl"
+      ]
+    },
+    "teams": {
+      "response_type": "list",
+      "sample_item_keys": []
+    },
+    "execute": {
+      "top_level_keys": [
+        "function_key",
+        "output_type",
+        "data",
+        "metadata"
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "task_id": "TASK-168",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Stash pop conflict — prior blocked work cannot be cleanly restored. Conflicting files: core/utils/paradigm_sentinel.py, docs/guides/coreStandards/GATE_SEQUENCE.md, core/utils/srp_sentinel.py. Human must resolve manually.",
+  "blocker_context": "Ran the required pre-task resume step after detecting stash `stash@{0}: On main: TASK-168 blocked partial - AC16 compliance conflict`. `git stash pop` aborted because local working tree changes would be overwritten in `core/utils/paradigm_sentinel.py` and `docs/guides/coreStandards/GATE_SEQUENCE.md`, and the untracked file `core/utils/srp_sentinel.py` would also be overwritten. Per the pre-task skill, execution stopped immediately without attempting conflict resolution or dropping the stash.",
+  "files_modified_so_far": [
+    "core/utils/srp_sentinel.py",
+    "core/utils/paradigm_sentinel.py",
+    "docs/guides/coreStandards/GATE_SEQUENCE.md"
+  ],
+  "taskfile_cleared": false
+}

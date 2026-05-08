@@ -1,42 +1,26 @@
 {
   "schema_version": 1,
-  "last_completed_task": "TASK-176a",
-  "last_commit": "2ea21ca",
+  "last_completed_task": "TASK-185c",
+  "last_commit": "3903835",
   "gate_baseline_violations": 0,
-  "mypy_baseline_violations": 145,
-  "active": {
-    "task_id": "TASK-176b",
-    "phase": "MULTI-PHASE-C",
-    "agent": "Codex",
-    "invoked_at": "2026-04-02T11:48:08.227449+00:00",
-    "pre_call_commit": "2ea21ca",
-    "retry_count": 2,
-    "thread_id": null
-  },
-  "abandoned_tasks": [],
+  "mypy_baseline_violations": 91,
+  "mypy_full_codebase_violations": 454,
+  "mypy_scope": "core/ --exclude core/gen_ai",
+  "mypy_note": "Baseline at 91 after TASK-185b bouncer/ package. GATE5T advisory-only until TASK-189+ clears the baseline.",
+  "active": null,
+  "abandoned_tasks": [
+    {
+      "task_id": "TASK-182c",
+      "abandoned_at": "2026-04-05T01:30:00.000000+00:00",
+      "reason": "Task spec was wrong -- GATE3 run_verifier.py uses ast.literal_eval to load MANIFEST from the file AST, which cannot resolve name references. MANIFEST = _PACKAGE_MANIFEST would cause GATE3 to fail. The 182b inline MANIFEST is required by TASK-185."
+    }
+  ],
   "dirty_files": [],
   "standing_notices": [
-    {
-      "id": "SN-004",
-      "summary": "_silent_call stdout suppression has Python stdlib thread-safety limitation",
-      "detail": "contextlib.redirect_stdout modifies sys.stdout globally. Not a regression from TASK-173a \u00e2\u20ac\u201d double-restore bug is fixed and nested calls restore correctly. Truly thread-safe requires thread-local storage. Address if concurrent pack generation is ever introduced.",
-      "added": "TASK-173a",
-      "blocks": false
-    },
-    {
-      "id": "SN-005",
-      "summary": "TeamInterface contract for analyze_country_h2h is stale \u00e2\u20ac\u201d declares ComparisonReportRows but engine returns VenueMatchupReport",
-      "detail": "TASK-173b works correctly against the runtime type (VenueMatchupReport). The interface definition has never matched the engine. Strict mypy would flag .get('summary') access as a type error. Resolve by updating the interface contract to match the engine's actual return type.",
-      "added": "TASK-173b",
-      "blocks": false
-    },
-    {
-      "id": "SN-006",
-      "summary": "Country H2H all-tie edge case yields misleading win_pct narrative",
-      "detail": "If every match in the country H2H sample is a tie/no-result, win_pct=0 and interpret_h2h produces a false away-dominance narrative. Practically impossible in 8Y cricket H2H but theoretically valid. Add a matches_decided guard if this section is ever extended.",
-      "added": "TASK-173b",
-      "blocks": false
-    }
+    {"id": "SN-004", "summary": "_silent_call stdout suppression has Python stdlib thread-safety limitation", "detail": "contextlib.redirect_stdout modifies sys.stdout globally. Not a regression from TASK-173a.", "added": "TASK-173a", "blocks": false},
+    {"id": "SN-006", "summary": "Country H2H all-tie edge case yields misleading win_pct narrative", "detail": "Add a matches_decided guard if this section is ever extended.", "added": "TASK-173b", "blocks": false},
+    {"id": "SN-007", "summary": "GATE5T advisory-only until mypy baseline cleared", "detail": "Baseline: 91. Advisory-only in pre-commit hook until TASK-189+ clears the baseline.", "added": "TASK-178", "blocks": false},
+    {"id": "SN-008", "summary": "Manifest-contract-verifier (GATE3) cannot resolve inherited methods through hub-pattern classes", "detail": "Any future hub-pattern class must include stubs for all manifest-decorated methods.", "added": "TASK-177c", "blocks": false}
   ],
   "next": "ready"
 }

@@ -1,0 +1,18 @@
+{
+  "task_id": "TASK-174a",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "How should this task proceed when AC-2 requires `_base.py` to copy MatchInterpreter.__init__ verbatim, but GATE5S blocks the exact dynamic `importlib.import_module(...)` lines as a security violation?",
+  "blocker_context": "Bootstrap completed cleanly. Implemented the additive `core/match_pack/interpreters/` package, all 7 smoke imports passed, `git diff -- core/match_pack/interpreter.py` was empty, GATE1 passed, GATE5T passed, GATE5P passed, GATE6 passed, and a fresh reviewer subagent returned PASS after receiving the smoke-import and gate outputs. The first commit attempt failed because the hook's semgrep path crashed under Windows encoding. Retrying the same commit with `PYTHONUTF8=1` and `PYTHONIOENCODING=utf-8` let semgrep run, and it then blocked `_base.py` lines 27-28 with `python.lang.security.audit.non-literal-import.non-literal-import` on the two required dynamic imports copied from `core/match_pack/interpreter.py`. Changing those lines would violate AC-2's verbatim-copy requirement, so the additive implementation was stashed as `TASK-174a blocked partial — semgrep blocks verbatim __init__` instead of forcing a non-compliant edit.",
+  "files_modified_so_far": [
+    "core/match_pack/interpreters/__init__.py",
+    "core/match_pack/interpreters/_base.py",
+    "core/match_pack/interpreters/h2h_interpreter.py",
+    "core/match_pack/interpreters/venue_interpreter.py",
+    "core/match_pack/interpreters/team_interpreter.py",
+    "core/match_pack/interpreters/player_interpreter.py",
+    "core/match_pack/interpreters/summary_composer.py"
+  ],
+  "taskfile_cleared": false
+}

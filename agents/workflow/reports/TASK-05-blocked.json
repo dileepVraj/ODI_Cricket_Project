@@ -1,0 +1,24 @@
+{
+  "task_id": "TASK-05",
+  "agent": "Codex",
+  "status": "BLOCKED",
+  "commit": null,
+  "blocker": "Do you want me to expand scope to the existing cockpit/backend compliance debt so the repo-wide compliance bouncer can pass, or should I keep this task limited to the Santhel cleanup?",
+  "blocker_context": "The Santhel cleanup itself was implemented and the scoped frontend checks passed, but the scoped compliance/meta gates still fail on cockpit/backend files because the repo enforces manifest/compliance rules that pre-exist this task. Frontend lint and TypeScript passed when scoped to the edited cockpit files; python type check also passed. The remaining blockers are repo-policy violations in the touched backend surface, not Santhel references.",
+  "files_modified_so_far": [
+    "api/cockpit/router.py",
+    "cockpit/database.py",
+    "cockpit/models.py",
+    "cockpit/schemas.py",
+    "cockpit/scraper.py",
+    "frontend/app/styles/live-trade-cockpit.css",
+    "frontend/components/cockpit/CockpitModule.tsx",
+    "frontend/components/cockpit/LiveOddsPanel.tsx",
+    "frontend/components/cockpit/LiveScorePanel.tsx",
+    "frontend/components/cockpit/LiveTradeCockpit.tsx",
+    "frontend/components/cockpit/cockpit-api.ts",
+    "frontend/components/cockpit/cockpit-types.ts",
+    "frontend/components/cockpit/SanthelSettingsPanel.tsx"
+  ],
+  "taskfile_cleared": false
+}

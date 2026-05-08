@@ -1,0 +1,200 @@
+{
+  "task_id": "TASK-181a",
+  "date": "2026-04-04",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "664570e2d63b8406192f1316fe6ff9e3e0386e8b",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE-C",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE2",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5S",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "SRP-CHECK",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    }
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "The package directory contains exactly five Python files: `__init__.py`, `_base.py`, `_h2h.py`, `_performance.py`, and `_form.py`."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "`core/calculators/team/matchup/__init__.py` re-exports `calculate_global_h2h_payload`, `calculate_country_h2h_payload`, `calculate_global_h2h_structured_payload`, `calculate_home_dominance_payload`, `calculate_away_performance_payload`, `calculate_global_performance_payload`, `calculate_continent_performance_payload`, and `calculate_team_form_payload`."
+      },
+      {
+        "id": "AC-3",
+        "status": "SATISFIED",
+        "reason": "`core/calculators/team/matchup/__init__.py` re-exports all required TypedDicts from `._base`: `GlobalH2HContext`, `CountryH2HContext`, `HomeDominanceContext`, `AwayPerformanceContext`, `GlobalPerformanceContext`, `ContinentPerformanceContext`, `TeamFormContext`, `ComparisonRowsPayload`, `VenueMatchupPayload`, `GlobalH2HStructuredPayload`, `MatrixRowsPayload`, `TeamFormRowsPayload`, and `ContinentRowsPayload`."
+      },
+      {
+        "id": "AC-4",
+        "status": "SATISFIED",
+        "reason": "`git diff HEAD -- core/calculators/team/matchup_calculator.py` returned no output, so the source file remained unchanged."
+      },
+      {
+        "id": "AC-5",
+        "status": "SATISFIED",
+        "reason": "py_compile succeeded for all five new package files with exit code 0."
+      },
+      {
+        "id": "AC-6",
+        "status": "SATISFIED",
+        "reason": "`python core/utils/python_type_check.py` reported 142 violations, which is within the task threshold."
+      },
+      {
+        "id": "AC-7",
+        "status": "SATISFIED",
+        "reason": "`python core/utils/srp_sentinel.py` reported `PASS (0 blocking, 9 advisory)` and the advisory count did not increase."
+      },
+      {
+        "id": "AC-8",
+        "status": "SATISFIED",
+        "reason": "`python core/utils/compliance_bouncer.py --root .` reported `PASS: 100% compliance across 41 file(s).`"
+      }
+    ],
+    "assertion": {
+      "ran": true,
+      "expected": "ASSERTION PASSED: matchup/ package importable — all public functions and TypedDicts reachable",
+      "actual": "ASSERTION PASSED: matchup/ package importable — all public functions and TypedDicts reachable",
+      "match": true,
+      "pre_impl_output": "Traceback (most recent call last):\r\n  File \"C:\\Cricket_Project_Stable\\agents\\workflow\\assertion.py\", line 6, in <module>\r\n    from core.calculators.team.matchup import (\r\nModuleNotFoundError: No module named 'core'",
+      "raw_output": "ASSERTION PASSED: matchup/ package importable — all public functions and TypedDicts reachable"
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "The package directory contains exactly five Python files: `__init__.py`, `_base.py`, `_h2h.py`, `_performance.py`, and `_form.py`."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "`core/calculators/team/matchup/__init__.py` re-exports `calculate_global_h2h_payload`, `calculate_country_h2h_payload`, `calculate_global_h2h_structured_payload`, `calculate_home_dominance_payload`, `calculate_away_performance_payload`, `calculate_global_performance_payload`, `calculate_continent_performance_payload`, and `calculate_team_form_payload`."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "`core/calculators/team/matchup/__init__.py` re-exports all required TypedDicts from `._base`: `GlobalH2HContext`, `CountryH2HContext`, `HomeDominanceContext`, `AwayPerformanceContext`, `GlobalPerformanceContext`, `ContinentPerformanceContext`, `TeamFormContext`, `ComparisonRowsPayload`, `VenueMatchupPayload`, `GlobalH2HStructuredPayload`, `MatrixRowsPayload`, `TeamFormRowsPayload`, and `ContinentRowsPayload`."
+    },
+    {
+      "id": "AC-4",
+      "status": "SATISFIED",
+      "reason": "`git diff HEAD -- core/calculators/team/matchup_calculator.py` returned no output, so the source file remained unchanged."
+    },
+    {
+      "id": "AC-5",
+      "status": "SATISFIED",
+      "reason": "`py_compile` succeeded for all five new package files with exit code 0."
+    },
+    {
+      "id": "AC-6",
+      "status": "SATISFIED",
+      "reason": "`python core/utils/python_type_check.py` reported 142 violations, which is within the task threshold."
+    },
+    {
+      "id": "AC-7",
+      "status": "SATISFIED",
+      "reason": "`python core/utils/srp_sentinel.py` reported `PASS (0 blocking, 9 advisory)` and the advisory count did not increase."
+    },
+    {
+      "id": "AC-8",
+      "status": "SATISFIED",
+      "reason": "`python core/utils/compliance_bouncer.py --root .` reported `PASS: 100% compliance across 41 file(s).`"
+    }
+  ],
+  "files_modified": [
+    "agents/audits/SRP_VIOLATIONS.md",
+    "core/calculators/team/matchup/__init__.py",
+    "core/calculators/team/matchup/_base.py",
+    "core/calculators/team/matchup/_h2h.py",
+    "core/calculators/team/matchup/_performance.py",
+    "core/calculators/team/matchup/_form.py",
+    "tests/contracts/test_core_calculators_team_matchup.py"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}

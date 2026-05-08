@@ -1,0 +1,184 @@
+{
+  "task_id": "TASK-187a",
+  "date": "2026-04-08",
+  "agent": "Codex",
+  "status": "COMPLETE",
+  "commit": "a145587",
+  "baseline_violations": 0,
+  "post_task_violations": 0,
+  "violations_delta": 0,
+  "gates": [
+    {
+      "gate_id": "GATE1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE-C",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5S",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5T",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE5P",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATE6",
+      "triggered": true,
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF1",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "SRP-CHECK",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF2",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF3",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    },
+    {
+      "gate_id": "GATEF4",
+      "triggered": false,
+      "status": "SKIPPED",
+      "violations": []
+    }
+  ],
+  "reviewer": {
+    "verdict": "PASS",
+    "acs": [
+      {
+        "id": "AC-1",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack/__init__.py exports MatchPackAssembler, MatchPackOrchestrator, MatchPackPersister, and MatchPackGenerator at module scope, so importing formats.odi.match_pack exposes all four names without changing api/main.py or config/format_registry.py."
+      },
+      {
+        "id": "AC-2",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack/__init__.py assigns MatchPackGenerator = MatchPackOrchestrator, so the package namespace resolves MatchPackGenerator to MatchPackOrchestrator."
+      },
+      {
+        "id": "AC-3",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack/_orchestrator.py defines MatchPackOrchestrator.__init__(self, bot, reports_dir=None) and wires self.assembler = MatchPackAssembler() plus self.persister = MatchPackPersister(reports_dir=reports_dir)."
+      },
+      {
+        "id": "AC-4",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack/_assembler.py implements MatchPackAssembler._strip_internal_keys() with recursive handling for dict values and list items, while filtering out keys starting with underscore."
+      },
+      {
+        "id": "AC-5",
+        "status": "SATISFIED",
+        "reason": "formats/odi/match_pack/_persister.py defines MatchPackPersister(reports_dir=None) and _save_report(), which creates the reports directory, builds the filename internally, and writes JSON with json.dump."
+      },
+      {
+        "id": "AC-6",
+        "status": "SATISFIED",
+        "reason": "The provided registry snippet in config.format_registry.get_format_engines() imports f\"{base}.match_pack\" and returns mod.MatchPackGenerator, and the package __init__.py exports MatchPackGenerator, so ODI registration still resolves through the package boundary."
+      }
+    ],
+    "assertion": {
+      "ran": false,
+      "expected": null,
+      "actual": null,
+      "match": null,
+      "pre_impl_output": "N/A - non-calculator task",
+      "raw_output": "N/A - non-calculator task"
+    },
+    "scope_clean": true,
+    "out_of_scope_files": [],
+    "issues": []
+  },
+  "acs": [
+    {
+      "id": "AC-1",
+      "status": "SATISFIED",
+      "reason": "formats/odi/match_pack/__init__.py exports MatchPackAssembler, MatchPackOrchestrator, MatchPackPersister, and MatchPackGenerator at module scope."
+    },
+    {
+      "id": "AC-2",
+      "status": "SATISFIED",
+      "reason": "MatchPackGenerator is assigned to MatchPackOrchestrator in the package namespace."
+    },
+    {
+      "id": "AC-3",
+      "status": "SATISFIED",
+      "reason": "MatchPackOrchestrator wires dedicated assembler and persister helpers during initialization."
+    },
+    {
+      "id": "AC-4",
+      "status": "SATISFIED",
+      "reason": "MatchPackAssembler strips internal keys recursively from nested dict and list payloads."
+    },
+    {
+      "id": "AC-5",
+      "status": "SATISFIED",
+      "reason": "MatchPackPersister writes JSON to a configured reports directory without caller-side path logic."
+    },
+    {
+      "id": "AC-6",
+      "status": "SATISFIED",
+      "reason": "config.format_registry still resolves MatchPackGenerator through the package boundary."
+    }
+  ],
+  "files_modified": [
+    "formats/odi/match_pack/__init__.py",
+    "formats/odi/match_pack/_assembler.py",
+    "formats/odi/match_pack/_legacy.py",
+    "formats/odi/match_pack/_orchestrator.py",
+    "formats/odi/match_pack/_persister.py"
+  ],
+  "scope_violations": [],
+  "blockers_hit": [],
+  "taskfile_cleared": true
+}

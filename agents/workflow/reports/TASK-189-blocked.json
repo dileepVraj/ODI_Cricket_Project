@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-189",
+  "phase": "1",
+  "status": "BLOCKED",
+  "blocked_at": "2026-04-08",
+  "reason": "Phase 1 fixes are complete on the files listed in the plan. However, mypy is also pulling in errors from imported modules that are outside the Phase 1 file list. These are files that our Phase 1 files import from — mypy follows those imports and reports errors inside them too, even though we were not supposed to touch them. This means the verification command still shows errors even after all Phase 1 files are fixed correctly.",
+  "phase_1_files_fixed": [
+    "core/match_pack/transformers/player_transformer.py",
+    "core/match_pack/interpreters/team_interpreter.py",
+    "core/utils/data_snapshot.py",
+    "formats/odi/utils/json_converter.py",
+    "formats/odi/utils/refinery_script.py",
+    "api/engine_pool.py",
+    "formats/odi/tests/truth_bridge/base_runner.py",
+    "config/settings.py"
+  ],
+  "decision_required": true,
+  "options": [
+    {
+      "option": 1,
+      "label": "Expand Phase 1 scope",
+      "description": "Widen Phase 1 to also fix the imported modules that mypy is dragging in. This clears the error count fully but means touching more files than originally planned. More work now, cleaner result."
+    },
+    {
+      "option": 2,
+      "label": "Switch verification to file-only mode",
+      "description": "Change the verification command to only check the Phase 1 files directly (not their imports). This lets us confirm Phase 1 is genuinely done without being blocked by errors in files we are not responsible for yet. Those other files get fixed in a later phase."
+    }
+  ],
+  "question_for_human": "Phase 1 code changes are done. Which option would you like to take — Option 1 (fix the extra files mypy is pulling in, more work but fully clean) or Option 2 (check only the Phase 1 files, confirm they are fixed, and leave the other files for a later phase)?"
+}
