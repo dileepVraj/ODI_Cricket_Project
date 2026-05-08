@@ -51,7 +51,6 @@ export interface TradeFilters {
     season?: number;
     status?: string;
     result?: "SAT" | "SAV+" | "SAV-" | "LOST" | "OPEN";
-    is_fake_favourite?: boolean;
 }
 
 /** @schema TradeResponse in cockpit/schemas.py */
@@ -77,22 +76,12 @@ export interface TradeResponse {
     pct_of_target: number | null;
     pct_return_on_stake: number | null;
     exit_odds: number | null;
-    bullet_05_odds: number | null;
-    bullet_05_stake: number | null;
-    bullet_1_odds: number | null;
-    bullet_1_stake: number | null;
-    bullet_2_odds: number | null;
-    bullet_2_stake: number | null;
-    bullet_3_odds: number | null;
-    bullet_3_stake: number | null;
     selected_team_before_toss: string | null;
     back_odds_before_toss: number | null;
     lay_odds_before_toss: number | null;
     selected_team_after_toss: string | null;
     back_odds_after_toss: number | null;
     lay_odds_after_toss: number | null;
-    fav_reached_130: boolean;
-    is_fake_favourite: boolean;
     notes: string | null;
     crex_url: string | null;
     result: string | null;
@@ -106,6 +95,7 @@ export interface TradeResponse {
     missed_swing_bet_index?: number | null;
     missed_swing_cumulative_stake?: number | null;
     missed_swing_net_pnl?: number | null;
+    missed_swing_type?: string | null;
     trade_mistakes?: string | null;
     targeted_pnl: number | null;
     achieved_yield_percentage: number | null;
@@ -140,6 +130,7 @@ export interface SettleTradeRequest {
     missed_swing_bet_index: number | null;
     missed_swing_cumulative_stake: number | null;
     missed_swing_net_pnl: number | null;
+    missed_swing_type: string | null;
     targeted_pnl: number;
     achieved_yield: number;
     trade_mistakes: TradeMistakes | null;

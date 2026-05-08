@@ -25,22 +25,12 @@ export interface HistoryTradeResponse {
     pct_of_target: number | null;
     pct_return_on_stake: number | null;
     exit_odds: number | null;
-    bullet_05_odds: number | null;
-    bullet_05_stake: number | null;
-    bullet_1_odds: number | null;
-    bullet_1_stake: number | null;
-    bullet_2_odds: number | null;
-    bullet_2_stake: number | null;
-    bullet_3_odds: number | null;
-    bullet_3_stake: number | null;
     selected_team_before_toss: string | null;
     back_odds_before_toss: number | null;
     lay_odds_before_toss: number | null;
     selected_team_after_toss: string | null;
     back_odds_after_toss: number | null;
     lay_odds_after_toss: number | null;
-    fav_reached_130: boolean;
-    is_fake_favourite: boolean;
     notes: string | null;
     crex_url: string | null;
     result: string | null;
@@ -54,6 +44,7 @@ export interface HistoryTradeResponse {
     missed_swing_bet_index: number | null;
     missed_swing_cumulative_stake: number | null;
     missed_swing_net_pnl: number | null;
+    missed_swing_type: string | null;
     targeted_pnl: number | null;
     achieved_yield_percentage: number | null;
     trade_mistakes: string | null;
@@ -86,6 +77,14 @@ export interface HistorySummaryResponse {
     latest_match_date: string | null;
 }
 
+/** @schema HistoryTradesPageResponse in cockpit/schemas.py */
+export interface HistoryTradesPageResponse {
+    trades: HistoryTradeResponse[];
+    total_count: number;
+    page: number;
+    page_size: number;
+}
+
 /** @schema none -- frontend-only filter state */
 export interface HistoryTradeFilters {
     league: HistoryLeague;
@@ -93,6 +92,8 @@ export interface HistoryTradeFilters {
     dateRange: string;
     dateFrom?: string;
     dateTo?: string;
+    page?: number;
+    pageSize?: number;
 }
 
 function cockpitFetch<T>(path: string, init?: RequestInit): Promise<T> {
@@ -125,12 +126,23 @@ export function buildHistoryQueryString(filters: HistoryTradeFilters): string {
 
     params.set("status", "SETTLED,VOID");
 
+    if (filters.page !== undefined) {
+        params.set("page", String(filters.page));
+    }
+    if (filters.pageSize !== undefined) {
+        params.set("page_size", String(filters.pageSize));
+    }
+
     const query = params.toString();
     return query ? `?${query}` : "";
 }
 
-export async function getHistoryTrades(filters: HistoryTradeFilters): Promise<HistoryTradeResponse[]> {
-    return cockpitFetch<HistoryTradeResponse[]>(`/history/trades${buildHistoryQueryString(filters)}`);
+export async function getHistoryTrades(filters: HistoryTradeFilters & { page: number; pageSize: number }): Promise<HistoryTradesPageResponse>;
+export async function getHistoryTrades(filters?: HistoryTradeFilters): Promise<HistoryTradeResponse[]>;
+export async function getHistoryTrades(
+    filters: HistoryTradeFilters = { league: "all", dateRange: "all" },
+): Promise<HistoryTradeResponse[] | HistoryTradesPageResponse> {
+    return cockpitFetch<HistoryTradeResponse[] | HistoryTradesPageResponse>(`/history/trades${buildHistoryQueryString(filters)}`);
 }
 
 export async function getHistorySummary(filters: HistoryTradeFilters): Promise<HistorySummaryResponse> {

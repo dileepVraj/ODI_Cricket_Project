@@ -1,11 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useAppContext } from "@/lib/context";
 import { stripEmoji } from "@/lib/utils";
 import { Activity, Zap } from "lucide-react";
 
 export default function FormatSelector() {
     const { formats, activeFormat, switchFormat, manifest } = useAppContext();
+    const [isMounted, setIsMounted] = useState(false);
+    const showFormatTabs = isMounted && formats.length > 0;
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     return (
         <header
@@ -26,11 +33,11 @@ export default function FormatSelector() {
             </div>
 
             <nav className="[display:flex] [gap:4px] [align-items:center]">
-                {formats.map((fmt) => (
+                {showFormatTabs && formats.map((fmt) => (
                     <button
                         key={fmt.key}
                         id={`format-tab-${fmt.key}`}
-                        className={`format-tab ${fmt.key === activeFormat ? "active" : ""} ${!fmt.has_manifest ? "disabled" : ""}`}
+                        className={`format-tab ${isMounted && fmt.key === activeFormat ? "active" : ""} ${!fmt.has_manifest ? "disabled" : ""}`}
                         onClick={() => switchFormat(fmt.key)}
                         disabled={!fmt.has_manifest}
                         title={fmt.has_manifest ? fmt.label : `${fmt.label} - coming soon`}

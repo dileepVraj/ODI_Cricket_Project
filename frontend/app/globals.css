@@ -1,7 +1,7 @@
-/* ── Tailwind ─────────────────────────────────────────────────────────── */
+/* â”€â”€ Tailwind â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @import "tailwindcss";
 
-/* ── Cascadia Code fallback for --font-data ───────────────────────────── */
+/* â”€â”€ Cascadia Code fallback for --font-data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @font-face {
   font-family: "Cascadia Code";
   src: local("Cascadia Code"), local("CascadiaCode"),
@@ -9,13 +9,13 @@
   font-display: swap;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   VANTAGE — Design System v2.0
-   Obsidian Command — Dark Fintech Pro (Bloomberg + Linear)
-   ═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   VANTAGE â€” Design System v2.0
+   Obsidian Command â€” Dark Fintech Pro (Bloomberg + Linear)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 :root {
-  /* ── Fonts ──────────────────────────────────────────────────────────── */
+  /* â”€â”€ Fonts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --font-inter: "Inter", system-ui, sans-serif;
   --font-jetbrains-mono: "JetBrains Mono", "Cascadia Code", "Cascadia Mono", monospace;
   --font-space-grotesk: "Space Grotesk", var(--font-inter);
@@ -24,38 +24,38 @@
   --font-headline: var(--font-space-grotesk), var(--font-ui);
   --font-display: var(--font-space-grotesk), var(--font-ui);
 
-  /* ── Background Layers (darkest → lightest) ─────────────────────────── */
+  /* â”€â”€ Background Layers (darkest â†’ lightest) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --bg-base:     #0D1117;
   --bg-surface:  #141920;
   --bg-elevated: #1A2130;
   --bg-hover:    #212A3A;
 
-  /* ── Accent Colors ──────────────────────────────────────────────────── */
+  /* â”€â”€ Accent Colors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --accent-ui:       #6366F1;
   --accent-ui-hover: #7274F3;
   --accent-data:     #F59E0B;
   --color-maroon:    #B02A37;
   --color-six:       #7C3AED;
 
-  /* ── Tier / Semantic Colors ─────────────────────────────────────────── */
+  /* â”€â”€ Tier / Semantic Colors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --tier-elite:   #22C55E;
   --tier-strong:  #14B8A6;
   --tier-caution: #F59E0B;
   --tier-danger:  #EF4444;
 
-  /* ── Text Hierarchy ─────────────────────────────────────────────────── */
+  /* â”€â”€ Text Hierarchy â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --text-primary:   #E2E8F0;
   --text-secondary: #64748B;
   --text-muted:     #4B5563;
   --text-disabled:  #2D3748;
 
-  /* ── Border Colors ──────────────────────────────────────────────────── */
+  /* â”€â”€ Border Colors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --border-subtle:  rgba(255, 255, 255, 0.05);
   --border-default: rgba(255, 255, 255, 0.09);
   --border-strong:  rgba(255, 255, 255, 0.12);
   --border-accent:  rgba(99, 102, 241, 0.30);
 
-  /* ── Semantic Banner Colors ─────────────────────────────────────────── */
+  /* â”€â”€ Semantic Banner Colors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --bg-caution:     rgba(245, 158, 11, 0.10);
   --border-caution: rgba(245, 158, 11, 0.25);
   --bg-danger:      rgba(239, 68, 68, 0.10);
@@ -65,7 +65,7 @@
   --bg-elite:       rgba(34, 197, 94, 0.08);
   --border-elite:   rgba(34, 197, 94, 0.20);
 
-  /* ── Type Scale ─────────────────────────────────────────────────────── */
+  /* â”€â”€ Type Scale â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --text-2xs:     0.60rem;
   --text-xs:      0.65rem;
   --text-sm:      0.72rem;
@@ -76,13 +76,13 @@
   --text-2xl:     1.5rem;
   --text-display: 2.5rem;
 
-  /* ── Font Weights ───────────────────────────────────────────────────── */
+  /* â”€â”€ Font Weights â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --weight-normal:   400;
   --weight-medium:   500;
   --weight-semibold: 600;
   --weight-bold:     700;
 
-  /* ── Spacing Scale (4px base unit) ─────────────────────────────────── */
+  /* â”€â”€ Spacing Scale (4px base unit) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --space-1:  4px;
   --space-2:  8px;
   --space-3:  12px;
@@ -93,13 +93,13 @@
   --space-10: 40px;
   --space-12: 48px;
 
-  /* ── Border Radius (Tight-Tech) ─────────────────────────────────────── */
+  /* â”€â”€ Border Radius (Tight-Tech) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --radius-xs: 2px;
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
 
-  /* ── Shadows ────────────────────────────────────────────────────────── */
+  /* â”€â”€ Shadows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.30);
   --shadow-md:   0 4px 16px rgba(0, 0, 0, 0.35);
   --shadow-lg:   0 8px 32px rgba(0, 0, 0, 0.50);
@@ -108,19 +108,19 @@
   --callout-badge-text: #07006c;
   --callout-badge-glow: 0 0 10px rgba(192, 193, 255, 0.4);
 
-  /* ── Transitions ────────────────────────────────────────────────────── */
+  /* â”€â”€ Transitions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow:   350ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ── Layout Dimensions ──────────────────────────────────────────────── */
+  /* â”€â”€ Layout Dimensions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --sidebar-width:           240px;
   --sidebar-collapsed-width: 60px;
   --topbar-height:           48px;
   --context-bar-height:      56px;
 }
 
-/* ── Base Reset ──────────────────────────────────────────────────────── */
+/* â”€â”€ Base Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 *,
 *::before,
@@ -150,7 +150,7 @@ textarea {
   font-family: inherit;
 }
 
-/* ── Font Utility ────────────────────────────────────────────────────── */
+/* â”€â”€ Font Utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .font-data {
   font-family: var(--font-data);
@@ -158,7 +158,7 @@ textarea {
   font-feature-settings: "tnum" 1, "lnum" 1;
 }
 
-/* ── Scrollbar ───────────────────────────────────────────────────────── */
+/* â”€â”€ Scrollbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -178,7 +178,7 @@ textarea {
   background: var(--text-muted);
 }
 
-/* ── Keyframes ───────────────────────────────────────────────────────── */
+/* â”€â”€ Keyframes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes fadeIn {
   from {
@@ -221,7 +221,7 @@ textarea {
   50%       { opacity: 0.4; }
 }
 
-/* ── Animation Utilities ─────────────────────────────────────────────── */
+/* â”€â”€ Animation Utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
@@ -239,7 +239,68 @@ textarea {
   animation: pulse-dot 1.5s ease-in-out infinite;
 }
 
-/* ── Skeleton ────────────────────────────────────────────────────────── */
+.live-trade-toast {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 240;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 14rem;
+  max-width: min(22rem, calc(100vw - var(--space-8)));
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-primary);
+}
+
+.live-trade-toast::before {
+  content: "";
+  width: 0.35rem;
+  align-self: stretch;
+  border-radius: 999px;
+  background: var(--toast-accent, currentColor);
+  opacity: 0.9;
+}
+
+.live-trade-toast--success {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tier-elite) 18%, var(--bg-surface)),
+    color-mix(in srgb, var(--tier-elite) 8%, var(--bg-elevated))
+  );
+  border-color: color-mix(in srgb, var(--tier-elite) 32%, var(--border-strong));
+  --toast-accent: var(--tier-elite);
+}
+
+.live-trade-toast--error {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tier-danger) 18%, var(--bg-surface)),
+    color-mix(in srgb, var(--tier-danger) 8%, var(--bg-elevated))
+  );
+  border-color: color-mix(in srgb, var(--tier-danger) 32%, var(--border-strong));
+  --toast-accent: var(--tier-danger);
+}
+
+@media (max-width: 720px) {
+  .live-trade-toast {
+    left: var(--space-4);
+    right: var(--space-4);
+    bottom: var(--space-4);
+    max-width: none;
+  }
+}
+
+/* Skeleton */
 
 .skeleton {
   background: linear-gradient(

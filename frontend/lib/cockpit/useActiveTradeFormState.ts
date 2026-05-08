@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ApiClientError } from "@/lib/api";
 import {
     createTrade,
     updateTrade,
@@ -11,21 +12,18 @@ import {
     buildCreateTradeRequest,
     buildOddsTeamOptions,
     buildTossOptions,
-    EMPTY_ODDS_PHASE_INPUT,
-    formatMatchDateInput,
-    getDefaultSeason,
     isOddsPhaseComplete,
-    parsePositiveAmount,
-    resolveTossSelection,
+    isTradeBasicsReady,
 } from "../../components/cockpit/cockpit-form-helpers";
 import type { HomeGround, OddsPhaseInput, TossSelection } from "../../components/cockpit/cockpit-types";
-const DEFAULT_BANKROLL = "100";
+import { useCockpitTradeDraft } from "./CockpitTradeDraftContext";
 
 type UseActiveTradeFormStateArgs = {
     formatKey: string;
     teamOptions: string[];
     venueOptions: VenueOption[];
     onTradeSaved: () => Promise<void>;
+    onTradeExecuted?: (tradeId: number) => void;
 };
 export type ActiveTradeFormState = {
     selectedTradeId: number | null;
@@ -46,6 +44,7 @@ export type ActiveTradeFormState = {
     oddsTeamOptions: string[];
     canCreateTrade: boolean;
     submitLabel: string;
+    resetDraftState: () => void;
     clearFormState: () => void;
     hydrateTrade: (trade: TradeResponse) => void;
     handleCreateTrade: () => Promise<void>;
@@ -63,74 +62,73 @@ export type ActiveTradeFormState = {
     setOddsAfterTossBackOdds: (value: string) => void;
     setOddsAfterTossLayOdds: (value: string) => void;
 };
-function isTradeBasicsReady(
-    homeTeam: string,
-    awayTeam: string,
-    venue: string,
-    bankroll: string,
-    oddsBeforeToss: OddsPhaseInput
-): boolean {
-    return homeTeam !== ""
-        && awayTeam !== ""
-        && venue !== ""
-        && parsePositiveAmount(bankroll) !== null
-        && isOddsPhaseComplete(oddsBeforeToss);
-}
+
 export function useActiveTradeFormState({
     formatKey,
     teamOptions,
     venueOptions,
     onTradeSaved,
+    onTradeExecuted,
 }: UseActiveTradeFormStateArgs): ActiveTradeFormState {
     const selectedFormat = formatKey || "ipl";
-    const defaultSeason = getDefaultSeason(selectedFormat);
-
-    const [selectedTradeId, setSelectedTradeId] = useState<number | null>(null);
-    const [homeTeam, setHomeTeam] = useState("");
-    const [awayTeam, setAwayTeam] = useState("");
-    const [tossSelection, setTossSelection] = useState<TossSelection>("");
-    const [season, setSeason] = useState(() => defaultSeason);
-    const [venue, setVenue] = useState("");
-    const [bankroll, setBankroll] = useState(DEFAULT_BANKROLL);
-    const [matchDate, setMatchDate] = useState("");
-    const [oddsBeforeToss, setOddsBeforeToss] = useState<OddsPhaseInput>(EMPTY_ODDS_PHASE_INPUT);
-    const [oddsAfterToss, setOddsAfterToss] = useState<OddsPhaseInput>(EMPTY_ODDS_PHASE_INPUT);
-    const [homeGround, setHomeGround] = useState<HomeGround>("NEU");
+    const {
+        selectedTradeId,
+        homeTeam,
+        awayTeam,
+        tossSelection,
+        season,
+        venue,
+        bankroll,
+        matchDate,
+        homeGround,
+        oddsBeforeToss,
+        oddsAfterToss,
+        resetDraftState,
+        clearFormState,
+        hydrateTrade,
+        setSelectedTradeId,
+        setHomeTeam,
+        setAwayTeam,
+        setTossSelection,
+        setVenue,
+        setBankroll,
+        setMatchDate,
+        setHomeGround,
+        setOddsBeforeTossSelectedTeam,
+        setOddsBeforeTossBackOdds,
+        setOddsBeforeTossLayOdds,
+        setOddsAfterTossSelectedTeam,
+        setOddsAfterTossBackOdds,
+        setOddsAfterTossLayOdds,
+    } = useCockpitTradeDraft();
     const [isSaving, setIsSaving] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [submitMessage, setSubmitMessage] = useState<string | null>(null);
 
     useEffect(() => {
-        setSelectedTradeId(null);
-        setHomeTeam("");
-        setAwayTeam("");
-        setTossSelection("");
-        setSeason(defaultSeason);
-        setVenue("");
-        setBankroll(DEFAULT_BANKROLL);
-        setMatchDate("");
-        setOddsBeforeToss(EMPTY_ODDS_PHASE_INPUT);
-        setOddsAfterToss(EMPTY_ODDS_PHASE_INPUT);
-        setHomeGround("NEU");
         setIsSaving(false);
         setSubmitError(null);
         setSubmitMessage(null);
-    }, [defaultSeason, selectedFormat]);
+    }, [selectedFormat]);
 
     useEffect(() => {
+        if (teamOptions.length === 0) {
+            return;
+        }
+
         if (homeTeam !== "" && !teamOptions.includes(homeTeam)) {
             setHomeTeam("");
         }
         if (awayTeam !== "" && !teamOptions.includes(awayTeam)) {
             setAwayTeam("");
         }
-    }, [awayTeam, homeTeam, teamOptions]);
+    }, [awayTeam, homeTeam, setAwayTeam, setHomeTeam, teamOptions]);
 
     useEffect(() => {
         if (venue !== "" && !venueOptions.some((option) => option.id === venue)) {
             setVenue("");
         }
-    }, [venue, venueOptions]);
+    }, [setVenue, venue, venueOptions]);
 
     useEffect(() => {
         if (homeTeam !== "" && awayTeam === homeTeam) {
@@ -141,65 +139,31 @@ export function useActiveTradeFormState({
         if (tossSelection !== "" && !tossOptions.includes(tossSelection)) {
             setTossSelection("");
         }
-    }, [awayTeam, homeTeam, tossSelection]);
+    }, [awayTeam, homeTeam, setAwayTeam, setTossSelection, tossSelection]);
 
     useEffect(() => {
         const oddsTeamOptions = buildOddsTeamOptions(homeTeam, awayTeam);
+        const firstTeam = oddsTeamOptions[0] ?? "";
 
-        setOddsBeforeToss((current) => {
-            if (current.selectedTeam === "" || oddsTeamOptions.includes(current.selectedTeam)) {
-                return current;
-            }
-            return { ...current, selectedTeam: "" };
-        });
+        if (firstTeam !== "" && oddsBeforeToss.selectedTeam === "") {
+            setOddsBeforeTossSelectedTeam(firstTeam);
+        } else if (oddsBeforeToss.selectedTeam !== "" && !oddsTeamOptions.includes(oddsBeforeToss.selectedTeam)) {
+            setOddsBeforeTossSelectedTeam(firstTeam);
+        }
 
-        setOddsAfterToss((current) => {
-            if (current.selectedTeam === "" || oddsTeamOptions.includes(current.selectedTeam)) {
-                return current;
-            }
-            return { ...current, selectedTeam: "" };
-        });
-    }, [awayTeam, homeTeam]);
-
-    function clearFormState(): void {
-        setSelectedTradeId(null);
-        setHomeTeam("");
-        setAwayTeam("");
-        setTossSelection("");
-        setSeason(defaultSeason);
-        setVenue("");
-        setBankroll(DEFAULT_BANKROLL);
-        setMatchDate("");
-        setOddsBeforeToss(EMPTY_ODDS_PHASE_INPUT);
-        setOddsAfterToss(EMPTY_ODDS_PHASE_INPUT);
-        setHomeGround("NEU");
-        setSubmitError(null);
-        setSubmitMessage(null);
-    }
-
-    function hydrateTrade(trade: TradeResponse): void {
-        setSelectedTradeId(trade.id);
-        setSeason(trade.season);
-        setMatchDate(formatMatchDateInput(trade.match_date));
-        setHomeTeam(trade.team_1);
-        setAwayTeam(trade.team_2);
-        setVenue(trade.stadium);
-        setBankroll(trade.bankroll.toString());
-        setHomeGround(trade.home_ground);
-        setTossSelection(resolveTossSelection(trade.toss_winner, trade.toss_decision, trade.team_1, trade.team_2));
-        setOddsBeforeToss({
-            selectedTeam: trade.selected_team_before_toss ?? "",
-            backOdds: trade.back_odds_before_toss === null ? "" : trade.back_odds_before_toss.toString(),
-            layOdds: trade.lay_odds_before_toss === null ? "" : trade.lay_odds_before_toss.toString(),
-        });
-        setOddsAfterToss({
-            selectedTeam: trade.selected_team_after_toss ?? "",
-            backOdds: trade.back_odds_after_toss === null ? "" : trade.back_odds_after_toss.toString(),
-            layOdds: trade.lay_odds_after_toss === null ? "" : trade.lay_odds_after_toss.toString(),
-        });
-        setSubmitError(null);
-        setSubmitMessage(null);
-    }
+        if (firstTeam !== "" && oddsAfterToss.selectedTeam === "") {
+            setOddsAfterTossSelectedTeam(firstTeam);
+        } else if (oddsAfterToss.selectedTeam !== "" && !oddsTeamOptions.includes(oddsAfterToss.selectedTeam)) {
+            setOddsAfterTossSelectedTeam(firstTeam);
+        }
+    }, [
+        awayTeam,
+        homeTeam,
+        oddsAfterToss.selectedTeam,
+        oddsBeforeToss.selectedTeam,
+        setOddsAfterTossSelectedTeam,
+        setOddsBeforeTossSelectedTeam,
+    ]);
 
     async function handleCreateTrade(): Promise<void> {
         const tradePayload = buildCreateTradeRequest({
@@ -235,14 +199,23 @@ export function useActiveTradeFormState({
                 : await updateTrade(selectedTradeId, tradePayload, selectedFormat);
 
             setSelectedTradeId(savedTrade.id);
+            await onTradeSaved();
+            const executeReady = tossSelection !== "" && isOddsPhaseComplete(oddsAfterToss);
+            if (executeReady && onTradeExecuted) {
+                onTradeExecuted(savedTrade.id);
+                return;
+            }
             setSubmitMessage(
                 savedTrade.status === "ACTIVE"
                     ? `Trade ${savedTrade.id} is active now.`
                     : `Draft ${savedTrade.id} saved.`
             );
-            await onTradeSaved();
-        } catch {
-            setSubmitError("Failed to save the trade. Please try again.");
+        } catch (err) {
+            if (err instanceof ApiClientError && err.message.includes("Insufficient Wallet Funds")) {
+                setSubmitError("Wallet balance too low. Top up your wallet first.");
+            } else {
+                setSubmitError("Failed to save the trade. Please try again.");
+            }
         } finally {
             setIsSaving(false);
         }
@@ -274,6 +247,7 @@ export function useActiveTradeFormState({
         oddsTeamOptions,
         canCreateTrade,
         submitLabel,
+        resetDraftState,
         clearFormState,
         hydrateTrade,
         handleCreateTrade,
@@ -284,17 +258,11 @@ export function useActiveTradeFormState({
         setBankroll,
         setMatchDate,
         setHomeGround,
-        setOddsBeforeTossSelectedTeam: (value: string) =>
-            setOddsBeforeToss((current) => ({ ...current, selectedTeam: value })),
-        setOddsBeforeTossBackOdds: (value: string) =>
-            setOddsBeforeToss((current) => ({ ...current, backOdds: value })),
-        setOddsBeforeTossLayOdds: (value: string) =>
-            setOddsBeforeToss((current) => ({ ...current, layOdds: value })),
-        setOddsAfterTossSelectedTeam: (value: string) =>
-            setOddsAfterToss((current) => ({ ...current, selectedTeam: value })),
-        setOddsAfterTossBackOdds: (value: string) =>
-            setOddsAfterToss((current) => ({ ...current, backOdds: value })),
-        setOddsAfterTossLayOdds: (value: string) =>
-            setOddsAfterToss((current) => ({ ...current, layOdds: value })),
+        setOddsBeforeTossSelectedTeam,
+        setOddsBeforeTossBackOdds,
+        setOddsBeforeTossLayOdds,
+        setOddsAfterTossSelectedTeam,
+        setOddsAfterTossBackOdds,
+        setOddsAfterTossLayOdds,
     };
 }

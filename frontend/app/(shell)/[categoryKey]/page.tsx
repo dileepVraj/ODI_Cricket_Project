@@ -1,12 +1,13 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useState } from "react";
 import { useParams, notFound } from "next/navigation";
 import { useAppContext } from "@/lib/context";
 import { PageHeader } from "@/components/common/PageHeader";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { ModuleFunctionPanel } from "@/components/layout/ModuleFunctionPanel";
-import CockpitModule from "@/components/cockpit/CockpitModule";
 import { SkeletonBar, SkeletonBlock } from "@/components/common/Skeleton";
 import { resolveIcon } from "@/lib/icons";
 import { stripEmoji } from "@/lib/utils";
@@ -55,7 +56,7 @@ export default function ModulePage() {
     }
 
     if (category.module_type === "cockpit") {
-        return <CockpitModule />;
+        notFound();
     }
 
     if (category.functions.length === 0) {

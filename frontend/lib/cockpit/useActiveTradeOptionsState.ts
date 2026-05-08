@@ -14,6 +14,19 @@ type UseActiveTradeOptionsStateArgs = {
     formatKey: string;
 };
 
+const IPL_TEAM_OPTIONS = [
+    "CSK",
+    "DC",
+    "GT",
+    "KKR",
+    "LSG",
+    "MI",
+    "PBKS",
+    "RCB",
+    "RR",
+    "SRH",
+];
+
 export type ActiveTradeOptionsState = {
     teamOptions: string[];
     venueOptions: VenueOption[];
@@ -31,7 +44,9 @@ export type ActiveTradeOptionsState = {
 export function useActiveTradeOptionsState({ formatKey }: UseActiveTradeOptionsStateArgs): ActiveTradeOptionsState {
     const selectedFormat = formatKey || "ipl";
 
-    const [teamOptions, setTeamOptions] = useState<string[]>([]);
+    const [teamOptions, setTeamOptions] = useState<string[]>(
+        selectedFormat === "ipl" ? IPL_TEAM_OPTIONS : []
+    );
     const [venueOptions, setVenueOptions] = useState<VenueOption[]>([]);
     const [isLoadingTeams, setIsLoadingTeams] = useState(false);
     const [isLoadingVenues, setIsLoadingVenues] = useState(false);
@@ -52,17 +67,23 @@ export function useActiveTradeOptionsState({ formatKey }: UseActiveTradeOptionsS
             };
         }
 
-        setTeamOptions([]);
         setIsLoadingTeams(true);
+        setTeamOptions(selectedFormat === "ipl" ? IPL_TEAM_OPTIONS : []);
         fetchCockpitTeams(selectedFormat)
             .then((loadedTeams) => {
                 if (!cancelled) {
-                    setTeamOptions(loadedTeams);
+                    if (loadedTeams.length > 0) {
+                        setTeamOptions(loadedTeams);
+                    } else if (selectedFormat === "ipl") {
+                        setTeamOptions(IPL_TEAM_OPTIONS);
+                    } else {
+                        setTeamOptions([]);
+                    }
                 }
             })
             .catch(() => {
                 if (!cancelled) {
-                    setTeamOptions([]);
+                    setTeamOptions(selectedFormat === "ipl" ? IPL_TEAM_OPTIONS : []);
                 }
             })
             .finally(() => {
@@ -164,7 +185,7 @@ export function useActiveTradeOptionsState({ formatKey }: UseActiveTradeOptionsS
         setPendingDeleteError(null);
 
         try {
-            await deleteTrade(tradeId);
+            await deleteTrade(tradeId, selectedFormat);
             setPendingTrades((current) => current.filter((trade) => trade.id !== tradeId));
         } catch {
             setPendingDeleteError("Could not delete the draft. Please try again.");

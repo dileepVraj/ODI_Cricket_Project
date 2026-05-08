@@ -79,6 +79,58 @@
   cursor: not-allowed;
 }
 
+.btn-caution {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--tier-caution);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-caution:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.20);
+}
+
+.btn-caution:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-lay-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--tier-danger);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-lay-active:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.20);
+}
+
+.btn-lay-active:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ── Badges ──────────────────────────────────────────────────────────── */
 
 .badge {

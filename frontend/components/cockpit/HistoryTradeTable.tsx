@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { ChevronRight, Pencil, Trash2 } from "lucide-react";
-import EmptyState from "@/components/common/EmptyState";
 import CockpitTeamText from "./CockpitTeamText";
+import HistoryTradeTableEmptyState from "./HistoryTradeTableEmptyState";
+import HistoryTradeTableFooter from "./HistoryTradeTableFooter";
 import type { HistoryTradeResponse } from "@/lib/cockpit/history-api";
 import {
     formatDate,
@@ -34,6 +35,10 @@ interface HistoryTradeTableProps {
     deletingTradeId: number | null;
     showFormatLabel: boolean;
     hasFilters: boolean;
+    currentPage: number;
+    pageSize: number;
+    totalTrades: number;
+    onPageChange: (page: number) => void;
     onTradeClick: (tradeId: number) => void;
     onDeleteTrade: (trade: HistoryTradeResponse) => Promise<void>;
 }
@@ -49,6 +54,10 @@ export default function HistoryTradeTable({
     deletingTradeId,
     showFormatLabel,
     hasFilters,
+    currentPage,
+    pageSize,
+    totalTrades,
+    onPageChange,
     onTradeClick,
     onDeleteTrade,
 }: HistoryTradeTableProps) {
@@ -120,14 +129,11 @@ export default function HistoryTradeTable({
                         ) : error ? (
                             <HistoryTradeTableErrorRow message={error} showFormatLabel={showFormatLabel} />
                         ) : orderedTrades.length === 0 ? (
-                            <tr>
-                                <td colSpan={showFormatLabel ? 10 : 9} className="px-4 py-12">
-                                    <EmptyState
-                                        title={hasFilters ? "No matches found" : "No settled trades yet"}
-                                        message={hasFilters ? "No settled trades match your current filters." : "Completed matches will appear here after they are settled."}
-                                    />
-                                </td>
-                            </tr>
+                            <HistoryTradeTableEmptyState
+                                colSpan={showFormatLabel ? 10 : 9}
+                                hasFilters={hasFilters}
+                                totalTrades={totalTrades}
+                            />
                         ) : (
                             orderedTrades.flatMap((trade) => {
                                 const isExpanded = expandedTradeId === trade.id;
@@ -273,18 +279,13 @@ export default function HistoryTradeTable({
                     </tbody>
                 </table>
             </div>
-            <div className="flex items-center justify-between gap-4 bg-slate-900/80 px-6 py-3.5">
-                <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">
-                    {isLoadingTrades
-                        ? "Loading settled trades..."
-                        : orderedTrades.length > 0
-                            ? `Showing 1-${orderedTrades.length} of ${orderedTrades.length} trades`
-                            : "No settled trades yet"}
-                </div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.22em] dashboard-hero-rainbow">
-                    Newest first
-                </div>
-            </div>
+            <HistoryTradeTableFooter
+                currentPage={currentPage}
+                pageSize={pageSize}
+                totalTrades={totalTrades}
+                isLoadingTrades={isLoadingTrades}
+                onPageChange={onPageChange}
+            />
         </div>
     );
 }

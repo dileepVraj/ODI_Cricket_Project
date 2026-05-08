@@ -1,8 +1,10 @@
-import { Suspense } from "react";
 import { AppProvider } from "@/lib/context";
+import { CockpitTradeDraftProvider } from "@/lib/cockpit/CockpitTradeDraftContext";
 import TopBar from "@/components/layout/TopBar";
 import Sidebar from "@/components/layout/Sidebar";
-import ContextBar from "@/components/layout/ContextBar";
+import ShellContextBar from "@/components/layout/ShellContextBar";
+
+export const dynamic = "force-dynamic";
 
 export default function ShellLayout({
   children,
@@ -11,18 +13,18 @@ export default function ShellLayout({
 }) {
   return (
     <AppProvider>
-      <TopBar />
-      <div className="app-shell">
-        <Sidebar />
-        <div className="app-main">
-          <Suspense fallback={<div className="context-bar" aria-hidden="true" />}>
-            <ContextBar />
-          </Suspense>
-          <main className="app-content">
-            {children}
-          </main>
+      <CockpitTradeDraftProvider>
+        <TopBar />
+        <div className="app-shell">
+          <Sidebar />
+          <div className="app-main">
+            <ShellContextBar />
+            <main className="app-content">
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
+      </CockpitTradeDraftProvider>
     </AppProvider>
   );
 }

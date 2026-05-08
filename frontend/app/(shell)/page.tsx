@@ -1,9 +1,12 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
 import { useAppContext } from "@/lib/context";
 import { CategoryIcon } from "@/lib/icons";
+import EmptyState from "@/components/common/EmptyState";
 import { SkeletonBar, SkeletonBlock } from "@/components/common/Skeleton";
 import type { ManifestCategory } from "@/lib/api";
 
@@ -112,7 +115,7 @@ export default function DashboardPage() {
         return <DashboardSkeleton />;
     }
 
-    const subtitle = `${manifest.format_label} · ${manifest.categories.length} modules available`;
+    const subtitle = `${manifest.format_label} - ${manifest.categories.length} modules available`;
 
     return (
         <div className="dashboard-page">
@@ -124,17 +127,24 @@ export default function DashboardPage() {
                 <p className="page-subtitle">{subtitle}</p>
             </div>
 
-            <div
-                className="dashboard-grid"
-                role="list"
-                aria-label="Analysis modules"
-            >
-                {manifest.categories.map((category) => (
-                    <div key={category.key} role="listitem">
-                        <ModuleCard category={category} />
-                    </div>
-                ))}
-            </div>
+            {manifest.categories.length === 0 ? (
+                <EmptyState
+                    title="No modules available"
+                    message="This format does not expose any modules yet. Use the universal dashboard to switch formats."
+                />
+            ) : (
+                <div
+                    className="dashboard-grid"
+                    role="list"
+                    aria-label="Analysis modules"
+                >
+                    {manifest.categories.map((category) => (
+                        <div key={category.key} role="listitem">
+                            <ModuleCard category={category} />
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

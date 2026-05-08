@@ -1,5 +1,8 @@
 "use client";
 
+import CockpitDropdown from "./CockpitDropdown";
+import CockpitTeamText from "./CockpitTeamText";
+
 interface CockpitOddsSelectorProps {
     fieldLabel: string;
     idPrefix: string;
@@ -27,27 +30,24 @@ export default function CockpitOddsSelector({
 
     return (
         <div className="cockpit-odds-selector">
-            <select
+            <CockpitDropdown
                 id={`${idPrefix}-team`}
-                className="context-input cockpit-match-setup-input cockpit-odds-selector-control"
+                ariaLabel={`${fieldLabel} team`}
                 value={selectedTeam}
-                onChange={(event) => onSelectedTeamChange(event.target.value)}
+                options={teamOptions.map((team) => ({ value: team, label: <CockpitTeamText team={team} variant="outlined" /> }))}
+                placeholder="Team"
                 disabled={!hasTeamOptions}
-                aria-label={`${fieldLabel} team`}
-            >
-                <option value="">{hasTeamOptions ? "Select team" : "Select teams first"}</option>
-                {teamOptions.map((team) => (
-                    <option key={team} value={team}>
-                        {team}
-                    </option>
-                ))}
-            </select>
+                onChange={onSelectedTeamChange}
+                className="cockpit-odds-selector-control cockpit-odds-selector-control--team"
+                triggerClassName="cockpit-match-setup-input cockpit-odds-selector-control"
+            />
 
             <input
                 id={`${idPrefix}-back`}
                 type="text"
                 inputMode="text"
-                className="context-input cockpit-match-setup-input cockpit-odds-selector-control"
+                autoComplete="off"
+                className="context-input cockpit-match-setup-input cockpit-odds-selector-control cockpit-odds-selector-control--odds"
                 placeholder="Back"
                 value={backOdds}
                 onChange={(event) => onBackOddsChange(event.target.value)}
@@ -58,7 +58,8 @@ export default function CockpitOddsSelector({
                 id={`${idPrefix}-lay`}
                 type="text"
                 inputMode="text"
-                className="context-input cockpit-match-setup-input cockpit-odds-selector-control"
+                autoComplete="off"
+                className="context-input cockpit-match-setup-input cockpit-odds-selector-control cockpit-odds-selector-control--odds"
                 placeholder="Lay"
                 value={layOdds}
                 onChange={(event) => onLayOddsChange(event.target.value)}

@@ -43,6 +43,7 @@ interface EditPrePopulateDispatchers {
     setMissedSwingBackOddsPaise: Dispatch<SetStateAction<string>>;
     setMissedSwingLayOddsPaise: Dispatch<SetStateAction<string>>;
     setMissedSwingBetIndex: Dispatch<SetStateAction<number | null>>;
+    setMissedSwingType: Dispatch<SetStateAction<string | null>>;
     setMistakeTags: Dispatch<SetStateAction<string[]>>;
     setMistakeNote: Dispatch<SetStateAction<string>>;
 }
@@ -65,6 +66,7 @@ export function useSettleEditPrePopulate(
             setMissedSwingBackOddsPaise,
             setMissedSwingLayOddsPaise,
             setMissedSwingBetIndex,
+            setMissedSwingType,
             setMistakeTags,
             setMistakeNote,
         } = dispatchers;
@@ -78,6 +80,7 @@ export function useSettleEditPrePopulate(
             || tradeState.missed_swing_bet_index != null
             || tradeState.missed_swing_cumulative_stake != null
             || tradeState.missed_swing_net_pnl != null
+            || tradeState.missed_swing_type != null
         );
         setHasMissedSwing(hasMissedSwing);
         if (hasMissedSwing && tradeState.missed_swing_team == null) {
@@ -94,6 +97,9 @@ export function useSettleEditPrePopulate(
         }
         if (tradeState.missed_swing_bet_index != null) {
             setMissedSwingBetIndex(tradeState.missed_swing_bet_index);
+        }
+        if (tradeState.missed_swing_type != null) {
+            setMissedSwingType(tradeState.missed_swing_type);
         }
         if (tradeState.trade_mistakes) {
             try {

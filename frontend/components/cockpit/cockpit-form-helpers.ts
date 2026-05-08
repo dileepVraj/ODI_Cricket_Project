@@ -1,4 +1,4 @@
-import type { CreateTradeRequest } from "./cockpit-api";
+import type { CreateTradeRequest, TradeResponse } from "./cockpit-api";
 import type { HomeGround, OddsPhaseInput, TossSelection } from "./cockpit-types";
 
 export const EMPTY_ODDS_PHASE_INPUT: OddsPhaseInput = {
@@ -12,8 +12,22 @@ export function parsePositiveAmount(value: string): number | null {
     return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 }
 
-export function getDefaultSeason(formatKey: string): number {
-    return formatKey === "ipl" ? 2025 : new Date().getFullYear();
+export function isTradeBasicsReady(
+    homeTeam: string,
+    awayTeam: string,
+    venue: string,
+    bankroll: string,
+    oddsBeforeToss: OddsPhaseInput
+): boolean {
+    return homeTeam !== ""
+        && awayTeam !== ""
+        && venue !== ""
+        && parsePositiveAmount(bankroll) !== null
+        && isOddsPhaseComplete(oddsBeforeToss);
+}
+
+export function getDefaultSeason(_formatKey: string): number {
+    return new Date().getFullYear();
 }
 
 export function parseIntegerOdds(value: string): number | null {
@@ -136,4 +150,72 @@ export function buildTossOptions(homeTeam: string, awayTeam: string): TossSelect
     }
 
     return ["HOME_FIELD", "HOME_BAT", "AWAY_FIELD", "AWAY_BAT"];
+}
+
+function titleCase(value: string): string {
+    return value
+        .split(" ")
+        .filter((part) => part !== "")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+        .join(" ");
+}
+
+export function formatVenueDisplayName(stadium: string): string {
+    const trimmedStadium = stadium.trim();
+    if (trimmedStadium === "") {
+        return "N/A";
+    }
+
+    if (trimmedStadium === "IND_MUMBAI_WANKHEDE") {
+        return "Wankhede Stadium, Mumbai";
+    }
+
+    if (trimmedStadium === "IND_MUMBAI_BRABOURNE") {
+        return "Brabourne Stadium, Mumbai";
+    }
+
+    if (trimmedStadium === "IND_AHMEDABAD_NARENDRA_MODI") {
+        return "Narendra Modi Stadium, Ahmedabad";
+    }
+
+    if (!trimmedStadium.includes("_")) {
+        return trimmedStadium;
+    }
+
+    const parts = trimmedStadium.split("_").filter((part) => part !== "");
+    if (parts.length < 2) {
+        return titleCase(trimmedStadium.replace(/-/g, " "));
+    }
+
+    const city = titleCase(parts[1].replace(/-/g, " "));
+    const venueLabel = titleCase(parts.slice(2).join(" ").replace(/-/g, " "));
+    const normalizedVenueLabel = venueLabel === "" ? titleCase(parts[parts.length - 1].replace(/-/g, " ")) : venueLabel;
+    const hasVenueSuffix = /\b(stadium|ground|arena|park|club|oval|field|center|centre)\b/i.test(normalizedVenueLabel);
+
+    return `${hasVenueSuffix ? normalizedVenueLabel : `${normalizedVenueLabel} Stadium`}, ${city}`;
+}
+
+export function formatPreTossOddsLabel(trade: TradeResponse): string {
+    const selectedTeam = trade.selected_team_before_toss?.trim() ?? "";
+    if (
+        selectedTeam !== ""
+        && trade.back_odds_before_toss !== null
+        && trade.lay_odds_before_toss !== null
+    ) {
+        return `Pre-toss: ${selectedTeam} ${trade.back_odds_before_toss}/${trade.lay_odds_before_toss}`;
+    }
+
+    if (trade.opening_odds !== null) {
+        return `Pre-toss ${trade.opening_odds.toFixed(2)}`;
+    }
+
+    return "Pre-toss: Pending";
+}
+
+export function formatTossResult(trade: TradeResponse): string {
+    if (!trade.toss_winner || !trade.toss_decision) {
+        return "Pending";
+    }
+    const decision = trade.toss_decision === "bat" ? "bat" : "bowl";
+    return `${trade.toss_winner} opt to ${decision}`;
 }

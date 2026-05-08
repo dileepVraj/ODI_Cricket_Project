@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { X, Lightbulb } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import WinSplitBarSection from "@/components/guide/WinSplitBarSection";

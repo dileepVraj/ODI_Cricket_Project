@@ -23,6 +23,7 @@ interface UseSettlePageActionsArgs {
     missedSwingBackOddsPaise: string;
     missedSwingLayOddsPaise: string;
     missedSwingBetIndex: number | null;
+    missedSwingType: string | null;
     mistakeTags: string[];
     mistakeNote: string;
     resetDraftState: () => void;
@@ -64,6 +65,7 @@ export function useSettlePageActions({
     missedSwingBackOddsPaise,
     missedSwingLayOddsPaise,
     missedSwingBetIndex,
+    missedSwingType,
     mistakeTags,
     mistakeNote,
     resetDraftState,
@@ -140,6 +142,7 @@ export function useSettlePageActions({
             missed_swing_net_pnl: hasMissedSwing && missedOpportunityResult
                 ? missedOpportunityResult.netPnl
                 : null,
+            missed_swing_type: hasMissedSwing ? missedSwingType : null,
             targeted_pnl: targetedPnl,
             achieved_yield: achievedYield,
             trade_mistakes: mistakeTags.length > 0 || mistakeNote.trim() !== ""

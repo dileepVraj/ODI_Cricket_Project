@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { Suspense, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -52,6 +54,7 @@ function SettlePageInner() {
     const [missedSwingBackOddsPaise, setMissedSwingBackOddsPaise] = useState("");
     const [missedSwingLayOddsPaise, setMissedSwingLayOddsPaise] = useState("");
     const [missedSwingBetIndex, setMissedSwingBetIndex] = useState<number | null>(null);
+    const [missedSwingType, setMissedSwingType] = useState<SettleTradeRequest["missed_swing_type"]>(null);
     const [mistakeTags, setMistakeTags] = useState<string[]>([]);
     const [mistakeNote, setMistakeNote] = useState("");
 
@@ -84,6 +87,7 @@ function SettlePageInner() {
         missedSwingBackOddsPaise,
         missedSwingLayOddsPaise,
         missedSwingBetIndex,
+        missedSwingType,
         mistakeTags,
         mistakeNote,
         resetDraftState,
@@ -98,9 +102,14 @@ function SettlePageInner() {
         setMissedSwingBackOddsPaise,
         setMissedSwingLayOddsPaise,
         setMissedSwingBetIndex,
+        setMissedSwingType,
         setMistakeTags,
         setMistakeNote,
     });
+
+    const showMissedOpportunitySimulator = tradeState
+        ? tradeState.net_pnl_team_1 <= 0 || tradeState.net_pnl_team_2 <= 0
+        : false;
 
     if (isLoading) return <SettlePageSkeleton />;
     if (loadError || !tradeState) {
@@ -176,10 +185,13 @@ function SettlePageInner() {
                         missedSwingBackOddsPaise={missedSwingBackOddsPaise}
                         missedSwingLayOddsPaise={missedSwingLayOddsPaise}
                         missedSwingBetIndex={missedSwingBetIndex}
+                        missedSwingType={missedSwingType}
+                        showMissedOpportunitySimulator={showMissedOpportunitySimulator}
                         team1={tradeState.team_1}
                         team2={tradeState.team_2}
                         bets={bets}
                         missedOpportunityResult={missedOpportunityResult}
+                        settledPnl={settledPnl}
                         mistakeTags={mistakeTags}
                         mistakeNote={mistakeNote}
                         onSentimentChange={setSentiment}
@@ -190,6 +202,7 @@ function SettlePageInner() {
                                 setMissedSwingTeam(tradeState.team_1);
                             }
                         }}
+                        onMissedSwingTypeChange={setMissedSwingType}
                         onMissedSwingTeamChange={setMissedSwingTeam}
                         onMissedSwingBackOddsPaiseChange={setMissedSwingBackOddsPaise}
                         onMissedSwingLayOddsPaiseChange={setMissedSwingLayOddsPaise}

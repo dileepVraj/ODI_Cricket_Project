@@ -1,8 +1,10 @@
 "use client";
 
 import type { VenueOption } from "./cockpit-api";
+import CockpitDropdown, { type CockpitDropdownOption } from "./CockpitDropdown";
 import CockpitHomeGroundToggle from "./CockpitHomeGroundToggle";
 import CockpitOddsSelector from "./CockpitOddsSelector";
+import CockpitTeamText from "./CockpitTeamText";
 import type { HomeGround, OddsPhaseInput, TossSelection } from "./cockpit-types";
 
 interface CockpitMatchSetupProps {
@@ -21,6 +23,7 @@ interface CockpitMatchSetupProps {
     homeGround: HomeGround;
     oddsBeforeToss: OddsPhaseInput;
     oddsAfterToss: OddsPhaseInput;
+    walletBalance: number | null;
     canCreateTrade: boolean;
     isCreating: boolean;
     createError: string | null;
@@ -58,6 +61,7 @@ export default function CockpitMatchSetup({
     homeGround,
     oddsBeforeToss,
     oddsAfterToss,
+    walletBalance,
     canCreateTrade,
     isCreating,
     createError,
@@ -80,19 +84,31 @@ export default function CockpitMatchSetup({
 }: CockpitMatchSetupProps) {
     const hasTeamOptions = teamOptions.length > 0;
     const hasVenueOptions = venueOptions.length > 0;
-    const teamPlaceholder = isLoadingTeams ? "Loading teams..." : "No teams available";
+    const homeTeamPlaceholder = isLoadingTeams ? "Loading teams..." : hasTeamOptions ? "Select home team..." : "No teams available";
+    const awayTeamPlaceholder = isLoadingTeams ? "Loading teams..." : hasTeamOptions ? "Select away team..." : "No teams available";
     const venuePlaceholder = isLoadingVenues ? "Loading venues..." : "No venues available";
-    const tossOptions = homeTeam && awayTeam
+    const teamDropdownOptions: CockpitDropdownOption[] = teamOptions.map((team) => ({
+        value: team,
+        label: <CockpitTeamText team={team} variant="outlined" />,
+    }));
+    const tossOptions: CockpitDropdownOption[] = homeTeam && awayTeam
         ? [
-            { value: "HOME_FIELD" as const, label: `${homeTeam} choose to field` },
-            { value: "HOME_BAT" as const, label: `${homeTeam} choose to bat` },
-            { value: "AWAY_FIELD" as const, label: `${awayTeam} choose to field` },
-            { value: "AWAY_BAT" as const, label: `${awayTeam} choose to bat` },
+            { value: "HOME_FIELD" as const, label: <><CockpitTeamText team={homeTeam} variant="outlined" /> choose to field</> },
+            { value: "HOME_BAT" as const, label: <><CockpitTeamText team={homeTeam} variant="outlined" /> choose to bat</> },
+            { value: "AWAY_FIELD" as const, label: <><CockpitTeamText team={awayTeam} variant="outlined" /> choose to field</> },
+            { value: "AWAY_BAT" as const, label: <><CockpitTeamText team={awayTeam} variant="outlined" /> choose to bat</> },
         ]
         : [];
 
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+        event.preventDefault();
+        if (canCreateTrade && !isCreating) {
+            onCreateTrade();
+        }
+    }
+
     return (
-        <div className="glass-card cockpit-match-setup">
+        <form className="glass-card cockpit-match-setup" onSubmit={handleSubmit}>
             <div className="cockpit-match-setup-header">
                 <div className="cockpit-match-setup-copy">
                     <h2 className="cockpit-match-setup-title">Match Setup</h2>
@@ -111,6 +127,7 @@ export default function CockpitMatchSetup({
                     <input
                         id="cockpit-match-date"
                         type="date"
+                        autoComplete="off"
                         className="context-input cockpit-match-setup-input"
                         value={matchDate}
                         onChange={(event) => onMatchDateChange(event.target.value)}
@@ -121,40 +138,32 @@ export default function CockpitMatchSetup({
                     <label className="cockpit-match-setup-label" htmlFor="cockpit-home-team">
                         Home team
                     </label>
-                    <select
+                    <CockpitDropdown
                         id="cockpit-home-team"
-                        className="context-input cockpit-match-setup-input"
+                        ariaLabel="Home team"
                         value={homeTeam}
-                        onChange={(event) => onHomeTeamChange(event.target.value)}
+                        options={teamDropdownOptions}
+                        placeholder={homeTeamPlaceholder}
                         disabled={!hasTeamOptions}
-                    >
-                        <option value="">{hasTeamOptions ? "Select home team" : teamPlaceholder}</option>
-                        {teamOptions.map((team) => (
-                            <option key={team} value={team}>
-                                {team}
-                            </option>
-                        ))}
-                    </select>
+                        triggerClassName="cockpit-match-setup-input"
+                        onChange={onHomeTeamChange}
+                    />
                 </div>
 
                 <div className="cockpit-match-setup-field">
                     <label className="cockpit-match-setup-label" htmlFor="cockpit-away-team">
                         Away team
                     </label>
-                    <select
+                    <CockpitDropdown
                         id="cockpit-away-team"
-                        className="context-input cockpit-match-setup-input"
+                        ariaLabel="Away team"
                         value={awayTeam}
-                        onChange={(event) => onAwayTeamChange(event.target.value)}
+                        options={awayTeamOptions.map((team) => ({ value: team, label: <CockpitTeamText team={team} variant="outlined" /> }))}
+                        placeholder={awayTeamPlaceholder}
                         disabled={!hasTeamOptions}
-                    >
-                        <option value="">{hasTeamOptions ? "Select away team" : teamPlaceholder}</option>
-                        {awayTeamOptions.map((team) => (
-                            <option key={team} value={team}>
-                                {team}
-                            </option>
-                        ))}
-                    </select>
+                        triggerClassName="cockpit-match-setup-input"
+                        onChange={onAwayTeamChange}
+                    />
                 </div>
 
                 <div className="cockpit-match-setup-field">
@@ -168,7 +177,7 @@ export default function CockpitMatchSetup({
                         onChange={(event) => onVenueChange(event.target.value)}
                         disabled={!hasVenueOptions}
                     >
-                        <option value="">{hasVenueOptions ? "Select venue" : venuePlaceholder}</option>
+                        <option value="" disabled className="text-slate-500">{hasVenueOptions ? "Select venue" : venuePlaceholder}</option>
                         {venueOptions.map((option) => (
                             <option key={option.id} value={option.id}>
                                 {option.label}
@@ -208,22 +217,16 @@ export default function CockpitMatchSetup({
                     <label className="cockpit-match-setup-label" htmlFor="cockpit-toss">
                         Toss
                     </label>
-                    <select
+                    <CockpitDropdown
                         id="cockpit-toss"
-                        className="context-input cockpit-match-setup-input"
+                        ariaLabel="Toss outcome"
                         value={tossSelection}
-                        onChange={(event) => onTossSelectionChange(event.target.value as TossSelection)}
+                        options={tossOptions}
+                        placeholder={tossOptions.length === 0 ? "Select teams first" : "Select toss winner..."}
                         disabled={tossOptions.length === 0}
-                    >
-                        <option value="">
-                            {tossOptions.length === 0 ? "Select teams first" : "Select toss outcome"}
-                        </option>
-                        {tossOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>
+                        triggerClassName="cockpit-match-setup-input"
+                        onChange={(nextValue) => onTossSelectionChange(nextValue as TossSelection)}
+                    />
                 </div>
 
                 <div className="cockpit-match-setup-field">
@@ -253,11 +256,24 @@ export default function CockpitMatchSetup({
                         step="0.01"
                         min="0.01"
                         inputMode="decimal"
+                        autoComplete="off"
                         className="context-input cockpit-match-setup-input"
                         placeholder="e.g. 5000"
                         value={bankroll}
                         onChange={(event) => onBankrollChange(event.target.value)}
                     />
+                    {walletBalance !== null && (
+                        <p className="cockpit-match-setup-hint" aria-live="polite">
+                            Available:{" "}
+                            <span className="font-numeric">
+                                {walletBalance.toLocaleString("en-IN", {
+                                    style: "currency",
+                                    currency: "INR",
+                                    maximumFractionDigits: 0,
+                                })}
+                            </span>
+                        </p>
+                    )}
                 </div>
             </div>
 
@@ -268,19 +284,18 @@ export default function CockpitMatchSetup({
                     </p>
                 )}
                 {createMessage && !createError && (
-                    <p className="cockpit-match-setup-hint" style={{ color: "var(--tier-elite)", marginRight: "auto" }}>
+                    <p className="cockpit-match-setup-hint cockpit-match-setup-message">
                         {createMessage}
                     </p>
                 )}
                 <button
-                    type="button"
+                    type="submit"
                     className="btn-primary cockpit-match-setup-submit"
                     disabled={!canCreateTrade || isCreating}
-                    onClick={onCreateTrade}
                 >
                     {isCreating ? "Saving..." : submitLabel}
                 </button>
             </div>
-        </div>
+        </form>
     );
 }

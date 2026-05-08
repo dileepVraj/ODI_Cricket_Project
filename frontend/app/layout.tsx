@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "./styles/layout.css";
 import "./styles/components.css";
@@ -7,19 +6,8 @@ import "./styles/cards.css";
 import "./styles/inputs.css";
 import "./styles/data.css";
 import "./styles/landing.css";
-import "./styles/live-trade-cockpit.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
-  display: "swap",
-});
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Vantage | Strategic Algo Exchange",
@@ -37,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en">
       <body>{children}</body>
     </html>
   );

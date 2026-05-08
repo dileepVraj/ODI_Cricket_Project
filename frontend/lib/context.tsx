@@ -107,6 +107,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // ── Load context data (teams, venues) when format changes ─────────
     useEffect(() => {
         if (!activeFormat) return;
+
+        const clearContext = () => {
+            setTeams([]);
+            setVenues([]);
+            setIsLoadingContext(false);
+        };
+
+        if (!manifest || manifest.format_key !== activeFormat) {
+            clearContext();
+            return;
+        }
+
+        if (Object.keys(manifest.context_fields || {}).length === 0) {
+            clearContext();
+            return;
+        }
+
         let cancelled = false;
 
         queueMicrotask(() => {
@@ -123,7 +140,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             .finally(() => { if (!cancelled) setIsLoadingContext(false); });
 
         return () => { cancelled = true; };
-    }, [activeFormat]);
+    }, [activeFormat, manifest]);
 
     // ── Switch format ─────────────────────────────────────────────────
     const switchFormat = useCallback((formatKey: string) => {
